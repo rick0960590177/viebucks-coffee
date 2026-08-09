@@ -87,10 +87,16 @@
             text-transform: lowercase;
         }
 
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
         nav ul {
             display: flex;
             list-style: none;
-            gap: 45px;
+            gap: 35px;
         }
 
         nav a {
@@ -107,6 +113,32 @@
         nav a:hover {
             color: var(--gold-light);
             text-shadow: 0 0 15px rgba(197, 160, 89, 0.4);
+        }
+
+        /* Language Switcher */
+        .lang-switcher {
+            display: flex;
+            gap: 8px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-gold);
+            padding: 4px;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 7.5pt;
+            font-weight: 600;
+            letter-spacing: 2px;
+            padding: 6px 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .lang-btn.active, .lang-btn:hover {
+            background: var(--gold-gradient);
+            color: var(--bg-deep);
         }
 
         /* Hero Section */
@@ -214,7 +246,30 @@
             color: var(--text-main);
         }
 
-        /* Collections Grid */
+        /* Brand Story Section */
+        .story-section {
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-gold);
+            border-bottom: 1px solid var(--border-gold);
+            padding: 100px 40px;
+            text-align: center;
+        }
+
+        .story-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .story-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 11.5pt;
+            color: var(--text-muted);
+            line-height: 2.4;
+            letter-spacing: 1.5px;
+            margin-bottom: 30px;
+        }
+
+        /* Collections / Bean Details Grid */
         .collections-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -224,7 +279,7 @@
         .collection-card {
             background: var(--bg-surface);
             border: 1px solid var(--border-gold);
-            padding: 50px 40px;
+            padding: 45px 35px;
             position: relative;
             transition: var(--transition);
             display: flex;
@@ -240,9 +295,9 @@
         }
 
         .collection-header {
-            margin-bottom: 35px;
+            margin-bottom: 25px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding-bottom: 20px;
+            padding-bottom: 15px;
         }
 
         .collection-name {
@@ -250,39 +305,110 @@
             font-size: 15pt;
             color: var(--gold-light);
             letter-spacing: 3px;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
 
         .collection-name-vn {
-            font-size: 8.5pt;
+            font-size: 8pt;
             color: var(--text-muted);
             letter-spacing: 2px;
             text-transform: uppercase;
         }
 
-        .price-list {
+        /* Bean Info Specs */
+        .bean-specs {
             list-style: none;
-            margin-bottom: 40px;
+            margin-bottom: 25px;
         }
 
-        .price-item {
+        .bean-spec-item {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 14px 0;
+            padding: 8px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            font-size: 9pt;
+            font-size: 8.5pt;
         }
 
-        .price-item span:first-child {
+        .bean-spec-item span:first-child {
             color: var(--text-muted);
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
         }
 
-        .price-item span:last-child {
+        .bean-spec-item span:last-child {
             color: var(--text-main);
-            font-weight: 600;
+            font-weight: 500;
             letter-spacing: 1px;
+            text-align: right;
+        }
+
+        .bean-flavor-desc {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 9.5pt;
+            color: var(--gold-light);
+            margin-bottom: 25px;
+            line-height: 1.6;
+            letter-spacing: 1px;
+            background: rgba(197, 160, 89, 0.03);
+            padding: 12px;
+            border-left: 2px solid var(--gold-primary);
+        }
+
+        /* Radar Chart Simulation */
+        .radar-chart-container {
+            background: var(--bg-deep);
+            border: 1px solid rgba(197, 160, 89, 0.15);
+            padding: 15px;
+        }
+
+        .radar-title {
+            font-size: 7.5pt;
+            color: var(--gold-primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .radar-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .radar-row {
+            display: flex;
+            align-items: center;
+            font-size: 7.5pt;
+            letter-spacing: 1px;
+        }
+
+        .radar-label {
+            width: 70px;
+            color: var(--text-muted);
+        }
+
+        .radar-track {
+            flex-grow: 1;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+            margin: 0 10px;
+        }
+
+        .radar-fill {
+            height: 100%;
+            background: var(--gold-gradient);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .radar-score {
+            width: 25px;
+            text-align: right;
+            color: var(--gold-light);
+            font-weight: 600;
         }
 
         /* Calculator Atelier Section */
@@ -455,8 +581,9 @@
             .collections-grid { grid-template-columns: 1fr; }
             .atelier-grid { grid-template-columns: 1fr; }
             .checkout-grid { grid-template-columns: 1fr; }
-            header { padding: 20px 30px; }
-            nav ul { gap: 20px; }
+            header { padding: 20px 20px; flex-direction: column; gap: 15px; }
+            .nav-right { width: 100%; justify-content: space-between; }
+            nav ul { gap: 15px; }
         }
     </style>
 </head>
@@ -465,45 +592,83 @@
     <!-- Header -->
     <header>
         <a href="#" class="brand-logo">viebucks</a>
-        <nav>
-            <ul>
-                <li><a href="#collections">Collections</a></li>
-                <li><a href="#atelier">Atelier Calc</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
+        <div class="nav-right">
+            <nav>
+                <ul>
+                    <li><a href="#story" data-i18n="nav_story">Story</a></li>
+                    <li><a href="#collections" data-i18n="nav_collections">Collections</a></li>
+                    <li><a href="#atelier" data-i18n="nav_atelier">Atelier Calc</a></li>
+                    <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="lang-switcher">
+                <button class="lang-btn" onclick="setLanguage('zh')">ZH</button>
+                <button class="lang-btn" onclick="setLanguage('vi')">VI</button>
+                <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+            </div>
+        </div>
     </header>
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-badge">Haute Coffee Collection</div>
+        <div class="hero-badge" data-i18n="hero_badge">Haute Coffee Collection</div>
         <h1 class="hero-title">viebucks</h1>
-        <p class="hero-quote">“It's never too late to drink coffee.”</p>
-        <a href="#atelier" class="btn-gold">Explore Bespoke Pricing</a>
+        <p class="hero-quote" data-i18n="hero_quote">“It's never too late to drink coffee.”</p>
+        <a href="#atelier" class="btn-gold" data-i18n="hero_btn">Explore Bespoke Pricing</a>
     </section>
 
-    <!-- Collections Section -->
+    <!-- Brand Story Section -->
+    <section id="story" class="story-section">
+        <div class="section-container" style="padding: 0;">
+            <div class="section-header" style="margin-bottom: 40px;">
+                <span class="section-subtitle" data-i18n="story_sub">Our Atelier Heritage / Câu Chuyện Thương Hiệu</span>
+                <h2 class="section-title" data-i18n="story_title">品牌故事與工藝精神</h2>
+            </div>
+            <div class="story-content">
+                <p class="story-text" data-i18n="story_p1">
+                    VIEBUCKS 誕生於對咖啡工藝的極致追求。我們深信每一顆咖啡豆都蘊藏著大地的靈魂與烘焙師的匠心。從產地莊園的嚴選、精準的烘焙曲線，到完美風味的呈現，VIEBUCKS 始終堅持以 Haute Coffee（高級訂製咖啡）的哲學，為每一位熱愛咖啡的品味人士提供無與倫比的感官體驗。
+                </p>
+                <p class="story-text" data-i18n="story_p2">
+                    無論是醇厚濃郁的羅布斯塔、層次豐富的阿拉比卡，或是風味獨特的巴西喜拉朵，我們都以嚴謹的標準對待。正如我們的信念：「It's never too late to drink coffee.」——享受一杯好咖啡，永遠不嫌晚。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Collections Section (Coffee Bean Details & Flavor Radar) -->
     <section id="collections" class="section-container">
         <div class="section-header">
-            <span class="section-subtitle">Curated Price List / Bảng Giá Cà Phê</span>
-            <h2 class="section-title">官方精品零售定價</h2>
+            <span class="section-subtitle" data-i18n="col_sub">Bean Heritage & Flavor Profiles / Hồ Sơ Cà Phê</span>
+            <h2 class="section-title" data-i18n="col_title">頂級精品咖啡豆履歷與風味解構</h2>
         </div>
 
         <div class="collections-grid">
-            <!-- Arabica Card -->
+            <!-- Arabica Card (Updated to Vietnam Origin) -->
             <div class="collection-card">
                 <div>
                     <div class="collection-header">
                         <h3 class="collection-name">Arabica</h3>
-                        <div class="collection-name-vn">阿拉比卡精品系列</div>
+                        <div class="collection-name-vn" data-i18n="arabica_desc">越南阿拉比卡精品系列</div>
                     </div>
-                    <ul class="price-list">
-                        <li class="price-item"><span>咖啡豆 (250g) / Hạt</span><span>145,000 VND</span></li>
-                        <li class="price-item"><span>咖啡豆 (500g) / Hạt</span><span>280,000 VND</span></li>
-                        <li class="price-item"><span>咖啡豆 (1000g) / Hạt</span><span>550,000 VND</span></li>
-                        <li class="price-item"><span>濾掛包 (12g) / Túi lọc</span><span>16,000 VND</span></li>
-                        <li class="price-item"><span>冷萃包 (10g) / Ngâm lạnh</span><span>12,500 VND</span></li>
+                    <ul class="bean-specs">
+                        <li class="bean-spec-item"><span data-i18n="lbl_origin">產地 / Origin</span><span>越南 大叻 / Da Lat, Vietnam</span></li>
+                        <li class="bean-spec-item"><span data-i18n="lbl_altitude">海拔 / Altitude</span><span>1,500 - 1,650m</span></li>
+                        <li class="bean-spec-item"><span data-i18n="lbl_mill">處理廠 / Mill</span><span>Da Lat Highland Estate</span></li>
+                        <li class="bean-spec-item"><span data-i18n="lbl_process">處理方式 / Process</span><span>水洗 / Washed</span></li>
                     </ul>
+                    <div class="bean-flavor-desc" data-i18n="arabica_flavor">
+                        “展現獨特的花香與黃 檸檬果酸，伴隨黑糖甜感，口感清爽且尾韻回甘持久。”
+                    </div>
+                </div>
+                <div class="radar-chart-container">
+                    <div class="radar-title" data-i18n="radar_title">風味雷達 / Flavor Radar</div>
+                    <div class="radar-bars">
+                        <div class="radar-row"><span class="radar-label" data-i18n="r_acidity">酸質</span><div class="radar-track"><div class="radar-fill" style="width: 85%;"></div></div><span class="radar-score">4.2</span></div>
+                        <div class="radar-row"><span class="radar-label" data-i18n="r_sweetness">甜感</span><div class="radar-track"><div class="radar-fill" style="width: 85%;"></div></div><span class="radar-score">4.2</span></div>
+                        <div class="radar-row"><span class="radar-label" data-i18n="r_body">醇厚度</span><div class="radar-track"><div class="radar-fill" style="width: 65%;"></div></div><span class="radar-score">3.2</span></div>
+                        <div class="radar-row"><span class="radar-label" data-i18n="r_aroma">香氣</span><div class="radar-track"><div class="radar-fill" style="width: 90%;"></div></div><span class="radar-score">4.5</span></div>
+                        <div class="radar-row"><span class="radar-label" data-i18n="r_aftertaste">回甘</span><div class="radar-track"><div class="radar-fill" style="width: 85%;"></div></div><span class="radar-score">4.2</span></div>
+                    </div>
                 </div>
             </div>
 
@@ -512,15 +677,27 @@
                 <div>
                     <div class="collection-header">
                         <h3 class="collection-name">Robusta</h3>
-                        <div class="collection-name-vn">羅布斯塔經典系列</div>
+                        <div class="collection-name-vn" data-i18n="robusta_desc">越南羅布斯塔精品系列</div>
                     </div>
-                    <ul class="price-list">
-                        <li class="price-item"><span>咖啡豆 (250g) / Hạt</span><span>91,000 VND</span></li>
-                        <li class="price-item"><span>咖啡豆 (500g) / Hạt</span><span>172,000 VND</span></li>
-                        <li class="price-item"><span>咖啡豆 (1000g) / Hạt</span><span>335,000 VND</span></li>
-                        <li class="price-item"><span>濾掛包 (12g) / Túi lọc</span><span>13,000 VND</span></li>
-                        <li class="price-item"><span>冷萃包 (10g) / Ngâm lạnh</span><span>7,000 VND</span></li>
+                    <ul class="bean-specs">
+                        <li class="bean-spec-item"><span data-i18n="lbl_origin">產地 / Origin</span><span>越南西原 / Central Highlands, VN</span></li>
+                        <li class="bean-spec-item"><span data-i18n="lbl_altitude">海拔 / Altitude</span><span>500 - 800m</span></li>
+                        <li class="bean-spec-item"><span data-i18n="lbl_mill">處理廠 / Mill</span><span>Da Lat Highland Mill</span></li>
+                        <li class="bean-spec-item"><span data-i18n="lbl_process">處理方式 / Process</span><span>天然日曬 / Natural</span></li>
                     </ul>
+                    <div class="bean-flavor-desc" data-i18n="robusta_flavor">
+                        “濃郁厚實的黑巧克力與烤核果香氣，苦甜平衡極佳，油脂豐厚且具備強烈穿透力。”
+                    </div>
+                </div>
+                <div class="radar-chart-container">
+                    <div class="radar-title" data-i18n="radar_title">風味雷達 / Flavor Radar</div>
+                    <div class="radar-bars">
+                        <div class="radar-row"><span class="radar-label" data-i18n="r_acidity">酸質</span><div class="radar-track"><div class="radar-fill" style="width: 20%;"></div></div><span class="radar-score">1.0</span></div>
+                        <div class="radar-row"><span class="radar-label" data-i18n="r_sweetness">甜感</span><div class="radar-track"><div class="radar-fill" style="width: 60%;"></div></div><span class="radar-score">3.0</span></div>
+                        <div class="radar-row"><span class="radar-label" data-i18n="r_body">醇厚度</span><div class="radar-track"><div class="radar-fill" style="width: 100%;"></div></div><span class="radar-score">5.0</span></div>
+                        <div class="radar-row"><span class="radar-label" data-i18n="r_aroma">香氣</span><div class="radar-track"><div class="radar-fill" style="width: 75%;"></div></div><span class="radar-score">3.8</span></div>
+                        <div class="radar-row"><span class="radar-label" data-i18n="r_aftertaste">回甘</span><div class="radar-track"><div class="radar-fill" style="width: 70%;"></div></div><span class="radar-score">3.5</span></div>
+                    </div>
                 </div>
             </div>
 
@@ -529,15 +706,27 @@
                 <div>
                     <div class="collection-header">
                         <h3 class="collection-name">Brazil Cerrado</h3>
-                        <div class="collection-name-vn">巴西喜拉朵特選系列</div>
+                        <div class="collection-name-vn" data-i18n="brazil_desc">巴西喜拉朵特選系列</div>
                     </div>
-                    <ul class="price-list">
-                        <li class="price-item"><span>咖啡豆 (250g) / Hạt</span><span>200,000 VND</span></li>
-                        <li class="price-item"><span>咖啡豆 (500g) / Hạt</span><span>390,000 VND</span></li>
-                        <li class="price-item"><span>咖啡豆 (1000g) / Hạt</span><span>770,000 VND</span></li>
-                        <li class="price-item"><span>濾掛包 (12g) / Túi lọc</span><span>19,000 VND</span></li>
-                        <li class="price-item"><span>冷萃包 (10g) / Ngâm lạnh</span><span>15,000 VND</span></li>
+                    <ul class="bean-specs">
+                        <li class="bean-spec-item"><span data-i18n="lbl_origin">產地 / Origin</span><span>巴西喜拉朵 / Cerrado, Brazil</span></li>
+                        <li class="bean-spec-item"><span data-i18n="lbl_altitude">海拔 / Altitude</span><span>900 - 1,200m</span></li>
+                        <li class="bean-spec-item"><span data-i18n="lbl_mill">處理廠 / Mill</span><span>Cerrado Specialty Estate</span></li>
+                        <li class="bean-spec-item"><span data-i18n="lbl_process">處理方式 / Process</span><span>半水洗 / Pulped Natural</span></li>
                     </ul>
+                    <div class="bean-flavor-desc" data-i18n="brazil_flavor">
+                        “散發濃郁的烤堅果、焦糖奶油與可可香氣，口感溫潤滑順，酸度低且餘韻香甜。”
+                    </div>
+                </div>
+                <div class="radar-chart-container">
+                    <div class="radar-title" data-i18n="radar_title">風味雷達 / Flavor Radar</div>
+                    <div class="radar-bars">
+                        <div class="radar-row"><span class="radar-label" data-i18n="r_acidity">酸質</span><div class="radar-track"><div class="radar-fill" style="width: 40%;"></div></div><span class="radar-score">2.0</span></div>
+                        <div class="radar-row"><span class="radar-label" data-i18n="r_sweetness">甜感</span><div class="radar-track"><div class="radar-fill" style="width: 90%;"></div></div><span class="radar-score">4.5</span></div>
+                        <div class="radar-row"><span class="radar-label" data-i18n="r_body">醇厚度</span><div class="radar-track"><div class="radar-fill" style="width: 85%;"></div></div><span class="radar-score">4.2</span></div>
+                        <div class="radar-row"><span class="radar-label" data-i18n="r_aroma">香氣</span><div class="radar-track"><div class="radar-fill" style="width: 80%;"></div></div><span class="radar-score">4.0</span></div>
+                        <div class="radar-row"><span class="radar-label" data-i18n="r_aftertaste">回甘</span><div class="radar-track"><div class="radar-fill" style="width: 90%;"></div></div><span class="radar-score">4.5</span></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -546,21 +735,21 @@
     <!-- Calculator Atelier Section -->
     <section id="atelier" class="section-container" style="background: radial-gradient(circle at center, #101013 0%, var(--bg-deep) 100%);">
         <div class="section-header">
-            <span class="section-subtitle">Bespoke Calculator Atelier</span>
-            <h2>採購金額智能試算（達批發門檻自動套用批發價）</h2>
+            <span class="section-subtitle" data-i18n="calc_sub">Bespoke Calculator Atelier</span>
+            <h2 data-i18n="calc_title">採購金額智能試算（達批發門檻自動套用批發價）</h2>
         </div>
 
         <div class="calculator-atelier">
             <div class="atelier-grid">
                 <div class="input-group">
-                    <label>選擇品項與規格 / Product & Variant</label>
+                    <label data-i18n="label_product">選擇品項與規格 / Product & Variant</label>
                     <select id="productSelect" onchange="calculateTotal()">
                         <optgroup label="Arabica Series (批發門檻：10包/個起)">
-                            <option value="145000" data-wholesale="125000">阿拉比卡 咖啡豆 (250g)</option>
-                            <option value="280000" data-wholesale="240000">阿拉比卡 咖啡豆 (500g)</option>
-                            <option value="550000" data-wholesale="470000">阿拉比卡 咖啡豆 (1000g)</option>
-                            <option value="16000" data-wholesale="13500">阿拉比卡 濾掛包 (12g)</option>
-                            <option value="12500" data-wholesale="10500">阿拉比卡 冷萃包 (10g)</option>
+                            <option value="145000" data-wholesale="125000">越南阿拉比卡 咖啡豆 (250g)</option>
+                            <option value="280000" data-wholesale="240000">越南阿拉比卡 咖啡豆 (500g)</option>
+                            <option value="550000" data-wholesale="470000">越南阿拉比卡 咖啡豆 (1000g)</option>
+                            <option value="16000" data-wholesale="13500">越南阿拉比卡 濾掛包 (12g)</option>
+                            <option value="12500" data-wholesale="10500">越南阿拉比卡 冷萃包 (10g)</option>
                         </optgroup>
                         <optgroup label="Robusta Series (批發門檻：10包/個起)">
                             <option value="91000" data-wholesale="78000">羅布斯塔 咖啡豆 (250g)</option>
@@ -580,45 +769,45 @@
                 </div>
 
                 <div class="input-group">
-                    <label>購買數量 / Quantity (批發門檻：10)</label>
+                    <label data-i18n="label_qty">購買數量 / Quantity (批發門檻：10)</label>
                     <input type="number" id="qtyInput" value="1" min="1" oninput="calculateTotal()">
                 </div>
             </div>
 
             <div class="atelier-result">
-                <h4>Estimated Total Amount</h4>
+                <h4 data-i18n="est_total">Estimated Total Amount</h4>
                 <div class="total-display" id="calcTotal">VND 0</div>
                 <div class="total-note" id="calcNote">標準零售價格試算</div>
-                <button type="button" class="btn-gold" onclick="showCheckoutForm()">確認選購 / Confirm Order</button>
+                <button type="button" class="btn-gold" onclick="showCheckoutForm()" data-i18n="btn_confirm">確認選購 / Confirm Order</button>
             </div>
 
             <!-- 填寫訂購資料表單 -->
             <div class="checkout-form-container" id="checkoutFormContainer">
-                <h3 class="checkout-title">填寫訂購人與配送資訊 / Shipping Information</h3>
+                <h3 class="checkout-title" data-i18n="form_title">填寫訂購人與配送資訊 / Shipping Information</h3>
                 
                 <form id="orderForm" onsubmit="submitOrder(event)">
                     <div class="checkout-grid">
                         <div class="input-group">
-                            <label>訂購人姓名 / Full Name *</label>
+                            <label data-i18n="label_name">訂購人姓名 / Full Name *</label>
                             <input type="text" id="custName" required placeholder="請輸入您的姓名">
                         </div>
                         <div class="input-group">
-                            <label>聯絡電話 / Phone Number *</label>
+                            <label data-i18n="label_phone">聯絡電話 / Phone Number *</label>
                             <input type="tel" id="custPhone" required placeholder="請輸入聯絡電話">
                         </div>
                     </div>
                     <div class="checkout-grid full">
                         <div class="input-group">
-                            <label>送貨地址 / Delivery Address *</label>
+                            <label data-i18n="label_address">送貨地址 / Delivery Address *</label>
                             <input type="text" id="custAddress" required placeholder="請輸入完整的送貨地址">
                         </div>
                     </div>
                     <div style="text-align: center; margin-top: 30px;">
-                        <button type="submit" class="btn-gold">送出訂單 / Submit Order</button>
+                        <button type="submit" class="btn-gold" data-i18n="btn_submit">送出訂單 / Submit Order</button>
                     </div>
                 </form>
 
-                <div class="success-msg" id="successMsg">
+                <div class="success-msg" id="successMsg" data-i18n="success_msg">
                     感謝您的訂購！訂單已成功送出，系統已同步發送郵件通知至 VIEBUCKS ，專員將盡快為您出貨。
                 </div>
             </div>
@@ -630,8 +819,8 @@
         <div class="footer-brand">viebucks</div>
         <div class="footer-info">
             <p><strong>Công ty TNHH VIEBUCKS</strong></p>
-            <p>地址：365 QL13, Thủ Dầu Một, Hồ Chí Minh</p>
-            <p>電話：0348246669 / 0839681380</p>
+            <p data-i18n="footer_addr">地址：365 QL13, Thủ Dầu Một, Hồ Chí Minh</p>
+            <p data-i18n="footer_tel">電話：0348246669 / 0839681380</p>
         </div>
         <div class="footer-copyright">
             “It's never too late to drink coffee.” &copy; 2026 viebucks. All rights reserved.
@@ -639,6 +828,185 @@
     </footer>
 
     <script>
+        const translations = {
+            zh: {
+                nav_story: "品牌故事",
+                nav_collections: "咖啡豆履歷",
+                nav_atelier: "智能試算",
+                nav_contact: "聯繫我們",
+                hero_badge: "Haute Coffee Collection",
+                hero_quote: "“It's never too late to drink coffee.”",
+                hero_btn: "探索專屬訂製定價",
+                story_sub: "Our Atelier Heritage / Câu Chuyện Thương Hiệu",
+                story_title: "品牌故事與工藝精神",
+                story_p1: "VIEBUCKS 誕生於對咖啡工藝的極致追求。我們深信每一顆咖啡豆都蘊藏著大地的靈魂與烘焙師的匠心。從產地莊園的嚴選、精準的烘焙曲線，到完美風味的呈現，VIEBUCKS 始終堅持以 Haute Coffee（高級訂製咖啡）的哲學，為每一位熱愛咖啡的品味人士提供無與倫比的感官體驗。",
+                story_p2: "無論是醇厚濃郁的羅布斯塔、層次豐富的阿拉比卡，或是風味獨特的巴西喜拉朵，我們都以嚴謹的標準對待。正如我們的信念：「It's never too late to drink coffee.」——享受一杯好咖啡，永遠不嫌晚。",
+                col_sub: "Bean Heritage & Flavor Profiles / Hồ Sơ Cà Phê",
+                col_title: "頂級精品咖啡豆履歷與風味解構",
+                arabica_desc: "越南阿拉比卡精品系列",
+                robusta_desc: "羅布斯塔經典系列",
+                brazil_desc: "巴西喜拉朵特選系列",
+                lbl_origin: "產地 / Origin",
+                lbl_altitude: "海拔 / Altitude",
+                lbl_mill: "處理廠 / Mill",
+                lbl_process: "處理方式 / Process",
+                arabica_flavor: "“展現獨特的花香與黃檸檬果酸，伴隨黑糖甜感，口感清爽且尾韻回甘持久。”",
+                robusta_flavor: "“濃郁厚實的黑巧克力與烤核果香氣，苦甜平衡極佳，油脂豐厚且具備強烈穿透力。”",
+                brazil_flavor: "“散發濃郁的烤堅果、焦糖奶油與可可香氣，口感溫潤滑順，酸度低且餘韻香甜。”",
+                radar_title: "風味雷達 / Flavor Radar",
+                r_acidity: "酸質",
+                r_sweetness: "甜感",
+                r_body: "醇厚度",
+                r_aroma: "香氣",
+                r_aftertaste: "回甘",
+                calc_sub: "Bespoke Calculator Atelier",
+                calc_title: "採購金額智能試算（達批發門檻自動套用批發價）",
+                label_product: "選擇品項與規格 / Product & Variant",
+                label_qty: "購買數量 / Quantity (批發門檻：10)",
+                est_total: "Estimated Total Amount",
+                note_retail: "標準零售價格試算",
+                note_wholesale: "已達 10 包門檻 — 自動套用尊榮批發價格！",
+                btn_confirm: "確認選購 / Confirm Order",
+                form_title: "填寫訂購人與配送資訊 / Shipping Information",
+                label_name: "訂購人姓名 / Full Name *",
+                label_phone: "聯絡電話 / Phone Number *",
+                label_address: "送貨地址 / Delivery Address *",
+                btn_submit: "送出訂單 / Submit Order",
+                success_msg: "感謝您的訂購！訂單已成功送出，系統已同步發送郵件通知至 VIEBUCKS ，專員將盡快為您出貨。",
+                footer_addr: "地址：365 QL13, Thủ Dầu Một, Hồ Chí Minh",
+                footer_tel: "電話：0348246669 / 0839681380"
+            },
+            vi: {
+                nav_story: "Câu Chuyện",
+                nav_collections: "Hồ Sơ Cà Phê",
+                nav_atelier: "Tính Giá",
+                nav_contact: "Liên Hệ",
+                hero_badge: "Bộ Sưu Tập Cà Phê Haute",
+                hero_quote: "“Không bao giờ là quá muộn để thưởng thức cà phê.”",
+                hero_btn: "Khám Phá Giá Đặt Riêng",
+                story_sub: "Our Atelier Heritage / Di Sản Xưởng Chế Tác",
+                story_title: "Câu Chuyện Thương Hiệu & Tinh Thần Nghệ Thuật",
+                story_p1: "VIEBUCKS ra đời từ niềm đam mê tuyệt đối với nghệ thuật cà phê. Chúng tôi tin rằng mỗi hạt cà phê đều chứa đựng linh hồn của đất mẹ và tâm huyết của người rang. Từ việc lựa chọn kỹ lưỡng các đồn điền nguyên liệu, biểu đồ rang chính xác, cho đến việc tôn vinh hương vị hoàn hảo, VIEBUCKS luôn kiên định với triết lý Haute Coffee.",
+                story_p2: "Dù là dòng Robusta đậm đà, Arabica đa tầng hương vị, hay Brazil Cerrado đặc trưng, chúng tôi đều xử lý với sự khắt khe cao nhất. Đúng như tôn chỉ của chúng tôi: 'It's never too late to drink coffee.'",
+                col_sub: "Bean Heritage & Flavor Profiles",
+                col_title: "Hồ Sơ Cà Phê & Phân Tích Hương Vị",
+                arabica_desc: "Dòng Arabica Việt Nam Cao Cấp",
+                robusta_desc: "Dòng Robusta Truyền Thống",
+                brazil_desc: "Dòng Brazil Cerrado Đặc Biệt",
+                lbl_origin: "Xuất xứ / Origin",
+                lbl_altitude: "Độ cao / Altitude",
+                lbl_mill: "Nhà máy / Mill",
+                lbl_process: "Phương pháp / Process",
+                arabica_flavor: "“Mang hương hoa đặc trưng và vị chua chanh vàng thanh nhã, vị ngọt đường đen, hậu vị mượt mà.”",
+                robusta_flavor: "“Hương sô cô la đen đậm đà và hạt rang, cân bằng vị đắng ngọt hoàn hảo.”",
+                brazil_flavor: "“Hương hạt rang, bơ caramel và ca cao phong phú, vị ngọt kéo dài.”",
+                radar_title: "Biểu Đồ Hương Vị",
+                r_acidity: "Độ chua",
+                r_sweetness: "Độ ngọt",
+                r_body: "Thể chất",
+                r_aroma: "Hương thơm",
+                r_aftertaste: "Hậu vị",
+                calc_sub: "Xưởng Tính Giá Riêng Biệt",
+                calc_title: "Tính Toán Thông Minh (Tự động áp dụng giá sỉ từ 10 sản phẩm)",
+                label_product: "Chọn Sản Phẩm & Quy Cách / Product & Variant",
+                label_qty: "Số Lượng / Quantity (Mức sỉ: 10)",
+                est_total: "Tổng Tiền Ước Tính",
+                note_retail: "Tính theo giá bán lẻ tiêu chuẩn",
+                note_wholesale: "Đã đạt mức sỉ 10 gói — Tự động áp dụng giá sỉ ưu đãi!",
+                btn_confirm: "Xác Nhận Đặt Hàng / Confirm Order",
+                form_title: "Thông Tin Đơn Hàng & Giao Nhận / Shipping Information",
+                label_name: "Họ và tên / Full Name *",
+                label_phone: "Số điện thoại / Phone Number *",
+                label_address: "Địa chỉ giao hàng / Delivery Address *",
+                btn_submit: "Gửi Đơn Hàng / Submit Order",
+                success_msg: "Cảm ơn bạn đã đặt hàng! Đơn hàng đã được gửi thành công đến VIEBUCKS, nhân viên sẽ liên hệ với bạn sớm nhất.",
+                footer_addr: "Địa chỉ: 365 QL13, Thủ Dầu Một, Hồ Chí Minh",
+                footer_tel: "Điện thoại: 0348246669 / 0839681380"
+            },
+            en: {
+                nav_story: "Story",
+                nav_collections: "Bean Heritage",
+                nav_atelier: "Atelier Calc",
+                nav_contact: "Contact",
+                hero_badge: "Haute Coffee Collection",
+                hero_quote: "“It's never too late to drink coffee.”",
+                hero_btn: "Explore Bespoke Pricing",
+                story_sub: "Our Atelier Heritage",
+                story_title: "Brand Story & Craftsmanship",
+                story_p1: "VIEBUCKS was born from an ultimate pursuit of coffee craftsmanship. We believe every coffee bean carries the soul of the earth and the dedication of the roaster. From estate selection to precise roasting profiles, VIEBUCKS adheres to the Haute Coffee philosophy, offering an unmatched sensory experience.",
+                story_p2: "Whether it is rich Robusta, layered Arabica, or unique Brazil Cerrado, we treat each with rigorous standards. As our belief states: 'It's never too late to drink coffee.'",
+                col_sub: "Bean Heritage & Flavor Profiles",
+                col_title: "Fine Coffee Bean Heritage & Flavor Breakdown",
+                arabica_desc: "Vietnam Arabica Fine Selection",
+                robusta_desc: "Robusta Classic Selection",
+                brazil_desc: "Brazil Cerrado Special Selection",
+                lbl_origin: "Origin",
+                lbl_altitude: "Altitude",
+                lbl_mill: "Processing Mill",
+                lbl_process: "Process",
+                arabica_flavor: "“Featuring distinctive floral notes, bright yellow lemon acidity, brown sugar sweetness, and a clean finish.”",
+                robusta_flavor: "“Rich dark chocolate and roasted nut notes, excellent bitter-sweet balance with heavy body.”",
+                brazil_flavor: "“Rich roasted nuts, caramel butter and cocoa notes, smooth and low acidity with sweet aftertaste.”",
+                radar_title: "Flavor Radar",
+                r_acidity: "Acidity",
+                r_sweetness: "Sweetness",
+                r_body: "Body",
+                r_aroma: "Aroma",
+                r_aftertaste: "Aftertaste",
+                calc_sub: "Bespoke Calculator Atelier",
+                calc_title: "Smart Amount Calculator (Wholesale rate auto-applied at threshold)",
+                label_product: "Select Product & Variant",
+                label_qty: "Quantity (Wholesale threshold: 10)",
+                est_total: "Estimated Total Amount",
+                note_retail: "Standard retail price calculation",
+                note_wholesale: "Threshold reached (10 packs) — Special wholesale price applied!",
+                btn_confirm: "Confirm Order",
+                form_title: "Shipping & Contact Information",
+                label_name: "Full Name *",
+                label_phone: "Phone Number *",
+                label_address: "Delivery Address *",
+                btn_submit: "Submit Order",
+                success_msg: "Thank you for your order! Successfully submitted to VIEBUCKS, our specialist will contact you shortly.",
+                footer_addr: "Address: 365 QL13, Thu Dau Mot, Ho Chi Minh",
+                footer_tel: "Phone: 0348246669 / 0839681380"
+            }
+        };
+
+        let currentLang = 'zh';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            const dict = translations[lang];
+            if (!dict) return;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) {
+                    el.innerText = dict[key];
+                }
+            });
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('onclick').includes(lang)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            calculateTotal();
+        }
+
+        function detectUserLanguage() {
+            const browserLang = navigator.language || navigator.userLanguage;
+            if (browserLang.toLowerCase().startsWith('vi')) {
+                setLanguage('vi');
+            } else if (browserLang.toLowerCase().startsWith('en')) {
+                setLanguage('en');
+            } else {
+                setLanguage('zh');
+            }
+        }
+
         function calculateTotal() {
             const selectEl = document.getElementById('productSelect');
             const selectedOption = selectEl.options[selectEl.selectedIndex];
@@ -649,11 +1017,11 @@
 
             const threshold = 10;
             let unitPrice = retailPrice;
-            let noteText = "標準零售價格試算";
+            let noteText = translations[currentLang].note_retail;
 
             if (qty >= threshold) {
                 unitPrice = wholesalePrice;
-                noteText = "已達 10 包門檻 — 自動套用尊榮批發價格！";
+                noteText = translations[currentLang].note_wholesale;
             }
 
             const total = Math.round(unitPrice * qty);
@@ -691,7 +1059,6 @@
                 deliveryAddress: address
             };
 
-            // 請將此處替換為您部署完成的 Google Apps Script 網頁應用程式網址
             const webhookUrl = 'https://script.google.com/macros/s/AKfycbzsbLIZwfGG3lsPHA8iMEAbYJhfATRmo6APzc96GeRbgY3aERVNNySZ62y-_bWVd7OX/exec';
 
             try {
@@ -712,7 +1079,10 @@
             }
         }
 
-        window.onload = calculateTotal;
+        window.onload = () => {
+            detectUserLanguage();
+            calculateTotal();
+        };
     </script>
 </body>
 </html>
