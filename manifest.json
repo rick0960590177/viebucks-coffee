@@ -1,0 +1,9 @@
+{
+  "name": "VIEBUCKS Haute Coffee",
+  "short_name": "VIEBUCKS",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050506",
+  "theme_color": "#C5A059",
+  "icons": []
+}
