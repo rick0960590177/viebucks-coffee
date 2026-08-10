@@ -3,734 +3,646 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIEBUCKS - Haute Coffee Collection & Bespoke Calculator</title>
-    
-    <!-- 引入 Google 字型 (Optima 風格 serif + 質感 sans-serif) -->
+    <title>VIEBUCKS - Bespoke Coffee & B2B Purchasing Atelier</title>
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- html2pdf.js：用於無伺服器端繪製高質量 PDF 報價單 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        /* === 基礎全域樣式與色調設定 === */
         :root {
-            --bg-primary: #0F1115;
-            --bg-secondary: #171A21;
-            --bg-card: #1E222D;
+            --bg-primary: #0D0E11;
+            --bg-secondary: #14171F;
+            --bg-card: #1A1E29;
             --accent-gold: #D4AF37;
-            --accent-gold-hover: #F3E5AB;
+            --accent-gold-light: #F4E8C1;
             --text-main: #ECEFF1;
-            --text-muted: #90A4AE;
-            --border-color: #2C3240;
+            --text-muted: #8A99A8;
+            --border-color: #272D3B;
             --font-heading: 'Cormorant Garamond', serif;
             --font-body: 'Montserrat', sans-serif;
+            --success-color: #2E7D32;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             background-color: var(--bg-primary);
             color: var(--text-main);
             font-family: var(--font-body);
             line-height: 1.6;
-            padding-bottom: 60px;
+            padding-bottom: 80px;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
 
-        /* === Header 導覽列 === */
+        /* Header */
         header {
-            background: rgba(15, 17, 21, 0.95);
+            background: rgba(13, 14, 17, 0.95);
             backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            position: sticky; top: 0; z-index: 100;
             border-bottom: 1px solid var(--border-color);
             padding: 15px 0;
         }
+        .nav-wrapper { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-heading); font-size: 2.2rem; font-weight: 700; color: var(--accent-gold); text-decoration: none; letter-spacing: 2px; }
 
-        .nav-wrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        /* Section Universal Styles */
+        section { padding: 50px 0; border-bottom: 1px solid var(--border-color); }
+        .section-header { text-align: center; margin-bottom: 35px; }
+        .section-subtitle { color: var(--accent-gold); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; }
+        .section-title { font-family: var(--font-heading); font-size: 2.2rem; }
 
-        .logo {
-            font-family: var(--font-heading);
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--accent-gold);
-            text-decoration: none;
-            letter-spacing: 2px;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 25px;
-        }
-
-        nav a {
-            color: var(--text-main);
-            text-decoration: none;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: color 0.3s;
-        }
-
-        nav a:hover {
-            color: var(--accent-gold);
-        }
-
-        /* === 區塊通用樣式 === */
-        section {
-            padding: 60px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .section-subtitle {
-            color: var(--accent-gold);
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-        }
-
-        .section-title {
-            font-family: var(--font-heading);
-            font-size: 2.2rem;
-            font-weight: 600;
-        }
-
-        /* === 產品展示卡片區 === */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .product-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.3s, border-color 0.3s;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-gold);
-        }
-
-        .product-name {
-            font-family: var(--font-heading);
-            font-size: 1.8rem;
-            color: var(--accent-gold);
-        }
-
-        .product-origin {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 15px;
-        }
-
-        .price-tag {
-            margin: 15px 0;
-            padding: 10px;
-            background: rgba(212, 175, 55, 0.05);
-            border-left: 3px solid var(--accent-gold);
-            font-size: 0.85rem;
-        }
-
-        .price-highlight {
-            color: var(--accent-gold);
-            font-weight: 600;
-        }
-
-        /* === 採購試算與購物車區塊 === */
-        .atelier-wrapper {
+        /* Atelier Container */
+        .atelier-card {
             background-color: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 35px;
             border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
         }
 
-        .calculator-form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+        /* Free Shipping Bar */
+        .shipping-progress-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 15px 20px;
+            border-radius: 8px;
             margin-bottom: 25px;
-            align-items: end;
         }
+        .shipping-text { display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 8px; }
+        .progress-bar-bg { background: var(--bg-primary); height: 8px; border-radius: 4px; overflow: hidden; }
+        .progress-bar-fill { background: linear-gradient(90deg, #B8860B, var(--accent-gold)); height: 100%; width: 0%; transition: width 0.4s ease; }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
+        /* Form & Selectors */
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        label { font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
         select, input {
             background-color: var(--bg-primary);
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 12px 15px;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.3s;
+            padding: 12px; border-radius: 6px; outline: none; font-size: 0.95rem;
+        }
+        select:focus, input:focus { border-color: var(--accent-gold); }
+
+        /* Custom Blend Range Sliders */
+        .blend-slider-group { margin: 15px 0; }
+        .blend-slider-header { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 5px; }
+        input[type="range"] {
+            width: 100%; -webkit-appearance: none; background: var(--border-color); height: 6px; border-radius: 3px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--accent-gold); cursor: pointer;
         }
 
-        select:focus, input:focus {
-            border-color: var(--accent-gold);
-        }
-
+        /* Buttons */
         .btn {
-            background-color: var(--accent-gold);
-            color: #000;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.1s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.85rem;
+            background-color: var(--accent-gold); color: #000; border: none; padding: 12px 20px;
+            border-radius: 6px; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+            transition: all 0.2s ease; font-size: 0.85rem; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn:hover { background-color: var(--accent-gold-light); transform: translateY(-1px); }
+        .btn-outline { background: transparent; border: 1px solid var(--accent-gold); color: var(--accent-gold); }
+        .btn-outline:hover { background: rgba(212, 175, 55, 0.1); }
+        .btn-zalo { background-color: #0068FF; color: #fff; }
+        .btn-zalo:hover { background-color: #0052cc; }
+
+        /* Cart Table */
+        .cart-table-wrapper { overflow-x: auto; margin: 25px 0; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 14px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+        th { color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; }
+
+        /* Pricing Summary Box */
+        .pricing-summary {
+            background: var(--bg-card); border-radius: 8px; padding: 20px; display: flex;
+            flex-direction: column; gap: 10px; margin-bottom: 25px;
+        }
+        .summary-row { display: flex; justify-content: space-between; font-size: 0.95rem; }
+        .summary-row.grand-total {
+            border-top: 1px solid var(--border-color); padding-top: 10px; font-weight: 700;
+            font-size: 1.3rem; color: var(--accent-gold);
         }
 
-        .btn:hover {
-            background-color: var(--accent-gold-hover);
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn-danger {
-            background-color: transparent;
-            color: #ef5350;
-            border: 1px solid #ef5350;
-            padding: 5px 10px;
-            font-size: 0.75rem;
-        }
-
-        .btn-danger:hover {
-            background-color: #ef5350;
-            color: #fff;
-        }
-
-        /* 批發折扣動態提示條 */
-        .discount-banner {
-            background: rgba(212, 175, 55, 0.1);
-            border: 1px dashed var(--accent-gold);
-            padding: 12px 20px;
-            border-radius: 6px;
-            margin-bottom: 25px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        /* 購物車表格 */
-        .cart-table-wrapper {
-            overflow-x: auto;
-            margin-bottom: 25px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        th, td {
-            padding: 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .cart-total-box {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: var(--bg-card);
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 35px;
-        }
-
-        .total-amount {
-            font-family: var(--font-heading);
-            font-size: 2rem;
-            color: var(--accent-gold);
-            font-weight: 700;
-        }
-
-        /* 結帳資訊表單 */
-        .checkout-section {
-            border-top: 1px dashed var(--border-color);
-            padding-top: 30px;
-        }
-
-        .checkout-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .btn-zalo {
-            background-color: #0068FF;
-            color: #fff;
-        }
-
-        .btn-zalo:hover {
-            background-color: #0052cc;
-        }
-
-        @media (max-width: 768px) {
-            .checkout-grid {
-                grid-template-columns: 1fr;
-            }
-            .nav-wrapper {
-                flex-direction: column;
-                gap: 15px;
-            }
-        }
+        /* PDF Hidden Sheet (for Export Render) */
+        #pdfExportTemplate { display: none; }
     </style>
 </head>
 <body>
 
-    <!-- 頁首導覽 -->
     <header>
         <div class="container nav-wrapper">
             <a href="#" class="logo">viebucks</a>
-            <nav>
-                <ul>
-                    <li><a href="#collections">Collections</a></li>
-                    <li><a href="#atelier">Atelier Calc</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
+            <div style="font-size: 0.85rem; color: var(--accent-gold);">Haute Coffee Atelier</div>
         </div>
     </header>
 
     <main class="container">
         
-        <!-- 咖啡豆產品履歷展示 -->
-        <section id="collections">
+        <!-- 1. 客製化調配區域 (Bespoke Custom Blend) -->
+        <section id="custom-blend">
             <div class="section-header">
-                <div class="section-subtitle">Bean Heritage & Flavor Profiles</div>
-                <h2 class="section-title">頂級精品咖啡豆履歷</h2>
+                <div class="section-subtitle">Bespoke Customization</div>
+                <h2 class="section-title">調酒師級——專屬配方自由調配算器</h2>
             </div>
 
-            <div class="products-grid">
-                <!-- Arabica -->
-                <div class="product-card">
-                    <div>
-                        <h3 class="product-name">Arabica</h3>
-                        <div class="product-origin">越南 大叻 (Da Lat) | 水洗 Washed</div>
-                        <p style="font-size: 0.9rem; color: var(--text-muted);">
-                            展現獨特的花香與黃檸檬果酸，伴隨黑糖甜感，口感清爽且尾韻回甘持久。
-                        </p>
+            <div class="atelier-card">
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">
+                    拖動滑竿調配您偏好的豆種比例，系統將依據原料比例即時算計客製化報價：
+                </p>
+
+                <div class="blend-slider-group">
+                    <div class="blend-slider-header">
+                        <span>Arabica (越南大叻水洗 - 花果香/高酸度)</span>
+                        <span id="arabicaRatioVal">60%</span>
                     </div>
-                    <div class="price-tag">
-                        零售價: <span class="price-highlight">180.000 ₫</span> / 包<br>
-                        批發價 (≥10包): <span class="price-highlight">140.000 ₫</span> / 包
-                    </div>
+                    <input type="range" id="arabicaRatio" min="0" max="100" value="60" oninput="adjustBlend('arabica')">
                 </div>
 
-                <!-- Robusta -->
-                <div class="product-card">
-                    <div>
-                        <h3 class="product-name">Robusta</h3>
-                        <div class="product-origin">越南 西原 (Central Highlands) | 日曬 Natural</div>
-                        <p style="font-size: 0.9rem; color: var(--text-muted);">
-                            濃郁厚實的黑巧克力與烤核果香氣，苦甜平衡極佳，油脂豐厚且具備強烈穿透力。
-                        </p>
+                <div class="blend-slider-group">
+                    <div class="blend-slider-header">
+                        <span>Robusta (越南西原日曬 - 濃郁/醇厚油脂)</span>
+                        <span id="robustaRatioVal">40%</span>
                     </div>
-                    <div class="price-tag">
-                        零售價: <span class="price-highlight">150.000 ₫</span> / 包<br>
-                        批發價 (≥10包): <span class="price-highlight">110.000 ₫</span> / 包
-                    </div>
+                    <input type="range" id="robustaRatio" min="0" max="100" value="40" oninput="adjustBlend('robusta')">
                 </div>
 
-                <!-- Brazil Cerrado -->
-                <div class="product-card">
-                    <div>
-                        <h3 class="product-name">Brazil Cerrado</h3>
-                        <div class="product-origin">巴西 喜拉朵 (Cerrado) | 半水洗 Pulped Natural</div>
-                        <p style="font-size: 0.9rem; color: var(--text-muted);">
-                            散發濃郁的烤堅果、焦糖奶油與可可香氣，口感溫潤滑順，酸度低且餘韻香甜。
-                        </p>
+                <div class="grid-3" style="margin-top: 25px;">
+                    <div class="form-group">
+                        <label>研磨度 / Grind Size</label>
+                        <select id="blendGrind">
+                            <option value="全豆 (Whole Bean)">全豆 (Whole Bean)</option>
+                            <option value="手沖 (Pour Over)">手沖 (Pour Over)</option>
+                            <option value="義式濃縮 (Espresso)">義式濃縮 (Espresso)</option>
+                        </select>
                     </div>
-                    <div class="price-tag">
-                        零售價: <span class="price-highlight">200.000 ₫</span> / 包<br>
-                        批發價 (≥10包): <span class="price-highlight">160.000 ₫</span> / 包
+                    <div class="form-group">
+                        <label>採購數量 (包)</label>
+                        <input type="number" id="blendQty" value="5" min="1">
+                    </div>
+                    <div class="form-group" style="justify-content: flex-end;">
+                        <button class="btn" onclick="addCustomBlendToCart()">加入採購車</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 智能試算與購物車 -->
-        <section id="atelier">
+        <!-- 2. 智能試算與購物車 -->
+        <section id="cart-section">
             <div class="section-header">
-                <div class="section-subtitle">Bespoke Calculator Atelier</div>
-                <h2 class="section-title">採購金額智能試算與動態訂購車</h2>
+                <div class="section-subtitle">Purchasing Calculator</div>
+                <h2 class="section-title">單品試算與購物車</h2>
             </div>
 
-            <div class="atelier-wrapper">
-                <!-- 選擇器表單 -->
-                <div class="calculator-form">
-                    <div class="form-group" style="grid-column: span 2;">
-                        <label for="productSelect">選擇咖啡豆品項 / Item</label>
-                        <select id="productSelect">
-                            <option value="arabica">Arabica (越南大叻精品系列)</option>
-                            <option value="robusta">Robusta (越南西原經典系列)</option>
-                            <option value="brazil">Brazil Cerrado (巴西喜拉朵特選)</option>
+            <div class="atelier-card">
+                <!-- 免運進度條 -->
+                <div class="shipping-progress-container">
+                    <div class="shipping-text">
+                        <span id="shippingProgressStatus">載入免運資訊...</span>
+                        <span id="shippingProgressDiff" style="color: var(--accent-gold); font-weight: 600;"></span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progressBarFill"></div>
+                    </div>
+                </div>
+
+                <!-- 單品選擇 -->
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label>選擇單品豆 / Item</label>
+                        <select id="singleProductSelect">
+                            <option value="arabica">Arabica - 越南大叻精品系列</option>
+                            <option value="robusta">Robusta - 越南西原經典系列</option>
+                            <option value="brazil">Brazil Cerrado - 巴西喜拉朵特選</option>
                         </select>
                     </div>
-
                     <div class="form-group">
-                        <label for="grindSelect">研磨度 / Grind Size</label>
-                        <select id="grindSelect">
+                        <label>研磨規格</label>
+                        <select id="singleGrindSelect">
                             <option value="全豆 (Whole Bean)">全豆 (Whole Bean)</option>
                             <option value="手沖 (Pour Over)">手沖 (Pour Over)</option>
                             <option value="義式濃縮 (Espresso)">義式濃縮 (Espresso)</option>
-                            <option value="摩卡壺 (Moka Pot)">摩卡壺 (Moka Pot)</option>
                         </select>
                     </div>
-
                     <div class="form-group">
-                        <label for="itemQty">數量 / Qty (包)</label>
-                        <input type="number" id="itemQty" value="1" min="1" max="500">
+                        <label>數量 / Qty (滿10包自動套用批發價)</label>
+                        <input type="number" id="singleQty" value="10" min="1">
                     </div>
-
-                    <button class="btn" id="addToCartBtn">加入採購清單</button>
                 </div>
+                <button class="btn" style="margin-bottom: 25px;" onclick="addSingleProductToCart()">新增單品品項</button>
 
-                <!-- 折扣進度動態 Banner -->
-                <div class="discount-banner" id="discountBanner">
-                    <span>💡 💡 提示：單一品項購買滿 <b>10 包</b> 即自動觸發批發優惠價！</span>
-                </div>
-
-                <!-- 購物車列表 -->
+                <!-- 購物車清單表格 -->
                 <div class="cart-table-wrapper">
                     <table>
                         <thead>
                             <tr>
-                                <th>品項 / Item</th>
-                                <th>研磨規格</th>
+                                <th>品項名稱</th>
+                                <th>規格/研磨</th>
                                 <th>數量</th>
-                                <th>適用單價</th>
-                                <th>小計 / Subtotal</th>
+                                <th>單價</th>
+                                <th>小計</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
-                        <tbody id="cartTableBody">
-                            <!-- 由 JavaScript 動態繪製內容 -->
-                        </tbody>
+                        <tbody id="cartTableBody"></tbody>
                     </table>
                 </div>
 
-                <!-- 總計區塊 -->
-                <div class="cart-total-box">
-                    <div>
-                        <div style="font-size: 0.85rem; color: var(--text-muted);">Estimated Grand Total</div>
-                        <div style="font-size: 0.9rem;">多筆品項總計金額 (含稅)</div>
+                <!-- 費用總結 -->
+                <div class="pricing-summary">
+                    <div class="summary-row">
+                        <span>商品小計 (Subtotal):</span>
+                        <span id="subtotalVal">0 ₫</span>
                     </div>
-                    <div class="total-amount" id="grandTotal">0 ₫</div>
+                    <div class="summary-row">
+                        <span>配送區域與預估運費:</span>
+                        <select id="shippingRegionSelect" onchange="renderCart()" style="padding: 4px 8px; font-size:0.85rem;">
+                            <option value="local">平陽省 / 胡志明市 (滿 500,000 ₫ 免運)</option>
+                            <option value="national">越南其他省份 (固定 45,000 ₫)</option>
+                        </select>
+                    </div>
+                    <div class="summary-row">
+                        <span>預估運費 (Shipping Fee):</span>
+                        <span id="shippingFeeVal">0 ₫</span>
+                    </div>
+                    <div class="summary-row grand-total">
+                        <span>總計應付 (Grand Total):</span>
+                        <span id="grandTotalVal">0 ₫</span>
+                    </div>
                 </div>
 
-                <!-- 配送資訊與送出訂單 -->
-                <div class="checkout-section" id="contact">
-                    <h3 style="margin-bottom: 20px; font-family: var(--font-heading); font-size: 1.5rem;">填寫訂購人與配送資訊 / Shipping Information</h3>
-                    
-                    <form id="orderForm">
-                        <div class="checkout-grid">
-                            <div class="form-group">
-                                <label for="custName">訂購人姓名 / Full Name *</label>
-                                <input type="text" id="custName" required placeholder="例如：Chang Yu Wei">
-                            </div>
-                            <div class="form-group">
-                                <label for="custPhone">聯絡電話 / Phone Number *</label>
-                                <input type="tel" id="custPhone" required placeholder="例如：0348246669">
-                            </div>
+                <!-- 配送與聯絡資訊表單 -->
+                <div style="border-top: 1px dashed var(--border-color); padding-top: 25px;">
+                    <h3 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 15px;">訂購與報價資訊</h3>
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label>公司/寶號/訂購人 *</label>
+                            <input type="text" id="custName" placeholder="例如：VIE Coffee Shop">
                         </div>
-                        <div class="form-group" style="margin-bottom: 20px;">
-                            <label for="custAddress">配送地址 / Delivery Address *</label>
-                            <input type="text" id="custAddress" required placeholder="例如：365 QL13, Thủ Dầu Một, Hồ Chí Minh">
+                        <div class="form-group">
+                            <label>聯絡電話 *</label>
+                            <input type="tel" id="custPhone" placeholder="0348246669">
                         </div>
+                        <div class="form-group">
+                            <label>配送地址 *</label>
+                            <input type="text" id="custAddress" placeholder="365 QL13, Thủ Dầu Một">
+                        </div>
+                    </div>
 
-                        <div class="action-buttons">
-                            <button type="submit" class="btn" id="submitOrderBtn">送出 Email 訂單</button>
-                            <button type="button" class="btn btn-zalo" id="sendZaloBtn">透過 Zalo 快速下單</button>
-                        </div>
-                    </form>
+                    <div style="display: flex; gap: 15px; margin-top: 25px; flex-wrap: wrap;">
+                        <button class="btn btn-outline" onclick="exportQuotePDF()">📄 匯出 PDF 正式報價單</button>
+                        <button class="btn btn-zalo" onclick="sendToZalo()">💬 透過 Zalo 傳送採購單</button>
+                    </div>
                 </div>
             </div>
         </section>
+
     </main>
 
-    <!-- JavaScript 邏輯引擎 -->
+    <!-- PDF 渲染隱藏模板 (使用 inline style 確保 html2pdf 渲染樣式穩定) -->
+    <div id="pdfExportTemplate">
+        <div style="padding: 40px; font-family: 'Helvetica', sans-serif; color: #111;">
+            <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #D4AF37; padding-bottom: 15px; margin-bottom: 20px;">
+                <div>
+                    <h1 style="color: #D4AF37; margin: 0; font-size: 28px;">VIEBUCKS COFFEE</h1>
+                    <p style="font-size: 12px; color: #666; margin: 3px 0 0 0;">Công ty TNHH VIEBUCKS</p>
+                    <p style="font-size: 11px; color: #666;">365 QL13, Thủ Dầu Một, Hồ Chí Minh | Tel: 0348246669</p>
+                </div>
+                <div style="text-align: right;">
+                    <h2 style="margin: 0; font-size: 20px; color: #333;">採購報價單 (QUOTATION)</h2>
+                    <p style="font-size: 11px; color: #666; margin-top: 5px;" id="pdfQuoteDate">日期：2026-08-10</p>
+                    <p style="font-size: 11px; color: #666;" id="pdfQuoteNo">單號：VB-20260810-01</p>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 20px; background: #f9f9f9; padding: 12px; border-radius: 4px; font-size: 12px;">
+                <p><strong>客戶名稱：</strong> <span id="pdfCustName">--</span></p>
+                <p><strong>聯絡電話：</strong> <span id="pdfCustPhone">--</span></p>
+                <p><strong>送貨地址：</strong> <span id="pdfCustAddress">--</span></p>
+            </div>
+
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px;">
+                <thead>
+                    <tr style="background: #1A1E29; color: #fff;">
+                        <th style="padding: 8px; border: 1px solid #333; text-align: left;">品項 / Item</th>
+                        <th style="padding: 8px; border: 1px solid #333; text-align: center;">規格</th>
+                        <th style="padding: 8px; border: 1px solid #333; text-align: center;">數量</th>
+                        <th style="padding: 8px; border: 1px solid #333; text-align: right;">單價</th>
+                        <th style="padding: 8px; border: 1px solid #333; text-align: right;">小計</th>
+                    </tr>
+                </thead>
+                <tbody id="pdfTableBody"></tbody>
+            </table>
+
+            <div style="text-align: right; font-size: 13px; line-height: 1.8;">
+                <p>商品小計：<span id="pdfSubtotal">0 ₫</span></p>
+                <p>預估運費：<span id="pdfShipping">0 ₫</span></p>
+                <p style="font-size: 16px; font-weight: bold; color: #B8860B;">總計金額：<span id="pdfGrandTotal">0 ₫</span></p>
+            </div>
+
+            <div style="margin-top: 40px; border-top: 1px solid #eee; padding-top: 15px; font-size: 10px; color: #888; display: flex; justify-content: space-between;">
+                <div>
+                    <p>* 本報價單有效期為 14 天。</p>
+                    <p>* 感謝您選擇 VIEBUCKS Haute Coffee，期待為您服務。</p>
+                </div>
+                <div style="text-align: center; margin-right: 30px;">
+                    <p>VIEBUCKS 蓋章/簽署</p>
+                    <div style="height: 50px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4 大核心 JavaScript 模組劃分 -->
     <script>
-        // === 1. 產品資料庫 (價格與資訊) ===
+        // =========================================================================
+        // 模組一：產品資料庫與全域狀態 (Product DB & State)
+        // =========================================================================
         const PRODUCT_DB = {
-            arabica: {
-                name: 'Arabica (大叻水洗)',
-                retailPrice: 180000,
-                wholesalePrice: 140000
-            },
-            robusta: {
-                name: 'Robusta (西原日曬)',
-                retailPrice: 150000,
-                wholesalePrice: 110000
-            },
-            brazil: {
-                name: 'Brazil Cerrado (喜拉朵)',
-                retailPrice: 200000,
-                wholesalePrice: 160000
-            }
+            arabica: { name: 'Arabica (越南大叻水洗)', retailPrice: 180000, wholesalePrice: 140000 },
+            robusta: { name: 'Robusta (越南西原日曬)', retailPrice: 150000, wholesalePrice: 110000 },
+            brazil:  { name: 'Brazil Cerrado (巴西喜拉朵)', retailPrice: 200000, wholesalePrice: 160000 }
         };
 
-        // 狀態管理：購物車陣列
+        const FREE_SHIPPING_THRESHOLD = 500000; // 平陽/胡志明市 滿 50 萬免運
         let cart = [];
 
-        // === 2. 工具函式：格式化越南盾金額 (VND) ===
-        const formatVND = (amount) => {
-            return new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND'
-            }).format(amount);
-        };
+        // 貨幣格式化 (VND)
+        const formatVND = (num) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(num);
 
-        // === 3. 核心功能：讀取與儲存 LocalStorage ===
-        const saveCartToStorage = () => {
-            localStorage.setItem('viebucks_cart', JSON.stringify(cart));
-        };
-
-        const loadCartFromStorage = () => {
-            const savedCart = localStorage.getItem('viebucks_cart');
-            if (savedCart) {
-                try {
-                    cart = JSON.parse(savedCart);
-                } catch (e) {
-                    cart = [];
-                }
+        // LocalStorage 同步
+        const saveCart = () => localStorage.setItem('viebucks_cart_v2', JSON.stringify(cart));
+        const loadCart = () => {
+            const saved = localStorage.getItem('viebucks_cart_v2');
+            if (saved) {
+                try { cart = JSON.parse(saved); } catch (e) { cart = []; }
             }
         };
 
-        // === 4. UI 渲染：繪製購物車與計算金額 ===
-        const renderCart = () => {
+        // =========================================================================
+        // 模組二：客製化配方自由調配引擎 (Custom Blend Atelier Engine)
+        // =========================================================================
+        function adjustBlend(changedSource) {
+            const arabicaSlider = document.getElementById('arabicaRatio');
+            const robustaSlider = document.getElementById('robustaRatio');
+
+            if (changedSource === 'arabica') {
+                robustaSlider.value = 100 - arabicaSlider.value;
+            } else {
+                arabicaSlider.value = 100 - robustaSlider.value;
+            }
+
+            document.getElementById('arabicaRatioVal').innerText = arabicaSlider.value + '%';
+            document.getElementById('robustaRatioVal').innerText = robustaSlider.value + '%';
+        }
+
+        function addCustomBlendToCart() {
+            const arabicaRatio = parseInt(document.getElementById('arabicaRatio').value, 10);
+            const robustaRatio = parseInt(document.getElementById('robustaRatio').value, 10);
+            const grind = document.getElementById('blendGrind').value;
+            const qty = parseInt(document.getElementById('blendQty').value, 10);
+
+            // 計算客製化每包單價 (加權平均加載 10% 客製處理費)
+            const basePrice = (PRODUCT_DB.arabica.retailPrice * (arabicaRatio/100)) +
+                              (PRODUCT_DB.robusta.retailPrice * (robustaRatio/100));
+            const customUnitPrice = Math.round(basePrice * 1.1); 
+
+            const blendName = `Bespoke Blend (${arabicaRatio}% Arabica / ${robustaRatio}% Robusta)`;
+
+            cart.push({
+                isCustom: true,
+                name: blendName,
+                grind: grind,
+                qty: qty,
+                unitPrice: customUnitPrice
+            });
+
+            renderCart();
+        }
+
+        function addSingleProductToCart() {
+            const pId = document.getElementById('singleProductSelect').value;
+            const grind = document.getElementById('singleGrindSelect').value;
+            const qty = parseInt(document.getElementById('singleQty').value, 10);
+
+            if (qty <= 0) return;
+
+            const existingIdx = cart.findIndex(item => !item.isCustom && item.id === pId && item.grind === grind);
+            if (existingIdx > -1) {
+                cart[existingIdx].qty += qty;
+            } else {
+                cart.push({ isCustom: false, id: pId, grind: grind, qty: qty });
+            }
+
+            renderCart();
+        }
+
+        // =========================================================================
+        // 模組三：免運計算與購物車渲染 (Shipping & Cart UI)
+        // =========================================================================
+        function renderCart() {
             const tbody = document.getElementById('cartTableBody');
             tbody.innerHTML = '';
 
+            let subtotal = 0;
+
             if (cart.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted); padding:30px;">採購清單目前是空的</td></tr>`;
-                document.getElementById('grandTotal').innerText = formatVND(0);
-                updateDiscountBanner();
-                return;
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted); padding: 25px;">採購車內尚無品項</td></tr>`;
+            } else {
+                cart.forEach((item, index) => {
+                    let itemName = '', unitPrice = 0;
+
+                    if (item.isCustom) {
+                        itemName = item.name;
+                        unitPrice = item.unitPrice;
+                    } else {
+                        const p = PRODUCT_DB[item.id];
+                        itemName = p.name;
+                        // 滿 10 包觸發單品批發價
+                        unitPrice = item.qty >= 10 ? p.wholesalePrice : p.retailPrice;
+                    }
+
+                    const itemSubtotal = unitPrice * item.qty;
+                    subtotal += itemSubtotal;
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><b>${itemName}</b></td>
+                        <td>${item.grind}</td>
+                        <td>
+                            <input type="number" value="${item.qty}" min="1" style="width:60px; padding:3px;" onchange="updateQty(${index}, this.value)">
+                        </td>
+                        <td>${formatVND(unitPrice)}</td>
+                        <td><b>${formatVND(itemSubtotal)}</b></td>
+                        <td><button style="color:#ef5350; background:none; border:none; cursor:pointer;" onclick="removeItem(${index})">刪除</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
             }
 
-            let grandTotal = 0;
+            // 免運邏輯判斷
+            const region = document.getElementById('shippingRegionSelect').value;
+            let shippingFee = 0;
 
-            cart.forEach((item, index) => {
-                const product = PRODUCT_DB[item.id];
-                // 階梯計價判斷：單品滿 10 包自動採用批發價
-                const isWholesale = item.qty >= 10;
-                const unitPrice = isWholesale ? product.wholesalePrice : product.retailPrice;
-                const subtotal = unitPrice * item.qty;
-                
-                grandTotal += subtotal;
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><b>${product.name}</b></td>
-                    <td>${item.grind}</td>
-                    <td>
-                        <input type="number" value="${item.qty}" min="1" max="500" 
-                               style="width: 70px; padding: 5px;" 
-                               onchange="updateItemQty(${index}, this.value)">
-                    </td>
-                    <td>
-                        ${formatVND(unitPrice)} 
-                        ${isWholesale ? '<span style="color: var(--accent-gold); font-size: 0.75rem;">(批發價)</span>' : ''}
-                    </td>
-                    <td><b>${formatVND(subtotal)}</b></td>
-                    <td>
-                        <button class="btn btn-danger" onclick="removeItem(${index})">刪除</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            document.getElementById('grandTotal').innerText = formatVND(grandTotal);
-            saveCartToStorage();
-            updateDiscountBanner();
-        };
-
-        // === 5. 批發折扣動態提示提示機制 ===
-        const updateDiscountBanner = () => {
-            const banner = document.getElementById('discountBanner');
-            if (cart.length === 0) {
-                banner.innerHTML = `<span>💡 提示：單一品項購買滿 <b>10 包</b> 即自動套用批發優惠價！</span>`;
-                return;
-            }
-
-            let nearDiscountMessages = [];
-            cart.forEach(item => {
-                if (item.qty < 10) {
-                    const diff = 10 - item.qty;
-                    const pName = PRODUCT_DB[item.id].name;
-                    nearDiscountMessages.push(`<b>${pName}</b> 還差 ${diff} 包即可享有批發價！`);
+            if (region === 'local') {
+                if (subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0) {
+                    shippingFee = 0;
+                } else {
+                    shippingFee = 30000; // 平陽/胡志明未達門市運費 3 萬 VND
                 }
-            });
-
-            if (nearDiscountMessages.length > 0) {
-                banner.innerHTML = `<span>🔥 折扣提示：${nearDiscountMessages.join(' | ')}</span>`;
             } else {
-                banner.innerHTML = `<span style="color: #4caf50;">🎉 太棒了！您目前的品項皆已解鎖批發優惠價！</span>`;
+                shippingFee = subtotal > 0 ? 45000 : 0; // 外省固定 4.5 萬 VND
             }
-        };
 
-        // === 6. 購物車互動操作邏輯 ===
-        const addToCart = () => {
-            const productId = document.getElementById('productSelect').value;
-            const grind = document.getElementById('grindSelect').value;
-            const qty = parseInt(document.getElementById('itemQty').value, 10);
+            const grandTotal = subtotal + shippingFee;
 
-            if (isNaN(qty) || qty <= 0) {
-                alert('請輸入有效的數量');
+            // UI 數字更新
+            document.getElementById('subtotalVal').innerText = formatVND(subtotal);
+            document.getElementById('shippingFeeVal').innerText = formatVND(shippingFee);
+            document.getElementById('grandTotalVal').innerText = formatVND(grandTotal);
+
+            // 更新免運進度條 UI
+            updateShippingProgressBar(subtotal, region);
+
+            saveCart();
+        }
+
+        function updateShippingProgressBar(subtotal, region) {
+            const statusText = document.getElementById('shippingProgressStatus');
+            const diffText = document.getElementById('shippingProgressDiff');
+            const fill = document.getElementById('progressBarFill');
+
+            if (region === 'national') {
+                statusText.innerText = '跨省配送採用標準快遞';
+                diffText.innerText = '固定運費 45,000 ₫';
+                fill.style.width = '100%';
                 return;
             }
 
-            // 檢查是否已有相同品項與研磨度的項目
-            const existingIndex = cart.findIndex(item => item.id === productId && item.grind === grind);
-            if (existingIndex > -1) {
-                cart[existingIndex].qty += qty;
+            if (subtotal >= FREE_SHIPPING_THRESHOLD) {
+                statusText.innerText = '🎉 已達成平陽 / 胡志明市免費配送門檻！';
+                diffText.innerText = '免運費';
+                fill.style.width = '100%';
             } else {
-                cart.push({ id: productId, grind, qty });
+                const diff = FREE_SHIPPING_THRESHOLD - subtotal;
+                const pct = Math.min(100, Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 100));
+                statusText.innerText = '平陽 / 胡志明市滿 500,000 ₫ 免運費';
+                diffText.innerText = `還差 ${formatVND(diff)} 免運`;
+                fill.style.width = pct + '%';
+            }
+        }
+
+        function updateQty(idx, val) {
+            const p = parseInt(val, 10);
+            if (p > 0) { cart[idx].qty = p; renderCart(); }
+        }
+
+        function removeItem(idx) {
+            cart.splice(idx, 1);
+            renderCart();
+        }
+
+        // =========================================================================
+        // 模組四：PDF 報價單匯出與 Zalo 智慧轉換 (Export PDF & Zalo)
+        // =========================================================================
+        function exportQuotePDF() {
+            const name = document.getElementById('custName').value.trim() || '貴客 / Valued Client';
+            const phone = document.getElementById('custPhone').value.trim() || '未提供';
+            const address = document.getElementById('custAddress').value.trim() || '自取 / 未填寫';
+
+            if (cart.length === 0) {
+                alert('請先加入商品至採購車，方可匯出報價單。');
+                return;
             }
 
-            renderCart();
-        };
+            // 填充 PDF 模板
+            document.getElementById('pdfCustName').innerText = name;
+            document.getElementById('pdfCustPhone').innerText = phone;
+            document.getElementById('pdfCustAddress').innerText = address;
 
-        window.updateItemQty = (index, newQty) => {
-            const parsed = parseInt(newQty, 10);
-            if (parsed > 0) {
-                cart[index].qty = parsed;
-                renderCart();
-            }
-        };
+            const now = new Date();
+            document.getElementById('pdfQuoteDate').innerText = `日期：${now.toISOString().split('T')[0]}`;
+            document.getElementById('pdfQuoteNo').innerText = `單號：VB-${now.getTime().toString().slice(-6)}`;
 
-        window.removeItem = (index) => {
-            cart.splice(index, 1);
-            renderCart();
-        };
+            const pdfTbody = document.getElementById('pdfTableBody');
+            pdfTbody.innerHTML = '';
+            let subtotal = 0;
 
-        // === 7. 結帳與下單 (Email / Zalo) ===
-        const generateOrderSummaryText = () => {
+            cart.forEach(item => {
+                let itemName = '', unitPrice = 0;
+                if (item.isCustom) {
+                    itemName = item.name; unitPrice = item.unitPrice;
+                } else {
+                    const p = PRODUCT_DB[item.id];
+                    itemName = p.name;
+                    unitPrice = item.qty >= 10 ? p.wholesalePrice : p.retailPrice;
+                }
+                const sub = unitPrice * item.qty;
+                subtotal += sub;
+
+                pdfTbody.innerHTML += `
+                    <tr>
+                        <td style="padding:6px; border:1px solid #ddd;">${itemName}</td>
+                        <td style="padding:6px; border:1px solid #ddd; text-align:center;">${item.grind}</td>
+                        <td style="padding:6px; border:1px solid #ddd; text-align:center;">${item.qty}</td>
+                        <td style="padding:6px; border:1px solid #ddd; text-align:right;">${formatVND(unitPrice)}</td>
+                        <td style="padding:6px; border:1px solid #ddd; text-align:right;">${formatVND(sub)}</td>
+                    </tr>
+                `;
+            });
+
+            const region = document.getElementById('shippingRegionSelect').value;
+            let shippingFee = (region === 'local' && subtotal >= FREE_SHIPPING_THRESHOLD) ? 0 : (region === 'local' ? 30000 : 45000);
+
+            document.getElementById('pdfSubtotal').innerText = formatVND(subtotal);
+            document.getElementById('pdfShipping').innerText = formatVND(shippingFee);
+            document.getElementById('pdfGrandTotal').innerText = formatVND(subtotal + shippingFee);
+
+            // 執行 PDF 下載
+            const element = document.getElementById('pdfExportTemplate');
+            element.style.display = 'block';
+
+            const opt = {
+                margin:       10,
+                filename:     `VIEBUCKS_Quotation_${now.toISOString().split('T')[0]}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                element.style.display = 'none';
+            });
+        }
+
+        function sendToZalo() {
             const name = document.getElementById('custName').value.trim();
             const phone = document.getElementById('custPhone').value.trim();
-            const address = document.getElementById('custAddress').value.trim();
-
-            if (!name || !phone || !address) {
-                alert('請先完整的填寫訂購人姓名、電話與地址！');
-                return null;
+            if (!name || !phone) {
+                alert('請先填寫訂購人姓名與聯絡電話');
+                return;
             }
 
-            if (cart.length === 0) {
-                alert('您的採購清單是空的，請先新增品項。');
-                return null;
-            }
-
-            let summary = `【VIEBUCKS 採購訂單】\n`;
-            summary += `訂購人：${name}\n電話：${phone}\n地址：${address}\n`;
-            summary += `--------------------------\n`;
-            
-            let total = 0;
+            let msg = `【VIEBUCKS 採購訂單】\n客戶：${name}\n電話：${phone}\n--------------\n`;
             cart.forEach(item => {
-                const p = PRODUCT_DB[item.id];
-                const unitPrice = item.qty >= 10 ? p.wholesalePrice : p.retailPrice;
-                const sub = unitPrice * item.qty;
-                total += sub;
-                summary += `- ${p.name} (${item.grind}) x ${item.qty}包 = ${formatVND(sub)}\n`;
+                const name = item.isCustom ? item.name : PRODUCT_DB[item.id].name;
+                msg += `- ${name} (${item.grind}) x${item.qty}\n`;
             });
-            
-            summary += `--------------------------\n`;
-            summary += `預估總金額：${formatVND(total)}`;
-            return summary;
-        };
+            msg += `--------------\n總計：${document.getElementById('grandTotalVal').innerText}`;
 
-        // 表單提交事件 (模擬異步發送)
-        document.getElementById('orderForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const summary = generateOrderSummaryText();
-            if (!summary) return;
-
-            const btn = document.getElementById('submitOrderBtn');
-            btn.disabled = true;
-            btn.innerText = '處理中...';
-
-            setTimeout(() => {
-                alert('感謝您的訂購！訂單已成功送出，專員將盡快為您安排出貨。');
-                cart = [];
-                renderCart();
-                document.getElementById('orderForm').reset();
-                btn.disabled = false;
-                btn.innerText = '送出 EMAIL 訂單';
-            }, 1200);
-        });
-
-        // Zalo 快速下單按鈕 (點擊複製並開啓聊天)
-        document.getElementById('sendZaloBtn').addEventListener('click', () => {
-            const summary = generateOrderSummaryText();
-            if (!summary) return;
-
-            navigator.clipboard.writeText(summary).then(() => {
-                alert('訂單明細已自動複製到剪貼簿！即將為您開啟 Zalo 客服聊天視窗，請直接貼上訊息即可。');
-                // VIEBUCKS 官方電話 0839681380
-                window.open('https://zalo.me/0839681380', '_blank');
+            navigator.clipboard.writeText(msg).then(() => {
+                alert('訂單摘要已複製到剪貼簿！即將為您打開 Zalo 客服聊天視窗。');
+                window.open('https://zalo.me/0348246669', '_blank');
             });
-        });
+        }
 
-        // === 8. 初始化頁面 ===
-        document.getElementById('addToCartBtn').addEventListener('click', addToCart);
-        loadCartFromStorage();
+        // 初始化
+        loadCart();
         renderCart();
     </script>
 </body>
