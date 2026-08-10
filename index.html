@@ -217,6 +217,25 @@
             box-shadow: 0 15px 40px rgba(197, 160, 89, 0.35);
         }
 
+        .btn-outline {
+            display: inline-block;
+            padding: 14px 35px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 8pt;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: transparent;
+            color: var(--gold-light);
+            border: 1px solid var(--gold-primary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-outline:hover {
+            background: rgba(197, 160, 89, 0.1);
+        }
+
         /* Container & Section Layout */
         .section-container {
             max-width: 1300px;
@@ -269,7 +288,7 @@
             margin-bottom: 30px;
         }
 
-        /* Collections / Bean Details Grid */
+        /* Collections Grid */
         .collections-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -411,7 +430,7 @@
             font-weight: 600;
         }
 
-        /* Calculator Atelier Section */
+        /* Calculator & Cart Atelier Section */
         .calculator-atelier {
             background: var(--bg-surface);
             border: 1px solid var(--border-gold);
@@ -425,7 +444,7 @@
             display: grid;
             grid-template-columns: 1.2fr 0.8fr;
             gap: 40px;
-            margin-bottom: 50px;
+            margin-bottom: 30px;
         }
 
         .input-group {
@@ -459,6 +478,64 @@
             box-shadow: 0 0 15px rgba(197, 160, 89, 0.15);
         }
 
+        .atelier-actions {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 40px;
+            justify-content: center;
+        }
+
+        /* Cart Items Table */
+        .cart-container {
+            margin-bottom: 40px;
+            border-top: 1px solid rgba(197, 160, 89, 0.15);
+            padding-top: 30px;
+        }
+
+        .cart-title {
+            font-family: 'Cinzel', serif;
+            font-size: 13pt;
+            color: var(--gold-light);
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 8.5pt;
+        }
+
+        .cart-table th {
+            text-align: left;
+            color: var(--gold-primary);
+            border-bottom: 1px solid var(--border-gold);
+            padding: 12px 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .cart-table td {
+            padding: 14px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            color: var(--text-main);
+        }
+
+        .remove-btn {
+            background: transparent;
+            border: none;
+            color: #E74C3C;
+            cursor: pointer;
+            font-size: 11pt;
+            transition: var(--transition);
+        }
+
+        .remove-btn:hover {
+            color: #C0392B;
+        }
+
+        /* Atelier Result / Grand Total Display */
         .atelier-result {
             background: rgba(197, 160, 89, 0.03);
             border: 1px dashed var(--border-gold);
@@ -643,7 +720,7 @@
         </div>
 
         <div class="collections-grid">
-            <!-- Arabica Card (Updated to Vietnam Origin) -->
+            <!-- Arabica Card (Vietnam Origin) -->
             <div class="collection-card">
                 <div>
                     <div class="collection-header">
@@ -657,7 +734,7 @@
                         <li class="bean-spec-item"><span data-i18n="lbl_process">處理方式 / Process</span><span>水洗 / Washed</span></li>
                     </ul>
                     <div class="bean-flavor-desc" data-i18n="arabica_flavor">
-                        “展現獨特的花香與黃 檸檬果酸，伴隨黑糖甜感，口感清爽且尾韻回甘持久。”
+                        “展現獨特的花香與黃檸檬果酸，伴隨黑糖甜感，口感清爽且尾韻回甘持久。”
                     </div>
                 </div>
                 <div class="radar-chart-container">
@@ -677,12 +754,12 @@
                 <div>
                     <div class="collection-header">
                         <h3 class="collection-name">Robusta</h3>
-                        <div class="collection-name-vn" data-i18n="robusta_desc">越南羅布斯塔精品系列</div>
+                        <div class="collection-name-vn" data-i18n="robusta_desc">羅布斯塔經典系列</div>
                     </div>
                     <ul class="bean-specs">
                         <li class="bean-spec-item"><span data-i18n="lbl_origin">產地 / Origin</span><span>越南西原 / Central Highlands, VN</span></li>
                         <li class="bean-spec-item"><span data-i18n="lbl_altitude">海拔 / Altitude</span><span>500 - 800m</span></li>
-                        <li class="bean-spec-item"><span data-i18n="lbl_mill">處理廠 / Mill</span><span>Da Lat Highland Mill</span></li>
+                        <li class="bean-spec-item"><span data-i18n="lbl_mill">處理廠 / Mill</span><span>Viebucks Highland Mill</span></li>
                         <li class="bean-spec-item"><span data-i18n="lbl_process">處理方式 / Process</span><span>天然日曬 / Natural</span></li>
                     </ul>
                     <div class="bean-flavor-desc" data-i18n="robusta_flavor">
@@ -732,53 +809,56 @@
         </div>
     </section>
 
-    <!-- Calculator Atelier Section -->
+    <!-- Calculator Atelier & Shopping Cart Section -->
     <section id="atelier" class="section-container" style="background: radial-gradient(circle at center, #101013 0%, var(--bg-deep) 100%);">
         <div class="section-header">
             <span class="section-subtitle" data-i18n="calc_sub">Bespoke Calculator Atelier</span>
-            <h2 data-i18n="calc_title">採購金額智能試算（達批發門檻自動套用批發價）</h2>
+            <h2 data-i18n="calc_title">採購金額智能試算與多筆訂購車（單品滿10包自動套用批發價）</h2>
         </div>
 
         <div class="calculator-atelier">
             <div class="atelier-grid">
                 <div class="input-group">
                     <label data-i18n="label_product">選擇品項與規格 / Product & Variant</label>
-                    <select id="productSelect" onchange="calculateTotal()">
-                        <optgroup label="Arabica Series (批發門檻：10包/個起)">
-                            <option value="145000" data-wholesale="125000">越南阿拉比卡 咖啡豆 (250g)</option>
-                            <option value="280000" data-wholesale="240000">越南阿拉比卡 咖啡豆 (500g)</option>
-                            <option value="550000" data-wholesale="470000">越南阿拉比卡 咖啡豆 (1000g)</option>
-                            <option value="16000" data-wholesale="13500">越南阿拉比卡 濾掛包 (12g)</option>
-                            <option value="12500" data-wholesale="10500">越南阿拉比卡 冷萃包 (10g)</option>
-                        </optgroup>
-                        <optgroup label="Robusta Series (批發門檻：10包/個起)">
-                            <option value="91000" data-wholesale="78000">羅布斯塔 咖啡豆 (250g)</option>
-                            <option value="172000" data-wholesale="148000">羅布斯塔 咖啡豆 (500g)</option>
-                            <option value="335000" data-wholesale="285000">羅布斯塔 咖啡豆 (1000g)</option>
-                            <option value="13000" data-wholesale="11000">羅布斯塔 濾掛包 (12g)</option>
-                            <option value="7000" data-wholesale="5800">羅布斯塔 冷萃包 (10g)</option>
-                        </optgroup>
-                        <optgroup label="Brazil Cerrado Series (批發門檻：10包/個起)">
-                            <option value="200000" data-wholesale="170000">巴西喜拉朵 咖啡豆 (250g)</option>
-                            <option value="390000" data-wholesale="330000">巴西喜拉朵 咖啡豆 (500g)</option>
-                            <option value="770000" data-wholesale="650000">巴西喜拉朵 咖啡豆 (1000g)</option>
-                            <option value="19000" data-wholesale="16000">巴西喜拉朵 濾掛包 (12g)</option>
-                            <option value="15000" data-wholesale="12500">巴西喜拉朵 冷萃包 (10g)</option>
-                        </optgroup>
+                    <select id="productSelect">
+                        <!-- 動態透過 JS 依據語系填入選單內容 -->
                     </select>
                 </div>
 
                 <div class="input-group">
                     <label data-i18n="label_qty">購買數量 / Quantity (批發門檻：10)</label>
-                    <input type="number" id="qtyInput" value="1" min="1" oninput="calculateTotal()">
+                    <input type="number" id="qtyInput" value="1" min="1">
                 </div>
             </div>
 
-            <div class="atelier-result">
-                <h4 data-i18n="est_total">Estimated Total Amount</h4>
+            <div class="atelier-actions">
+                <button type="button" class="btn-outline" onclick="addToCart()" data-i18n="btn_add_cart">+ 加入採購清單 / Add to Cart</button>
+            </div>
+
+            <!-- 採購清單購物車表格 -->
+            <div class="cart-container" id="cartContainer" style="display: none;">
+                <h3 class="cart-title" data-i18n="cart_title">您的採購清單 / Shopping Cart</h3>
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="th_item">品項 / Item</th>
+                            <th data-i18n="th_qty">數量 / Qty</th>
+                            <th data-i18n="th_price">單價 / Unit Price</th>
+                            <th data-i18n="th_subtotal">小計 / Subtotal</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="cartTableBody">
+                        <!-- 動態插入項目 -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="atelier-result" id="atelierResultArea" style="display: none;">
+                <h4 data-i18n="est_total">Estimated Grand Total</h4>
                 <div class="total-display" id="calcTotal">VND 0</div>
-                <div class="total-note" id="calcNote">標準零售價格試算</div>
-                <button type="button" class="btn-gold" onclick="showCheckoutForm()" data-i18n="btn_confirm">確認選購 / Confirm Order</button>
+                <div class="total-note" id="calcNote" data-i18n="total_note_desc">多筆品項總計金額</div>
+                <button type="button" class="btn-gold" onclick="showCheckoutForm()" data-i18n="btn_confirm">確認選購與填寫資料 / Confirm Order</button>
             </div>
 
             <!-- 填寫訂購資料表單 -->
@@ -803,12 +883,12 @@
                         </div>
                     </div>
                     <div style="text-align: center; margin-top: 30px;">
-                        <button type="submit" class="btn-gold" data-i18n="btn_submit">送出訂單 / Submit Order</button>
+                        <button type="submit" class="btn-gold" data-i18n="btn_submit">送出多筆訂單 / Submit Order</button>
                     </div>
                 </form>
 
                 <div class="success-msg" id="successMsg" data-i18n="success_msg">
-                    感謝您的訂購！訂單已成功送出，系統已同步發送郵件通知至 VIEBUCKS ，專員將盡快為您出貨。
+                    感謝您的訂購！多筆訂單已成功送出，系統已同步發送郵件通知至 VIEBUCKS ，專員將盡快為您出貨。
                 </div>
             </div>
         </div>
@@ -860,21 +940,50 @@
                 r_aroma: "香氣",
                 r_aftertaste: "回甘",
                 calc_sub: "Bespoke Calculator Atelier",
-                calc_title: "採購金額智能試算（達批發門檻自動套用批發價）",
+                calc_title: "採購金額智能試算與多筆訂購車（單品滿10包自動套用批發價）",
                 label_product: "選擇品項與規格 / Product & Variant",
                 label_qty: "購買數量 / Quantity (批發門檻：10)",
-                est_total: "Estimated Total Amount",
-                note_retail: "標準零售價格試算",
-                note_wholesale: "已達 10 包門檻 — 自動套用尊榮批發價格！",
-                btn_confirm: "確認選購 / Confirm Order",
+                btn_add_cart: "+ 加入採購清單 / Add to Cart",
+                cart_title: "您的採購清單 / Shopping Cart",
+                th_item: "品項 / Item",
+                th_qty: "數量 / Qty",
+                th_price: "單價 / Unit Price",
+                th_subtotal: "小計 / Subtotal",
+                est_total: "Estimated Grand Total",
+                note_retail: "（標準零售價）",
+                note_wholesale: "（已達10包門檻 - 享批發價）",
+                total_note_desc: "多筆品項總計金額",
+                btn_confirm: "確認選購與填寫資料 / Confirm Order",
                 form_title: "填寫訂購人與配送資訊 / Shipping Information",
                 label_name: "訂購人姓名 / Full Name *",
                 label_phone: "聯絡電話 / Phone Number *",
                 label_address: "送貨地址 / Delivery Address *",
-                btn_submit: "送出訂單 / Submit Order",
-                success_msg: "感謝您的訂購！訂單已成功送出，系統已同步發送郵件通知至 VIEBUCKS ，專員將盡快為您出貨。",
+                btn_submit: "送出多筆訂單 / Submit Order",
+                success_msg: "感謝您的訂購！多筆訂單已成功送出，系統已同步發送郵件通知至 VIEBUCKS ，專員將盡快為您出貨。",
                 footer_addr: "地址：365 QL13, Thủ Dầu Một, Hồ Chí Minh",
-                footer_tel: "電話：0348246669 / 0839681380"
+                footer_tel: "電話：0348246669 / 0839681380",
+                opt_groups: {
+                    g1: "Arabica 系列 (批發門檻：10包/個起)",
+                    g2: "Robusta 系列 (批發門檻：10包/個起)",
+                    g3: "Brazil Cerrado 系列 (批發門檻：10包/個起)"
+                },
+                products: [
+                    { name: "越南阿拉比卡 咖啡豆 (250g)", price: 145000, wholesale: 125000, group: "g1" },
+                    { name: "越南阿拉比卡 咖啡豆 (500g)", price: 280000, wholesale: 240000, group: "g1" },
+                    { name: "越南阿拉比卡 咖啡豆 (1000g)", price: 550000, wholesale: 470000, group: "g1" },
+                    { name: "越南阿拉比卡 濾掛包 (12g)", price: 16000, wholesale: 13500, group: "g1" },
+                    { name: "越南阿拉比卡 冷萃包 (10g)", price: 12500, wholesale: 10500, group: "g1" },
+                    { name: "羅布斯塔 咖啡豆 (250g)", price: 91000, wholesale: 78000, group: "g2" },
+                    { name: "羅布斯塔 咖啡豆 (500g)", price: 172000, wholesale: 148000, group: "g2" },
+                    { name: "羅布斯塔 咖啡豆 (1000g)", price: 335000, wholesale: 285000, group: "g2" },
+                    { name: "羅布斯塔 濾掛包 (12g)", price: 13000, wholesale: 11000, group: "g2" },
+                    { name: "羅布斯塔 冷萃包 (10g)", price: 7000, wholesale: 5800, group: "g2" },
+                    { name: "巴西喜拉朵 咖啡豆 (250g)", price: 200000, wholesale: 170000, group: "g3" },
+                    { name: "巴西喜拉朵 咖啡豆 (500g)", price: 390000, wholesale: 330000, group: "g3" },
+                    { name: "巴西喜拉朵 咖啡豆 (1000g)", price: 770000, wholesale: 650000, group: "g3" },
+                    { name: "巴西喜拉朵 濾掛包 (12g)", price: 19000, wholesale: 16000, group: "g3" },
+                    { name: "巴西喜拉朵 冷萃包 (10g)", price: 15000, wholesale: 12500, group: "g3" }
+                ]
             },
             vi: {
                 nav_story: "Câu Chuyện",
@@ -907,12 +1016,19 @@
                 r_aroma: "Hương thơm",
                 r_aftertaste: "Hậu vị",
                 calc_sub: "Xưởng Tính Giá Riêng Biệt",
-                calc_title: "Tính Toán Thông Minh (Tự động áp dụng giá sỉ từ 10 sản phẩm)",
+                calc_title: "Tính Toán Thông Minh & Giỏ Hàng (Áp dụng giá sỉ từ 10 sản phẩm)",
                 label_product: "Chọn Sản Phẩm & Quy Cách / Product & Variant",
                 label_qty: "Số Lượng / Quantity (Mức sỉ: 10)",
-                est_total: "Tổng Tiền Ước Tính",
-                note_retail: "Tính theo giá bán lẻ tiêu chuẩn",
-                note_wholesale: "Đã đạt mức sỉ 10 gói — Tự động áp dụng giá sỉ ưu đãi!",
+                btn_add_cart: "+ Thêm vào giỏ hàng / Add to Cart",
+                cart_title: "Giỏ Hàng Của Bạn / Shopping Cart",
+                th_item: "Sản phẩm / Item",
+                th_qty: "Số lượng / Qty",
+                th_price: "Đơn giá / Unit Price",
+                th_subtotal: "Thành tiền / Subtotal",
+                est_total: "Tổng Tiền Giỏ Hàng",
+                note_retail: "（Giá bán lẻ）",
+                note_wholesale: "（Đã đạt mức sỉ 10 gói）",
+                total_note_desc: "Tổng tiền các mặt hàng trong giỏ",
                 btn_confirm: "Xác Nhận Đặt Hàng / Confirm Order",
                 form_title: "Thông Tin Đơn Hàng & Giao Nhận / Shipping Information",
                 label_name: "Họ và tên / Full Name *",
@@ -921,7 +1037,29 @@
                 btn_submit: "Gửi Đơn Hàng / Submit Order",
                 success_msg: "Cảm ơn bạn đã đặt hàng! Đơn hàng đã được gửi thành công đến VIEBUCKS, nhân viên sẽ liên hệ với bạn sớm nhất.",
                 footer_addr: "Địa chỉ: 365 QL13, Thủ Dầu Một, Hồ Chí Minh",
-                footer_tel: "Điện thoại: 0348246669 / 0839681380"
+                footer_tel: "Điện thoại: 0348246669 / 0839681380",
+                opt_groups: {
+                    g1: "Dòng Arabica (Mức sỉ: từ 10 gói)",
+                    g2: "Dòng Robusta (Mức sỉ: từ 10 gói)",
+                    g3: "Dòng Brazil Cerrado (Mức sỉ: từ 10 gói)"
+                },
+                products: [
+                    { name: "Cà phê hạt Arabica Việt Nam (250g)", price: 145000, wholesale: 125000, group: "g1" },
+                    { name: "Cà phê hạt Arabica Việt Nam (500g)", price: 280000, wholesale: 240000, group: "g1" },
+                    { name: "Cà phê hạt Arabica Việt Nam (1000g)", price: 550000, wholesale: 470000, group: "g1" },
+                    { name: "Cà phê túi lọc Arabica Việt Nam (12g)", price: 16000, wholesale: 13500, group: "g1" },
+                    { name: "Cà phê ủ lạnh Arabica Việt Nam (10g)", price: 12500, wholesale: 10500, group: "g1" },
+                    { name: "Cà phê hạt Robusta (250g)", price: 91000, wholesale: 78000, group: "g2" },
+                    { name: "Cà phê hạt Robusta (500g)", price: 172000, wholesale: 148000, group: "g2" },
+                    { name: "Cà phê hạt Robusta (1000g)", price: 335000, wholesale: 285000, group: "g2" },
+                    { name: "Cà phê túi lọc Robusta (12g)", price: 13000, wholesale: 11000, group: "g2" },
+                    { name: "Cà phê ủ lạnh Robusta (10g)", price: 7000, wholesale: 5800, group: "g2" },
+                    { name: "Cà phê hạt Brazil Cerrado (250g)", price: 200000, wholesale: 170000, group: "g3" },
+                    { name: "Cà phê hạt Brazil Cerrado (500g)", price: 390000, wholesale: 330000, group: "g3" },
+                    { name: "Cà phê hạt Brazil Cerrado (1000g)", price: 770000, wholesale: 650000, group: "g3" },
+                    { name: "Cà phê túi lọc Brazil Cerrado (12g)", price: 19000, wholesale: 16000, group: "g3" },
+                    { name: "Cà phê ủ lạnh Brazil Cerrado (10g)", price: 15000, wholesale: 12500, group: "g3" }
+                ]
             },
             en: {
                 nav_story: "Story",
@@ -954,12 +1092,19 @@
                 r_aroma: "Aroma",
                 r_aftertaste: "Aftertaste",
                 calc_sub: "Bespoke Calculator Atelier",
-                calc_title: "Smart Amount Calculator (Wholesale rate auto-applied at threshold)",
+                calc_title: "Smart Amount Calculator & Shopping Cart (Wholesale rate at 10+ packs)",
                 label_product: "Select Product & Variant",
                 label_qty: "Quantity (Wholesale threshold: 10)",
-                est_total: "Estimated Total Amount",
-                note_retail: "Standard retail price calculation",
-                note_wholesale: "Threshold reached (10 packs) — Special wholesale price applied!",
+                btn_add_cart: "+ Add to Cart",
+                cart_title: "Shopping Cart",
+                th_item: "Item",
+                th_qty: "Qty",
+                th_price: "Unit Price",
+                th_subtotal: "Subtotal",
+                est_total: "Estimated Grand Total",
+                note_retail: "（Retail Price）",
+                note_wholesale: "（Wholesale Price Applied）",
+                total_note_desc: "Grand total for all cart items",
                 btn_confirm: "Confirm Order",
                 form_title: "Shipping & Contact Information",
                 label_name: "Full Name *",
@@ -968,11 +1113,34 @@
                 btn_submit: "Submit Order",
                 success_msg: "Thank you for your order! Successfully submitted to VIEBUCKS, our specialist will contact you shortly.",
                 footer_addr: "Address: 365 QL13, Thu Dau Mot, Ho Chi Minh",
-                footer_tel: "Phone: 0348246669 / 0839681380"
+                footer_tel: "Phone: 0348246669 / 0839681380",
+                opt_groups: {
+                    g1: "Arabica Series (Wholesale threshold: 10+)",
+                    g2: "Robusta Series (Wholesale threshold: 10+)",
+                    g3: "Brazil Cerrado Series (Wholesale threshold: 10+)"
+                },
+                products: [
+                    { name: "Vietnam Arabica Coffee Beans (250g)", price: 145000, wholesale: 125000, group: "g1" },
+                    { name: "Vietnam Arabica Coffee Beans (500g)", price: 280000, wholesale: 240000, group: "g1" },
+                    { name: "Vietnam Arabica Coffee Beans (1000g)", price: 550000, wholesale: 470000, group: "g1" },
+                    { name: "Vietnam Arabica Drip Bag (12g)", price: 16000, wholesale: 13500, group: "g1" },
+                    { name: "Vietnam Arabica Cold Brew Bag (10g)", price: 12500, wholesale: 10500, group: "g1" },
+                    { name: "Robusta Coffee Beans (250g)", price: 91000, wholesale: 78000, group: "g2" },
+                    { name: "Robusta Coffee Beans (500g)", price: 172000, wholesale: 148000, group: "g2" },
+                    { name: "Robusta Coffee Beans (1000g)", price: 335000, wholesale: 285000, group: "g2" },
+                    { name: "Robusta Drip Bag (12g)", price: 13000, wholesale: 11000, group: "g2" },
+                    { name: "Robusta Cold Brew Bag (10g)", price: 7000, wholesale: 5800, group: "g2" },
+                    { name: "Brazil Cerrado Coffee Beans (250g)", price: 200000, wholesale: 170000, group: "g3" },
+                    { name: "Brazil Cerrado Coffee Beans (500g)", price: 390000, wholesale: 330000, group: "g3" },
+                    { name: "Brazil Cerrado Coffee Beans (1000g)", price: 770000, wholesale: 650000, group: "g3" },
+                    { name: "Brazil Cerrado Drip Bag (12g)", price: 19000, wholesale: 16000, group: "g3" },
+                    { name: "Brazil Cerrado Cold Brew Bag (10g)", price: 15000, wholesale: 12500, group: "g3" }
+                ]
             }
         };
 
         let currentLang = 'zh';
+        let cart = [];
 
         function setLanguage(lang) {
             currentLang = lang;
@@ -993,7 +1161,37 @@
                 }
             });
 
-            calculateTotal();
+            // 動態更新下拉選單商品項目與規格語系
+            renderProductSelect();
+            renderCart();
+        }
+
+        function renderProductSelect() {
+            const selectEl = document.getElementById('productSelect');
+            const dict = translations[currentLang];
+            selectEl.innerHTML = '';
+
+            const groups = {
+                g1: document.createElement('optgroup'),
+                g2: document.createElement('optgroup'),
+                g3: document.createElement('optgroup')
+            };
+
+            groups.g1.label = dict.opt_groups.g1;
+            groups.g2.label = dict.opt_groups.g2;
+            groups.g3.label = dict.opt_groups.g3;
+
+            dict.products.forEach(p => {
+                const option = document.createElement('option');
+                option.value = p.price;
+                option.setAttribute('data-wholesale', p.wholesale);
+                option.text = p.name;
+                groups[p.group].appendChild(option);
+            });
+
+            selectEl.appendChild(groups.g1);
+            selectEl.appendChild(groups.g2);
+            selectEl.appendChild(groups.g3);
         }
 
         function detectUserLanguage() {
@@ -1007,29 +1205,92 @@
             }
         }
 
-        function calculateTotal() {
+        function addToCart() {
             const selectEl = document.getElementById('productSelect');
             const selectedOption = selectEl.options[selectEl.selectedIndex];
             
             const retailPrice = parseFloat(selectedOption.value);
             const wholesalePrice = parseFloat(selectedOption.getAttribute('data-wholesale'));
-            const qty = parseFloat(document.getElementById('qtyInput').value) || 0;
+            const qty = parseInt(document.getElementById('qtyInput').value) || 1;
+            const productName = selectedOption.text;
 
             const threshold = 10;
             let unitPrice = retailPrice;
-            let noteText = translations[currentLang].note_retail;
+            let pricingNote = translations[currentLang].note_retail;
 
             if (qty >= threshold) {
                 unitPrice = wholesalePrice;
-                noteText = translations[currentLang].note_wholesale;
+                pricingNote = translations[currentLang].note_wholesale;
             }
 
-            const total = Math.round(unitPrice * qty);
-            document.getElementById('calcTotal').innerText = 'VND ' + total.toLocaleString();
-            document.getElementById('calcNote').innerText = noteText;
+            const existingIndex = cart.findIndex(item => item.name === productName);
+            if (existingIndex > -1) {
+                cart[existingIndex].qty += qty;
+                const newQty = cart[existingIndex].qty;
+                if (newQty >= threshold) {
+                    cart[existingIndex].unitPrice = wholesalePrice;
+                    cart[existingIndex].pricingNote = translations[currentLang].note_wholesale;
+                } else {
+                    cart[existingIndex].unitPrice = retailPrice;
+                    cart[existingIndex].pricingNote = translations[currentLang].note_retail;
+                }
+                cart[existingIndex].subtotal = cart[existingIndex].unitPrice * newQty;
+            } else {
+                cart.push({
+                    name: productName,
+                    qty: qty,
+                    unitPrice: unitPrice,
+                    pricingNote: pricingNote,
+                    subtotal: unitPrice * qty,
+                    retailPrice: retailPrice,
+                    wholesalePrice: wholesalePrice
+                });
+            }
+
+            renderCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            renderCart();
+        }
+
+        function renderCart() {
+            const cartContainer = document.getElementById('cartContainer');
+            const resultArea = document.getElementById('atelierResultArea');
+            const tbody = document.getElementById('cartTableBody');
+            
+            tbody.innerHTML = '';
+
+            if (cart.length === 0) {
+                cartContainer.style.display = 'none';
+                resultArea.style.display = 'none';
+                return;
+            }
+
+            cartContainer.style.display = 'block';
+            resultArea.style.display = 'flex';
+
+            let grandTotal = 0;
+
+            cart.forEach((item, index) => {
+                grandTotal += item.subtotal;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${item.name} <br><small style="color:var(--gold-primary);">${item.pricingNote}</small></td>
+                    <td>${item.qty}</td>
+                    <td>VND ${item.unitPrice.toLocaleString()}</td>
+                    <td>VND ${item.subtotal.toLocaleString()}</td>
+                    <td><button type="button" class="remove-btn" onclick="removeFromCart(${index})">&times;</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('calcTotal').innerText = 'VND ' + grandTotal.toLocaleString();
         }
 
         function showCheckoutForm() {
+            if (cart.length === 0) return;
             const container = document.getElementById('checkoutFormContainer');
             container.style.display = 'block';
             container.scrollIntoView({ behavior: 'smooth' });
@@ -1038,22 +1299,20 @@
         async function submitOrder(event) {
             event.preventDefault();
 
-            const selectEl = document.getElementById('productSelect');
-            const productName = selectEl.options[selectEl.selectedIndex].text;
-            const qty = document.getElementById('qtyInput').value;
-            const totalAmount = document.getElementById('calcTotal').innerText;
-            const noteType = document.getElementById('calcNote').innerText;
-            
+            if (cart.length === 0) return;
+
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
             const address = document.getElementById('custAddress').value;
+            const grandTotal = document.getElementById('calcTotal').innerText;
+
+            const itemsSummary = cart.map(i => `${i.name} x ${i.qty} (VND ${i.subtotal.toLocaleString()})`).join(' | ');
 
             const orderData = {
                 recipientEmail: 'rick0960590177@gmail.com',
-                product: productName,
-                quantity: qty,
-                total: totalAmount,
-                pricingType: noteType,
+                items: itemsSummary,
+                cartDetails: cart,
+                total: grandTotal,
                 customerName: name,
                 customerPhone: phone,
                 deliveryAddress: address
@@ -1069,7 +1328,7 @@
                     body: JSON.stringify(orderData)
                 });
 
-                console.log('Order Submitted Successfully:', orderData);
+                console.log('Cart Order Submitted Successfully:', orderData);
                 document.getElementById('orderForm').style.display = 'none';
                 document.getElementById('successMsg').style.display = 'block';
 
@@ -1081,7 +1340,6 @@
 
         window.onload = () => {
             detectUserLanguage();
-            calculateTotal();
         };
     </script>
 </body>
