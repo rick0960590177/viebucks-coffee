@@ -391,7 +391,7 @@
         <div class="nav-right">
             <!-- Language Selector -->
             <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
-                <option value="en" selected>English</option>
+                <option value="en">English</option>
                 <option value="zh">繁體中文</option>
                 <option value="vi">Tiếng Việt</option>
             </select>
@@ -447,9 +447,9 @@
                         <div class="product-options">
                             <label style="font-size: 12px;" data-i18n="grind_label">Grind Size:</label>
                             <select id="grind_p1">
-                                <option value="Whole Bean">Whole Bean</option>
-                                <option value="Pha Phin / Pour Over">Pha Phin / Pour Over</option>
-                                <option value="Espresso">Espresso</option>
+                                <option value="whole_bean" data-i18n="opt_whole_bean">Whole Bean</option>
+                                <option value="phin_pourover" data-i18n="opt_phin_pourover">Pha Phin / Pour Over</option>
+                                <option value="espresso" data-i18n="opt_espresso">Espresso</option>
                             </select>
                             <label style="font-size: 12px;" data-i18n="qty_label">Quantity (10+ for Wholesale):</label>
                             <input type="number" id="qty_p1" value="10" min="1">
@@ -468,9 +468,9 @@
                         <div class="product-options">
                             <label style="font-size: 12px;" data-i18n="grind_label">Grind Size:</label>
                             <select id="grind_p2">
-                                <option value="Whole Bean">Whole Bean</option>
-                                <option value="Pha Phin / Pour Over">Pha Phin / Pour Over</option>
-                                <option value="Espresso">Espresso</option>
+                                <option value="whole_bean" data-i18n="opt_whole_bean">Whole Bean</option>
+                                <option value="phin_pourover" data-i18n="opt_phin_pourover">Pha Phin / Pour Over</option>
+                                <option value="espresso" data-i18n="opt_espresso">Espresso</option>
                             </select>
                             <label style="font-size: 12px;" data-i18n="qty_label">Quantity:</label>
                             <input type="number" id="qty_p2" value="10" min="1">
@@ -489,9 +489,9 @@
                         <div class="product-options">
                             <label style="font-size: 12px;" data-i18n="grind_label">Grind Size:</label>
                             <select id="grind_p3">
-                                <option value="Whole Bean">Whole Bean</option>
-                                <option value="Pha Phin / Pour Over">Pha Phin / Pour Over</option>
-                                <option value="Espresso">Espresso</option>
+                                <option value="whole_bean" data-i18n="opt_whole_bean">Whole Bean</option>
+                                <option value="phin_pourover" data-i18n="opt_phin_pourover">Pha Phin / Pour Over</option>
+                                <option value="espresso" data-i18n="opt_espresso">Espresso</option>
                             </select>
                             <label style="font-size: 12px;" data-i18n="qty_label">Quantity:</label>
                             <input type="number" id="qty_p3" value="10" min="1">
@@ -500,7 +500,7 @@
                     </div>
                 </div>
 
-                <!-- Product 4: Dip Coffee Bags (NEW) -->
+                <!-- Product 4: Dip Coffee Bags -->
                 <div class="product-card">
                     <img src="https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=500&q=80" alt="Dip Coffee Bags">
                     <div class="product-info">
@@ -510,7 +510,7 @@
                         <div class="product-options">
                             <label style="font-size: 12px;" data-i18n="spec_label">Spec:</label>
                             <select id="grind_p4">
-                                <option value="Ready-to-steep Bags">Ready-to-steep Bags</option>
+                                <option value="dip_bags" data-i18n="opt_dip_bags">Ready-to-steep Bags</option>
                             </select>
                             <label style="font-size: 12px;" data-i18n="qty_label">Quantity:</label>
                             <input type="number" id="qty_p4" value="10" min="1">
@@ -582,7 +582,7 @@ const ZALO_PHONE = "0348246669";
 const FREE_SHIPPING_THRESHOLD = 3000000;
 let currentLang = 'en';
 
-// Dictionary for Internationalization
+// 多國語言字典 (UI 與 規格選項)
 const I18N = {
     en: {
         cart: "Cart",
@@ -607,6 +607,10 @@ const I18N = {
         p4_desc: "Convenient immersion coffee bags. Premium ground specialty coffee, just steep in hot water for 3-5 mins.",
         grind_label: "Grind Size:",
         spec_label: "Spec:",
+        opt_whole_bean: "Whole Bean",
+        opt_phin_pourover: "Pha Phin / Pour Over",
+        opt_espresso: "Espresso",
+        opt_dip_bags: "Ready-to-steep Bags",
         qty_label: "Quantity (10+ for Wholesale):",
         add_to_cart: "+ Add to Cart",
         shipping_title: "👤 Shipping & Client Information",
@@ -624,6 +628,8 @@ const I18N = {
         empty_cart: "Your shopping cart is currently empty.",
         wholesale_tag: "Wholesale",
         free_shipping: "0 ₫ (Free)",
+        unit_label: "Unit:",
+        spec_text: "Spec:",
         zalo_alert: "Order details copied to clipboard!\nOpening Zalo, simply paste the message into the chat to place your order."
     },
     zh: {
@@ -649,6 +655,10 @@ const I18N = {
         p4_desc: "便利浸泡式咖啡包。選用精選研磨精品豆，放入熱水浸泡 3-5 分鐘即可享用。",
         grind_label: "研磨規格：",
         spec_label: "規格：",
+        opt_whole_bean: "原豆 (不研磨)",
+        opt_phin_pourover: "越南滴漏 / 手沖細度",
+        opt_espresso: "義式濃縮細度",
+        opt_dip_bags: "浸泡式咖啡包",
         qty_label: "數量 (10包以上享批發價)：",
         add_to_cart: "+ 加入購物車",
         shipping_title: "👤 訂購人與配送資訊 / Shipping Details",
@@ -666,6 +676,8 @@ const I18N = {
         empty_cart: "購物車目前是空的。",
         wholesale_tag: "批發價",
         free_shipping: "0 ₫ (免運)",
+        unit_label: "單價：",
+        spec_text: "規格：",
         zalo_alert: "訂單明細已複製到剪貼簿！\n即將為您開啟 Zalo，請直接在對話框貼上訊息發送即可。"
     },
     vi: {
@@ -691,6 +703,10 @@ const I18N = {
         p4_desc: "Cà phê túi ngâm tiện lợi. Cà phê đặc sản xay sẵn, chỉ cần ngâm nước nóng 3-5 phút.",
         grind_label: "Mức độ xay:",
         spec_label: "Quy cách:",
+        opt_whole_bean: "Hạt nguyên nguyên bản",
+        opt_phin_pourover: "Pha Phin / Pour Over",
+        opt_espresso: "Pha Máy Espresso",
+        opt_dip_bags: "Túi ngâm tiện lợi",
         qty_label: "Số lượng (Từ 10 gói giá sỉ):",
         add_to_cart: "+ Thêm vào giỏ",
         shipping_title: "👤 Thông tin giao hàng",
@@ -708,6 +724,8 @@ const I18N = {
         empty_cart: "Giỏ hàng hiện đang trống.",
         wholesale_tag: "Giá sỉ",
         free_shipping: "0 ₫ (Miễn phí)",
+        unit_label: "Đơn giá:",
+        spec_text: "Quy cách:",
         zalo_alert: "Đã sao chép chi tiết đơn hàng!\nĐang mở Zalo, vui lòng dán tin nhắn vào hội thoại để gửi đơn hàng."
     }
 };
@@ -722,18 +740,39 @@ const PRODUCT_DB = {
 
 let cart = [];
 
+// 自動偵測使用者語言
+function detectUserLanguage() {
+    const userLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+    if (userLang.startsWith('zh')) return 'zh';
+    if (userLang.startsWith('vi')) return 'vi';
+    return 'en';
+}
+
 function formatVND(val) {
     return new Intl.NumberFormat('vi-VN').format(val) + ' ₫';
 }
 
 function changeLanguage(lang) {
     currentLang = lang;
+    document.getElementById('langSelect').value = lang;
+    
+    // 1. 更新 UI 靜態文字
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (I18N[lang] && I18N[lang][key]) {
             el.innerText = I18N[lang][key];
         }
     });
+    
+    // 2. 更新產品卡片的動態產品名稱
+    document.querySelectorAll('[data-pname]').forEach(el => {
+        const pId = el.getAttribute('data-pname');
+        if (PRODUCT_DB[pId]) {
+            el.innerText = PRODUCT_DB[pId].name[lang];
+        }
+    });
+
+    // 3. 同步重新渲染購物車（確保商品名與規格切換）
     renderCart();
 }
 
@@ -745,14 +784,14 @@ function toggleCart() {
 }
 
 function addToCart(pId) {
-    const grind = document.getElementById(`grind_${pId}`).value;
+    const grindKey = document.getElementById(`grind_${pId}`).value;
     const qty = parseInt(document.getElementById(`qty_${pId}`).value) || 1;
 
-    const existing = cart.find(item => item.id === pId && item.grind === grind);
+    const existing = cart.find(item => item.id === pId && item.grindKey === grindKey);
     if (existing) {
         existing.qty += qty;
     } else {
-        cart.push({ id: pId, grind: grind, qty: qty });
+        cart.push({ id: pId, grindKey: grindKey, qty: qty });
     }
     
     renderCart();
@@ -789,12 +828,16 @@ function renderCart() {
             subtotal += itemTotal;
             totalQty += item.qty;
 
+            // 取得當前語言對應的規格文字與商品名稱
+            const specText = I18N[currentLang][`opt_${item.grindKey}`] || item.grindKey;
+            const productName = product.name[currentLang];
+
             container.innerHTML += `
                 <div class="cart-item">
                     <div class="cart-item-info">
-                        <strong>${product.name[currentLang]}</strong> ${isWholesale ? `<span class="badge-wholesale">${I18N[currentLang].wholesale_tag}</span>` : ''}<br>
-                        <small style="color:#666;">Spec: ${item.grind}</small><br>
-                        <small style="color:#B8860B;">Unit: ${formatVND(unitPrice)}</small>
+                        <strong>${productName}</strong> ${isWholesale ? `<span class="badge-wholesale">${I18N[currentLang].wholesale_tag}</span>` : ''}<br>
+                        <small style="color:#666;">${I18N[currentLang].spec_text} ${specText}</small><br>
+                        <small style="color:#B8860B;">${I18N[currentLang].unit_label} ${formatVND(unitPrice)}</small>
                     </div>
                     <div style="text-align:right;">
                         <input type="number" class="qty-input" value="${item.qty}" min="1" onchange="updateQty(${index}, this.value)"><br>
@@ -835,7 +878,10 @@ function sendOrderToZalo() {
         const total = unitPrice * item.qty;
         subtotal += total;
 
-        itemsText += `${index + 1}. ${product.name[currentLang]}\n   Spec: ${item.grind}\n   Qty: ${item.qty} | Price: ${formatVND(unitPrice)} | Sub: ${formatVND(total)}\n`;
+        const specText = I18N[currentLang][`opt_${item.grindKey}`] || item.grindKey;
+        const productName = product.name[currentLang];
+
+        itemsText += `${index + 1}. ${productName}\n   Spec: ${specText}\n   Qty: ${item.qty} | Price: ${formatVND(unitPrice)} | Sub: ${formatVND(total)}\n`;
     });
 
     const region = document.getElementById('shippingRegionSelect').value;
@@ -864,8 +910,9 @@ function sendOrderToZalo() {
     });
 }
 
-// Initial Setup
-renderCart();
+// 初始化：自動偵測語言並套用
+const initialLang = detectUserLanguage();
+changeLanguage(initialLang);
 </script>
 
 </body>
