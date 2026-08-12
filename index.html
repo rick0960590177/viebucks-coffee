@@ -201,7 +201,7 @@
             border-radius: 4px;
         }
 
-        /* 購物车與結帳區 */
+        /* 購物車與結帳區 */
         .cart-summary {
             background: #faf8f5;
             padding: 25px;
@@ -277,6 +277,101 @@
 
         .btn-submit:hover {
             background-color: #432519;
+        }
+
+        /* 訂單表單 Modal 彈窗樣式 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #fff;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .receipt-header {
+            text-align: center;
+            border-bottom: 2px dashed #2c1810;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .receipt-header h2 {
+            color: #2c1810;
+            letter-spacing: 1px;
+        }
+
+        .receipt-header p {
+            color: #8c6d46;
+            font-size: 13px;
+        }
+
+        .receipt-section {
+            margin-bottom: 20px;
+        }
+
+        .receipt-section h4 {
+            color: #2c1810;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .receipt-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .receipt-table th, .receipt-table td {
+            padding: 6px 0;
+            text-align: left;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn-modal {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn-print { background: #8c6d46; color: #fff; }
+        .btn-copy { background: #d4af37; color: #2c1810; }
+        .btn-close { background: #ddd; color: #333; }
+
+        /* 列印隱藏非訂單內容 */
+        @media print {
+            body * { visibility: hidden; }
+            #receipt-printable, #receipt-printable * { visibility: visible; }
+            #receipt-printable { position: absolute; left: 0; top: 0; width: 100%; }
+            .modal-actions { display: none; }
         }
 
         /* FAQ */
@@ -358,7 +453,7 @@
             <h2 data-i18n="story_title">品牌故事與工藝精神</h2>
         </div>
         <div style="background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-            <p data-i18n="story_p1">VIEBUCKS 誕生於對咖啡工藝的極致追求。我們深信每一顆咖啡豆都蘊藏著大地的靈魂與烘焙師的匠心。從產地莊園的嚴選、精準的烘焙曲線，到完美風味的呈現，VIEBUCKS 始終堅持以 Haute Coffee（高級訂製咖啡）的哲學，為每一位熱愛咖啡的品味人士提供無與倫比的感官體驗。</p>
+            <p data-i18n="story_p1">VIEBUCKS 誕生於對咖啡工藝的極致追求。我們深信每一顆咖啡豆都蘊藏著大地的靈魂與烘焙師的匠心。從產地莊園的嚴選、精準的烘焙曲線，到完美風味的呈現，VIEBUCKS 始終堅持以 Haute Coffee（高級訂製咖啡）的哲學，為每一位熱愛咖啡的品味人士 provide 無與倫比的感官體驗。</p>
         </div>
     </section>
 
@@ -451,7 +546,7 @@
                     </div>
                 </div>
 
-                <!-- 訂購人資訊：發送 Gmail + 自動複製並跳轉 Zalo -->
+                <!-- 訂購人資訊表單 -->
                 <form id="checkout-form" class="checkout-form" onsubmit="sendOrder(event)">
                     <h4 style="margin-top: 10px;" data-i18n="form_heading">填寫配送與聯絡資訊</h4>
                     
@@ -460,7 +555,7 @@
                     <input type="email" id="cust-email" class="form-input" placeholder="電子郵件 / Email Address" required data-i18n-ph="ph_email">
                     <textarea id="cust-address" class="form-input" rows="2" placeholder="詳細配送地址 / Shipping Address" required data-i18n-ph="ph_address"></textarea>
 
-                    <button type="submit" class="btn-submit" data-i18n="btn_submit_order">確認送出訂單 (複製訂單 + 開啟 Gmail & Zalo)</button>
+                    <button type="submit" class="btn-submit" data-i18n="btn_submit_order">確認送出訂單 (生成表單 + 複製 + Gmail/Zalo)</button>
                 </form>
             </div>
         </div>
@@ -482,12 +577,60 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- 頁尾 -->
     <footer>
         <p><strong>Công ty TNHH VIEBUCKS</strong> | 地址：365 QL13, Thủ Dầu Một, Hồ Chí Minh</p>
         <p style="margin-top: 5px;">電話：0348246669 / 0839681380</p>
         <p style="margin-top: 15px; color: #666;">“It's never too late to drink coffee.” © 2026 viebucks. All rights reserved.</p>
     </footer>
+
+    <!-- 自動生成訂購單 (Modal 彈窗) -->
+    <div id="receipt-modal" class="modal-overlay">
+        <div class="modal-content" id="receipt-printable">
+            <div class="receipt-header">
+                <h2>VIEBUCKS COFFEE</h2>
+                <p>Haute Coffee Collection - 官方訂購表單</p>
+            </div>
+
+            <div class="receipt-section">
+                <p><strong>訂單編號：</strong><span id="rec-id"></span></p>
+                <p><strong>訂購時間：</strong><span id="rec-date"></span></p>
+            </div>
+
+            <div class="receipt-section">
+                <h4>【訂購內容明細】</h4>
+                <table class="receipt-table">
+                    <thead>
+                        <tr style="border-bottom: 1px solid #ccc;">
+                            <th>品項名稱</th>
+                            <th style="text-align:center;">數量</th>
+                            <th style="text-align:right;">金額</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rec-items-body"></tbody>
+                </table>
+                <div style="text-align: right; margin-top: 10px; font-weight: bold;">
+                    <p>商品小計：<span id="rec-goods-total"></span></p>
+                    <p>運費：<span id="rec-shipping"></span></p>
+                    <p style="font-size: 18px; color: #e74c3c; margin-top: 5px;">應付總額：<span id="rec-grand-total"></span></p>
+                </div>
+            </div>
+
+            <div class="receipt-section">
+                <h4>【訂購人與配送資訊】</h4>
+                <p><strong>姓名：</strong><span id="rec-name"></span></p>
+                <p><strong>電話：</strong><span id="rec-phone"></span></p>
+                <p><strong>Email：</strong><span id="rec-email"></span></p>
+                <p><strong>地址：</strong><span id="rec-address"></span></p>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-modal btn-print" onclick="window.print()">🖨️ 列印 / 存為 PDF</button>
+                <button class="btn-modal btn-copy" onclick="copyReceiptText()">📋 再次複製內文</button>
+                <button class="btn-modal btn-close" onclick="closeModal()">關閉視窗</button>
+            </div>
+        </div>
+    </div>
 
     <!-- 懸浮聯絡按鈕 -->
     <div class="floating-contact">
@@ -495,9 +638,8 @@
         <a href="tel:0348246669" class="floating-btn btn-phone">📞</a>
     </div>
 
-    <!-- JS 邏輯：購物車 + 相容性複製 + Gmail 寄件 + Zalo 跳轉 + 多國語言 -->
+    <!-- JS 邏輯 -->
     <script>
-        // 1. 商品資料庫
         const products = {
             arabica: { name: "Arabica 大叻精品阿拉比卡", retail: 220000, wholesale: 180000 },
             robusta: { name: "Robusta 西原特選羅布斯塔", retail: 150000, wholesale: 120000 },
@@ -505,8 +647,17 @@
         };
 
         let currentCartItems = [];
+        let currentOrderRawText = "";
 
-        // 2. 數量調整
+        function generateOrderId() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const random = Math.floor(1000 + Math.random() * 9000);
+            return `VB${year}${month}${day}-${random}`;
+        }
+
         function updateQty(id, delta) {
             const input = document.getElementById(`qty-${id}`);
             let val = parseInt(input.value) || 0;
@@ -516,7 +667,6 @@
             renderCart();
         }
 
-        // 3. 渲染購物車
         function renderCart() {
             const tbody = document.getElementById('cart-items-body');
             tbody.innerHTML = '';
@@ -541,7 +691,12 @@
                     `;
                     tbody.appendChild(row);
 
-                    currentCartItems.push(`- ${products[id].name} x ${qty}包 (單價: ${unitPrice.toLocaleString()} VND, 小計: ${subtotal.toLocaleString()} VND)`);
+                    currentCartItems.push({
+                        name: products[id].name,
+                        qty: qty,
+                        unitPrice: unitPrice,
+                        subtotal: subtotal
+                    });
                 }
             }
 
@@ -558,7 +713,6 @@
             document.getElementById('grand-total').innerText = `${grandTotal.toLocaleString()} VND`;
         }
 
-        // 相容性剪貼簿複製函式
         function copyToClipboard(text) {
             if (navigator.clipboard && window.isSecureContext) {
                 return navigator.clipboard.writeText(text);
@@ -584,7 +738,17 @@
             }
         }
 
-        // 4. 送出訂單：自動複製 + 開啟 Gmail + 跳轉 Zalo
+        function copyReceiptText() {
+            copyToClipboard(currentOrderRawText).then(() => {
+                alert('📋 訂單內容已成功複製！');
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('receipt-modal').style.display = 'none';
+        }
+
+        // 送出訂單流程：生成表單 modal + 自動複製 + 開啟 Gmail & Zalo
         async function sendOrder(e) {
             e.preventDefault();
 
@@ -593,23 +757,58 @@
                 return;
             }
 
+            const orderId = generateOrderId();
             const name = document.getElementById('cust-name').value;
             const phone = document.getElementById('cust-phone').value;
             const email = document.getElementById('cust-email').value;
             const address = document.getElementById('cust-address').value;
-            const grandTotal = document.getElementById('grand-total').innerText;
-
-            const targetEmail = "rick0960590177@gmail.com";
-            const subject = `【VIEBUCKS 新採購訂單】訂購人：${name}`;
             
-            const bodyText = 
+            const goodsTotalStr = document.getElementById('goods-total').innerText;
+            const shippingStr = document.getElementById('shipping-fee').innerText;
+            const grandTotalStr = document.getElementById('grand-total').innerText;
+            const orderDate = new Date().toLocaleString();
+
+            // 1. 填入 Modal 訂購表單
+            document.getElementById('rec-id').innerText = orderId;
+            document.getElementById('rec-date').innerText = orderDate;
+            document.getElementById('rec-name').innerText = name;
+            document.getElementById('rec-phone').innerText = phone;
+            document.getElementById('rec-email').innerText = email;
+            document.getElementById('rec-address').innerText = address;
+            document.getElementById('rec-goods-total').innerText = goodsTotalStr;
+            document.getElementById('rec-shipping').innerText = shippingStr;
+            document.getElementById('rec-grand-total').innerText = grandTotalStr;
+
+            const recBody = document.getElementById('rec-items-body');
+            recBody.innerHTML = '';
+            
+            let itemsTextArr = [];
+            currentCartItems.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${item.name}</td>
+                    <td style="text-align:center;">${item.qty} 包</td>
+                    <td style="text-align:right;">${item.subtotal.toLocaleString()} VND</td>
+                `;
+                recBody.appendChild(tr);
+
+                itemsTextArr.push(`- ${item.name} x ${item.qty}包 (單價: ${item.unitPrice.toLocaleString()} VND, 小計: ${item.subtotal.toLocaleString()} VND)`);
+            });
+
+            // 2. 組成純文字格式 (剪貼簿與 Email 用)
+            currentOrderRawText = 
 `VIEBUCKS 採購訂單內容：
 ---------------------------------
+【訂單編號】${orderId}
+【訂購時間】${orderDate}
+
 【訂購品項】
-${currentCartItems.join('\n')}
+${itemsTextArr.join('\n')}
 
 【金額總計】
-應付總額（含運費）：${grandTotal}
+商品總額：${goodsTotalStr}
+運費：${shippingStr}
+應付總額：${grandTotalStr}
 
 【配送與聯絡資訊】
 姓名：${name}
@@ -619,26 +818,29 @@ Email：${email}
 ---------------------------------
 （此郵件由 VIEBUCKS 官方網站自動生成）`;
 
-            // 1. 先複製訂單內容
+            // 3. 複製剪貼簿
             try {
-                await copyToClipboard(bodyText);
+                await copyToClipboard(currentOrderRawText);
             } catch (err) {
-                console.warn('自動複製失敗：', err);
+                console.warn('複製失敗', err);
             }
 
-            alert('📋 訂單內容已自動複製！\n\n系統即將為您開啟 Gmail 與 Zalo，請直接在聊天室「貼上」訂單傳送給我們即可。');
+            // 4. 顯示 Modal 訂購單畫面
+            document.getElementById('receipt-modal').style.display = 'flex';
 
-            // 2. 開啟預設郵件 App (帶入收件人與內容)
-            const mailtoUrl = `mailto:${targetEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
+            // 5. 開啟 Gmail
+            const targetEmail = "rick0960590177@gmail.com";
+            const subject = `【VIEBUCKS 採購訂單 #${orderId}】訂購人：${name}`;
+            const mailtoUrl = `mailto:${targetEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(currentOrderRawText)}`;
             window.location.href = mailtoUrl;
 
-            // 3. 延遲 1 秒後開啟 Zalo 聊天頁面，避免遭瀏覽器攔截
+            // 6. 1秒後開啟 Zalo
             setTimeout(() => {
                 window.open('https://zalo.me/0348246669', '_blank');
             }, 1000);
         }
 
-        // 5. 多國語言字典
+        // 多國語言字典
         const translations = {
             "zh-TW": {
                 "nav_story": "品牌故事",
@@ -667,7 +869,7 @@ Email：${email}
                 "ph_phone": "聯絡電話 / Phone Number",
                 "ph_email": "電子郵件 / Email Address",
                 "ph_address": "詳細配送地址 / Shipping Address",
-                "btn_submit_order": "確認送出訂單 (複製訂單 + 開啟 Gmail & Zalo)",
+                "btn_submit_order": "確認送出訂單 (生成表單 + 複製 + Gmail/Zalo)",
                 "faq_tag": "FAQ & Policy",
                 "faq_title": "常見問題與採購須知",
                 "faq_q1": "Q: 批發門檻與優惠如何計算？",
@@ -702,7 +904,7 @@ Email：${email}
                 "ph_phone": "Số điện thoại / Phone",
                 "ph_email": "Email",
                 "ph_address": "Địa chỉ giao hàng chi tiết",
-                "btn_submit_order": "Gửi Đơn Hàng (Sao chép + Mở Gmail & Zalo)",
+                "btn_submit_order": "Gửi Đơn Hàng (Tạo Hóa Đơn + Copy + Gmail/Zalo)",
                 "faq_tag": "Hỏi Đáp & Chính Sách",
                 "faq_title": "Thắc Mắc Thường Gặp",
                 "faq_q1": "Q: Chính sách giá sỉ được tính như thế nào?",
@@ -737,7 +939,7 @@ Email：${email}
                 "ph_phone": "Phone Number",
                 "ph_email": "Email Address",
                 "ph_address": "Detailed Shipping Address",
-                "btn_submit_order": "Submit Order (Copy Order + Open Gmail & Zalo)",
+                "btn_submit_order": "Submit Order (Receipt + Copy + Gmail/Zalo)",
                 "faq_tag": "FAQ & Policy",
                 "faq_title": "Frequently Asked Questions",
                 "faq_q1": "Q: How is wholesale pricing applied?",
