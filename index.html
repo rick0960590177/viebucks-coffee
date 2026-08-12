@@ -4,17 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIEBUCKS Coffee - Specialty Coffee & B2B Solutions</title>
-    <!-- Tailwind CSS CDN for styling -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         html { scroll-behavior: smooth; }
+        /* Custom Scrollbar for Cart Drawer */
+        .cart-scroll::-webkit-scrollbar { width: 4px; }
+        .cart-scroll::-webkit-scrollbar-thumb { background: #d97706; border-radius: 4px; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-50 text-gray-800 relative">
 
     <!-- Header / Navbar -->
-    <header class="sticky top-0 z-50 bg-white shadow-md">
+    <header class="sticky top-0 z-40 bg-white shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
             <!-- Logo -->
             <a href="#" class="flex items-center space-x-2 text-amber-900 font-bold text-xl">
@@ -30,27 +33,27 @@
                 <a href="#contact" class="hover:text-amber-800 transition" data-i18n="nav_contact">Liên hệ</a>
             </nav>
 
-            <!-- Language Switcher & Action Button -->
+            <!-- Language Switcher & Cart Toggle -->
             <div class="flex items-center space-x-3">
                 <!-- 語言切換選單 -->
-                <div class="relative">
-                    <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-gray-100 text-gray-800 text-sm font-medium border border-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-amber-700 cursor-pointer">
-                        <option value="vi" selected>🇻🇳 Tiếng Việt</option>
-                        <option value="zh">🇹🇼 繁體中文</option>
-                        <option value="en">🇺🇸 English</option>
-                    </select>
-                </div>
+                <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-gray-100 text-gray-800 text-sm font-medium border border-gray-300 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-amber-700 cursor-pointer">
+                    <option value="vi" selected>🇻🇳 VN</option>
+                    <option value="zh">🇹🇼 TW</option>
+                    <option value="en">🇺🇸 EN</option>
+                </select>
 
-                <a href="#contact" class="hidden sm:inline-flex items-center gap-2 bg-amber-800 text-white text-sm px-4 py-2 rounded-lg hover:bg-amber-900 transition">
-                    <i class="fa-solid fa-paper-plane"></i>
-                    <span data-i18n="nav_quote">Yêu cầu báo giá</span>
-                </a>
+                <!-- Floating Cart Button in Header -->
+                <button onclick="toggleCartDrawer()" class="relative bg-amber-800 hover:bg-amber-900 text-white p-2 px-3 rounded-lg flex items-center gap-2 transition shadow">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="hidden sm:inline text-sm font-semibold" data-i18n="cart_title">Giỏ hàng</span>
+                    <span id="cartBadge" class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full hidden">0</span>
+                </button>
             </div>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="bg-amber-900 text-white py-20 px-4 text-center relative overflow-hidden">
+    <section class="bg-amber-900 text-white py-16 px-4 text-center relative overflow-hidden">
         <div class="max-w-4xl mx-auto space-y-6 relative z-10">
             <span class="bg-amber-800/80 text-amber-200 text-sm px-4 py-1.5 rounded-full inline-block font-semibold tracking-wide" data-i18n="hero_subtitle">
                 Cà phê đặc sản & Giải pháp B2B
@@ -59,475 +62,359 @@
                 "It's never too late to drink coffee."
             </h1>
             <p class="text-lg md:text-xl text-amber-100 max-w-2xl mx-auto leading-relaxed" data-i18n="hero_desc">
-                Tuyển chọn Arabica và Robusta chất lượng cao, cung cấp giải pháp cà phê chuyên nghiệp với chế độ rang chính xác, thu mua linh hoạt và hợp tác tùy chỉnh.
+                Tuyển chọn Arabica và Robusta chất lượng cao, cung cấp giải pháp cà phê chuyên nghiệp.
             </p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4 pt-4">
-                <a href="#products" class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-semibold shadow-md transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-list-ul"></i>
-                    <span data-i18n="btn_view_catalog">Xem danh mục sản phẩm</span>
-                </a>
-                <a href="#contact" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-comments"></i>
-                    <span data-i18n="btn_inquire">Tư vấn báo giá online</span>
+            <div class="pt-2">
+                <a href="#products" class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-semibold shadow-md transition inline-flex items-center gap-2">
+                    <i class="fa-solid fa-cart-plus"></i>
+                    <span data-i18n="btn_view_catalog">Xem danh mục & Đặt hàng</span>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- About Us Section -->
-    <section id="about" class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="space-y-6">
-                    <span class="text-amber-800 font-bold uppercase tracking-wider text-sm" data-i18n="about_tag">About Us / Về chúng tôi</span>
-                    <h2 class="text-3xl font-bold text-gray-900 leading-tight">
-                        <span data-i18n="about_company">Công ty TNHH VIEBUCKS</span><br>
-                        <span class="text-amber-800 text-2xl" data-i18n="about_subtitle">Nhà cung cấp cà phê chuyên nghiệp với chất lượng ổn định và hương vị tuyệt hảo</span>
-                    </h2>
-                    <p class="text-gray-600 leading-relaxed" data-i18n="about_desc">
-                        Công ty TNHH VIEBUCKS chú trọng phát triển ngành cà phê tinh tế, tập trung vào hương vị và độ ổn định chất lượng. Từ Arabica cao cấp, Robusta địa phương đến Brazil Cerrado đơn nguồn, chúng tôi mang đến giải pháp chọn hạt và rang tối ưu cho người yêu cà phê và doanh nghiệp F&B.
-                    </p>
-                    
-                    <div class="grid grid-cols-2 gap-4 pt-4">
-                        <div class="p-4 bg-amber-50 rounded-lg border border-amber-100">
-                            <i class="fa-solid fa-language text-amber-800 text-2xl mb-2"></i>
-                            <h3 class="font-bold text-gray-800" data-i18n="feature_1_title">Hỗ trợ song ngữ Trung - Việt</h3>
-                            <p class="text-sm text-gray-600 mt-1" data-i18n="feature_1_desc">Đội ngũ chuyên nghiệp, giao tiếp thương mại xuyên quốc gia dễ dàng.</p>
-                        </div>
-                        <div class="p-4 bg-amber-50 rounded-lg border border-amber-100">
-                            <i class="fa-solid fa-boxes-packing text-amber-800 text-2xl mb-2"></i>
-                            <h3 class="font-bold text-gray-800" data-i18n="feature_2_title">Hệ thống bán sỉ linh hoạt</h3>
-                            <p class="text-sm text-gray-600 mt-1" data-i18n="feature_2_desc">Ngưỡng đặt hàng cực thấp, đáp ứng đa dạng doanh nghiệp.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="relative">
-                    <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=1000&auto=format&fit=crop" alt="Coffee Roasting" class="rounded-2xl shadow-xl w-full h-[400px] object-cover">
-                    <div class="absolute bottom-4 left-4 bg-amber-900/90 text-white p-4 rounded-xl backdrop-blur-sm">
-                        <div class="text-3xl font-extrabold text-amber-400">100%</div>
-                        <div class="text-xs" data-i18n="img_badge">Hạt cà phê nguyên chất tuyển chọn</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing / Products Section -->
+    <!-- Products & Interactive Shopping Section -->
     <section id="products" class="py-16 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-3xl mx-auto mb-12">
                 <span class="text-amber-800 font-bold uppercase tracking-wider text-sm" data-i18n="products_tag">Bảng Giá Cà Phê / Bảng giá</span>
-                <h2 class="text-3xl font-bold text-gray-900 mt-1" data-i18n="products_title">Dòng Cà Phê Tuyển Chọn & Phụ Kiện</h2>
-                <p class="text-gray-600 mt-2" data-i18n="products_desc">Cung cấp giải pháp bán lẻ và bán sỉ số lượng lớn với mức chiết khấu cực tốt.</p>
+                <h2 class="text-3xl font-bold text-gray-900 mt-1" data-i18n="products_title">Dòng Cà Phê Tuyển Chọn</h2>
+                <p class="text-gray-600 mt-2 text-sm" data-i18n="wholesale_tip">💡 Tự động áp dụng giá bán sỉ khi mua đạt số lượng tối thiểu!</p>
             </div>
 
-            <!-- Product Tables Container -->
-            <div class="space-y-8">
-                <!-- Arabica Series -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <div class="bg-amber-900 text-white p-4 flex justify-between items-center">
-                        <div>
-                            <h3 class="font-bold text-lg" data-i18n="arabica_title">Dòng Arabica Premium</h3>
-                            <p class="text-xs text-amber-200" data-i18n="arabica_sub">Hương thơm đậm đà, vị chua ngọt cân bằng</p>
-                        </div>
-                        <span class="bg-amber-800 text-xs px-3 py-1 rounded-full">Arabica 100%</span>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-gray-100 text-xs font-bold text-gray-600 uppercase border-b border-gray-200">
-                                    <th class="p-4" data-i18n="th_item">Sản phẩm</th>
-                                    <th class="p-4" data-i18n="th_retail">Giá bán lẻ</th>
-                                    <th class="p-4" data-i18n="th_wholesale">Giá bán sỉ</th>
-                                    <th class="p-4" data-i18n="th_moq">Mức tối thiểu</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-100 text-sm">
-                                <tr>
-                                    <td class="p-4 font-medium" data-i18n="p_a250">Cà phê hạt Arabica (250g)</td>
-                                    <td class="p-4">144,853 VND</td>
-                                    <td class="p-4 text-amber-800 font-semibold">105,348 VND</td>
-                                    <td class="p-4 text-gray-500">20 gói</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-4 font-medium" data-i18n="p_a500">Cà phê hạt Arabica (500g)</td>
-                                    <td class="p-4">279,706 VND</td>
-                                    <td class="p-4 text-amber-800 font-semibold">203,422 VND</td>
-                                    <td class="p-4 text-gray-500">10 gói</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-4 font-medium" data-i18n="p_a1000">Cà phê hạt Arabica (1000g)</td>
-                                    <td class="p-4">549,412 VND</td>
-                                    <td class="p-4 text-amber-800 font-semibold">399,572 VND</td>
-                                    <td class="p-4 text-gray-500">5 gói</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Robusta Series -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                    <div class="bg-amber-900 text-white p-4 flex justify-between items-center">
-                        <div>
-                            <h3 class="font-bold text-lg" data-i18n="robusta_title">Dòng Robusta Bold</h3>
-                            <p class="text-xs text-amber-200" data-i18n="robusta_sub">Đậm đà chuẩn vị truyền thống Việt Nam</p>
-                        </div>
-                        <span class="bg-amber-800 text-xs px-3 py-1 rounded-full">Robusta 100%</span>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-gray-100 text-xs font-bold text-gray-600 uppercase border-b border-gray-200">
-                                    <th class="p-4" data-i18n="th_item">Sản phẩm</th>
-                                    <th class="p-4" data-i18n="th_retail">Giá bán lẻ</th>
-                                    <th class="p-4" data-i18n="th_wholesale">Giá bán sỉ</th>
-                                    <th class="p-4" data-i18n="th_moq">Mức tối thiểu</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-100 text-sm">
-                                <tr>
-                                    <td class="p-4 font-medium" data-i18n="p_r250">Cà phê hạt Robusta (250g)</td>
-                                    <td class="p-4">91,176 VND</td>
-                                    <td class="p-4 text-amber-800 font-semibold">66,310 VND</td>
-                                    <td class="p-4 text-gray-500">20 gói</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-4 font-medium" data-i18n="p_r500">Cà phê hạt Robusta (500g)</td>
-                                    <td class="p-4">172,353 VND</td>
-                                    <td class="p-4 text-amber-800 font-semibold">125,348 VND</td>
-                                    <td class="p-4 text-gray-500">10 gói</td>
-                                </tr>
-                                <tr>
-                                    <td class="p-4 font-medium" data-i18n="p_r1000">Cà phê hạt Robusta (1000g)</td>
-                                    <td class="p-4">334,706 VND</td>
-                                    <td class="p-4 text-amber-800 font-semibold">243,422 VND</td>
-                                    <td class="p-4 text-gray-500">5 gói</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <!-- Interactive Product Grid Cards -->
+            <div id="productGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Products dynamically rendered by JS -->
             </div>
         </div>
     </section>
 
-    <!-- B2B Section -->
-    <section id="b2b" class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="text-amber-800 font-bold uppercase tracking-wider text-sm" data-i18n="b2b_tag">B2B Solutions / Hợp tác doanh nghiệp</span>
-                <h2 class="text-3xl font-bold text-gray-900 mt-1" data-i18n="b2b_title">Giải pháp linh hoạt dành cho khách hàng doanh nghiệp</h2>
-                <p class="text-gray-600 mt-2" data-i18n="b2b_desc">Đồng hành cùng quán cà phê, văn phòng và các dự án quà tặng doanh nghiệp.</p>
+    <!-- Slide-over Cart Drawer (側邊購物車抽屜) -->
+    <div id="cartOverlay" class="fixed inset-0 bg-black/50 z-50 opacity-0 pointer-events-none transition-opacity duration-300" onclick="toggleCartDrawer()"></div>
+    <aside id="cartDrawer" class="fixed top-0 right-0 h-full w-full sm:w-[420px] bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="p-4 bg-amber-900 text-white flex justify-between items-center shadow">
+            <div class="flex items-center gap-2 font-bold text-lg">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span data-i18n="cart_title">Giỏ hàng mua sắm</span>
             </div>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="p-6 bg-gray-50 rounded-xl border border-gray-100 text-center space-y-4">
-                    <div class="w-14 h-14 bg-amber-800 text-white rounded-full flex items-center justify-center mx-auto text-xl">
-                        <i class="fa-solid fa-store"></i>
-                    </div>
-                    <h3 class="font-bold text-xl text-gray-800" data-i18n="b2b_c1_title">Bán sỉ cho Quán & Chuỗi F&B</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed" data-i18n="b2b_c1_desc">Gói 1000g tiện lợi, chất lượng rang đồng nhất đảm bảo hương vị ổn định cho quán.</p>
-                </div>
-
-                <div class="p-6 bg-gray-50 rounded-xl border border-gray-100 text-center space-y-4">
-                    <div class="w-14 h-14 bg-amber-800 text-white rounded-full flex items-center justify-center mx-auto text-xl">
-                        <i class="fa-solid fa-building"></i>
-                    </div>
-                    <h3 class="font-bold text-xl text-gray-800" data-i18n="b2b_c2_title">Gói Cà Phê Văn Phòng</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed" data-i18n="b2b_c2_desc">Cung cấp cà phê túi lọc và hạt tươi định kỳ, nâng cao trải nghiệm làm việc cho đội ngũ.</p>
-                </div>
-
-                <div class="p-6 bg-gray-50 rounded-xl border border-gray-100 text-center space-y-4">
-                    <div class="w-14 h-14 bg-amber-800 text-white rounded-full flex items-center justify-center mx-auto text-xl">
-                        <i class="fa-solid fa-box-open"></i>
-                    </div>
-                    <h3 class="font-bold text-xl text-gray-800" data-i18n="b2b_c3_title">Quà Tặng Doanh Nghiệp & OEM</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed" data-i18n="b2b_c3_desc">Tùy chỉnh bao bì túi lọc, quà tặng sự kiện mang đậm dấu ấn thương hiệu riêng.</p>
-                </div>
-            </div>
+            <button onclick="toggleCartDrawer()" class="text-gray-300 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
-    </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-16 bg-gray-900 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-2 gap-12">
-                <div class="space-y-6">
-                    <span class="text-amber-400 font-bold uppercase tracking-wider text-sm" data-i18n="contact_tag">Contact Us / Liên hệ</span>
-                    <h2 class="text-3xl font-bold" data-i18n="contact_title">Bắt đầu hành trình cà phê chất lượng của bạn</h2>
-                    <p class="text-gray-400" data-i18n="contact_desc">Hãy liên hệ với chúng tôi ngay hôm nay để nhận mẫu thử, báo giá sỉ hoặc tư vấn giải pháp tùy chỉnh.</p>
+        <!-- Cart Items List -->
+        <div id="cartItemsList" class="flex-1 p-4 overflow-y-auto cart-scroll space-y-4">
+            <!-- Dynamic Cart Items -->
+        </div>
 
-                    <div class="space-y-4 pt-4">
-                        <div class="flex items-start gap-4">
-                            <i class="fa-solid fa-industry text-amber-500 mt-1"></i>
-                            <div>
-                                <h4 class="font-semibold" data-i18n="info_mfg">Nhà sản xuất</h4>
-                                <p class="text-gray-400 text-sm">Công ty TNHH VIEBUCKS</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-4">
-                            <i class="fa-solid fa-location-dot text-amber-500 mt-1"></i>
-                            <div>
-                                <h4 class="font-semibold" data-i18n="info_addr">Địa chỉ</h4>
-                                <p class="text-gray-400 text-sm">365 QL13, Thủ Dầu Một, Hồ Chí Minh</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start gap-4">
-                            <i class="fa-solid fa-phone text-amber-500 mt-1"></i>
-                            <div>
-                                <h4 class="font-semibold" data-i18n="info_phone">Điện thoại</h4>
-                                <p class="text-gray-400 text-sm">0348246669 / 0839681380</p>
-                            </div>
-                        </div>
+        <!-- Cart Summary Footer -->
+        <div class="p-4 bg-gray-50 border-t border-gray-200 space-y-3">
+            <div class="flex justify-between items-center text-sm">
+                <span class="text-gray-600" data-i18n="total_estimate">Tổng tạm tính:</span>
+                <span id="cartTotalPrice" class="text-xl font-extrabold text-amber-900">0 VND</span>
+            </div>
+            <p class="text-xs text-gray-500" data-i18n="vat_notice">* Đã tự động chiết khấu giá sỉ nếu đạt số lượng.</p>
+            <button onclick="openCheckoutModal()" class="w-full bg-amber-800 hover:bg-amber-900 text-white font-bold py-3 rounded-lg shadow transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-circle-check"></i>
+                <span data-i18n="btn_checkout">Xác nhận gửi đơn hàng</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Checkout Modal (結帳採購單 Modal) -->
+    <div id="checkoutModal" class="fixed inset-0 z-50 bg-black/60 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl transform transition-all">
+            <div class="bg-amber-900 text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span data-i18n="modal_title">Thông tin đặt hàng / 採購確認</span>
+                </h3>
+                <button onclick="closeCheckoutModal()" class="text-gray-300 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <form id="orderForm" onsubmit="handleOrderSubmit(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="form_name">Họ và tên / 姓名 *</label>
+                    <input type="text" id="custName" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-amber-700 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="form_phone">Số điện thoại / 電話 *</label>
+                        <input type="tel" id="custPhone" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-amber-700 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="form_company">Tên công ty / 公司名稱</label>
+                        <input type="text" id="custCompany" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-amber-700 outline-none">
                     </div>
                 </div>
-
-                <!-- Simple Contact Form -->
-                <div class="bg-gray-800 p-8 rounded-2xl border border-gray-700">
-                    <h3 class="text-xl font-bold mb-6" data-i18n="form_title">Yêu cầu tư vấn online</h3>
-                    <form class="space-y-4" onsubmit="event.preventDefault(); alert('Cảm ơn bạn! Chúng tôi sẽ liên hệ sớm.');">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-400 mb-1" data-i18n="form_name">Họ và tên</label>
-                            <input type="text" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500" required>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-400 mb-1" data-i18n="form_phone">Số điện thoại</label>
-                            <input type="tel" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500" required>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-400 mb-1" data-i18n="form_msg">Nội dung tư vấn</label>
-                            <textarea rows="3" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-amber-500"></textarea>
-                        </div>
-                        <button type="submit" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-lg transition" data-i18n="form_submit">Gửi yêu cầu</button>
-                    </form>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="form_address">Địa chỉ giao hàng / 送貨地址 *</label>
+                    <input type="text" id="custAddress" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-amber-700 outline-none">
                 </div>
-            </div>
-        </div>
-    </section>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1" data-i18n="form_note">Ghi chú thêm / 備註需求</label>
+                    <textarea id="custNote" rows="2" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-amber-700 outline-none"></textarea>
+                </div>
 
-    <!-- Footer -->
-    <footer class="bg-gray-950 text-gray-500 text-xs py-6 border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div>
-                © 2026 Công ty TNHH VIEBUCKS. All Rights Reserved.
-            </div>
-            <div class="flex space-x-6">
-                <a href="#" class="hover:underline" data-i18n="footer_privacy">Chính sách bảo mật</a>
-                <a href="#" class="hover:underline" data-i18n="footer_terms">Điều khoản dịch vụ</a>
-            </div>
+                <!-- Submit Buttons -->
+                <div class="pt-2 flex flex-col gap-2">
+                    <button type="submit" class="w-full bg-amber-800 hover:bg-amber-900 text-white font-bold py-2.5 rounded-lg transition flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span data-i18n="btn_send_order">Gửi đơn đặt hàng</span>
+                    </button>
+                    <!-- Fast Zalo order button for Vietnam market -->
+                    <button type="button" onclick="sendOrderZalo()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg transition flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-comment-dots"></i>
+                        <span data-i18n="btn_zalo">Đặt hàng nhanh qua Zalo</span>
+                    </button>
+                </div>
+            </form>
         </div>
-    </footer>
+    </div>
 
-    <!-- i18n JavaScript Logic -->
+    <!-- JavaScript Data & Business Logic -->
     <script>
-        // 1. 文字字典庫 (以 越南文 'vi' 為預設值)
+        // 1. 商品資料庫 (含有零售價、批發價與批發起訂門檻 MOQ)
+        const productsData = [
+            { id: "A250", category: "arabica", name_vi: "Hạt Arabica (250g)", name_zh: "阿拉比卡 咖啡豆 (250g)", name_en: "Arabica Beans (250g)", retail: 144853, wholesale: 105348, moq: 20 },
+            { id: "A500", category: "arabica", name_vi: "Hạt Arabica (500g)", name_zh: "阿拉比卡 咖啡豆 (500g)", name_en: "Arabica Beans (500g)", retail: 279706, wholesale: 203422, moq: 10 },
+            { id: "A1000", category: "arabica", name_vi: "Hạt Arabica (1000g)", name_zh: "阿拉比卡 咖啡豆 (1000g)", name_en: "Arabica Beans (1000g)", retail: 549412, wholesale: 399572, moq: 5 },
+            { id: "R250", category: "robusta", name_vi: "Hạt Robusta (250g)", name_zh: "羅布斯塔 咖啡豆 (250g)", name_en: "Robusta Beans (250g)", retail: 91176, wholesale: 66310, moq: 20 },
+            { id: "R500", category: "robusta", name_vi: "Hạt Robusta (500g)", name_zh: "羅布斯塔 咖啡豆 (500g)", name_en: "Robusta Beans (500g)", retail: 172353, wholesale: 125348, moq: 10 },
+            { id: "R1000", category: "robusta", name_vi: "Hạt Robusta (1000g)", name_zh: "羅布斯塔 咖啡豆 (1000g)", name_en: "Robusta Beans (1000g)", retail: 334706, wholesale: 243422, moq: 5 }
+        ];
+
+        // 2. 多國語言文字庫
         const i18nData = {
             vi: {
-                nav_about: "Về chúng tôi",
-                nav_products: "Sản phẩm & Giá",
-                nav_b2b: "Hợp tác B2B",
-                nav_contact: "Liên hệ",
-                nav_quote: "Yêu cầu báo giá",
-                hero_subtitle: "Cà phê đặc sản & Giải pháp B2B",
-                hero_desc: "Tuyển chọn Arabica và Robusta chất lượng cao, cung cấp giải pháp cà phê chuyên nghiệp với chế độ rang chính xác, thu mua linh hoạt và hợp tác tùy chỉnh.",
-                btn_view_catalog: "Xem danh mục sản phẩm",
-                btn_inquire: "Tư vấn báo giá online",
-                about_tag: "Về chúng tôi",
-                about_company: "Công ty TNHH VIEBUCKS",
-                about_subtitle: "Nhà cung cấp cà phê chuyên nghiệp với chất lượng ổn định và hương vị tuyệt hảo",
-                about_desc: "Công ty TNHH VIEBUCKS chú trọng phát triển ngành cà phê tinh tế, tập trung vào hương vị và độ ổn định chất lượng. Từ Arabica cao cấp, Robusta địa phương đến Brazil Cerrado đơn nguồn, chúng tôi mang đến giải pháp chọn hạt và rang tối ưu cho người yêu cà phê và doanh nghiệp F&B.",
-                feature_1_title: "Hỗ trợ song ngữ Trung - Việt",
-                feature_1_desc: "Đội ngũ chuyên nghiệp, giao tiếp thương mại xuyên quốc gia dễ dàng.",
-                feature_2_title: "Hệ thống bán sỉ linh hoạt",
-                feature_2_desc: "Ngưỡng đặt hàng cực thấp, đáp ứng đa dạng doanh nghiệp.",
-                img_badge: "Hạt cà phê nguyên chất tuyển chọn",
-                products_tag: "Bảng giá",
-                products_title: "Dòng Cà Phê Tuyển Chọn & Phụ Kiện",
-                products_desc: "Cung cấp giải pháp bán lẻ và bán sỉ số lượng lớn với mức chiết khấu cực tốt.",
-                arabica_title: "Dòng Arabica Premium",
-                arabica_sub: "Hương thơm đậm đà, vị chua ngọt cân bằng",
-                robusta_title: "Dòng Robusta Bold",
-                robusta_sub: "Đậm đà chuẩn vị truyền thống Việt Nam",
-                th_item: "Sản phẩm",
-                th_retail: "Giá bán lẻ",
-                th_wholesale: "Giá bán sỉ",
-                th_moq: "Mức tối thiểu",
-                p_a250: "Cà phê hạt Arabica (250g)",
-                p_a500: "Cà phê hạt Arabica (500g)",
-                p_a1000: "Cà phê hạt Arabica (1000g)",
-                p_r250: "Cà phê hạt Robusta (250g)",
-                p_r500: "Cà phê hạt Robusta (500g)",
-                p_r1000: "Cà phê hạt Robusta (1000g)",
-                b2b_tag: "Hợp tác doanh nghiệp",
-                b2b_title: "Giải pháp linh hoạt dành cho khách hàng doanh nghiệp",
-                b2b_desc: "Đồng hành cùng quán cà phê, văn phòng và các dự án quà tặng doanh nghiệp.",
-                b2b_c1_title: "Bán sỉ cho Quán & Chuỗi F&B",
-                b2b_c1_desc: "Gói 1000g tiện lợi, chất lượng rang đồng nhất đảm bảo hương vị ổn định cho quán.",
-                b2b_c2_title: "Gói Cà Phê Văn Phòng",
-                b2b_c2_desc: "Cung cấp cà phê túi lọc và hạt tươi định kỳ, nâng cao trải nghiệm làm việc cho đội ngũ.",
-                b2b_c3_title: "Quà Tặng Doanh Nghiệp & OEM",
-                b2b_c3_desc: "Tùy chỉnh bao bì túi lọc, quà tặng sự kiện mang đậm dấu ấn thương hiệu riêng.",
-                contact_tag: "Liên hệ",
-                contact_title: "Bắt đầu hành trình cà phê chất lượng của bạn",
-                contact_desc: "Hãy liên hệ với chúng tôi ngay hôm nay để nhận mẫu thử, báo giá sỉ hoặc tư vấn giải pháp tùy chỉnh.",
-                info_mfg: "Nhà sản xuất",
-                info_addr: "Địa chỉ",
-                info_phone: "Điện thoại",
-                form_title: "Yêu cầu tư vấn online",
-                form_name: "Họ và tên",
-                form_phone: "Số điện thoại",
-                form_msg: "Nội dung tư vấn",
-                form_submit: "Gửi yêu cầu",
-                footer_privacy: "Chính sách bảo mật",
-                footer_terms: "Điều khoản dịch vụ"
+                nav_about: "Về chúng tôi", nav_products: "Sản phẩm & Giá", nav_b2b: "Hợp tác B2B", nav_contact: "Liên hệ",
+                hero_subtitle: "Cà phê đặc sản & Giải pháp B2B", hero_desc: "Tuyển chọn Arabica và Robusta chất lượng cao, giải pháp sỉ & lẻ linh hoạt.",
+                btn_view_catalog: "Xem danh mục & Đặt hàng", products_tag: "Bảng giá & Đặt hàng", products_title: "Dòng Cà Phê Tuyển Chọn",
+                wholesale_tip: "💡 Tự động áp dụng giá bán sỉ khi mua đạt số lượng tối thiểu!",
+                cart_title: "Giỏ hàng mua sắm", total_estimate: "Tổng tạm tính:", vat_notice: "* Đã tự động chiết khấu giá sỉ nếu đạt số lượng.",
+                btn_checkout: "Xác nhận gửi đơn hàng", empty_cart: "Giỏ hàng của bạn đang trống.",
+                retail_price: "Giá lẻ:", wholesale_price: "Giá sỉ:", moq_label: "Tối thiểu sỉ:", btn_add: "Thêm vào giỏ",
+                modal_title: "Xác nhận đơn hàng", form_name: "Họ và tên *", form_phone: "Số điện thoại *", form_company: "Tên công ty",
+                form_address: "Địa chỉ giao hàng *", form_note: "Ghi chú thêm", btn_send_order: "Gửi đơn hàng qua Email", btn_zalo: "Đặt hàng nhanh qua Zalo"
             },
             zh: {
-                nav_about: "關於我們",
-                nav_products: "產品與價格",
-                nav_b2b: "商業合作",
-                nav_contact: "聯絡我們",
-                nav_quote: "索取報價",
-                hero_subtitle: "Specialty Coffee & B2B Solutions",
-                hero_desc: "嚴選高品質阿拉比卡與羅布斯塔，提供精準烘焙、靈活採購與客製化合作的專業咖啡方案。",
-                btn_view_catalog: "瀏覽產品目錄",
-                btn_inquire: "線上諮詢採購",
-                about_tag: "關於我們",
-                about_company: "Công ty TNHH VIEBUCKS",
-                about_subtitle: "極致風味與品質穩定的專業咖啡供應商",
-                about_desc: "Công ty TNHH VIEBUCKS 致力於精緻咖啡產業的發展，專注於風味表現與品質穩定。從精品阿拉比卡、在地羅布斯塔到單品巴西喜拉朵，我們為咖啡愛好者與餐飲業者提供最佳的選豆與烘焙解決方案。",
-                feature_1_title: "中越雙語支援",
-                feature_1_desc: "專業雙語團隊，跨國採購與商務溝通無障礙。",
-                feature_2_title: "彈性批發體系",
-                feature_2_desc: "超低起訂門檻，全面滿足大小企業與連鎖餐飲。",
-                img_badge: "100% 精選頂級原豆與在地契作",
-                products_tag: "產品定價表",
-                products_title: "精選咖啡豆與便利包系列",
-                products_desc: "提供零售與門檻極佳的大宗批發方案。",
-                arabica_title: "阿拉比卡系列 Arabica Premium",
-                arabica_sub: "香氣濃郁、酸甜平衡，最受精品咖啡市場喜愛的經典品類",
-                robusta_title: "羅布斯塔系列 Robusta Bold",
-                robusta_sub: "口感醇厚、油脂豐富，完美傳達越南在地經典風味",
-                th_item: "項目 / Sản phẩm",
-                th_retail: "零售單價",
-                th_wholesale: "批發單價",
-                th_moq: "批發門檻",
-                p_a250: "阿拉比卡 咖啡豆 (250g)",
-                p_a500: "阿拉比卡 咖啡豆 (500g)",
-                p_a1000: "阿拉比卡 咖啡豆 (1000g)",
-                p_r250: "羅布斯塔 咖啡豆 (250g)",
-                p_r500: "羅布斯塔 咖啡豆 (500g)",
-                p_r1000: "羅布斯塔 咖啡豆 (1000g)",
-                b2b_tag: "企業合作",
-                b2b_title: "專為商業客戶打造的靈活方案",
-                b2b_desc: "從咖啡店採購、企業辦公室供應到節慶禮盒客製，Viebucks 為您提供最給力的後盾。",
-                b2b_c1_title: "餐飲與連鎖門市批發",
-                b2b_c1_desc: "提供商業用 1000g 大容量包裝與穩定的烘焙品質，確保門市出杯風味始終如一。",
-                b2b_c2_title: "企業辦公室專案",
-                b2b_c2_desc: "定期配送濾掛包與新鮮咖啡豆，提升團隊工作效率與茶水間體驗。",
-                b2b_c3_title: "客製化禮盒與 OEM",
-                b2b_c3_desc: "支援濾掛包外包裝客製設計，打造符合您品牌形象的專屬節慶禮盒。",
-                contact_tag: "聯絡我們",
-                contact_title: "開始您的高品質咖啡之旅",
-                contact_desc: "歡迎隨時與我們聯繫！無論是索取樣品、批發報價或諮詢客製化合作，團隊將儘速為您服務。",
-                info_mfg: "生產商",
-                info_addr: "地址",
-                info_phone: "聯絡電話",
-                form_title: "線上需求表單",
-                form_name: "姓名",
-                form_phone: "聯絡電話",
-                form_msg: "諮詢內容",
-                form_submit: "送出需求",
-                footer_privacy: "隱私權政策",
-                footer_terms: "服務條款"
+                nav_about: "關於我們", nav_products: "產品與採購", nav_b2b: "商業合作", nav_contact: "聯絡我們",
+                hero_subtitle: "Specialty Coffee & B2B Solutions", hero_desc: "嚴選高品質阿拉比卡與羅布斯塔，提供彈性批發與零售採購方案。",
+                btn_view_catalog: "瀏覽產品與線上下單", products_tag: "產品定價與採購", products_title: "精選咖啡豆系列",
+                wholesale_tip: "💡 訂購數量達到批發門檻時，系統將自動套用優惠批發價！",
+                cart_title: "採購購物車", total_estimate: "預估總金額:", vat_notice: "* 已自動套用數量批發折扣。",
+                btn_checkout: "填寫資料並送出採購單", empty_cart: "您的購物車目前是空的。",
+                retail_price: "零售價:", wholesale_price: "批發價:", moq_label: "批發門檻:", btn_add: "加入購物車",
+                modal_title: "採購單資料確認", form_name: "聯絡人姓名 *", form_phone: "聯絡電話 *", form_company: "公司名稱",
+                form_address: "送貨地址 *", form_note: "備註需求", btn_send_order: "送出採購需求單", btn_zalo: "使用 Zalo 快速下單"
             },
             en: {
-                nav_about: "About Us",
-                nav_products: "Products & Pricing",
-                nav_b2b: "B2B Solutions",
-                nav_contact: "Contact Us",
-                nav_quote: "Get a Quote",
-                hero_subtitle: "Specialty Coffee & B2B Solutions",
-                hero_desc: "Carefully selected high-quality Arabica & Robusta, offering precise roasting, flexible purchasing, and custom B2B coffee solutions.",
-                btn_view_catalog: "View Catalog",
-                btn_inquire: "Inquire Online",
-                about_tag: "About Us",
-                about_company: "VIEBUCKS CO., LTD",
-                about_subtitle: "Professional Coffee Supplier with Premium Flavor and Stable Quality",
-                about_desc: "Công ty TNHH VIEBUCKS is dedicated to the specialty coffee industry, focusing on flavor profile and consistent quality. From fine Arabica, local Robusta, to single-origin Brazil Cerrado, we provide optimal bean selection and roasting solutions.",
-                feature_1_title: "Bilingual Support (VN/ZH/EN)",
-                feature_1_desc: "Professional team for smooth cross-border procurement and communication.",
-                feature_2_title: "Flexible Wholesale System",
-                feature_2_desc: "Ultra-low MOQ to meet the needs of businesses of all sizes.",
-                img_badge: "100% Selected Premium Green Beans",
-                products_tag: "Pricing Table",
-                products_title: "Featured Coffee Beans & Drip Bags",
-                products_desc: "Providing flexible options for both retail and volume wholesale.",
-                arabica_title: "Arabica Premium Series",
-                arabica_sub: "Rich aroma with a balanced sweet and sour profile",
-                robusta_title: "Robusta Bold Series",
-                robusta_sub: "Rich body and thick crema, traditional Vietnamese flavor",
-                th_item: "Product Name",
-                th_retail: "Retail Price",
-                th_wholesale: "Wholesale Price",
-                th_moq: "MOQ",
-                p_a250: "Arabica Coffee Beans (250g)",
-                p_a500: "Arabica Coffee Beans (500g)",
-                p_a1000: "Arabica Coffee Beans (1000g)",
-                p_r250: "Robusta Coffee Beans (250g)",
-                p_r500: "Robusta Coffee Beans (500g)",
-                p_r1000: "Robusta Coffee Beans (1000g)",
-                b2b_tag: "B2B Solutions",
-                b2b_title: "Flexible Solutions Built for Business Clients",
-                b2b_desc: "Partnering with cafes, corporate offices, and customized gift projects.",
-                b2b_c1_title: "Cafe & F&B Chain Wholesale",
-                b2b_c1_desc: "1000g commercial packs with roasting consistency for cup-to-cup stability.",
-                b2b_c2_title: "Corporate Coffee Solutions",
-                b2b_c2_desc: "Regular deliveries of drip bags and freshly roasted beans for your office.",
-                b2b_c3_title: "Custom Gifts & OEM",
-                b2b_c3_desc: "Tailored packaging designs for drip bags and branded corporate gift sets.",
-                contact_tag: "Contact Us",
-                contact_title: "Start Your Premium Coffee Journey Today",
-                contact_desc: "Get in touch with us today for free samples, wholesale pricing, or custom OEM solutions.",
-                info_mfg: "Manufacturer",
-                info_addr: "Address",
-                info_phone: "Phone",
-                form_title: "Online Inquiry Form",
-                form_name: "Full Name",
-                form_phone: "Phone Number",
-                form_msg: "Message",
-                form_submit: "Submit Request",
-                footer_privacy: "Privacy Policy",
-                footer_terms: "Terms of Service"
+                nav_about: "About Us", nav_products: "Products", nav_b2b: "B2B Solutions", nav_contact: "Contact",
+                hero_subtitle: "Specialty Coffee & B2B Solutions", hero_desc: "Selected high-quality Arabica & Robusta coffee beans.",
+                btn_view_catalog: "View Catalog & Order", products_tag: "Pricing & Ordering", products_title: "Featured Coffee Series",
+                wholesale_tip: "💡 Wholesale price is automatically applied once minimum quantity is met!",
+                cart_title: "Shopping Cart", total_estimate: "Estimated Total:", vat_notice: "* Wholesale discount automatically applied.",
+                btn_checkout: "Proceed to Checkout", empty_cart: "Your cart is empty.",
+                retail_price: "Retail:", wholesale_price: "Wholesale:", moq_label: "Min Order:", btn_add: "Add to Cart",
+                modal_title: "Order Confirmation", form_name: "Full Name *", form_phone: "Phone Number *", form_company: "Company Name",
+                form_address: "Shipping Address *", form_note: "Notes", btn_send_order: "Submit Order", btn_zalo: "Quick Order via Zalo"
             }
         };
 
-        // 2. 切換語言的核心邏輯
+        let currentLang = 'vi';
+        let cart = []; // 購物車陣列: { id, qty }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            currentLang = localStorage.getItem('preferred_lang') || 'vi';
+            changeLanguage(currentLang);
+            renderProducts();
+            updateCartUI();
+        });
+
+        // 渲染商品卡片
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '';
+
+            productsData.forEach(p => {
+                const name = p[`name_${currentLang}`] || p.name_vi;
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-xl shadow-sm border border-gray-200 p-5 flex flex-col justify-between hover:shadow-md transition";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-gray-900 text-lg">${name}</h3>
+                            <span class="bg-amber-100 text-amber-900 text-xs font-semibold px-2.5 py-1 rounded-full">MOQ: ${p.moq}</span>
+                        </div>
+                        <div class="space-y-1 text-sm my-3">
+                            <div class="flex justify-between text-gray-500">
+                                <span data-i18n="retail_price">${i18nData[currentLang].retail_price}</span>
+                                <span class="line-through">${p.retail.toLocaleString()} VND</span>
+                            </div>
+                            <div class="flex justify-between font-bold text-amber-900 text-base">
+                                <span data-i18n="wholesale_price">${i18nData[currentLang].wholesale_price}</span>
+                                <span>${p.wholesale.toLocaleString()} VND</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="addToCart('${p.id}')" class="w-full bg-amber-800 hover:bg-amber-900 text-white text-sm font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2 mt-2">
+                        <i class="fa-solid fa-plus"></i>
+                        <span data-i18n="btn_add">${i18nData[currentLang].btn_add}</span>
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // 購物車邏輯
+        function addToCart(id) {
+            const item = cart.find(x => x.id === id);
+            if (item) {
+                item.qty += 1;
+            } else {
+                cart.push({ id: id, qty: 1 });
+            }
+            updateCartUI();
+            toggleCartDrawer(true); // 自動打開購物車抽屜
+        }
+
+        function updateQuantity(id, delta) {
+            const item = cart.find(x => x.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) {
+                    cart = cart.filter(x => x.id !== id);
+                }
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartContainer = document.getElementById('cartItemsList');
+            const totalElement = document.getElementById('cartTotalPrice');
+            const badge = document.getElementById('cartBadge');
+
+            if (cart.length === 0) {
+                cartContainer.innerHTML = `<p class="text-center text-gray-400 py-8" data-i18n="empty_cart">${i18nData[currentLang].empty_cart}</p>`;
+                totalElement.textContent = "0 VND";
+                badge.classList.add('hidden');
+                return;
+            }
+
+            let totalSum = 0;
+            let totalItemsCount = 0;
+            cartContainer.innerHTML = '';
+
+            cart.forEach(c => {
+                const p = productsData.find(x => x.id === c.id);
+                // 自動判斷是否達到批發門檻
+                const isWholesale = c.qty >= p.moq;
+                const price = isWholesale ? p.wholesale : p.retail;
+                const lineTotal = price * c.qty;
+                totalSum += lineTotal;
+                totalItemsCount += c.qty;
+
+                const name = p[`name_${currentLang}`] || p.name_vi;
+
+                const itemRow = document.createElement('div');
+                itemRow.className = "flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100";
+                itemRow.innerHTML = `
+                    <div class="flex-1 pr-2">
+                        <h4 class="font-bold text-sm text-gray-800">${name}</h4>
+                        <div class="text-xs text-gray-500 mt-1">
+                            ${price.toLocaleString()} VND x ${c.qty}
+                            ${isWholesale ? '<span class="text-green-600 font-semibold ml-1">[Giá sỉ]</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="updateQuantity('${c.id}', -1)" class="w-6 h-6 rounded bg-gray-200 text-gray-700 flex items-center justify-center font-bold hover:bg-gray-300">-</button>
+                        <span class="text-sm font-semibold w-6 text-center">${c.qty}</span>
+                        <button onclick="updateQuantity('${c.id}', 1)" class="w-6 h-6 rounded bg-gray-200 text-gray-700 flex items-center justify-center font-bold hover:bg-gray-300">+</button>
+                    </div>
+                `;
+                cartContainer.appendChild(itemRow);
+            });
+
+            totalElement.textContent = totalSum.toLocaleString() + " VND";
+            badge.textContent = totalItemsCount;
+            badge.classList.remove('hidden');
+        }
+
+        // 購物車抽屜開關
+        function toggleCartDrawer(open) {
+            const drawer = document.getElementById('cartDrawer');
+            const overlay = document.getElementById('cartOverlay');
+            if (open === true || drawer.classList.contains('translate-x-full')) {
+                drawer.classList.remove('translate-x-full');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                drawer.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        // 結帳 Modal 控制
+        function openCheckoutModal() {
+            if (cart.length === 0) {
+                alert(i18nData[currentLang].empty_cart);
+                return;
+            }
+            document.getElementById('checkoutModal').classList.remove('hidden');
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').classList.add('hidden');
+        }
+
+        // 多國語言切換
         function changeLanguage(lang) {
-            // 寫入 localStorage 記憶設定
+            currentLang = lang;
             localStorage.setItem('preferred_lang', lang);
             document.documentElement.lang = lang;
 
-            // 尋找頁面上所有設有 data-i18n 屬性的元素並替換文字
-            const elements = document.querySelectorAll('[data-i18n]');
-            elements.forEach(el => {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (i18nData[lang] && i18nData[lang][key]) {
                     el.textContent = i18nData[lang][key];
                 }
             });
 
-            // 同步下拉選單數值
-            const langSelect = document.getElementById('langSelect');
-            if (langSelect) langSelect.value = lang;
+            document.getElementById('langSelect').value = lang;
+            renderProducts();
+            updateCartUI();
         }
 
-        // 3. 頁面初始化（優先載入 localStorage 設定，若無則採用 'vi' 越南文）
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('preferred_lang') || 'vi';
-            changeLanguage(savedLang);
-        });
+        // 快捷 Zalo 下單功能 (越南市場常見採購管道)
+        function sendOrderZalo() {
+            const name = document.getElementById('custName').value || "Khách hàng";
+            const phone = document.getElementById('custPhone').value || "";
+            if(!phone) {
+                alert(currentLang === 'zh' ? '請填寫電話號碼！' : 'Vui lòng nhập số điện thoại!');
+                return;
+            }
+
+            let orderText = `[ĐƠN HÀNG MỚI FROM WEBSITE]\n` + `Họ tên: ${name}\n` + `SĐT: ${phone}\n` + `------------------\n`;
+            cart.forEach(c => {
+                const p = productsData.find(x => x.id === c.id);
+                orderText += `- ${p.name_vi} x ${c.qty}\n`;
+            });
+
+            const zaloPhone = "0348246669"; // 網站營運電話
+            const encodedMsg = encodeURIComponent(orderText);
+            window.open(`https://zalo.me/${zaloPhone}`, '_blank');
+        }
+
+        function handleOrderSubmit(e) {
+            e.preventDefault();
+            alert(currentLang === 'zh' ? '感謝您的採購訂單！專員將於 24 小時內與您聯繫。' : 'Cảm ơn đơn hàng của bạn! Chúng tôi sẽ liên hệ sớm.');
+            cart = [];
+            updateCartUI();
+            closeCheckoutModal();
+            toggleCartDrawer(false);
+        }
     </script>
 </body>
 </html>
