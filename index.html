@@ -23,14 +23,14 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            padding: 20px;
+            padding: 15px;
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
             background: var(--card-bg);
-            padding: 30px;
+            padding: 25px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
@@ -42,11 +42,13 @@
             border-bottom: 2px solid var(--accent-color);
             padding-bottom: 15px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .header h1 {
             color: var(--primary-color);
-            font-size: 24px;
+            font-size: 22px;
         }
 
         .lang-switch button {
@@ -55,7 +57,7 @@
             padding: 5px 10px;
             border-radius: 4px;
             cursor: pointer;
-            margin-left: 5px;
+            margin-left: 3px;
             font-size: 12px;
             transition: 0.2s;
         }
@@ -104,12 +106,13 @@
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .product-info h3 {
             color: var(--primary-color);
             margin-bottom: 5px;
+            font-size: 16px;
         }
 
         .product-info p {
@@ -121,51 +124,82 @@
             display: flex;
             gap: 10px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
-        select, input[type="number"], input[type="text"] {
+        /* 數量 +/- 控制鈕器 */
+        .qty-picker {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .qty-btn {
+            background: #eee;
+            border: none;
+            width: 32px;
+            height: 32px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .qty-btn:active {
+            background: #ddd;
+        }
+
+        .qty-input {
+            width: 45px;
+            height: 32px;
+            border: none;
+            text-align: center;
+            font-size: 14px;
+            outline: none;
+        }
+
+        select, input[type="text"] {
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 14px;
         }
 
-        input[type="number"] {
-            width: 70px;
-        }
-
         .customer-form {
-            margin-top: 30px;
+            margin-top: 25px;
             background: #fafafa;
             padding: 20px;
             border-radius: 8px;
+            border: 1px solid #f0f0f0;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .form-group label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
         }
 
-        .form-group input, .form-group select {
+        .form-group input {
             width: 100%;
         }
 
         /* 優惠碼與金額試算區 */
         .coupon-section {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             margin-top: 15px;
             justify-content: flex-end;
         }
 
         .coupon-section input {
-            width: 180px;
+            width: 160px;
         }
 
         .coupon-section button {
@@ -181,8 +215,9 @@
         .summary-box {
             margin-top: 20px;
             text-align: right;
-            font-size: 16px;
+            font-size: 15px;
             color: var(--primary-color);
+            line-height: 1.6;
         }
 
         .summary-box .final-total {
@@ -226,7 +261,7 @@
             padding: 25px;
             border-radius: 10px;
             max-width: 550px;
-            width: 90%;
+            width: 92%;
             max-height: 90vh;
             overflow-y: auto;
         }
@@ -247,13 +282,13 @@
         .receipt-list li {
             padding: 6px 0;
             border-bottom: 1px dashed #eee;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         /* VietQR 樣式 */
         .qr-container {
             text-align: center;
-            margin-top: 15px;
+            margin-top: 10px;
             padding: 10px;
             background: #fff;
             border: 1px solid #ddd;
@@ -261,14 +296,13 @@
         }
 
         .qr-container img {
-            max-width: 220px;
+            max-width: 200px;
             height: auto;
-            border: 1px solid #eee;
         }
 
         .modal-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             margin-top: 20px;
             flex-wrap: wrap;
         }
@@ -280,7 +314,8 @@
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
-            min-width: 110px;
+            min-width: 100px;
+            font-size: 13px;
         }
 
         .btn-close { background: #ccc; }
@@ -289,7 +324,6 @@
         .btn-zalo { background: #0068ff; color: white; }
         .btn-email { background: #ea4335; color: white; }
 
-        /* 列印樣式優化 */
         @media print {
             body * { visibility: hidden; }
             #receipt-modal, #receipt-modal * { visibility: visible; }
@@ -316,7 +350,7 @@
 
     <!-- 免運門檻提示條 -->
     <div class="freeship-progress-container">
-        <div class="freeship-text" id="freeship-msg">滿 500,000 VND 即可享免運優惠！</div>
+        <div class="freeship-text" id="freeship-msg">載入中...</div>
         <div class="progress-bar-bg">
             <div class="progress-bar-fill" id="freeship-bar"></div>
         </div>
@@ -332,7 +366,11 @@
             </div>
             <div class="product-controls">
                 <select class="grind-select"></select>
-                <input type="number" class="qty-input" value="0" min="0" onchange="calculateTotal()">
+                <div class="qty-picker">
+                    <button class="qty-btn" onclick="updateQty(this, -1)">-</button>
+                    <input type="number" class="qty-input" value="0" min="0" onchange="calculateTotal()">
+                    <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+                </div>
             </div>
         </div>
 
@@ -344,7 +382,11 @@
             </div>
             <div class="product-controls">
                 <select class="grind-select"></select>
-                <input type="number" class="qty-input" value="0" min="0" onchange="calculateTotal()">
+                <div class="qty-picker">
+                    <button class="qty-btn" onclick="updateQty(this, -1)">-</button>
+                    <input type="number" class="qty-input" value="0" min="0" onchange="calculateTotal()">
+                    <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+                </div>
             </div>
         </div>
 
@@ -356,25 +398,29 @@
             </div>
             <div class="product-controls">
                 <select class="grind-select"></select>
-                <input type="number" class="qty-input" value="0" min="0" onchange="calculateTotal()">
+                <div class="qty-picker">
+                    <button class="qty-btn" onclick="updateQty(this, -1)">-</button>
+                    <input type="number" class="qty-input" value="0" min="0" onchange="calculateTotal()">
+                    <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- 訂購人資訊 -->
     <div class="customer-form">
-        <h3 id="txt-cust-info-title" style="margin-bottom: 15px; color: var(--primary-color);">訂購人資訊</h3>
+        <h3 id="txt-cust-info-title" style="margin-bottom: 12px; color: var(--primary-color);">訂購人資訊</h3>
         <div class="form-group">
             <label id="lbl-name">姓名 / Họ và tên / Full Name:</label>
-            <input type="text" id="cust-name" required placeholder="Ex: Chang Yu Wei">
+            <input type="text" id="cust-name" placeholder="Ex: Chang Yu Wei">
         </div>
         <div class="form-group">
             <label id="lbl-phone">電話 / Số điện thoại / Phone:</label>
-            <input type="text" id="cust-phone" required placeholder="Ex: 0912345678">
+            <input type="text" id="cust-phone" placeholder="Ex: 0912345678">
         </div>
         <div class="form-group">
             <label id="lbl-address">送貨地址 / Địa chỉ giao hàng / Address:</label>
-            <input type="text" id="cust-address" required placeholder="Ex: Ho Chi Minh City...">
+            <input type="text" id="cust-address" placeholder="Ex: Ho Chi Minh City...">
         </div>
         <div class="form-group">
             <label id="lbl-note">備註 / Ghi chú / Note:</label>
@@ -384,7 +430,7 @@
 
     <!-- 優惠碼輸入區 -->
     <div class="coupon-section">
-        <input type="text" id="coupon-code" placeholder="優惠碼 (Coupon)">
+        <input type="text" id="coupon-code" placeholder="優惠碼 (Coupon)" onkeypress="if(event.key==='Enter') applyCoupon()">
         <button onclick="applyCoupon()" id="btn-coupon">使用優惠碼</button>
     </div>
 
@@ -426,7 +472,7 @@
             
             <!-- 動態 VietQR 圖像 -->
             <div class="qr-container">
-                <p style="font-size: 11px; color: #777; margin-bottom: 5px;">掃描下方 VietQR 自動帶入金額與訂單編號</p>
+                <p style="font-size: 11px; color: #777; margin-bottom: 5px;" id="txt-qr-tip">掃描下方 VietQR 自動帶入金額與訂單編號</p>
                 <img id="vietqr-img" src="" alt="VietQR Code">
             </div>
             <p style="color: #e74c3c; margin-top: 5px; font-size: 12px;" id="txt-bank-note">* 轉帳備註請填寫訂單編號</p>
@@ -444,10 +490,15 @@
 
 <script>
     let currentLang = 'zh';
-    const FREESHIP_THRESHOLD = 500000; // 免運門檻
-    const STANDARD_SHIPPING = 30000;   // 標準運費
+    const FREESHIP_THRESHOLD = 500000;
+    const STANDARD_SHIPPING = 30000;
     let discountAmount = 0;
     let appliedCoupon = "";
+
+    // 接收訂單的真實 Email
+    const TARGET_EMAIL = "viebuckscoffee@gmail.com"; 
+    // Zalo 電話或 OA 連結
+    const ZALO_PHONE = "0348246669"; 
 
     // 語系字典
     const i18n = {
@@ -476,8 +527,11 @@
             bankHolder: "戶名：",
             bankAcc: "帳號：",
             bankNote: "* 轉帳備註請填寫訂單編號",
+            qrTip: "掃描下方 VietQR 自動帶入金額與訂單編號",
             freeshipReach: "🎉 已達免運門檻！即享免費配送",
             freeshipLack: "再消費 {amount} VND 即可享免運優惠！",
+            copySuccess: "訂單內容已複製到剪貼簿！",
+            zaloNotice: "訂單內容已複製！即將開啟 Zalo，請直接在對話框貼上傳送給我們。",
             grindOptions: [
                 "研磨度: 咖啡原豆 (Beans)",
                 "研磨度: 義式濃縮 (Espresso)",
@@ -511,8 +565,11 @@
             bankHolder: "Chủ tài khoản: ",
             bankAcc: "Số tài khoản: ",
             bankNote: "* Nội dung chuyển khoản vui lòng ghi rõ Mã đơn hàng",
+            qrTip: "Quét mã VietQR để tự động nhập số tiền và nội dung",
             freeshipReach: "🎉 Đã đạt điều kiện Freeship!",
             freeshipLack: "Mua thêm {amount} VND để được Freeship!",
+            copySuccess: "Đã sao chép nội dung đơn hàng!",
+            zaloNotice: "Đã sao chép đơn hàng! Hệ thống sẽ mở Zalo, vui lòng dán nội dung vào tin nhắn.",
             grindOptions: [
                 "Xay: Hạt nguyên (Beans)",
                 "Xay: Pha Máy (Espresso)",
@@ -546,8 +603,11 @@
             bankHolder: "Account Name: ",
             bankAcc: "Account No.: ",
             bankNote: "* Please include Order ID in transfer description",
+            qrTip: "Scan VietQR below to auto-fill amount and reference",
             freeshipReach: "🎉 You have qualified for Free Shipping!",
             freeshipLack: "Add {amount} VND more for Free Shipping!",
+            copySuccess: "Order details copied to clipboard!",
+            zaloNotice: "Order copied! Opening Zalo, please paste the message in chat.",
             grindOptions: [
                 "Grind: Whole Beans",
                 "Grind: Espresso",
@@ -557,6 +617,21 @@
             ]
         }
     };
+
+    // 頁面載入完成後執行
+    window.onload = function() {
+        loadSavedCustomerData();
+        changeLang('zh');
+    };
+
+    // 數量 +/- 按鈕控制
+    function updateQty(btn, change) {
+        const input = btn.parentElement.querySelector('.qty-input');
+        let val = parseInt(input.value) || 0;
+        val = Math.max(0, val + change);
+        input.value = val;
+        calculateTotal();
+    }
 
     // 切換語言
     function changeLang(lang) {
@@ -588,6 +663,7 @@
         document.getElementById('lbl-bank-holder').innerText = t.bankHolder;
         document.getElementById('lbl-bank-acc').innerText = t.bankAcc;
         document.getElementById('txt-bank-note').innerText = t.bankNote;
+        document.getElementById('txt-qr-tip').innerText = t.qrTip;
 
         document.querySelectorAll('.txt-price-lbl').forEach(el => el.innerText = t.priceLbl);
 
@@ -616,12 +692,12 @@
         const code = document.getElementById('coupon-code').value.trim().toUpperCase();
         if (code === "VIE10") {
             appliedCoupon = "VIE10 (9折)";
-            alert("已成功套用 VIE10 優惠碼 (享 9 折優惠)！");
+            alert(currentLang === 'zh' ? "已套用 VIE10 優惠碼 (享 9 折)！" : "Đã áp dụng mã VIE10 (Giảm 10%)!");
         } else if (code === "FREESHIP") {
             appliedCoupon = "FREESHIP";
-            alert("已成功套用 FREESHIP 折扣碼！");
+            alert(currentLang === 'zh' ? "已套用 FREESHIP 免運優惠碼！" : "Đã áp dụng mã FREESHIP!");
         } else {
-            alert("無效的優惠碼！");
+            alert(currentLang === 'zh' ? "無效的優惠碼！" : "Mã giảm giá không hợp lệ!");
             appliedCoupon = "";
         }
         calculateTotal();
@@ -654,7 +730,7 @@
         // 計算折扣金額
         discountAmount = 0;
         if (appliedCoupon.includes("9折")) {
-            discountAmount = subtotal * 0.1;
+            discountAmount = Math.round(subtotal * 0.1);
         }
 
         // 計算運費
@@ -667,6 +743,21 @@
         document.getElementById('total-amount').innerText = finalTotal.toLocaleString();
 
         return { subtotal, discountAmount, shipping, finalTotal };
+    }
+
+    // 記憶顧客資料至 LocalStorage
+    function saveCustomerData(name, phone, address) {
+        localStorage.setItem('vb_cust_name', name);
+        localStorage.setItem('vb_cust_phone', phone);
+        localStorage.setItem('vb_cust_address', address);
+    }
+
+    function loadSavedCustomerData() {
+        if (localStorage.getItem('vb_cust_name')) {
+            document.getElementById('cust-name').value = localStorage.getItem('vb_cust_name');
+            document.getElementById('cust-phone').value = localStorage.getItem('vb_cust_phone');
+            document.getElementById('cust-address').value = localStorage.getItem('vb_cust_address');
+        }
     }
 
     // 生成單據 Modal 與 VietQR
@@ -686,7 +777,10 @@
             return;
         }
 
-        // 動態生成流水號編號
+        // 儲存資訊方便下次自動填寫
+        saveCustomerData(name, phone, address);
+
+        // 生成訂單編號
         const dateStr = new Date().toISOString().slice(0,10).replace(/-/g,"");
         const randomNum = Math.floor(1000 + Math.random() * 9000);
         const orderId = `VB${dateStr}-${randomNum}`;
@@ -716,7 +810,7 @@
             }
         });
 
-        // 生成 VietQR URL (MB Bank ID: 970422, 帳號: 0348246669)
+        // 生成 VietQR URL
         const bankId = "MB";
         const accountNo = "0348246669";
         const accountName = "CONG TY TNHH VIEBUCKS";
@@ -730,7 +824,7 @@
         document.getElementById('receipt-modal').style.display = 'none';
     }
 
-    // 取得統一格式的純文字內容
+    // 取得統一純文字
     function getReceiptPlainText() {
         const id = document.getElementById('rec-id').innerText;
         const name = document.getElementById('rec-name').innerText;
@@ -760,16 +854,27 @@
     // 複製純文字
     function copyReceiptText() {
         const text = getReceiptPlainText();
-        navigator.clipboard.writeText(text).then(() => {
-            alert(currentLang === 'zh' ? '訂單內容已複製！' : 'Đã sao chép nội dung đơn hàng!');
-        });
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert(i18n[currentLang].copySuccess);
+            });
+        } else {
+            // 備用方案：如果瀏覽器不支援 clipboard API
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert(i18n[currentLang].copySuccess);
+        }
     }
 
     // 一鍵發送至 Zalo
     function sendViaZalo() {
         copyReceiptText();
-        const zaloPhone = "0348246669"; 
-        window.open(`https://zalo.me/${zaloPhone}`, '_blank');
+        alert(i18n[currentLang].zaloNotice);
+        window.open(`https://zalo.me/${ZALO_PHONE}`, '_blank');
     }
 
     // 一鍵發送至 Email
@@ -780,11 +885,8 @@
 
         const subject = encodeURIComponent(`[Viebucks Order] ${id} - ${name}`);
         const body = encodeURIComponent(text);
-        window.open(`mailto:your-email@gmail.com?subject=${subject}&body=${body}`);
+        window.open(`mailto:${TARGET_EMAIL}?subject=${subject}&body=${body}`);
     }
-
-    // 初始化語言
-    changeLang('zh');
 </script>
 
 </body>
