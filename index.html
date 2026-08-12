@@ -123,7 +123,7 @@
             color: #2c1810;
         }
 
-        /* 購物平台 Section */
+        /* 商城區塊 */
         .store-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -201,7 +201,7 @@
             border-radius: 4px;
         }
 
-        /* 購物車與結帳區 */
+        /* 購物车與結帳區 */
         .cart-summary {
             background: #faf8f5;
             padding: 25px;
@@ -382,9 +382,9 @@
                         <span class="badge-wholesale">滿10包批發價: 180,000 VND</span>
                     </div>
                     <div class="qty-control">
-                        <button class="qty-btn" onclick="updateQty('arabica', -1)">-</button>
+                        <button type="button" class="qty-btn" onclick="updateQty('arabica', -1)">-</button>
                         <input type="number" id="qty-arabica" class="qty-input" value="0" min="0" onchange="renderCart()">
-                        <button class="qty-btn" onclick="updateQty('arabica', 1)">+</button>
+                        <button type="button" class="qty-btn" onclick="updateQty('arabica', 1)">+</button>
                     </div>
                 </div>
 
@@ -396,9 +396,9 @@
                         <span class="badge-wholesale">滿10包批發價: 120,000 VND</span>
                     </div>
                     <div class="qty-control">
-                        <button class="qty-btn" onclick="updateQty('robusta', -1)">-</button>
+                        <button type="button" class="qty-btn" onclick="updateQty('robusta', -1)">-</button>
                         <input type="number" id="qty-robusta" class="qty-input" value="0" min="0" onchange="renderCart()">
-                        <button class="qty-btn" onclick="updateQty('robusta', 1)">+</button>
+                        <button type="button" class="qty-btn" onclick="updateQty('robusta', 1)">+</button>
                     </div>
                 </div>
 
@@ -410,9 +410,9 @@
                         <span class="badge-wholesale">滿10包批發價: 160,000 VND</span>
                     </div>
                     <div class="qty-control">
-                        <button class="qty-btn" onclick="updateQty('brazil', -1)">-</button>
+                        <button type="button" class="qty-btn" onclick="updateQty('brazil', -1)">-</button>
                         <input type="number" id="qty-brazil" class="qty-input" value="0" min="0" onchange="renderCart()">
-                        <button class="qty-btn" onclick="updateQty('brazil', 1)">+</button>
+                        <button type="button" class="qty-btn" onclick="updateQty('brazil', 1)">+</button>
                     </div>
                 </div>
             </div>
@@ -451,8 +451,8 @@
                     </div>
                 </div>
 
-                <!-- 訂購人資訊：點擊後複製訂單內容並喚起 Gmail -->
-                <form id="checkout-form" class="checkout-form" onsubmit="sendViaGmail(event)">
+                <!-- 訂購人資訊：發送 Gmail + 自動複製並跳轉 Zalo -->
+                <form id="checkout-form" class="checkout-form" onsubmit="sendOrder(event)">
                     <h4 style="margin-top: 10px;" data-i18n="form_heading">填寫配送與聯絡資訊</h4>
                     
                     <input type="text" id="cust-name" class="form-input" placeholder="訂購人姓名 / Full Name" required data-i18n-ph="ph_name">
@@ -460,7 +460,7 @@
                     <input type="email" id="cust-email" class="form-input" placeholder="電子郵件 / Email Address" required data-i18n-ph="ph_email">
                     <textarea id="cust-address" class="form-input" rows="2" placeholder="詳細配送地址 / Shipping Address" required data-i18n-ph="ph_address"></textarea>
 
-                    <button type="submit" class="btn-submit" data-i18n="btn_submit_order">送出訂單（自動複製並開啟 Gmail）</button>
+                    <button type="submit" class="btn-submit" data-i18n="btn_submit_order">確認送出訂單 (複製訂單 + 開啟 Gmail & Zalo)</button>
                 </form>
             </div>
         </div>
@@ -495,9 +495,9 @@
         <a href="tel:0348246669" class="floating-btn btn-phone">📞</a>
     </div>
 
-    <!-- JS 邏輯：購物車計算 + 自動複製剪貼簿 + Gmail 喚起 + 多國語言切換 -->
+    <!-- JS 邏輯：購物車 + 相容性複製 + Gmail 寄件 + Zalo 跳轉 + 多國語言 -->
     <script>
-        // 1. 商品資料庫與價格設定
+        // 1. 商品資料庫
         const products = {
             arabica: { name: "Arabica 大叻精品阿拉比卡", retail: 220000, wholesale: 180000 },
             robusta: { name: "Robusta 西原特選羅布斯塔", retail: 150000, wholesale: 120000 },
@@ -506,7 +506,7 @@
 
         let currentCartItems = [];
 
-        // 2. 購物車數量加減
+        // 2. 數量調整
         function updateQty(id, delta) {
             const input = document.getElementById(`qty-${id}`);
             let val = parseInt(input.value) || 0;
@@ -516,7 +516,7 @@
             renderCart();
         }
 
-        // 3. 渲染購物車與金額試算
+        // 3. 渲染購物車
         function renderCart() {
             const tbody = document.getElementById('cart-items-body');
             tbody.innerHTML = '';
@@ -558,8 +558,34 @@
             document.getElementById('grand-total').innerText = `${grandTotal.toLocaleString()} VND`;
         }
 
-        // 4. 自動複製訂單內容至剪貼簿並開啟 Gmail / mailto
-        async function sendViaGmail(e) {
+        // 相容性剪貼簿複製函式
+        function copyToClipboard(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                return navigator.clipboard.writeText(text);
+            } else {
+                return new Promise((resolve, reject) => {
+                    const textArea = document.createElement("textarea");
+                    textArea.value = text;
+                    textArea.style.position = "fixed";
+                    textArea.style.left = "-999999px";
+                    textArea.style.top = "-999999px";
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        textArea.remove();
+                        resolve();
+                    } catch (error) {
+                        textArea.remove();
+                        reject(error);
+                    }
+                });
+            }
+        }
+
+        // 4. 送出訂單：自動複製 + 開啟 Gmail + 跳轉 Zalo
+        async function sendOrder(e) {
             e.preventDefault();
 
             if (currentCartItems.length === 0) {
@@ -574,7 +600,7 @@
             const grandTotal = document.getElementById('grand-total').innerText;
 
             const targetEmail = "rick0960590177@gmail.com";
-            const subject = encodeURIComponent(`【VIEBUCKS 新採購訂單】訂購人：${name}`);
+            const subject = `【VIEBUCKS 新採購訂單】訂購人：${name}`;
             
             const bodyText = 
 `VIEBUCKS 採購訂單內容：
@@ -593,27 +619,23 @@ Email：${email}
 ---------------------------------
 （此郵件由 VIEBUCKS 官方網站自動生成）`;
 
-            // 自動複製訂單文字到剪貼簿
+            // 1. 先複製訂單內容
             try {
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    await navigator.clipboard.writeText(bodyText);
-                } else {
-                    // 相容性備案
-                    const tempInput = document.createElement("textarea");
-                    tempInput.value = bodyText;
-                    document.body.appendChild(tempInput);
-                    tempInput.select();
-                    document.execCommand("copy");
-                    document.body.removeChild(tempInput);
-                }
-                alert('📋 訂單內容已成功複製到剪貼簿！\n\n系統將為您開啟 Gmail，您也可以直接開啟 Zalo 貼上發送給我們。');
+                await copyToClipboard(bodyText);
             } catch (err) {
-                console.warn('複製失敗：', err);
+                console.warn('自動複製失敗：', err);
             }
 
-            // 開啟郵件用戶端
-            const mailtoUrl = `mailto:${targetEmail}?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
+            alert('📋 訂單內容已自動複製！\n\n系統即將為您開啟 Gmail 與 Zalo，請直接在聊天室「貼上」訂單傳送給我們即可。');
+
+            // 2. 開啟預設郵件 App (帶入收件人與內容)
+            const mailtoUrl = `mailto:${targetEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
             window.location.href = mailtoUrl;
+
+            // 3. 延遲 1 秒後開啟 Zalo 聊天頁面，避免遭瀏覽器攔截
+            setTimeout(() => {
+                window.open('https://zalo.me/0348246669', '_blank');
+            }, 1000);
         }
 
         // 5. 多國語言字典
@@ -627,7 +649,7 @@ Email：${email}
                 "hero_btn": "前往精品咖啡採購商城",
                 "story_tag": "Our Heritage",
                 "story_title": "品牌故事與工藝精神",
-                "story_p1": "VIEBUCKS 誕生於對咖啡工藝的極致追求。我們深信每一顆咖啡豆都蘊藏著大地的靈魂與烘焙師的匠心。從產地莊園的嚴選、精準的烘焙曲線，到完美風味的呈現，VIEBUCKS 始終堅持以 Haute Coffee（高級訂製咖啡）的哲學，為每一位熱愛咖啡的品味人士提供無與倫比的感官體驗。",
+                "story_p1": "VIEBUCKS 誕生於對咖啡工藝的極致追求。我們深信每一顆咖啡豆都蘊藏著大地的靈魂與烘焙師的匠心。從產地莊園的嚴選、精準的烘焙曲線，到完美風味的呈現，VIEBUCKS 始終堅持以 Haute Coffee（高級訂製咖啡）的哲學，為每一位熱愛咖啡的品味人士 provide 無與倫比的感官體驗。",
                 "store_tag": "Bespoke Atelier Store",
                 "store_title": "精品咖啡豆選購與採購試算",
                 "products_heading": "選擇咖啡豆品項 (500g/包)",
@@ -645,7 +667,7 @@ Email：${email}
                 "ph_phone": "聯絡電話 / Phone Number",
                 "ph_email": "電子郵件 / Email Address",
                 "ph_address": "詳細配送地址 / Shipping Address",
-                "btn_submit_order": "送出訂單（自動複製並開啟 Gmail）",
+                "btn_submit_order": "確認送出訂單 (複製訂單 + 開啟 Gmail & Zalo)",
                 "faq_tag": "FAQ & Policy",
                 "faq_title": "常見問題與採購須知",
                 "faq_q1": "Q: 批發門檻與優惠如何計算？",
@@ -680,7 +702,7 @@ Email：${email}
                 "ph_phone": "Số điện thoại / Phone",
                 "ph_email": "Email",
                 "ph_address": "Địa chỉ giao hàng chi tiết",
-                "btn_submit_order": "Gửi Đơn Hàng (Tự động sao chép & Mở Gmail)",
+                "btn_submit_order": "Gửi Đơn Hàng (Sao chép + Mở Gmail & Zalo)",
                 "faq_tag": "Hỏi Đáp & Chính Sách",
                 "faq_title": "Thắc Mắc Thường Gặp",
                 "faq_q1": "Q: Chính sách giá sỉ được tính như thế nào?",
@@ -715,7 +737,7 @@ Email：${email}
                 "ph_phone": "Phone Number",
                 "ph_email": "Email Address",
                 "ph_address": "Detailed Shipping Address",
-                "btn_submit_order": "Send Order (Auto-copy & Open Gmail)",
+                "btn_submit_order": "Submit Order (Copy Order + Open Gmail & Zalo)",
                 "faq_tag": "FAQ & Policy",
                 "faq_title": "Frequently Asked Questions",
                 "faq_q1": "Q: How is wholesale pricing applied?",
