@@ -451,20 +451,16 @@
                     </div>
                 </div>
 
-                <!-- 訂購人資訊 Formspree 寄信表單 -->
-                <form action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" class="checkout-form" onsubmit="return validateCheckout()">
+                <!-- 訂購人資訊：點擊後複製訂單內容並喚起 Gmail -->
+                <form id="checkout-form" class="checkout-form" onsubmit="sendViaGmail(event)">
                     <h4 style="margin-top: 10px;" data-i18n="form_heading">填寫配送與聯絡資訊</h4>
                     
-                    <input type="text" name="name" class="form-input" placeholder="訂購人姓名 / Full Name" required data-i18n-ph="ph_name">
-                    <input type="tel" name="phone" class="form-input" placeholder="聯絡電話 / Phone Number" required data-i18n-ph="ph_phone">
-                    <input type="email" name="email" class="form-input" placeholder="電子郵件 / Email Address" required data-i18n-ph="ph_email">
-                    <textarea name="address" class="form-input" rows="2" placeholder="詳細配送地址 / Shipping Address" required data-i18n-ph="ph_address"></textarea>
+                    <input type="text" id="cust-name" class="form-input" placeholder="訂購人姓名 / Full Name" required data-i18n-ph="ph_name">
+                    <input type="tel" id="cust-phone" class="form-input" placeholder="聯絡電話 / Phone Number" required data-i18n-ph="ph_phone">
+                    <input type="email" id="cust-email" class="form-input" placeholder="電子郵件 / Email Address" required data-i18n-ph="ph_email">
+                    <textarea id="cust-address" class="form-input" rows="2" placeholder="詳細配送地址 / Shipping Address" required data-i18n-ph="ph_address"></textarea>
 
-                    <!-- 隱藏欄位：自動存入購物車與金額資料發送至後端 Email -->
-                    <input type="hidden" name="cart_summary_text" id="hidden-cart-summary">
-                    <input type="hidden" name="final_amount" id="hidden-final-amount">
-
-                    <button type="submit" class="btn-submit" data-i18n="btn_submit_order">確認送出訂單</button>
+                    <button type="submit" class="btn-submit" data-i18n="btn_submit_order">送出訂單（自動複製並開啟 Gmail）</button>
                 </form>
             </div>
         </div>
@@ -499,7 +495,7 @@
         <a href="tel:0348246669" class="floating-btn btn-phone">📞</a>
     </div>
 
-    <!-- JS 邏輯：購物車計算 + 多國語言切換 -->
+    <!-- JS 邏輯：購物車計算 + 自動複製剪貼簿 + Gmail 喚起 + 多國語言切換 -->
     <script>
         // 1. 商品資料庫與價格設定
         const products = {
@@ -507,6 +503,8 @@
             robusta: { name: "Robusta 西原特選羅布斯塔", retail: 150000, wholesale: 120000 },
             brazil: { name: "Brazil Cerrado 巴西喜拉朵", retail: 200000, wholesale: 160000 }
         };
+
+        let currentCartItems = [];
 
         // 2. 購物車數量加減
         function updateQty(id, delta) {
@@ -524,14 +522,13 @@
             tbody.innerHTML = '';
 
             let goodsTotal = 0;
-            let cartTextDetails = [];
+            currentCartItems = [];
             let hasItems = false;
 
             for (const id in products) {
                 const qty = parseInt(document.getElementById(`qty-${id}`).value) || 0;
                 if (qty > 0) {
                     hasItems = true;
-                    // 單品滿 10 包自動帶入批發價
                     const unitPrice = qty >= 10 ? products[id].wholesale : products[id].retail;
                     const subtotal = unitPrice * qty;
                     goodsTotal += subtotal;
@@ -544,7 +541,7 @@
                     `;
                     tbody.appendChild(row);
 
-                    cartTextDetails.push(`${products[id].name} x ${qty}包 (單價:${unitPrice.toLocaleString()} = ${subtotal.toLocaleString()} VND)`);
+                    currentCartItems.push(`- ${products[id].name} x ${qty}包 (單價: ${unitPrice.toLocaleString()} VND, 小計: ${subtotal.toLocaleString()} VND)`);
                 }
             }
 
@@ -553,29 +550,73 @@
                 tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #999;">${translations[lang]["cart_empty"]}</td></tr>`;
             }
 
-            // 運費計算 (滿 2,000,000 免運)
             let shippingFee = (goodsTotal >= 2000000 || goodsTotal === 0) ? 0 : 30000;
             let grandTotal = goodsTotal > 0 ? goodsTotal + shippingFee : 0;
 
             document.getElementById('goods-total').innerText = `${goodsTotal.toLocaleString()} VND`;
             document.getElementById('shipping-fee').innerText = `${shippingFee.toLocaleString()} VND`;
             document.getElementById('grand-total').innerText = `${grandTotal.toLocaleString()} VND`;
-
-            // 將資料注入隱藏表單
-            document.getElementById('hidden-cart-summary').value = cartTextDetails.join(' | ');
-            document.getElementById('hidden-final-amount').value = `${grandTotal.toLocaleString()} VND`;
         }
 
-        function validateCheckout() {
-            const grandTotalText = document.getElementById('grand-total').innerText;
-            if (grandTotalText === '0 VND') {
+        // 4. 自動複製訂單內容至剪貼簿並開啟 Gmail / mailto
+        async function sendViaGmail(e) {
+            e.preventDefault();
+
+            if (currentCartItems.length === 0) {
                 alert('請先選擇要購買的咖啡豆數量！');
-                return false;
+                return;
             }
-            return true;
+
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const email = document.getElementById('cust-email').value;
+            const address = document.getElementById('cust-address').value;
+            const grandTotal = document.getElementById('grand-total').innerText;
+
+            const targetEmail = "rick0960590177@gmail.com";
+            const subject = encodeURIComponent(`【VIEBUCKS 新採購訂單】訂購人：${name}`);
+            
+            const bodyText = 
+`VIEBUCKS 採購訂單內容：
+---------------------------------
+【訂購品項】
+${currentCartItems.join('\n')}
+
+【金額總計】
+應付總額（含運費）：${grandTotal}
+
+【配送與聯絡資訊】
+姓名：${name}
+電話：${phone}
+Email：${email}
+地址：${address}
+---------------------------------
+（此郵件由 VIEBUCKS 官方網站自動生成）`;
+
+            // 自動複製訂單文字到剪貼簿
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(bodyText);
+                } else {
+                    // 相容性備案
+                    const tempInput = document.createElement("textarea");
+                    tempInput.value = bodyText;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(tempInput);
+                }
+                alert('📋 訂單內容已成功複製到剪貼簿！\n\n系統將為您開啟 Gmail，您也可以直接開啟 Zalo 貼上發送給我們。');
+            } catch (err) {
+                console.warn('複製失敗：', err);
+            }
+
+            // 開啟郵件用戶端
+            const mailtoUrl = `mailto:${targetEmail}?subject=${subject}&body=${encodeURIComponent(bodyText)}`;
+            window.location.href = mailtoUrl;
         }
 
-        // 4. 多國語言字典
+        // 5. 多國語言字典
         const translations = {
             "zh-TW": {
                 "nav_story": "品牌故事",
@@ -604,7 +645,7 @@
                 "ph_phone": "聯絡電話 / Phone Number",
                 "ph_email": "電子郵件 / Email Address",
                 "ph_address": "詳細配送地址 / Shipping Address",
-                "btn_submit_order": "確認送出訂單",
+                "btn_submit_order": "送出訂單（自動複製並開啟 Gmail）",
                 "faq_tag": "FAQ & Policy",
                 "faq_title": "常見問題與採購須知",
                 "faq_q1": "Q: 批發門檻與優惠如何計算？",
@@ -639,7 +680,7 @@
                 "ph_phone": "Số điện thoại / Phone",
                 "ph_email": "Email",
                 "ph_address": "Địa chỉ giao hàng chi tiết",
-                "btn_submit_order": "Xác Nhận Đặt Hàng",
+                "btn_submit_order": "Gửi Đơn Hàng (Tự động sao chép & Mở Gmail)",
                 "faq_tag": "Hỏi Đáp & Chính Sách",
                 "faq_title": "Thắc Mắc Thường Gặp",
                 "faq_q1": "Q: Chính sách giá sỉ được tính như thế nào?",
@@ -674,7 +715,7 @@
                 "ph_phone": "Phone Number",
                 "ph_email": "Email Address",
                 "ph_address": "Detailed Shipping Address",
-                "btn_submit_order": "Place Order Now",
+                "btn_submit_order": "Send Order (Auto-copy & Open Gmail)",
                 "faq_tag": "FAQ & Policy",
                 "faq_title": "Frequently Asked Questions",
                 "faq_q1": "Q: How is wholesale pricing applied?",
