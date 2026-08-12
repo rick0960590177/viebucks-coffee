@@ -18,7 +18,6 @@
             line-height: 1.6;
         }
 
-        /* 導覽列 */
         header {
             display: flex;
             justify-content: space-between;
@@ -66,7 +65,6 @@
             cursor: pointer;
         }
 
-        /* Banner */
         .hero {
             text-align: center;
             padding: 80px 20px;
@@ -98,7 +96,6 @@
             border-radius: 4px;
         }
 
-        /* 通用 Section */
         section {
             padding: 60px 8%;
             max-width: 1200px;
@@ -123,7 +120,6 @@
             color: #2c1810;
         }
 
-        /* 商城區塊 */
         .store-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -201,7 +197,16 @@
             border-radius: 4px;
         }
 
-        /* 購物車與結帳區 */
+        .grind-select {
+            margin-top: 8px;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 13px;
+            width: 100%;
+            max-width: 220px;
+        }
+
         .cart-summary {
             background: #faf8f5;
             padding: 25px;
@@ -247,7 +252,6 @@
             margin-top: 5px;
         }
 
-        /* 表單 */
         .checkout-form {
             display: flex;
             flex-direction: column;
@@ -279,7 +283,7 @@
             background-color: #432519;
         }
 
-        /* 訂單表單 Modal 彈窗樣式 */
+        /* Modal 訂單彈窗 */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -348,25 +352,28 @@
 
         .modal-actions {
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
             margin-top: 25px;
         }
 
         .btn-modal {
             flex: 1;
+            min-width: 130px;
             padding: 10px;
             border: none;
             border-radius: 4px;
             font-weight: bold;
             cursor: pointer;
             text-align: center;
+            text-decoration: none;
         }
 
         .btn-print { background: #8c6d46; color: #fff; }
         .btn-copy { background: #d4af37; color: #2c1810; }
+        .btn-zalo-direct { background: #0068FF; color: #fff; }
         .btn-close { background: #ddd; color: #333; }
 
-        /* 列印隱藏非訂單內容 */
         @media print {
             body * { visibility: hidden; }
             #receipt-printable, #receipt-printable * { visibility: visible; }
@@ -374,7 +381,6 @@
             .modal-actions { display: none; }
         }
 
-        /* FAQ */
         .faq-item {
             background: #fff;
             padding: 20px;
@@ -383,7 +389,6 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
 
-        /* 頁尾 */
         footer {
             background-color: #1a0e0a;
             color: #aaa;
@@ -392,7 +397,6 @@
             text-align: center;
         }
 
-        /* 懸浮按鈕 */
         .floating-contact {
             position: fixed;
             bottom: 25px;
@@ -446,7 +450,7 @@
         <a href="#store" class="btn" data-i18n="hero_btn">前往精品咖啡採購商城</a>
     </div>
 
-    <!-- 品牌故事 Section -->
+    <!-- 品牌故事 -->
     <section id="story">
         <div class="section-header">
             <span data-i18n="story_tag">Our Heritage</span>
@@ -457,7 +461,7 @@
         </div>
     </section>
 
-    <!-- 完整購物商城與試算區 -->
+    <!-- 商城 -->
     <section id="store">
         <div class="section-header">
             <span data-i18n="store_tag">Bespoke Atelier Store</span>
@@ -465,11 +469,11 @@
         </div>
 
         <div class="store-container">
-            <!-- 左側：商品列表 -->
+            <!-- 商品列表 -->
             <div>
                 <h3 style="margin-bottom: 20px; color: #2c1810;" data-i18n="products_heading">選擇咖啡豆品項 (500g/包)</h3>
 
-                <!-- 品項 1: Arabica -->
+                <!-- 品項 1 -->
                 <div class="product-item">
                     <div class="product-title">Arabica 大叻精品阿拉比卡</div>
                     <div class="product-price">
@@ -481,9 +485,15 @@
                         <input type="number" id="qty-arabica" class="qty-input" value="0" min="0" onchange="renderCart()">
                         <button type="button" class="qty-btn" onclick="updateQty('arabica', 1)">+</button>
                     </div>
+                    <select id="grind-arabica" class="grind-select" onchange="renderCart()">
+                        <option value="原豆 (Beans)">研磨度: 咖啡原豆 (Beans)</option>
+                        <option value="中磨 (Medium Grind)">研磨度: 中磨 (手沖/美式)</option>
+                        <option value="細磨 (Fine Grind)">研磨度: 細磨 (義式/摩卡壺)</option>
+                        <option value="粗磨 (Coarse Grind)">研磨度: 粗磨 (法壓壺)</option>
+                    </select>
                 </div>
 
-                <!-- 品項 2: Robusta -->
+                <!-- 品項 2 -->
                 <div class="product-item">
                     <div class="product-title">Robusta 西原特選羅布斯塔</div>
                     <div class="product-price">
@@ -495,9 +505,15 @@
                         <input type="number" id="qty-robusta" class="qty-input" value="0" min="0" onchange="renderCart()">
                         <button type="button" class="qty-btn" onclick="updateQty('robusta', 1)">+</button>
                     </div>
+                    <select id="grind-robusta" class="grind-select" onchange="renderCart()">
+                        <option value="原豆 (Beans)">研磨度: 咖啡原豆 (Beans)</option>
+                        <option value="中磨 (Medium Grind)">研磨度: 中磨 (手沖/美式)</option>
+                        <option value="細磨 (Fine Grind)">研磨度: 細磨 (義式/摩卡壺)</option>
+                        <option value="粗磨 (Coarse Grind)">研磨度: 粗磨 (法壓壺)</option>
+                    </select>
                 </div>
 
-                <!-- 品項 3: Brazil Cerrado -->
+                <!-- 品項 3 -->
                 <div class="product-item">
                     <div class="product-title">Brazil Cerrado 巴西喜拉朵</div>
                     <div class="product-price">
@@ -509,17 +525,23 @@
                         <input type="number" id="qty-brazil" class="qty-input" value="0" min="0" onchange="renderCart()">
                         <button type="button" class="qty-btn" onclick="updateQty('brazil', 1)">+</button>
                     </div>
+                    <select id="grind-brazil" class="grind-select" onchange="renderCart()">
+                        <option value="原豆 (Beans)">研磨度: 咖啡原豆 (Beans)</option>
+                        <option value="中磨 (Medium Grind)">研磨度: 中磨 (手沖/美式)</option>
+                        <option value="細磨 (Fine Grind)">研磨度: 細磨 (義式/摩卡壺)</option>
+                        <option value="粗磨 (Coarse Grind)">研磨度: 粗磨 (法壓壺)</option>
+                    </select>
                 </div>
             </div>
 
-            <!-- 右側：購物車與結帳資訊 -->
+            <!-- 購物車與表單 -->
             <div class="cart-summary">
                 <h3 style="color: #2c1810;" data-i18n="cart_heading">您的採購訂單清單</h3>
 
                 <table class="cart-table">
                     <thead>
                         <tr>
-                            <th data-i18n="th_item">品項</th>
+                            <th data-i18n="th_item">品項與研磨度</th>
                             <th data-i18n="th_qty">數量</th>
                             <th data-i18n="th_subtotal">小計</th>
                         </tr>
@@ -546,7 +568,6 @@
                     </div>
                 </div>
 
-                <!-- 訂購人資訊表單 -->
                 <form id="checkout-form" class="checkout-form" onsubmit="sendOrder(event)">
                     <h4 style="margin-top: 10px;" data-i18n="form_heading">填寫配送與聯絡資訊</h4>
                     
@@ -554,6 +575,7 @@
                     <input type="tel" id="cust-phone" class="form-input" placeholder="聯絡電話 / Phone Number" required data-i18n-ph="ph_phone">
                     <input type="email" id="cust-email" class="form-input" placeholder="電子郵件 / Email Address" required data-i18n-ph="ph_email">
                     <textarea id="cust-address" class="form-input" rows="2" placeholder="詳細配送地址 / Shipping Address" required data-i18n-ph="ph_address"></textarea>
+                    <input type="text" id="cust-note" class="form-input" placeholder="訂購備註 (選填，如：請開發票/特殊需求)" data-i18n-ph="ph_note">
 
                     <button type="submit" class="btn-submit" data-i18n="btn_submit_order">確認送出訂單 (生成表單 + 複製 + Gmail/Zalo)</button>
                 </form>
@@ -584,61 +606,61 @@
         <p style="margin-top: 15px; color: #666;">“It's never too late to drink coffee.” © 2026 viebucks. All rights reserved.</p>
     </footer>
 
-    <!-- 自動生成訂購單 (Modal 彈窗) -->
+    <!-- 訂購單 Modal -->
     <div id="receipt-modal" class="modal-overlay">
         <div class="modal-content" id="receipt-printable">
             <div class="receipt-header">
                 <h2>VIEBUCKS COFFEE</h2>
-                <p>Haute Coffee Collection - 官方訂購表單</p>
+                <p data-i18n="rec_sub">Haute Coffee Collection - 官方訂購表單</p>
             </div>
 
             <div class="receipt-section">
-                <p><strong>訂單編號：</strong><span id="rec-id"></span></p>
-                <p><strong>訂購時間：</strong><span id="rec-date"></span></p>
+                <p><strong data-i18n="rec_lbl_id">訂單編號：</strong><span id="rec-id"></span></p>
+                <p><strong data-i18n="rec_lbl_date">訂購時間：</strong><span id="rec-date"></span></p>
             </div>
 
             <div class="receipt-section">
-                <h4>【訂購內容明細】</h4>
+                <h4 data-i18n="rec_hdr_items">【訂購內容明細】</h4>
                 <table class="receipt-table">
                     <thead>
                         <tr style="border-bottom: 1px solid #ccc;">
-                            <th>品項名稱</th>
-                            <th style="text-align:center;">數量</th>
-                            <th style="text-align:right;">金額</th>
+                            <th data-i18n="th_item">品項名稱</th>
+                            <th style="text-align:center;" data-i18n="th_qty">數量</th>
+                            <th style="text-align:right;" data-i18n="th_subtotal">金額</th>
                         </tr>
                     </thead>
                     <tbody id="rec-items-body"></tbody>
                 </table>
                 <div style="text-align: right; margin-top: 10px; font-weight: bold;">
-                    <p>商品小計：<span id="rec-goods-total"></span></p>
-                    <p>運費：<span id="rec-shipping"></span></p>
-                    <p style="font-size: 18px; color: #e74c3c; margin-top: 5px;">應付總額：<span id="rec-grand-total"></span></p>
+                    <p><span data-i18n="label_goods_total">商品小計：</span><span id="rec-goods-total"></span></p>
+                    <p><span data-i18n="label_shipping">運費：</span><span id="rec-shipping"></span></p>
+                    <p style="font-size: 18px; color: #e74c3c; margin-top: 5px;"><span data-i18n="label_grand_total">應付總額：</span><span id="rec-grand-total"></span></p>
                 </div>
             </div>
 
             <div class="receipt-section">
-                <h4>【訂購人與配送資訊】</h4>
-                <p><strong>姓名：</strong><span id="rec-name"></span></p>
-                <p><strong>電話：</strong><span id="rec-phone"></span></p>
+                <h4 data-i18n="rec_hdr_cust">【訂購人與配送資訊】</h4>
+                <p><strong data-i18n="rec_lbl_name">姓名：</strong><span id="rec-name"></span></p>
+                <p><strong data-i18n="rec_lbl_phone">電話：</strong><span id="rec-phone"></span></p>
                 <p><strong>Email：</strong><span id="rec-email"></span></p>
-                <p><strong>地址：</strong><span id="rec-address"></span></p>
+                <p><strong data-i18n="rec_lbl_addr">地址：</strong><span id="rec-address"></span></p>
+                <p><strong data-i18n="rec_lbl_note">備註：</strong><span id="rec-note"></span></p>
             </div>
 
             <div class="modal-actions">
-                <button class="btn-modal btn-print" onclick="window.print()">🖨️ 列印 / 存為 PDF</button>
-                <button class="btn-modal btn-copy" onclick="copyReceiptText()">📋 再次複製內文</button>
-                <button class="btn-modal btn-close" onclick="closeModal()">關閉視窗</button>
+                <button class="btn-modal btn-print" onclick="window.print()" data-i18n="btn_print">🖨️ 列印 / 存 PDF</button>
+                <button class="btn-modal btn-copy" onclick="copyReceiptText()" data-i18n="btn_copy_again">📋 再次複製內文</button>
+                <a href="https://zalo.me/0348246669" target="_blank" class="btn-modal btn-zalo-direct" data-i18n="btn_zalo_direct">💬 前往 Zalo 貼上</a>
+                <button class="btn-modal btn-close" onclick="closeModal()" data-i18n="btn_close">關閉視窗</button>
             </div>
         </div>
     </div>
 
-    <!-- 懸浮聯絡按鈕 -->
     <div class="floating-contact">
         <a href="https://zalo.me/0348246669" target="_blank" rel="noopener noreferrer" class="floating-btn btn-zalo">Zalo</a>
         <a href="tel:0348246669" class="floating-btn btn-phone">📞</a>
     </div>
 
-    <!-- JS 邏輯 -->
     <script>
         const products = {
             arabica: { name: "Arabica 大叻精品阿拉比卡", retail: 220000, wholesale: 180000 },
@@ -661,8 +683,7 @@
         function updateQty(id, delta) {
             const input = document.getElementById(`qty-${id}`);
             let val = parseInt(input.value) || 0;
-            val += delta;
-            if (val < 0) val = 0;
+            val = Math.max(0, val + delta); // 防呆機制
             input.value = val;
             renderCart();
         }
@@ -676,16 +697,19 @@
             let hasItems = false;
 
             for (const id in products) {
-                const qty = parseInt(document.getElementById(`qty-${id}`).value) || 0;
+                let qty = parseInt(document.getElementById(`qty-${id}`).value) || 0;
+                qty = Math.max(0, qty);
+
                 if (qty > 0) {
                     hasItems = true;
+                    const grind = document.getElementById(`grind-${id}`).value;
                     const unitPrice = qty >= 10 ? products[id].wholesale : products[id].retail;
                     const subtotal = unitPrice * qty;
                     goodsTotal += subtotal;
 
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${products[id].name} ${qty >= 10 ? '<span class="badge-wholesale">批發價</span>' : ''}</td>
+                        <td>${products[id].name}<br><small style="color:#8c6d46;">(${grind})</small> ${qty >= 10 ? '<span class="badge-wholesale">批發價</span>' : ''}</td>
                         <td>${qty} 包</td>
                         <td>${subtotal.toLocaleString()} VND</td>
                     `;
@@ -693,6 +717,7 @@
 
                     currentCartItems.push({
                         name: products[id].name,
+                        grind: grind,
                         qty: qty,
                         unitPrice: unitPrice,
                         subtotal: subtotal
@@ -748,7 +773,6 @@
             document.getElementById('receipt-modal').style.display = 'none';
         }
 
-        // 送出訂單流程：生成表單 modal + 自動複製 + 開啟 Gmail & Zalo
         async function sendOrder(e) {
             e.preventDefault();
 
@@ -762,19 +786,20 @@
             const phone = document.getElementById('cust-phone').value;
             const email = document.getElementById('cust-email').value;
             const address = document.getElementById('cust-address').value;
-            
+            const note = document.getElementById('cust-note').value || "無";
+
             const goodsTotalStr = document.getElementById('goods-total').innerText;
             const shippingStr = document.getElementById('shipping-fee').innerText;
             const grandTotalStr = document.getElementById('grand-total').innerText;
             const orderDate = new Date().toLocaleString();
 
-            // 1. 填入 Modal 訂購表單
             document.getElementById('rec-id').innerText = orderId;
             document.getElementById('rec-date').innerText = orderDate;
             document.getElementById('rec-name').innerText = name;
             document.getElementById('rec-phone').innerText = phone;
             document.getElementById('rec-email').innerText = email;
             document.getElementById('rec-address').innerText = address;
+            document.getElementById('rec-note').innerText = note;
             document.getElementById('rec-goods-total').innerText = goodsTotalStr;
             document.getElementById('rec-shipping').innerText = shippingStr;
             document.getElementById('rec-grand-total').innerText = grandTotalStr;
@@ -786,16 +811,15 @@
             currentCartItems.forEach(item => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${item.name}</td>
+                    <td>${item.name}<br><small>(${item.grind})</small></td>
                     <td style="text-align:center;">${item.qty} 包</td>
                     <td style="text-align:right;">${item.subtotal.toLocaleString()} VND</td>
                 `;
                 recBody.appendChild(tr);
 
-                itemsTextArr.push(`- ${item.name} x ${item.qty}包 (單價: ${item.unitPrice.toLocaleString()} VND, 小計: ${item.subtotal.toLocaleString()} VND)`);
+                itemsTextArr.push(`- ${item.name} [${item.grind}] x ${item.qty}包 (小計: ${item.subtotal.toLocaleString()} VND)`);
             });
 
-            // 2. 組成純文字格式 (剪貼簿與 Email 用)
             currentOrderRawText = 
 `VIEBUCKS 採購訂單內容：
 ---------------------------------
@@ -815,32 +839,28 @@ ${itemsTextArr.join('\n')}
 電話：${phone}
 Email：${email}
 地址：${address}
+備註：${note}
 ---------------------------------
 （此郵件由 VIEBUCKS 官方網站自動生成）`;
 
-            // 3. 複製剪貼簿
             try {
                 await copyToClipboard(currentOrderRawText);
             } catch (err) {
                 console.warn('複製失敗', err);
             }
 
-            // 4. 顯示 Modal 訂購單畫面
             document.getElementById('receipt-modal').style.display = 'flex';
 
-            // 5. 開啟 Gmail
             const targetEmail = "rick0960590177@gmail.com";
             const subject = `【VIEBUCKS 採購訂單 #${orderId}】訂購人：${name}`;
             const mailtoUrl = `mailto:${targetEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(currentOrderRawText)}`;
             window.location.href = mailtoUrl;
 
-            // 6. 1秒後開啟 Zalo
             setTimeout(() => {
                 window.open('https://zalo.me/0348246669', '_blank');
             }, 1000);
         }
 
-        // 多國語言字典
         const translations = {
             "zh-TW": {
                 "nav_story": "品牌故事",
@@ -856,7 +876,7 @@ Email：${email}
                 "store_title": "精品咖啡豆選購與採購試算",
                 "products_heading": "選擇咖啡豆品項 (500g/包)",
                 "cart_heading": "您的採購訂單清單",
-                "th_item": "品項",
+                "th_item": "品項與研磨度",
                 "th_qty": "數量",
                 "th_subtotal": "小計",
                 "cart_empty": "尚未選擇商品",
@@ -869,13 +889,27 @@ Email：${email}
                 "ph_phone": "聯絡電話 / Phone Number",
                 "ph_email": "電子郵件 / Email Address",
                 "ph_address": "詳細配送地址 / Shipping Address",
+                "ph_note": "訂購備註 (選填，如：請開發票/特殊需求)",
                 "btn_submit_order": "確認送出訂單 (生成表單 + 複製 + Gmail/Zalo)",
                 "faq_tag": "FAQ & Policy",
                 "faq_title": "常見問題與採購須知",
                 "faq_q1": "Q: 批發門檻與優惠如何計算？",
                 "faq_a1": "單一品項購買滿 10 包（含）以上，系統將自動套用批發優惠價。如需大批次（100kg 以上）商業合作，歡迎點擊右下角 Zalo 洽詢專員。",
                 "faq_q2": "Q: 配送範圍與運費說明？",
-                "faq_a2": "支援全越南配送（平陽省、胡志明市及周邊省份快遞當日或隔日送達）。訂單金額滿 2,000,000 VND 即可享受免運費優惠。"
+                "faq_a2": "支援全越南配送（平陽省、胡志明市及周邊省份快遞當日或隔日送達）。訂單金額滿 2,000,000 VND 即可享受免運費優惠。",
+                "rec_sub": "Haute Coffee Collection - 官方訂購表單",
+                "rec_lbl_id": "訂單編號：",
+                "rec_lbl_date": "訂購時間：",
+                "rec_hdr_items": "【訂購內容明細】",
+                "rec_hdr_cust": "【訂購人與配送資訊】",
+                "rec_lbl_name": "姓名：",
+                "rec_lbl_phone": "電話：",
+                "rec_lbl_addr": "地址：",
+                "rec_lbl_note": "備註：",
+                "btn_print": "🖨️ 列印 / 存 PDF",
+                "btn_copy_again": "📋 再次複製內文",
+                "btn_zalo_direct": "💬 前往 Zalo 貼上",
+                "btn_close": "關閉視窗"
             },
             "vi": {
                 "nav_story": "Câu Chuyện Thương Hiệu",
@@ -891,7 +925,7 @@ Email：${email}
                 "store_title": "Chọn Cà Phê & Tính Giá Đặt Hàng",
                 "products_heading": "Chọn Loại Cà Phê Hạt (500g/gói)",
                 "cart_heading": "Đơn Hàng Của Bạn",
-                "th_item": "Sản Phẩm",
+                "th_item": "Sản Phẩm & Độ Xay",
                 "th_qty": "Số Lượng",
                 "th_subtotal": "Thành Tiền",
                 "cart_empty": "Chưa chọn sản phẩm nào",
@@ -904,13 +938,27 @@ Email：${email}
                 "ph_phone": "Số điện thoại / Phone",
                 "ph_email": "Email",
                 "ph_address": "Địa chỉ giao hàng chi tiết",
+                "ph_note": "Ghi chú đơn hàng (Không bắt buộc)",
                 "btn_submit_order": "Gửi Đơn Hàng (Tạo Hóa Đơn + Copy + Gmail/Zalo)",
                 "faq_tag": "Hỏi Đáp & Chính Sách",
                 "faq_title": "Thắc Mắc Thường Gặp",
                 "faq_q1": "Q: Chính sách giá sỉ được tính như thế nào?",
                 "faq_a1": "Khi mua từ 10 gói trở lên cho một mặt hàng, hệ thống sẽ tự động áp dụng giá sỉ.",
                 "faq_q2": "Q: Phạm vi giao hàng và phí vận chuyển?",
-                "faq_a2": "Giao hàng toàn quốc Việt Nam. Miễn phí vận chuyển cho đơn hàng từ 2.000.000 VNĐ."
+                "faq_a2": "Giao hàng toàn quốc Việt Nam. Miễn phí vận chuyển cho đơn hàng từ 2.000.000 VNĐ.",
+                "rec_sub": "Haute Coffee Collection - Đơn Đặt Hàng Chính Thức",
+                "rec_lbl_id": "Mã đơn hàng: ",
+                "rec_lbl_date": "Thời gian đặt: ",
+                "rec_hdr_items": "【Chi Tiết Đơn Hàng】",
+                "rec_hdr_cust": "【Thông Tin Khách Hàng】",
+                "rec_lbl_name": "Họ tên: ",
+                "rec_lbl_phone": "SĐT: ",
+                "rec_lbl_addr": "Địa chỉ: ",
+                "rec_lbl_note": "Ghi chú: ",
+                "btn_print": "🖨️ In / Lưu PDF",
+                "btn_copy_again": "📋 Sao chép lại",
+                "btn_zalo_direct": "💬 Mở Zalo để Dán",
+                "btn_close": "Đóng"
             },
             "en": {
                 "nav_story": "Brand Story",
@@ -926,7 +974,7 @@ Email：${email}
                 "store_title": "Coffee Selection & Price Estimator",
                 "products_heading": "Select Coffee Beans (500g/bag)",
                 "cart_heading": "Your Shopping Cart",
-                "th_item": "Item",
+                "th_item": "Item & Grind Size",
                 "th_qty": "Qty",
                 "th_subtotal": "Subtotal",
                 "cart_empty": "No items selected",
@@ -939,13 +987,27 @@ Email：${email}
                 "ph_phone": "Phone Number",
                 "ph_email": "Email Address",
                 "ph_address": "Detailed Shipping Address",
+                "ph_note": "Order Note (Optional)",
                 "btn_submit_order": "Submit Order (Receipt + Copy + Gmail/Zalo)",
                 "faq_tag": "FAQ & Policy",
                 "faq_title": "Frequently Asked Questions",
                 "faq_q1": "Q: How is wholesale pricing applied?",
                 "faq_a1": "Wholesale discount applies automatically when ordering 10 or more bags of a single item.",
                 "faq_q2": "Q: Shipping areas & policies?",
-                "faq_a2": "We ship nationwide across Vietnam. Free shipping on orders over 2,000,000 VND."
+                "faq_a2": "We ship nationwide across Vietnam. Free shipping on orders over 2,000,000 VND.",
+                "rec_sub": "Haute Coffee Collection - Official Order Form",
+                "rec_lbl_id": "Order ID: ",
+                "rec_lbl_date": "Date: ",
+                "rec_hdr_items": "【Order Details】",
+                "rec_hdr_cust": "【Shipping Info】",
+                "rec_lbl_name": "Name: ",
+                "rec_lbl_phone": "Phone: ",
+                "rec_lbl_addr": "Address: ",
+                "rec_lbl_note": "Note: ",
+                "btn_print": "🖨️ Print / Save PDF",
+                "btn_copy_again": "📋 Copy Text Again",
+                "btn_zalo_direct": "💬 Open Zalo to Paste",
+                "btn_close": "Close"
             }
         };
 
