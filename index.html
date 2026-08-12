@@ -3,1043 +3,789 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIEBUCKS - Haute Coffee Collection & E-Store</title>
+    <title>Viebucks - Specialty Coffee Order System</title>
     <style>
+        :root {
+            --primary-color: #2c1810;
+            --accent-color: #d4af37;
+            --bg-color: #f8f5f0;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #fdfbf7;
-            color: #333;
-            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
         }
 
-        header {
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 8%;
-            background-color: #2c1810;
-            color: #fff;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 26px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            color: #d4af37;
-            text-decoration: none;
-        }
-
-        nav {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 15px;
-            transition: color 0.3s;
-        }
-
-        nav a:hover {
-            color: #d4af37;
-        }
-
-        .lang-select {
-            padding: 6px 10px;
-            border-radius: 4px;
-            border: 1px solid #d4af37;
-            background: #2c1810;
-            color: #fff;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 80px 20px;
-            background: linear-gradient(rgba(44, 24, 16, 0.85), rgba(44, 24, 16, 0.85)), url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1600&auto=format&fit=crop') center/cover;
-            color: #fff;
-        }
-
-        .hero h1 {
-            font-size: 48px;
-            margin-bottom: 10px;
-            font-weight: 300;
-            letter-spacing: 3px;
-        }
-
-        .hero .slogan {
-            font-style: italic;
-            font-size: 18px;
-            color: #ddd;
-            margin-bottom: 25px;
-        }
-
-        .hero .btn {
-            display: inline-block;
-            background-color: #d4af37;
-            color: #2c1810;
-            padding: 12px 28px;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 4px;
-        }
-
-        section {
-            padding: 60px 8%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .section-header span {
-            color: #8c6d46;
-            font-size: 13px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            display: block;
-        }
-
-        .section-header h2 {
-            font-size: 30px;
-            color: #2c1810;
-        }
-
-        .store-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-
-        @media (max-width: 900px) {
-            .store-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .product-item {
-            border-bottom: 1px solid #eee;
-            padding-bottom: 20px;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 15px;
             margin-bottom: 20px;
         }
 
-        .product-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 24px;
         }
 
-        .product-title {
-            font-size: 18px;
-            color: #2c1810;
-            font-weight: bold;
-        }
-
-        .product-price {
-            color: #8c6d46;
-            font-weight: bold;
-            margin: 5px 0;
-        }
-
-        .badge-wholesale {
-            background-color: #e74c3c;
-            color: #fff;
-            font-size: 11px;
-            padding: 2px 6px;
-            border-radius: 3px;
-            margin-left: 5px;
-        }
-
-        .qty-control {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .qty-btn {
-            width: 32px;
-            height: 32px;
-            background: #f0f0f0;
-            border: 1px solid #ccc;
+        .lang-switch button {
+            background: none;
+            border: 1px solid var(--primary-color);
+            padding: 5px 10px;
             border-radius: 4px;
-            font-size: 18px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin-left: 5px;
+            font-size: 12px;
+            transition: 0.2s;
         }
 
-        .qty-input {
-            width: 50px;
-            text-align: center;
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+        .lang-switch button.active {
+            background: var(--primary-color);
+            color: white;
         }
 
-        .grind-select {
-            margin-top: 8px;
-            padding: 5px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            font-size: 13px;
-            width: 100%;
-            max-width: 220px;
-        }
-
-        .cart-summary {
-            background: #faf8f5;
-            padding: 25px;
+        /* 免運進度條樣式 */
+        .freeship-progress-container {
+            background: #f0ebe1;
             border-radius: 8px;
-            border: 1px solid #eee;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #e2d7c5;
         }
 
-        .cart-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
+        .freeship-text {
             font-size: 14px;
-        }
-
-        .cart-table th, .cart-table td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        .total-box {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid #8c6d46;
-        }
-
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 16px;
+            font-weight: bold;
+            color: var(--primary-color);
             margin-bottom: 8px;
         }
 
-        .grand-total {
-            font-size: 22px;
-            color: #e74c3c;
-            font-weight: bold;
+        .progress-bar-bg {
+            background: #e0e0e0;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
         }
 
-        .shipping-notice {
-            font-size: 12px;
-            color: #27ae60;
-            margin-top: 5px;
+        .progress-bar-fill {
+            background: var(--accent-color);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
         }
 
-        .checkout-form {
+        .product-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
             display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
         }
 
-        .form-input {
-            padding: 10px;
+        .product-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .product-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .product-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        select, input[type="number"], input[type="text"] {
+            padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 14px;
+        }
+
+        input[type="number"] {
+            width: 70px;
+        }
+
+        .customer-form {
+            margin-top: 30px;
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .form-group input, .form-group select {
             width: 100%;
         }
 
-        .btn-submit {
-            background-color: #2c1810;
-            color: #d4af37;
-            padding: 12px;
+        /* 優惠碼與金額試算區 */
+        .coupon-section {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: flex-end;
+        }
+
+        .coupon-section input {
+            width: 180px;
+        }
+
+        .coupon-section button {
+            padding: 8px 15px;
+            background: var(--accent-color);
+            color: white;
             border: none;
             border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .summary-box {
+            margin-top: 20px;
+            text-align: right;
+            font-size: 16px;
+            color: var(--primary-color);
+        }
+
+        .summary-box .final-total {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-top: 5px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
             font-size: 16px;
             font-weight: bold;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background 0.3s;
+            margin-top: 20px;
+            transition: 0.3s;
         }
 
         .btn-submit:hover {
-            background-color: #432519;
+            background: #422518;
         }
 
         /* Modal 訂單彈窗 */
         .modal-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 10000;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            z-index: 1000;
         }
 
         .modal-content {
-            background: #fff;
-            width: 100%;
-            max-width: 600px;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            max-width: 550px;
+            width: 90%;
             max-height: 90vh;
             overflow-y: auto;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            position: relative;
         }
 
-        .receipt-header {
-            text-align: center;
-            border-bottom: 2px dashed #2c1810;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
+        .modal-header {
+            font-size: 18px;
+            font-weight: bold;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
         }
 
-        .receipt-header h2 {
-            color: #2c1810;
-            letter-spacing: 1px;
+        .receipt-list {
+            list-style: none;
+            margin-bottom: 15px;
         }
 
-        .receipt-header p {
-            color: #8c6d46;
-            font-size: 13px;
-        }
-
-        .receipt-section {
-            margin-bottom: 20px;
-        }
-
-        .receipt-section h4 {
-            color: #2c1810;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 5px;
-            margin-bottom: 10px;
-        }
-
-        .receipt-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        .receipt-table th, .receipt-table td {
+        .receipt-list li {
             padding: 6px 0;
-            text-align: left;
+            border-bottom: 1px dashed #eee;
+            font-size: 14px;
         }
 
-        .modal-actions {
+        /* VietQR 樣式 */
+        .qr-container {
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        .qr-container img {
+            max-width: 220px;
+            height: auto;
+            border: 1px solid #eee;
+        }
+
+        .modal-buttons {
             display: flex;
-            flex-wrap: wrap;
             gap: 10px;
-            margin-top: 25px;
+            margin-top: 20px;
+            flex-wrap: wrap;
         }
 
-        .btn-modal {
+        .modal-buttons button {
             flex: 1;
-            min-width: 130px;
             padding: 10px;
             border: none;
             border-radius: 4px;
-            font-weight: bold;
             cursor: pointer;
-            text-align: center;
-            text-decoration: none;
+            font-weight: bold;
+            min-width: 110px;
         }
 
-        .btn-print { background: #8c6d46; color: #fff; }
-        .btn-copy { background: #d4af37; color: #2c1810; }
-        .btn-zalo-direct { background: #0068FF; color: #fff; }
-        .btn-close { background: #ddd; color: #333; }
+        .btn-close { background: #ccc; }
+        .btn-copy { background: #3498db; color: white; }
+        .btn-print { background: #2ecc71; color: white; }
+        .btn-zalo { background: #0068ff; color: white; }
+        .btn-email { background: #ea4335; color: white; }
 
+        /* 列印樣式優化 */
         @media print {
             body * { visibility: hidden; }
-            #receipt-printable, #receipt-printable * { visibility: visible; }
-            #receipt-printable { position: absolute; left: 0; top: 0; width: 100%; }
-            .modal-actions { display: none; }
+            #receipt-modal, #receipt-modal * { visibility: visible; }
+            #receipt-modal {
+                position: absolute;
+                left: 0; top: 0; width: 100%; height: auto;
+                background: white;
+            }
+            .modal-buttons { display: none !important; }
         }
-
-        .faq-item {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-        }
-
-        footer {
-            background-color: #1a0e0a;
-            color: #aaa;
-            padding: 40px 8% 20px;
-            font-size: 14px;
-            text-align: center;
-        }
-
-        .floating-contact {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .floating-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            text-decoration: none;
-            font-weight: bold;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
-        .btn-zalo { background-color: #0068FF; font-size: 13px; }
-        .btn-phone { background-color: #25D366; font-size: 20px; }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <header>
-        <a href="#" class="logo">viebucks</a>
-        <nav>
-            <a href="#story" data-i18n="nav_story">品牌故事</a>
-            <a href="#store" data-i18n="nav_store">採購商城</a>
-            <a href="#faq" data-i18n="nav_faq">常見問題</a>
-
-            <select id="language-select" class="lang-select">
-                <option value="zh-TW">繁體中文</option>
-                <option value="vi">Tiếng Việt</option>
-                <option value="en">English</option>
-            </select>
-        </nav>
-    </header>
-
-    <!-- Banner -->
-    <div class="hero">
-        <div style="color: #d4af37; letter-spacing: 2px; font-size: 13px;" data-i18n="hero_subtitle">HAUTE COFFEE COLLECTION</div>
-        <h1>viebucks</h1>
-        <div class="slogan" data-i18n="hero_slogan">“享受一杯好咖啡，永遠不嫌晚。”</div>
-        <a href="#store" class="btn" data-i18n="hero_btn">前往精品咖啡採購商城</a>
+<div class="container">
+    <div class="header">
+        <h1 id="txt-title">Viebucks 特調與精品咖啡訂購單</h1>
+        <div class="lang-switch">
+            <button onclick="changeLang('zh')" class="active" id="btn-zh">中文</button>
+            <button onclick="changeLang('vn')" id="btn-vn">Tiếng Việt</button>
+            <button onclick="changeLang('en')" id="btn-en">English</button>
+        </div>
     </div>
 
-    <!-- 品牌故事 -->
-    <section id="story">
-        <div class="section-header">
-            <span data-i18n="story_tag">Our Heritage</span>
-            <h2 data-i18n="story_title">品牌故事與工藝精神</h2>
+    <!-- 免運門檻提示條 -->
+    <div class="freeship-progress-container">
+        <div class="freeship-text" id="freeship-msg">滿 500,000 VND 即可享免運優惠！</div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="freeship-bar"></div>
         </div>
-        <div style="background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-            <p data-i18n="story_p1">VIEBUCKS 誕生於對咖啡工藝的極致追求。我們深信每一顆咖啡豆都蘊藏著大地的靈魂與烘焙師的匠心。從產地莊園的嚴選、精準的烘焙曲線，到完美風味的呈現，VIEBUCKS 始終堅持以 Haute Coffee（高級訂製咖啡）的哲學，為每一位熱愛咖啡的品味人士 provide 無與倫比的感官體驗。</p>
-        </div>
-    </section>
+    </div>
 
-    <!-- 商城 -->
-    <section id="store">
-        <div class="section-header">
-            <span data-i18n="store_tag">Bespoke Atelier Store</span>
-            <h2 data-i18n="store_title">精品咖啡豆選購與採購試算</h2>
-        </div>
-
-        <div class="store-container">
-            <!-- 商品列表 -->
-            <div>
-                <h3 style="margin-bottom: 20px; color: #2c1810;" data-i18n="products_heading">選擇咖啡豆品項 (500g/包)</h3>
-
-                <!-- 品項 1 -->
-                <div class="product-item">
-                    <div class="product-title">Arabica 大叻精品阿拉比卡</div>
-                    <div class="product-price">
-                        零售價: 220,000 VND 
-                        <span class="badge-wholesale">滿10包批發價: 180,000 VND</span>
-                    </div>
-                    <div class="qty-control">
-                        <button type="button" class="qty-btn" onclick="updateQty('arabica', -1)">-</button>
-                        <input type="number" id="qty-arabica" class="qty-input" value="0" min="0" onchange="renderCart()">
-                        <button type="button" class="qty-btn" onclick="updateQty('arabica', 1)">+</button>
-                    </div>
-                    <select id="grind-arabica" class="grind-select" onchange="renderCart()">
-                        <option value="原豆 (Beans)">研磨度: 咖啡原豆 (Beans)</option>
-                        <option value="中磨 (Medium Grind)">研磨度: 中磨 (手沖/美式)</option>
-                        <option value="細磨 (Fine Grind)">研磨度: 細磨 (義式/摩卡壺)</option>
-                        <option value="粗磨 (Coarse Grind)">研磨度: 粗磨 (法壓壺)</option>
-                    </select>
-                </div>
-
-                <!-- 品項 2 -->
-                <div class="product-item">
-                    <div class="product-title">Robusta 西原特選羅布斯塔</div>
-                    <div class="product-price">
-                        零售價: 150,000 VND 
-                        <span class="badge-wholesale">滿10包批發價: 120,000 VND</span>
-                    </div>
-                    <div class="qty-control">
-                        <button type="button" class="qty-btn" onclick="updateQty('robusta', -1)">-</button>
-                        <input type="number" id="qty-robusta" class="qty-input" value="0" min="0" onchange="renderCart()">
-                        <button type="button" class="qty-btn" onclick="updateQty('robusta', 1)">+</button>
-                    </div>
-                    <select id="grind-robusta" class="grind-select" onchange="renderCart()">
-                        <option value="原豆 (Beans)">研磨度: 咖啡原豆 (Beans)</option>
-                        <option value="中磨 (Medium Grind)">研磨度: 中磨 (手沖/美式)</option>
-                        <option value="細磨 (Fine Grind)">研磨度: 細磨 (義式/摩卡壺)</option>
-                        <option value="粗磨 (Coarse Grind)">研磨度: 粗磨 (法壓壺)</option>
-                    </select>
-                </div>
-
-                <!-- 品項 3 -->
-                <div class="product-item">
-                    <div class="product-title">Brazil Cerrado 巴西喜拉朵</div>
-                    <div class="product-price">
-                        零售價: 200,000 VND 
-                        <span class="badge-wholesale">滿10包批發價: 160,000 VND</span>
-                    </div>
-                    <div class="qty-control">
-                        <button type="button" class="qty-btn" onclick="updateQty('brazil', -1)">-</button>
-                        <input type="number" id="qty-brazil" class="qty-input" value="0" min="0" onchange="renderCart()">
-                        <button type="button" class="qty-btn" onclick="updateQty('brazil', 1)">+</button>
-                    </div>
-                    <select id="grind-brazil" class="grind-select" onchange="renderCart()">
-                        <option value="原豆 (Beans)">研磨度: 咖啡原豆 (Beans)</option>
-                        <option value="中磨 (Medium Grind)">研磨度: 中磨 (手沖/美式)</option>
-                        <option value="細磨 (Fine Grind)">研磨度: 細磨 (義式/摩卡壺)</option>
-                        <option value="粗磨 (Coarse Grind)">研磨度: 粗磨 (法壓壺)</option>
-                    </select>
-                </div>
+    <!-- 商品列表 -->
+    <div id="product-list">
+        <!-- 商品 1 -->
+        <div class="product-card" data-price="250000" data-name-zh="Ethiopia Yirgacheffe 埃塞俄比亞 耶加雪菲" data-name-vn="Ethiopia Yirgacheffe (Hạt Cà Phê)" data-name-en="Ethiopia Yirgacheffe Beans">
+            <div class="product-info">
+                <h3 class="prod-name">Ethiopia Yirgacheffe 埃塞俄比亞 耶加雪菲</h3>
+                <p><span class="txt-price-lbl">單價：</span>250,000 VND / 250g</p>
             </div>
-
-            <!-- 購物車與表單 -->
-            <div class="cart-summary">
-                <h3 style="color: #2c1810;" data-i18n="cart_heading">您的採購訂單清單</h3>
-
-                <table class="cart-table">
-                    <thead>
-                        <tr>
-                            <th data-i18n="th_item">品項與研磨度</th>
-                            <th data-i18n="th_qty">數量</th>
-                            <th data-i18n="th_subtotal">小計</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cart-items-body">
-                        <tr><td colspan="3" style="text-align: center; color: #999;" data-i18n="cart_empty">尚未選擇商品</td></tr>
-                    </tbody>
-                </table>
-
-                <div class="total-box">
-                    <div class="total-row">
-                        <span data-i18n="label_goods_total">商品總額:</span>
-                        <span id="goods-total">0 VND</span>
-                    </div>
-                    <div class="total-row">
-                        <span data-i18n="label_shipping">預估運費:</span>
-                        <span id="shipping-fee">30,000 VND</span>
-                    </div>
-                    <div class="shipping-notice" id="shipping-notice" data-i18n="free_ship_hint">單筆滿 2,000,000 VND 享免運費</div>
-
-                    <div class="total-row grand-total" style="margin-top: 10px;">
-                        <span data-i18n="label_grand_total">應付總額:</span>
-                        <span id="grand-total">0 VND</span>
-                    </div>
-                </div>
-
-                <form id="checkout-form" class="checkout-form" onsubmit="sendOrder(event)">
-                    <h4 style="margin-top: 10px;" data-i18n="form_heading">填寫配送與聯絡資訊</h4>
-                    
-                    <input type="text" id="cust-name" class="form-input" placeholder="訂購人姓名 / Full Name" required data-i18n-ph="ph_name">
-                    <input type="tel" id="cust-phone" class="form-input" placeholder="聯絡電話 / Phone Number" required data-i18n-ph="ph_phone">
-                    <input type="email" id="cust-email" class="form-input" placeholder="電子郵件 / Email Address" required data-i18n-ph="ph_email">
-                    <textarea id="cust-address" class="form-input" rows="2" placeholder="詳細配送地址 / Shipping Address" required data-i18n-ph="ph_address"></textarea>
-                    <input type="text" id="cust-note" class="form-input" placeholder="訂購備註 (選填，如：請開發票/特殊需求)" data-i18n-ph="ph_note">
-
-                    <button type="submit" class="btn-submit" data-i18n="btn_submit_order">確認送出訂單 (生成表單 + 複製 + Gmail/Zalo)</button>
-                </form>
+            <div class="product-controls">
+                <select class="grind-select"></select>
+                <input type="number" class="qty-input" value="0" min="0" onchange="calculateTotal()">
             </div>
         </div>
-    </section>
 
-    <!-- FAQ -->
-    <section id="faq">
-        <div class="section-header">
-            <span data-i18n="faq_tag">FAQ & Policy</span>
-            <h2 data-i18n="faq_title">常見問題與採購須知</h2>
+        <!-- 商品 2 -->
+        <div class="product-card" data-price="220000" data-name-zh="Colombia Supremo 哥倫比亞 蘇普雷摩" data-name-vn="Colombia Supremo (Hạt Cà Phê)" data-name-en="Colombia Supremo Beans">
+            <div class="product-info">
+                <h3 class="prod-name">Colombia Supremo 哥倫比亞 蘇普雷摩</h3>
+                <p><span class="txt-price-lbl">單價：</span>220,000 VND / 250g</p>
+            </div>
+            <div class="product-controls">
+                <select class="grind-select"></select>
+                <input type="number" class="qty-input" value="0" min="0" onchange="calculateTotal()">
+            </div>
         </div>
-        <div class="faq-item">
-            <h3 data-i18n="faq_q1">Q: 批發門檻與優惠如何計算？</h3>
-            <p data-i18n="faq_a1">單一品項購買滿 10 包（含）以上，系統將自動套用批發優惠價。如需大批次（100kg 以上）商業合作，歡迎點擊右下角 Zalo 洽詢專員。</p>
-        </div>
-        <div class="faq-item">
-            <h3 data-i18n="faq_q2">Q: 配送範圍與運費說明？</h3>
-            <p data-i18n="faq_a2">支援全越南配送（平陽省、胡志明市及周邊省份快遞當日或隔日送達）。訂單金額滿 2,000,000 VND 即可享受免運費優惠。</p>
-        </div>
-    </section>
 
-    <!-- 頁尾 -->
-    <footer>
-        <p><strong>Công ty TNHH VIEBUCKS</strong> | 地址：365 QL13, Thủ Dầu Một, Hồ Chí Minh</p>
-        <p style="margin-top: 5px;">電話：0348246669 / 0839681380</p>
-        <p style="margin-top: 15px; color: #666;">“It's never too late to drink coffee.” © 2026 viebucks. All rights reserved.</p>
-    </footer>
-
-    <!-- 訂購單 Modal -->
-    <div id="receipt-modal" class="modal-overlay">
-        <div class="modal-content" id="receipt-printable">
-            <div class="receipt-header">
-                <h2>VIEBUCKS COFFEE</h2>
-                <p data-i18n="rec_sub">Haute Coffee Collection - 官方訂購表單</p>
+        <!-- 商品 3 -->
+        <div class="product-card" data-price="180000" data-name-zh="Sicilian Style Coffee Blend 西西里風味特調豆" data-name-vn="Cà phê phối trộn phong cách Sicilian" data-name-en="Sicilian Style Specialty Blend">
+            <div class="product-info">
+                <h3 class="prod-name">Sicilian Style Coffee Blend 西西里風味特調豆</h3>
+                <p><span class="txt-price-lbl">單價：</span>180,000 VND / 250g</p>
             </div>
-
-            <div class="receipt-section">
-                <p><strong data-i18n="rec_lbl_id">訂單編號：</strong><span id="rec-id"></span></p>
-                <p><strong data-i18n="rec_lbl_date">訂購時間：</strong><span id="rec-date"></span></p>
-            </div>
-
-            <div class="receipt-section">
-                <h4 data-i18n="rec_hdr_items">【訂購內容明細】</h4>
-                <table class="receipt-table">
-                    <thead>
-                        <tr style="border-bottom: 1px solid #ccc;">
-                            <th data-i18n="th_item">品項名稱</th>
-                            <th style="text-align:center;" data-i18n="th_qty">數量</th>
-                            <th style="text-align:right;" data-i18n="th_subtotal">金額</th>
-                        </tr>
-                    </thead>
-                    <tbody id="rec-items-body"></tbody>
-                </table>
-                <div style="text-align: right; margin-top: 10px; font-weight: bold;">
-                    <p><span data-i18n="label_goods_total">商品小計：</span><span id="rec-goods-total"></span></p>
-                    <p><span data-i18n="label_shipping">運費：</span><span id="rec-shipping"></span></p>
-                    <p style="font-size: 18px; color: #e74c3c; margin-top: 5px;"><span data-i18n="label_grand_total">應付總額：</span><span id="rec-grand-total"></span></p>
-                </div>
-            </div>
-
-            <div class="receipt-section">
-                <h4 data-i18n="rec_hdr_cust">【訂購人與配送資訊】</h4>
-                <p><strong data-i18n="rec_lbl_name">姓名：</strong><span id="rec-name"></span></p>
-                <p><strong data-i18n="rec_lbl_phone">電話：</strong><span id="rec-phone"></span></p>
-                <p><strong>Email：</strong><span id="rec-email"></span></p>
-                <p><strong data-i18n="rec_lbl_addr">地址：</strong><span id="rec-address"></span></p>
-                <p><strong data-i18n="rec_lbl_note">備註：</strong><span id="rec-note"></span></p>
-            </div>
-
-            <div class="modal-actions">
-                <button class="btn-modal btn-print" onclick="window.print()" data-i18n="btn_print">🖨️ 列印 / 存 PDF</button>
-                <button class="btn-modal btn-copy" onclick="copyReceiptText()" data-i18n="btn_copy_again">📋 再次複製內文</button>
-                <a href="https://zalo.me/0348246669" target="_blank" class="btn-modal btn-zalo-direct" data-i18n="btn_zalo_direct">💬 前往 Zalo 貼上</a>
-                <button class="btn-modal btn-close" onclick="closeModal()" data-i18n="btn_close">關閉視窗</button>
+            <div class="product-controls">
+                <select class="grind-select"></select>
+                <input type="number" class="qty-input" value="0" min="0" onchange="calculateTotal()">
             </div>
         </div>
     </div>
 
-    <div class="floating-contact">
-        <a href="https://zalo.me/0348246669" target="_blank" rel="noopener noreferrer" class="floating-btn btn-zalo">Zalo</a>
-        <a href="tel:0348246669" class="floating-btn btn-phone">📞</a>
+    <!-- 訂購人資訊 -->
+    <div class="customer-form">
+        <h3 id="txt-cust-info-title" style="margin-bottom: 15px; color: var(--primary-color);">訂購人資訊</h3>
+        <div class="form-group">
+            <label id="lbl-name">姓名 / Họ và tên / Full Name:</label>
+            <input type="text" id="cust-name" required placeholder="Ex: Chang Yu Wei">
+        </div>
+        <div class="form-group">
+            <label id="lbl-phone">電話 / Số điện thoại / Phone:</label>
+            <input type="text" id="cust-phone" required placeholder="Ex: 0912345678">
+        </div>
+        <div class="form-group">
+            <label id="lbl-address">送貨地址 / Địa chỉ giao hàng / Address:</label>
+            <input type="text" id="cust-address" required placeholder="Ex: Ho Chi Minh City...">
+        </div>
+        <div class="form-group">
+            <label id="lbl-note">備註 / Ghi chú / Note:</label>
+            <input type="text" id="cust-note" placeholder="Ex: 發票需求、指定配送時間等">
+        </div>
     </div>
 
-    <script>
-        const products = {
-            arabica: { name: "Arabica 大叻精品阿拉比卡", retail: 220000, wholesale: 180000 },
-            robusta: { name: "Robusta 西原特選羅布斯塔", retail: 150000, wholesale: 120000 },
-            brazil: { name: "Brazil Cerrado 巴西喜拉朵", retail: 200000, wholesale: 160000 }
-        };
+    <!-- 優惠碼輸入區 -->
+    <div class="coupon-section">
+        <input type="text" id="coupon-code" placeholder="優惠碼 (Coupon)">
+        <button onclick="applyCoupon()" id="btn-coupon">使用優惠碼</button>
+    </div>
 
-        let currentCartItems = [];
-        let currentOrderRawText = "";
+    <!-- 總計金額區塊 -->
+    <div class="summary-box">
+        <div><span id="txt-subtotal-lbl">商品小計：</span> <span id="subtotal-amount">0</span> VND</div>
+        <div><span id="txt-discount-lbl">折扣金額：</span> -<span id="discount-amount">0</span> VND</div>
+        <div><span id="txt-shipping-lbl">預估運費：</span> <span id="shipping-amount">30,000</span> VND</div>
+        <div class="final-total"><span id="txt-total-lbl">應付總金額：</span> <span id="total-amount">0</span> VND</div>
+    </div>
 
-        function generateOrderId() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            const random = Math.floor(1000 + Math.random() * 9000);
-            return `VB${year}${month}${day}-${random}`;
-        }
+    <button class="btn-submit" onclick="generateReceipt()" id="btn-submit">生成電子訂購單</button>
+</div>
 
-        function updateQty(id, delta) {
-            const input = document.getElementById(`qty-${id}`);
-            let val = parseInt(input.value) || 0;
-            val = Math.max(0, val + delta); // 防呆機制
-            input.value = val;
-            renderCart();
-        }
+<!-- 訂購單視窗 Modal -->
+<div class="modal-overlay" id="receipt-modal">
+    <div class="modal-content">
+        <div class="modal-header" id="txt-modal-header">Viebucks 確認識算訂購單</div>
+        <p><strong><span id="txt-rec-id-lbl">訂單編號：</span></strong> <span id="rec-id"></span></p>
+        <p><strong><span id="txt-rec-name-lbl">訂購人：</span></strong> <span id="rec-name"></span></p>
+        <p><strong><span id="txt-rec-phone-lbl">電話：</span></strong> <span id="rec-phone"></span></p>
+        <p><strong><span id="txt-rec-addr-lbl">地址：</span></strong> <span id="rec-address"></span></p>
+        <hr style="margin: 10px 0;">
+        <ul class="receipt-list" id="rec-items"></ul>
+        <p style="text-align: right; font-weight: bold; font-size: 16px;">
+            <span id="txt-rec-total-lbl">應付總金額：</span> <span id="rec-total" style="color: #e74c3c;"></span> VND
+        </p>
+        
+        <p style="font-size: 12px; color: #666; margin-top: 5px;">
+            <strong><span id="txt-rec-note-lbl">備註：</span></strong> <span id="rec-note"></span>
+        </p>
 
-        function renderCart() {
-            const tbody = document.getElementById('cart-items-body');
-            tbody.innerHTML = '';
-
-            let goodsTotal = 0;
-            currentCartItems = [];
-            let hasItems = false;
-
-            for (const id in products) {
-                let qty = parseInt(document.getElementById(`qty-${id}`).value) || 0;
-                qty = Math.max(0, qty);
-
-                if (qty > 0) {
-                    hasItems = true;
-                    const grind = document.getElementById(`grind-${id}`).value;
-                    const unitPrice = qty >= 10 ? products[id].wholesale : products[id].retail;
-                    const subtotal = unitPrice * qty;
-                    goodsTotal += subtotal;
-
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${products[id].name}<br><small style="color:#8c6d46;">(${grind})</small> ${qty >= 10 ? '<span class="badge-wholesale">批發價</span>' : ''}</td>
-                        <td>${qty} 包</td>
-                        <td>${subtotal.toLocaleString()} VND</td>
-                    `;
-                    tbody.appendChild(row);
-
-                    currentCartItems.push({
-                        name: products[id].name,
-                        grind: grind,
-                        qty: qty,
-                        unitPrice: unitPrice,
-                        subtotal: subtotal
-                    });
-                }
-            }
-
-            if (!hasItems) {
-                const lang = localStorage.getItem("selected_language") || "zh-TW";
-                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #999;">${translations[lang]["cart_empty"]}</td></tr>`;
-            }
-
-            let shippingFee = (goodsTotal >= 2000000 || goodsTotal === 0) ? 0 : 30000;
-            let grandTotal = goodsTotal > 0 ? goodsTotal + shippingFee : 0;
-
-            document.getElementById('goods-total').innerText = `${goodsTotal.toLocaleString()} VND`;
-            document.getElementById('shipping-fee').innerText = `${shippingFee.toLocaleString()} VND`;
-            document.getElementById('grand-total').innerText = `${grandTotal.toLocaleString()} VND`;
-        }
-
-        function copyToClipboard(text) {
-            if (navigator.clipboard && window.isSecureContext) {
-                return navigator.clipboard.writeText(text);
-            } else {
-                return new Promise((resolve, reject) => {
-                    const textArea = document.createElement("textarea");
-                    textArea.value = text;
-                    textArea.style.position = "fixed";
-                    textArea.style.left = "-999999px";
-                    textArea.style.top = "-999999px";
-                    document.body.appendChild(textArea);
-                    textArea.focus();
-                    textArea.select();
-                    try {
-                        document.execCommand('copy');
-                        textArea.remove();
-                        resolve();
-                    } catch (error) {
-                        textArea.remove();
-                        reject(error);
-                    }
-                });
-            }
-        }
-
-        function copyReceiptText() {
-            copyToClipboard(currentOrderRawText).then(() => {
-                alert('📋 訂單內容已成功複製！');
-            });
-        }
-
-        function closeModal() {
-            document.getElementById('receipt-modal').style.display = 'none';
-        }
-
-        async function sendOrder(e) {
-            e.preventDefault();
-
-            if (currentCartItems.length === 0) {
-                alert('請先選擇要購買的咖啡豆數量！');
-                return;
-            }
-
-            const orderId = generateOrderId();
-            const name = document.getElementById('cust-name').value;
-            const phone = document.getElementById('cust-phone').value;
-            const email = document.getElementById('cust-email').value;
-            const address = document.getElementById('cust-address').value;
-            const note = document.getElementById('cust-note').value || "無";
-
-            const goodsTotalStr = document.getElementById('goods-total').innerText;
-            const shippingStr = document.getElementById('shipping-fee').innerText;
-            const grandTotalStr = document.getElementById('grand-total').innerText;
-            const orderDate = new Date().toLocaleString();
-
-            document.getElementById('rec-id').innerText = orderId;
-            document.getElementById('rec-date').innerText = orderDate;
-            document.getElementById('rec-name').innerText = name;
-            document.getElementById('rec-phone').innerText = phone;
-            document.getElementById('rec-email').innerText = email;
-            document.getElementById('rec-address').innerText = address;
-            document.getElementById('rec-note').innerText = note;
-            document.getElementById('rec-goods-total').innerText = goodsTotalStr;
-            document.getElementById('rec-shipping').innerText = shippingStr;
-            document.getElementById('rec-grand-total').innerText = grandTotalStr;
-
-            const recBody = document.getElementById('rec-items-body');
-            recBody.innerHTML = '';
+        <!-- 銀行轉帳與動態 VietQR 區塊 -->
+        <div style="background: #f9f9f9; padding: 12px; border-radius: 6px; margin-top: 15px; border: 1px dashed #d4af37; font-size: 13px;">
+            <p style="font-weight: bold; color: #2c1810; margin-bottom: 5px;" id="txt-bank-title">💳 銀行轉帳資訊：</p>
+            <p><strong id="lbl-bank-name">銀行：</strong> MB Bank</p>
+            <p><strong id="lbl-bank-holder">戶名：</strong> CÔNG TY TNHH VIEBUCKS</p>
+            <p><strong id="lbl-bank-acc">帳號：</strong> 0348246669</p>
             
-            let itemsTextArr = [];
-            currentCartItems.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${item.name}<br><small>(${item.grind})</small></td>
-                    <td style="text-align:center;">${item.qty} 包</td>
-                    <td style="text-align:right;">${item.subtotal.toLocaleString()} VND</td>
-                `;
-                recBody.appendChild(tr);
+            <!-- 動態 VietQR 圖像 -->
+            <div class="qr-container">
+                <p style="font-size: 11px; color: #777; margin-bottom: 5px;">掃描下方 VietQR 自動帶入金額與訂單編號</p>
+                <img id="vietqr-img" src="" alt="VietQR Code">
+            </div>
+            <p style="color: #e74c3c; margin-top: 5px; font-size: 12px;" id="txt-bank-note">* 轉帳備註請填寫訂單編號</p>
+        </div>
 
-                itemsTextArr.push(`- ${item.name} [${item.grind}] x ${item.qty}包 (小計: ${item.subtotal.toLocaleString()} VND)`);
-            });
+        <div class="modal-buttons">
+            <button class="btn-copy" onclick="copyReceiptText()" id="btn-copy-txt">複製文字</button>
+            <button class="btn-zalo" onclick="sendViaZalo()">Zalo 送出</button>
+            <button class="btn-email" onclick="sendViaEmail()">Email 送出</button>
+            <button class="btn-print" onclick="window.print()" id="btn-print-txt">列印單據</button>
+            <button class="btn-close" onclick="closeModal()" id="btn-close-txt">關閉</button>
+        </div>
+    </div>
+</div>
 
-            currentOrderRawText = 
-`VIEBUCKS 採購訂單內容：
----------------------------------
-【訂單編號】${orderId}
-【訂購時間】${orderDate}
+<script>
+    let currentLang = 'zh';
+    const FREESHIP_THRESHOLD = 500000; // 免運門檻
+    const STANDARD_SHIPPING = 30000;   // 標準運費
+    let discountAmount = 0;
+    let appliedCoupon = "";
 
-【訂購品項】
-${itemsTextArr.join('\n')}
-
-【金額總計】
-商品總額：${goodsTotalStr}
-運費：${shippingStr}
-應付總額：${grandTotalStr}
-
-【配送與聯絡資訊】
-姓名：${name}
-電話：${phone}
-Email：${email}
-地址：${address}
-備註：${note}
----------------------------------
-（此郵件由 VIEBUCKS 官方網站自動生成）`;
-
-            try {
-                await copyToClipboard(currentOrderRawText);
-            } catch (err) {
-                console.warn('複製失敗', err);
-            }
-
-            document.getElementById('receipt-modal').style.display = 'flex';
-
-            const targetEmail = "rick0960590177@gmail.com";
-            const subject = `【VIEBUCKS 採購訂單 #${orderId}】訂購人：${name}`;
-            const mailtoUrl = `mailto:${targetEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(currentOrderRawText)}`;
-            window.location.href = mailtoUrl;
-
-            setTimeout(() => {
-                window.open('https://zalo.me/0348246669', '_blank');
-            }, 1000);
+    // 語系字典
+    const i18n = {
+        zh: {
+            title: "Viebucks 特調與精品咖啡訂購單",
+            priceLbl: "單價：",
+            custTitle: "訂購人資訊",
+            subtotalLbl: "商品小計：",
+            discountLbl: "折扣金額：",
+            shippingLbl: "預估運費：",
+            totalLbl: "應付總金額：",
+            btnSubmit: "生成電子訂購單",
+            btnCoupon: "使用優惠碼",
+            modalHeader: "Viebucks 確認識算訂購單",
+            recId: "訂單編號：",
+            recName: "訂購人：",
+            recPhone: "電話：",
+            recAddr: "送貨地址：",
+            recTotal: "應付總金額：",
+            recNote: "備註：",
+            btnCopy: "複製文字",
+            btnPrint: "列印單據",
+            btnClose: "關閉",
+            bankTitle: "💳 銀行轉帳資訊：",
+            bankName: "銀行：",
+            bankHolder: "戶名：",
+            bankAcc: "帳號：",
+            bankNote: "* 轉帳備註請填寫訂單編號",
+            freeshipReach: "🎉 已達免運門檻！即享免費配送",
+            freeshipLack: "再消費 {amount} VND 即可享免運優惠！",
+            grindOptions: [
+                "研磨度: 咖啡原豆 (Beans)",
+                "研磨度: 義式濃縮 (Espresso)",
+                "研磨度: 手沖/塞風 (Medium)",
+                "研磨度: 摩卡壺 (Fine)",
+                "研磨度: 法壓壺 (Coarse)"
+            ]
+        },
+        vn: {
+            title: "Đơn Đặt Hàng Cà Phê Viebucks",
+            priceLbl: "Đơn giá: ",
+            custTitle: "Thông tin người đặt hàng",
+            subtotalLbl: "Tiền hàng: ",
+            discountLbl: "Giảm giá: ",
+            shippingLbl: "Phí vận chuyển: ",
+            totalLbl: "Tổng thanh toán: ",
+            btnSubmit: "Tạo Đơn Hàng Điện Tử",
+            btnCoupon: "Áp dụng",
+            modalHeader: "Hóa Đơn Xác Nhận Viebucks",
+            recId: "Mã đơn hàng: ",
+            recName: "Người đặt: ",
+            recPhone: "Số điện thoại: ",
+            recAddr: "Địa chỉ giao: ",
+            recTotal: "Tổng thanh toán: ",
+            recNote: "Ghi chú: ",
+            btnCopy: "Sao chép",
+            btnPrint: "In hóa đơn",
+            btnClose: "Đóng",
+            bankTitle: "💳 Thông tin chuyển khoản ngân hàng:",
+            bankName: "Ngân hàng: ",
+            bankHolder: "Chủ tài khoản: ",
+            bankAcc: "Số tài khoản: ",
+            bankNote: "* Nội dung chuyển khoản vui lòng ghi rõ Mã đơn hàng",
+            freeshipReach: "🎉 Đã đạt điều kiện Freeship!",
+            freeshipLack: "Mua thêm {amount} VND để được Freeship!",
+            grindOptions: [
+                "Xay: Hạt nguyên (Beans)",
+                "Xay: Pha Máy (Espresso)",
+                "Xay: Pha Phin / Pour Over (Medium)",
+                "Xay: Ấm Moka (Fine)",
+                "Xay: French Press (Coarse)"
+            ]
+        },
+        en: {
+            title: "Viebucks Specialty Coffee Order Form",
+            priceLbl: "Price: ",
+            custTitle: "Customer Information",
+            subtotalLbl: "Subtotal: ",
+            discountLbl: "Discount: ",
+            shippingLbl: "Shipping Fee: ",
+            totalLbl: "Total Payable: ",
+            btnSubmit: "Generate Order Receipt",
+            btnCoupon: "Apply Code",
+            modalHeader: "Viebucks Order Confirmation",
+            recId: "Order ID: ",
+            recName: "Customer: ",
+            recPhone: "Phone: ",
+            recAddr: "Address: ",
+            recTotal: "Total Payable: ",
+            recNote: "Note: ",
+            btnCopy: "Copy Text",
+            btnPrint: "Print Order",
+            btnClose: "Close",
+            bankTitle: "💳 Bank Transfer Details:",
+            bankName: "Bank: ",
+            bankHolder: "Account Name: ",
+            bankAcc: "Account No.: ",
+            bankNote: "* Please include Order ID in transfer description",
+            freeshipReach: "🎉 You have qualified for Free Shipping!",
+            freeshipLack: "Add {amount} VND more for Free Shipping!",
+            grindOptions: [
+                "Grind: Whole Beans",
+                "Grind: Espresso",
+                "Grind: Medium (Filter/Drip)",
+                "Grind: Fine (Moka Pot)",
+                "Grind: Coarse (French Press)"
+            ]
         }
+    };
 
-        const translations = {
-            "zh-TW": {
-                "nav_story": "品牌故事",
-                "nav_store": "採購商城",
-                "nav_faq": "常見問題",
-                "hero_subtitle": "HAUTE COFFEE COLLECTION",
-                "hero_slogan": "“享受一杯好咖啡，永遠不嫌晚。”",
-                "hero_btn": "前往精品咖啡採購商城",
-                "story_tag": "Our Heritage",
-                "story_title": "品牌故事與工藝精神",
-                "story_p1": "VIEBUCKS 誕生於對咖啡工藝的極致追求。我們深信每一顆咖啡豆都蘊藏著大地的靈魂與烘焙師的匠心。從產地莊園的嚴選、精準的烘焙曲線，到完美風味的呈現，VIEBUCKS 始終堅持以 Haute Coffee（高級訂製咖啡）的哲學，為每一位熱愛咖啡的品味人士 provide 無與倫比的感官體驗。",
-                "store_tag": "Bespoke Atelier Store",
-                "store_title": "精品咖啡豆選購與採購試算",
-                "products_heading": "選擇咖啡豆品項 (500g/包)",
-                "cart_heading": "您的採購訂單清單",
-                "th_item": "品項與研磨度",
-                "th_qty": "數量",
-                "th_subtotal": "小計",
-                "cart_empty": "尚未選擇商品",
-                "label_goods_total": "商品總額:",
-                "label_shipping": "預估運費:",
-                "free_ship_hint": "單筆滿 2,000,000 VND 享免運費",
-                "label_grand_total": "應付總額:",
-                "form_heading": "填寫配送與聯絡資訊",
-                "ph_name": "訂購人姓名 / Full Name",
-                "ph_phone": "聯絡電話 / Phone Number",
-                "ph_email": "電子郵件 / Email Address",
-                "ph_address": "詳細配送地址 / Shipping Address",
-                "ph_note": "訂購備註 (選填，如：請開發票/特殊需求)",
-                "btn_submit_order": "確認送出訂單 (生成表單 + 複製 + Gmail/Zalo)",
-                "faq_tag": "FAQ & Policy",
-                "faq_title": "常見問題與採購須知",
-                "faq_q1": "Q: 批發門檻與優惠如何計算？",
-                "faq_a1": "單一品項購買滿 10 包（含）以上，系統將自動套用批發優惠價。如需大批次（100kg 以上）商業合作，歡迎點擊右下角 Zalo 洽詢專員。",
-                "faq_q2": "Q: 配送範圍與運費說明？",
-                "faq_a2": "支援全越南配送（平陽省、胡志明市及周邊省份快遞當日或隔日送達）。訂單金額滿 2,000,000 VND 即可享受免運費優惠。",
-                "rec_sub": "Haute Coffee Collection - 官方訂購表單",
-                "rec_lbl_id": "訂單編號：",
-                "rec_lbl_date": "訂購時間：",
-                "rec_hdr_items": "【訂購內容明細】",
-                "rec_hdr_cust": "【訂購人與配送資訊】",
-                "rec_lbl_name": "姓名：",
-                "rec_lbl_phone": "電話：",
-                "rec_lbl_addr": "地址：",
-                "rec_lbl_note": "備註：",
-                "btn_print": "🖨️ 列印 / 存 PDF",
-                "btn_copy_again": "📋 再次複製內文",
-                "btn_zalo_direct": "💬 前往 Zalo 貼上",
-                "btn_close": "關閉視窗"
-            },
-            "vi": {
-                "nav_story": "Câu Chuyện Thương Hiệu",
-                "nav_store": "Cửa Hàng Bán Sỉ",
-                "nav_faq": "Hỏi Đáp",
-                "hero_subtitle": "BỘ SƯU TẬP CÀ PHÊ CAO CẤP",
-                "hero_slogan": "“Không bao giờ là quá muộn để thưởng thức cà phê.”",
-                "hero_btn": "Đến Cửa Hàng Mua Cà Phê",
-                "story_tag": "Di Sản Thương Hiệu",
-                "story_title": "Câu Chuyện Thương Hiệu & Tinh Thần Thủ Công",
-                "story_p1": "VIEBUCKS ra đời từ sự theo đuổi tột cùng nghệ thuật cà phê. Chúng tôi tin rằng mỗi hạt cà phê đều chứa đựng linh hồn của đất trời và tâm huyết của người thợ rang.",
-                "store_tag": "Bảng Tính Giá Tùy Chỉnh",
-                "store_title": "Chọn Cà Phê & Tính Giá Đặt Hàng",
-                "products_heading": "Chọn Loại Cà Phê Hạt (500g/gói)",
-                "cart_heading": "Đơn Hàng Của Bạn",
-                "th_item": "Sản Phẩm & Độ Xay",
-                "th_qty": "Số Lượng",
-                "th_subtotal": "Thành Tiền",
-                "cart_empty": "Chưa chọn sản phẩm nào",
-                "label_goods_total": "Tiền hàng:",
-                "label_shipping": "Phí vận chuyển:",
-                "free_ship_hint": "Miễn phí vận chuyển cho đơn từ 2.000.000 VNĐ",
-                "label_grand_total": "Tổng cộng:",
-                "form_heading": "Thông Tin Giao Hàng & Liên Hệ",
-                "ph_name": "Họ và tên / Full Name",
-                "ph_phone": "Số điện thoại / Phone",
-                "ph_email": "Email",
-                "ph_address": "Địa chỉ giao hàng chi tiết",
-                "ph_note": "Ghi chú đơn hàng (Không bắt buộc)",
-                "btn_submit_order": "Gửi Đơn Hàng (Tạo Hóa Đơn + Copy + Gmail/Zalo)",
-                "faq_tag": "Hỏi Đáp & Chính Sách",
-                "faq_title": "Thắc Mắc Thường Gặp",
-                "faq_q1": "Q: Chính sách giá sỉ được tính như thế nào?",
-                "faq_a1": "Khi mua từ 10 gói trở lên cho một mặt hàng, hệ thống sẽ tự động áp dụng giá sỉ.",
-                "faq_q2": "Q: Phạm vi giao hàng và phí vận chuyển?",
-                "faq_a2": "Giao hàng toàn quốc Việt Nam. Miễn phí vận chuyển cho đơn hàng từ 2.000.000 VNĐ.",
-                "rec_sub": "Haute Coffee Collection - Đơn Đặt Hàng Chính Thức",
-                "rec_lbl_id": "Mã đơn hàng: ",
-                "rec_lbl_date": "Thời gian đặt: ",
-                "rec_hdr_items": "【Chi Tiết Đơn Hàng】",
-                "rec_hdr_cust": "【Thông Tin Khách Hàng】",
-                "rec_lbl_name": "Họ tên: ",
-                "rec_lbl_phone": "SĐT: ",
-                "rec_lbl_addr": "Địa chỉ: ",
-                "rec_lbl_note": "Ghi chú: ",
-                "btn_print": "🖨️ In / Lưu PDF",
-                "btn_copy_again": "📋 Sao chép lại",
-                "btn_zalo_direct": "💬 Mở Zalo để Dán",
-                "btn_close": "Đóng"
-            },
-            "en": {
-                "nav_story": "Brand Story",
-                "nav_store": "Store & Wholesale",
-                "nav_faq": "FAQ",
-                "hero_subtitle": "HAUTE COFFEE COLLECTION",
-                "hero_slogan": "“It's never too late to drink coffee.”",
-                "hero_btn": "Shop Fine Coffees Now",
-                "story_tag": "Our Heritage",
-                "story_title": "Brand Story & Craftsmanship",
-                "story_p1": "VIEBUCKS was born out of the ultimate pursuit of coffee craftsmanship. We believe that every coffee bean contains the soul of the land.",
-                "store_tag": "Bespoke Atelier Store",
-                "store_title": "Coffee Selection & Price Estimator",
-                "products_heading": "Select Coffee Beans (500g/bag)",
-                "cart_heading": "Your Shopping Cart",
-                "th_item": "Item & Grind Size",
-                "th_qty": "Qty",
-                "th_subtotal": "Subtotal",
-                "cart_empty": "No items selected",
-                "label_goods_total": "Goods Total:",
-                "label_shipping": "Estimated Shipping:",
-                "free_ship_hint": "Free shipping on orders over 2,000,000 VND",
-                "label_grand_total": "Grand Total:",
-                "form_heading": "Shipping & Contact Info",
-                "ph_name": "Full Name",
-                "ph_phone": "Phone Number",
-                "ph_email": "Email Address",
-                "ph_address": "Detailed Shipping Address",
-                "ph_note": "Order Note (Optional)",
-                "btn_submit_order": "Submit Order (Receipt + Copy + Gmail/Zalo)",
-                "faq_tag": "FAQ & Policy",
-                "faq_title": "Frequently Asked Questions",
-                "faq_q1": "Q: How is wholesale pricing applied?",
-                "faq_a1": "Wholesale discount applies automatically when ordering 10 or more bags of a single item.",
-                "faq_q2": "Q: Shipping areas & policies?",
-                "faq_a2": "We ship nationwide across Vietnam. Free shipping on orders over 2,000,000 VND.",
-                "rec_sub": "Haute Coffee Collection - Official Order Form",
-                "rec_lbl_id": "Order ID: ",
-                "rec_lbl_date": "Date: ",
-                "rec_hdr_items": "【Order Details】",
-                "rec_hdr_cust": "【Shipping Info】",
-                "rec_lbl_name": "Name: ",
-                "rec_lbl_phone": "Phone: ",
-                "rec_lbl_addr": "Address: ",
-                "rec_lbl_note": "Note: ",
-                "btn_print": "🖨️ Print / Save PDF",
-                "btn_copy_again": "📋 Copy Text Again",
-                "btn_zalo_direct": "💬 Open Zalo to Paste",
-                "btn_close": "Close"
-            }
-        };
+    // 切換語言
+    function changeLang(lang) {
+        currentLang = lang;
+        document.querySelectorAll('.lang-switch button').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`btn-${lang}`).classList.add('active');
 
-        function changeLanguage(lang) {
-            if (!translations[lang]) lang = "zh-TW";
-            localStorage.setItem("selected_language", lang);
-            document.documentElement.lang = lang;
+        const t = i18n[lang];
+        document.getElementById('txt-title').innerText = t.title;
+        document.getElementById('txt-cust-info-title').innerText = t.custTitle;
+        document.getElementById('txt-subtotal-lbl').innerText = t.subtotalLbl;
+        document.getElementById('txt-discount-lbl').innerText = t.discountLbl;
+        document.getElementById('txt-shipping-lbl').innerText = t.shippingLbl;
+        document.getElementById('txt-total-lbl').innerText = t.totalLbl;
+        document.getElementById('btn-submit').innerText = t.btnSubmit;
+        document.getElementById('btn-coupon').innerText = t.btnCoupon;
+        document.getElementById('txt-modal-header').innerText = t.modalHeader;
+        document.getElementById('txt-rec-id-lbl').innerText = t.recId;
+        document.getElementById('txt-rec-name-lbl').innerText = t.recName;
+        document.getElementById('txt-rec-phone-lbl').innerText = t.recPhone;
+        document.getElementById('txt-rec-addr-lbl').innerText = t.recAddr;
+        document.getElementById('txt-rec-total-lbl').innerText = t.recTotal;
+        document.getElementById('txt-rec-note-lbl').innerText = t.recNote;
+        document.getElementById('btn-copy-txt').innerText = t.btnCopy;
+        document.getElementById('btn-print-txt').innerText = t.btnPrint;
+        document.getElementById('btn-close-txt').innerText = t.btnClose;
+        document.getElementById('txt-bank-title').innerText = t.bankTitle;
+        document.getElementById('lbl-bank-name').innerText = t.bankName;
+        document.getElementById('lbl-bank-holder').innerText = t.bankHolder;
+        document.getElementById('lbl-bank-acc').innerText = t.bankAcc;
+        document.getElementById('txt-bank-note').innerText = t.bankNote;
 
-            document.querySelectorAll("[data-i18n]").forEach(el => {
-                const key = el.getAttribute("data-i18n");
-                if (translations[lang][key]) el.innerText = translations[lang][key];
+        document.querySelectorAll('.txt-price-lbl').forEach(el => el.innerText = t.priceLbl);
+
+        // 更新品名與研磨選單
+        document.querySelectorAll('.product-card').forEach(card => {
+            const name = card.getAttribute(`data-name-${lang}`);
+            card.querySelector('.prod-name').innerText = name;
+
+            const select = card.querySelector('.grind-select');
+            const selectedIdx = select.selectedIndex >= 0 ? select.selectedIndex : 0;
+            select.innerHTML = '';
+            t.grindOptions.forEach(optText => {
+                const opt = document.createElement('option');
+                opt.value = optText;
+                opt.innerText = optText;
+                select.appendChild(opt);
             });
-
-            document.querySelectorAll("[data-i18n-ph]").forEach(el => {
-                const key = el.getAttribute("data-i18n-ph");
-                if (translations[lang][key]) el.placeholder = translations[lang][key];
-            });
-
-            const langSelect = document.getElementById("language-select");
-            if (langSelect) langSelect.value = lang;
-
-            renderCart();
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const savedLang = localStorage.getItem("selected_language") || "zh-TW";
-            changeLanguage(savedLang);
-
-            document.getElementById("language-select").addEventListener("change", (e) => {
-                changeLanguage(e.target.value);
-            });
+            select.selectedIndex = selectedIdx;
         });
-    </script>
+
+        calculateTotal();
+    }
+
+    // 優惠碼使用邏輯
+    function applyCoupon() {
+        const code = document.getElementById('coupon-code').value.trim().toUpperCase();
+        if (code === "VIE10") {
+            appliedCoupon = "VIE10 (9折)";
+            alert("已成功套用 VIE10 優惠碼 (享 9 折優惠)！");
+        } else if (code === "FREESHIP") {
+            appliedCoupon = "FREESHIP";
+            alert("已成功套用 FREESHIP 折扣碼！");
+        } else {
+            alert("無效的優惠碼！");
+            appliedCoupon = "";
+        }
+        calculateTotal();
+    }
+
+    // 計算總金額與免運進度
+    function calculateTotal() {
+        let subtotal = 0;
+        document.querySelectorAll('.product-card').forEach(card => {
+            const price = parseInt(card.getAttribute('data-price'));
+            const qty = parseInt(card.querySelector('.qty-input').value) || 0;
+            subtotal += price * qty;
+        });
+
+        // 計算免運門檻條
+        const t = i18n[currentLang];
+        const progressBar = document.getElementById('freeship-bar');
+        const progressMsg = document.getElementById('freeship-msg');
+        
+        let percent = Math.min((subtotal / FREESHIP_THRESHOLD) * 100, 100);
+        progressBar.style.width = percent + "%";
+
+        if (subtotal >= FREESHIP_THRESHOLD) {
+            progressMsg.innerText = t.freeshipReach;
+        } else {
+            let lack = FREESHIP_THRESHOLD - subtotal;
+            progressMsg.innerText = t.freeshipLack.replace('{amount}', lack.toLocaleString());
+        }
+
+        // 計算折扣金額
+        discountAmount = 0;
+        if (appliedCoupon.includes("9折")) {
+            discountAmount = subtotal * 0.1;
+        }
+
+        // 計算運費
+        let shipping = (subtotal >= FREESHIP_THRESHOLD || appliedCoupon === "FREESHIP" || subtotal === 0) ? 0 : STANDARD_SHIPPING;
+        let finalTotal = Math.max(0, subtotal - discountAmount + shipping);
+
+        document.getElementById('subtotal-amount').innerText = subtotal.toLocaleString();
+        document.getElementById('discount-amount').innerText = discountAmount.toLocaleString();
+        document.getElementById('shipping-amount').innerText = shipping.toLocaleString();
+        document.getElementById('total-amount').innerText = finalTotal.toLocaleString();
+
+        return { subtotal, discountAmount, shipping, finalTotal };
+    }
+
+    // 生成單據 Modal 與 VietQR
+    function generateReceipt() {
+        const { subtotal, finalTotal } = calculateTotal();
+        const name = document.getElementById('cust-name').value.trim();
+        const phone = document.getElementById('cust-phone').value.trim();
+        const address = document.getElementById('cust-address').value.trim();
+        const note = document.getElementById('cust-note').value.trim();
+
+        if (subtotal === 0) {
+            alert(currentLang === 'zh' ? '請至少選擇一項商品！' : 'Vui lòng chọn ít nhất một sản phẩm!');
+            return;
+        }
+        if (!name || !phone || !address) {
+            alert(currentLang === 'zh' ? '請填寫完整的訂購人資訊！' : 'Vui lòng điền đầy đủ thông tin người nhận!');
+            return;
+        }
+
+        // 動態生成流水號編號
+        const dateStr = new Date().toISOString().slice(0,10).replace(/-/g,"");
+        const randomNum = Math.floor(1000 + Math.random() * 9000);
+        const orderId = `VB${dateStr}-${randomNum}`;
+        document.getElementById('rec-id').innerText = orderId;
+
+        document.getElementById('rec-name').innerText = name;
+        document.getElementById('rec-phone').innerText = phone;
+        document.getElementById('rec-address').innerText = address;
+        document.getElementById('rec-note').innerText = note || 'N/A';
+        document.getElementById('rec-total').innerText = finalTotal.toLocaleString();
+
+        // 渲染品項
+        const itemsUl = document.getElementById('rec-items');
+        itemsUl.innerHTML = '';
+
+        document.querySelectorAll('.product-card').forEach(card => {
+            const qty = parseInt(card.querySelector('.qty-input').value) || 0;
+            if (qty > 0) {
+                const name = card.getAttribute(`data-name-${currentLang}`);
+                const price = parseInt(card.getAttribute('data-price'));
+                const grind = card.querySelector('.grind-select').value;
+                const itemSubtotal = price * qty;
+
+                const li = document.createElement('li');
+                li.innerText = `${name} x ${qty} [${grind}] - ${itemSubtotal.toLocaleString()} VND`;
+                itemsUl.appendChild(li);
+            }
+        });
+
+        // 生成 VietQR URL (MB Bank ID: 970422, 帳號: 0348246669)
+        const bankId = "MB";
+        const accountNo = "0348246669";
+        const accountName = "CONG TY TNHH VIEBUCKS";
+        const qrUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-compact2.png?amount=${finalTotal}&addInfo=${orderId}&accountName=${encodeURIComponent(accountName)}`;
+        document.getElementById('vietqr-img').src = qrUrl;
+
+        document.getElementById('receipt-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('receipt-modal').style.display = 'none';
+    }
+
+    // 取得統一格式的純文字內容
+    function getReceiptPlainText() {
+        const id = document.getElementById('rec-id').innerText;
+        const name = document.getElementById('rec-name').innerText;
+        const phone = document.getElementById('rec-phone').innerText;
+        const addr = document.getElementById('rec-address').innerText;
+        const total = document.getElementById('rec-total').innerText;
+        const note = document.getElementById('rec-note').innerText;
+
+        let itemsText = '';
+        document.querySelectorAll('#rec-items li').forEach(li => {
+            itemsText += `• ${li.innerText}\n`;
+        });
+
+        return `【Viebucks Order Confirmation】\n` +
+               `Order ID: ${id}\n` +
+               `Customer: ${name} (${phone})\n` +
+               `Address: ${addr}\n` +
+               `------------------------\n` +
+               `${itemsText}` +
+               `------------------------\n` +
+               `Total: ${total} VND\n` +
+               `Note: ${note}\n\n` +
+               `Bank: MB Bank\n` +
+               `Account: 0348246669 (VIEBUCKS)`;
+    }
+
+    // 複製純文字
+    function copyReceiptText() {
+        const text = getReceiptPlainText();
+        navigator.clipboard.writeText(text).then(() => {
+            alert(currentLang === 'zh' ? '訂單內容已複製！' : 'Đã sao chép nội dung đơn hàng!');
+        });
+    }
+
+    // 一鍵發送至 Zalo
+    function sendViaZalo() {
+        copyReceiptText();
+        const zaloPhone = "0348246669"; 
+        window.open(`https://zalo.me/${zaloPhone}`, '_blank');
+    }
+
+    // 一鍵發送至 Email
+    function sendViaEmail() {
+        const id = document.getElementById('rec-id').innerText;
+        const name = document.getElementById('rec-name').innerText;
+        const text = getReceiptPlainText();
+
+        const subject = encodeURIComponent(`[Viebucks Order] ${id} - ${name}`);
+        const body = encodeURIComponent(text);
+        window.open(`mailto:your-email@gmail.com?subject=${subject}&body=${body}`);
+    }
+
+    // 初始化語言
+    changeLang('zh');
+</script>
+
 </body>
 </html>
