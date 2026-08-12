@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIEBUCKS - Haute Coffee Collection</title>
+    <title>VIEBUCKS - Haute Coffee Collection & E-Store</title>
     <style>
-        /* 基本重置與樣式 */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -19,12 +18,12 @@
             line-height: 1.6;
         }
 
-        /* 頂部導覽列 */
+        /* 導覽列 */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 8%;
+            padding: 15px 8%;
             background-color: #2c1810;
             color: #fff;
             position: sticky;
@@ -33,7 +32,7 @@
         }
 
         .logo {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: bold;
             letter-spacing: 2px;
             color: #d4af37;
@@ -43,7 +42,7 @@
         nav {
             display: flex;
             align-items: center;
-            gap: 25px;
+            gap: 20px;
         }
 
         nav a {
@@ -58,70 +57,57 @@
         }
 
         .lang-select {
-            padding: 6px 12px;
+            padding: 6px 10px;
             border-radius: 4px;
             border: 1px solid #d4af37;
             background: #2c1810;
             color: #fff;
             font-weight: bold;
             cursor: pointer;
-            outline: none;
         }
 
-        /* Hero 主視覺區 */
+        /* Banner */
         .hero {
             text-align: center;
-            padding: 100px 20px;
+            padding: 80px 20px;
             background: linear-gradient(rgba(44, 24, 16, 0.85), rgba(44, 24, 16, 0.85)), url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1600&auto=format&fit=crop') center/cover;
             color: #fff;
         }
 
-        .hero .subtitle {
-            color: #d4af37;
-            letter-spacing: 3px;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
         .hero h1 {
-            font-size: 54px;
-            margin-bottom: 15px;
+            font-size: 48px;
+            margin-bottom: 10px;
             font-weight: 300;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
         }
 
         .hero .slogan {
             font-style: italic;
-            font-size: 20px;
+            font-size: 18px;
             color: #ddd;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .hero .btn {
             display: inline-block;
             background-color: #d4af37;
             color: #2c1810;
-            padding: 14px 32px;
+            padding: 12px 28px;
             text-decoration: none;
             font-weight: bold;
             border-radius: 4px;
-            transition: background 0.3s;
         }
 
-        .hero .btn:hover {
-            background-color: #f1c40f;
-        }
-
-        /* 通用 Section 樣式 */
+        /* 通用 Section */
         section {
-            padding: 80px 8%;
+            padding: 60px 8%;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
         }
 
         .section-header span {
@@ -130,116 +116,185 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             display: block;
-            margin-bottom: 8px;
         }
 
         .section-header h2 {
-            font-size: 32px;
+            font-size: 30px;
             color: #2c1810;
-            font-weight: 400;
         }
 
-        /* 品牌故事 */
-        .story-content {
-            background: #fff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            line-height: 1.8;
-            color: #555;
-        }
-
-        .story-content p {
-            margin-bottom: 15px;
-        }
-
-        /* 產品展示 */
-        .grid {
+        /* 購物平台 Section */
+        .store-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .card {
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
             background: #fff;
-            border-radius: 8px;
             padding: 30px;
+            border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border-top: 4px solid #8c6d46;
         }
 
-        .card h3 {
-            color: #2c1810;
-            font-size: 22px;
-            margin-bottom: 5px;
+        @media (max-width: 900px) {
+            .store-container {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .card .origin {
-            color: #8c6d46;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-
-        .card ul {
-            list-style: none;
+        .product-item {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
             margin-bottom: 20px;
-            font-size: 14px;
         }
 
-        .card ul li {
-            padding: 6px 0;
-            border-bottom: 1px dashed #eee;
+        .product-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .product-title {
+            font-size: 18px;
+            color: #2c1810;
+            font-weight: bold;
+        }
+
+        .product-price {
+            color: #8c6d46;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .badge-wholesale {
+            background-color: #e74c3c;
+            color: #fff;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-left: 5px;
+        }
+
+        .qty-control {
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
         }
 
-        /* 常見問題 FAQ */
-        .faq-item {
-            background: #fff;
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-input {
+            width: 50px;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* 購物車與結帳區 */
+        .cart-summary {
+            background: #faf8f5;
             padding: 25px;
             border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            border: 1px solid #eee;
         }
 
-        .faq-item h3 {
-            color: #2c1810;
-            font-size: 18px;
-            margin-bottom: 10px;
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
         }
 
-        .faq-item p {
-            color: #666;
-            font-size: 15px;
+        .cart-table th, .cart-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
         }
 
-        /* 頁尾 Footer */
+        .total-box {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #8c6d46;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .grand-total {
+            font-size: 22px;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .shipping-notice {
+            font-size: 12px;
+            color: #27ae60;
+            margin-top: 5px;
+        }
+
+        /* 表單 */
+        .checkout-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .form-input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        .btn-submit {
+            background-color: #2c1810;
+            color: #d4af37;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: #432519;
+        }
+
+        /* FAQ */
+        .faq-item {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        /* 頁尾 */
         footer {
             background-color: #1a0e0a;
             color: #aaa;
-            padding: 50px 8% 20px;
+            padding: 40px 8% 20px;
             font-size: 14px;
-        }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .footer-content h4 {
-            color: #fff;
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-
-        .footer-bottom {
             text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid #333;
-            color: #777;
         }
 
         /* 懸浮按鈕 */
@@ -250,7 +305,7 @@
             z-index: 9999;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .floating-btn {
@@ -264,11 +319,6 @@
             text-decoration: none;
             font-weight: bold;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: transform 0.2s;
-        }
-
-        .floating-btn:hover {
-            transform: scale(1.1);
         }
 
         .btn-zalo { background-color: #0068FF; font-size: 13px; }
@@ -277,16 +327,14 @@
 </head>
 <body>
 
-    <!-- 頂部導覽列 -->
+    <!-- Header -->
     <header>
         <a href="#" class="logo">viebucks</a>
         <nav>
             <a href="#story" data-i18n="nav_story">品牌故事</a>
-            <a href="#collections" data-i18n="nav_collections">精品咖啡豆</a>
+            <a href="#store" data-i18n="nav_store">採購商城</a>
             <a href="#faq" data-i18n="nav_faq">常見問題</a>
-            <a href="#contact" data-i18n="nav_contact">聯絡我們</a>
 
-            <!-- 多國語言切換選單 -->
             <select id="language-select" class="lang-select">
                 <option value="zh-TW">繁體中文</option>
                 <option value="vi">Tiếng Việt</option>
@@ -295,72 +343,134 @@
         </nav>
     </header>
 
-    <!-- 主視覺 Banner -->
+    <!-- Banner -->
     <div class="hero">
-        <div class="subtitle" data-i18n="hero_subtitle">HAUTE COFFEE COLLECTION</div>
+        <div style="color: #d4af37; letter-spacing: 2px; font-size: 13px;" data-i18n="hero_subtitle">HAUTE COFFEE COLLECTION</div>
         <h1>viebucks</h1>
         <div class="slogan" data-i18n="hero_slogan">“享受一杯好咖啡，永遠不嫌晚。”</div>
-        <a href="#collections" class="btn" data-i18n="hero_btn">探索精品咖啡豆</a>
+        <a href="#store" class="btn" data-i18n="hero_btn">前往精品咖啡採購商城</a>
     </div>
 
-    <!-- 品牌故事 -->
+    <!-- 品牌故事 Section -->
     <section id="story">
         <div class="section-header">
-            <span data-i18n="story_tag">Our Atelier Heritage</span>
+            <span data-i18n="story_tag">Our Heritage</span>
             <h2 data-i18n="story_title">品牌故事與工藝精神</h2>
         </div>
-        <div class="story-content">
+        <div style="background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
             <p data-i18n="story_p1">VIEBUCKS 誕生於對咖啡工藝的極致追求。我們深信每一顆咖啡豆都蘊藏著大地的靈魂與烘焙師的匠心。從產地莊園的嚴選、精準的烘焙曲線，到完美風味的呈現，VIEBUCKS 始終堅持以 Haute Coffee（高級訂製咖啡）的哲學，為每一位熱愛咖啡的品味人士提供無與倫比的感官體驗。</p>
-            <p data-i18n="story_p2">無論是醇厚濃郁的羅布斯塔、層次豐富的阿拉比卡，或是風味獨特的巴西喜拉朵，我們都以嚴謹的標準對待。正如我們的信念：「It's never too late to drink coffee.」——享受一杯好咖啡，永遠不嫌晚。</p>
         </div>
     </section>
 
-    <!-- 精品咖啡豆目錄 -->
-    <section id="collections">
+    <!-- 完整購物商城與試算區 -->
+    <section id="store">
         <div class="section-header">
-            <span data-i18n="coffee_tag">Bean Heritage & Flavor Profiles</span>
-            <h2 data-i18n="coffee_title">頂級精品咖啡豆系列</h2>
+            <span data-i18n="store_tag">Bespoke Atelier Store</span>
+            <h2 data-i18n="store_title">精品咖啡豆選購與採購試算</h2>
         </div>
-        <div class="grid">
-            <!-- Arabica -->
-            <div class="card">
-                <h3>Arabica</h3>
-                <div class="origin" data-i18n="arabica_sub">越南阿拉比卡精品系列</div>
-                <ul>
-                    <li><span data-i18n="label_origin">產地</span><span data-i18n="arabica_origin">越南 大叻 (Da Lat)</span></li>
-                    <li><span data-i18n="label_altitude">海拔</span><span>1,500 - 1,650m</span></li>
-                    <li><span data-i18n="label_process">處理方式</span><span data-i18n="process_washed">水洗 (Washed)</span></li>
-                </ul>
-                <p style="font-style: italic; font-size: 14px; color: #666;" data-i18n="arabica_desc">“展現獨特的花香與黃檸檬果酸，伴隨黑糖甜感，口感清爽且尾韻回甘持久。”</p>
+
+        <div class="store-container">
+            <!-- 左側：商品列表 -->
+            <div>
+                <h3 style="margin-bottom: 20px; color: #2c1810;" data-i18n="products_heading">選擇咖啡豆品項 (500g/包)</h3>
+
+                <!-- 品項 1: Arabica -->
+                <div class="product-item">
+                    <div class="product-title">Arabica 大叻精品阿拉比卡</div>
+                    <div class="product-price">
+                        零售價: 220,000 VND 
+                        <span class="badge-wholesale">滿10包批發價: 180,000 VND</span>
+                    </div>
+                    <div class="qty-control">
+                        <button class="qty-btn" onclick="updateQty('arabica', -1)">-</button>
+                        <input type="number" id="qty-arabica" class="qty-input" value="0" min="0" onchange="renderCart()">
+                        <button class="qty-btn" onclick="updateQty('arabica', 1)">+</button>
+                    </div>
+                </div>
+
+                <!-- 品項 2: Robusta -->
+                <div class="product-item">
+                    <div class="product-title">Robusta 西原特選羅布斯塔</div>
+                    <div class="product-price">
+                        零售價: 150,000 VND 
+                        <span class="badge-wholesale">滿10包批發價: 120,000 VND</span>
+                    </div>
+                    <div class="qty-control">
+                        <button class="qty-btn" onclick="updateQty('robusta', -1)">-</button>
+                        <input type="number" id="qty-robusta" class="qty-input" value="0" min="0" onchange="renderCart()">
+                        <button class="qty-btn" onclick="updateQty('robusta', 1)">+</button>
+                    </div>
+                </div>
+
+                <!-- 品項 3: Brazil Cerrado -->
+                <div class="product-item">
+                    <div class="product-title">Brazil Cerrado 巴西喜拉朵</div>
+                    <div class="product-price">
+                        零售價: 200,000 VND 
+                        <span class="badge-wholesale">滿10包批發價: 160,000 VND</span>
+                    </div>
+                    <div class="qty-control">
+                        <button class="qty-btn" onclick="updateQty('brazil', -1)">-</button>
+                        <input type="number" id="qty-brazil" class="qty-input" value="0" min="0" onchange="renderCart()">
+                        <button class="qty-btn" onclick="updateQty('brazil', 1)">+</button>
+                    </div>
+                </div>
             </div>
 
-            <!-- Robusta -->
-            <div class="card">
-                <h3>Robusta</h3>
-                <div class="origin" data-i18n="robusta_sub">羅布斯塔經典系列</div>
-                <ul>
-                    <li><span data-i18n="label_origin">產地</span><span data-i18n="robusta_origin">越南西原 (Central Highlands)</span></li>
-                    <li><span data-i18n="label_altitude">海拔</span><span>500 - 800m</span></li>
-                    <li><span data-i18n="label_process">處理方式</span><span data-i18n="process_natural">天然日曬 (Natural)</span></li>
-                </ul>
-                <p style="font-style: italic; font-size: 14px; color: #666;" data-i18n="robusta_desc">“濃郁厚實的黑巧克力與烤核果香氣，苦甜平衡極佳，油脂豐厚且具備強烈穿透力。”</p>
-            </div>
+            <!-- 右側：購物車與結帳資訊 -->
+            <div class="cart-summary">
+                <h3 style="color: #2c1810;" data-i18n="cart_heading">您的採購訂單清單</h3>
 
-            <!-- Brazil Cerrado -->
-            <div class="card">
-                <h3>Brazil Cerrado</h3>
-                <div class="origin" data-i18n="brazil_sub">巴西喜拉朵特選系列</div>
-                <ul>
-                    <li><span data-i18n="label_origin">產地</span><span data-i18n="brazil_origin">巴西喜拉朵 (Cerrado, Brazil)</span></li>
-                    <li><span data-i18n="label_altitude">海拔</span><span>900 - 1,200m</span></li>
-                    <li><span data-i18n="label_process">處理方式</span><span data-i18n="process_pulped">半水洗 (Pulped Natural)</span></li>
-                </ul>
-                <p style="font-style: italic; font-size: 14px; color: #666;" data-i18n="brazil_desc">“散發濃郁的烤堅果、焦糖奶油與可可香氣，口感溫潤滑順，酸度低且餘韻香甜。”</p>
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="th_item">品項</th>
+                            <th data-i18n="th_qty">數量</th>
+                            <th data-i18n="th_subtotal">小計</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-items-body">
+                        <tr><td colspan="3" style="text-align: center; color: #999;" data-i18n="cart_empty">尚未選擇商品</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="total-box">
+                    <div class="total-row">
+                        <span data-i18n="label_goods_total">商品總額:</span>
+                        <span id="goods-total">0 VND</span>
+                    </div>
+                    <div class="total-row">
+                        <span data-i18n="label_shipping">預估運費:</span>
+                        <span id="shipping-fee">30,000 VND</span>
+                    </div>
+                    <div class="shipping-notice" id="shipping-notice" data-i18n="free_ship_hint">單筆滿 2,000,000 VND 享免運費</div>
+
+                    <div class="total-row grand-total" style="margin-top: 10px;">
+                        <span data-i18n="label_grand_total">應付總額:</span>
+                        <span id="grand-total">0 VND</span>
+                    </div>
+                </div>
+
+                <!-- 訂購人資訊 Formspree 寄信表單 -->
+                <form action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" class="checkout-form" onsubmit="return validateCheckout()">
+                    <h4 style="margin-top: 10px;" data-i18n="form_heading">填寫配送與聯絡資訊</h4>
+                    
+                    <input type="text" name="name" class="form-input" placeholder="訂購人姓名 / Full Name" required data-i18n-ph="ph_name">
+                    <input type="tel" name="phone" class="form-input" placeholder="聯絡電話 / Phone Number" required data-i18n-ph="ph_phone">
+                    <input type="email" name="email" class="form-input" placeholder="電子郵件 / Email Address" required data-i18n-ph="ph_email">
+                    <textarea name="address" class="form-input" rows="2" placeholder="詳細配送地址 / Shipping Address" required data-i18n-ph="ph_address"></textarea>
+
+                    <!-- 隱藏欄位：自動存入購物車與金額資料發送至後端 Email -->
+                    <input type="hidden" name="cart_summary_text" id="hidden-cart-summary">
+                    <input type="hidden" name="final_amount" id="hidden-final-amount">
+
+                    <button type="submit" class="btn-submit" data-i18n="btn_submit_order">確認送出訂單</button>
+                </form>
             </div>
         </div>
     </section>
 
-    <!-- 常見問題 FAQ -->
+    <!-- FAQ -->
     <section id="faq">
         <div class="section-header">
             <span data-i18n="faq_tag">FAQ & Policy</span>
@@ -374,187 +484,234 @@
             <h3 data-i18n="faq_q2">Q: 配送範圍與運費說明？</h3>
             <p data-i18n="faq_a2">支援全越南配送（平陽省、胡志明市及周邊省份快遞當日或隔日送達）。訂單金額滿 2,000,000 VND 即可享受免運費優惠。</p>
         </div>
-        <div class="faq-item">
-            <h3 data-i18n="faq_q3">Q: 咖啡豆的新鮮度與烘焙日期？</h3>
-            <p data-i18n="faq_a3">VIEBUCKS 堅持新鮮烘焙，所有精品豆均在下單後 3 天內烘焙完成封包出貨，包裝均附有單向排氣閥與精確烘焙日期標籤。</p>
-        </div>
     </section>
 
-    <!-- 頁尾 -->
-    <footer id="contact">
-        <div class="footer-content">
-            <div>
-                <h4>Công ty TNHH VIEBUCKS</h4>
-                <p data-i18n="footer_address">地址：365 QL13, Thủ Dầu Một, Hồ Chí Minh</p>
-                <p data-i18n="footer_phone">電話：0348246669 / 0839681380</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            “It's never too late to drink coffee.” © 2026 viebucks. All rights reserved.
-        </div>
+    <!-- Footer -->
+    <footer>
+        <p><strong>Công ty TNHH VIEBUCKS</strong> | 地址：365 QL13, Thủ Dầu Một, Hồ Chí Minh</p>
+        <p style="margin-top: 5px;">電話：0348246669 / 0839681380</p>
+        <p style="margin-top: 15px; color: #666;">“It's never too late to drink coffee.” © 2026 viebucks. All rights reserved.</p>
     </footer>
 
-    <!-- 右下角懸浮通訊按鈕 -->
+    <!-- 懸浮聯絡按鈕 -->
     <div class="floating-contact">
         <a href="https://zalo.me/0348246669" target="_blank" rel="noopener noreferrer" class="floating-btn btn-zalo">Zalo</a>
         <a href="tel:0348246669" class="floating-btn btn-phone">📞</a>
     </div>
 
-    <!-- JavaScript 多國語言切換邏輯 -->
+    <!-- JS 邏輯：購物車計算 + 多國語言切換 -->
     <script>
-        // 1. 多國語言對照字典
+        // 1. 商品資料庫與價格設定
+        const products = {
+            arabica: { name: "Arabica 大叻精品阿拉比卡", retail: 220000, wholesale: 180000 },
+            robusta: { name: "Robusta 西原特選羅布斯塔", retail: 150000, wholesale: 120000 },
+            brazil: { name: "Brazil Cerrado 巴西喜拉朵", retail: 200000, wholesale: 160000 }
+        };
+
+        // 2. 購物車數量加減
+        function updateQty(id, delta) {
+            const input = document.getElementById(`qty-${id}`);
+            let val = parseInt(input.value) || 0;
+            val += delta;
+            if (val < 0) val = 0;
+            input.value = val;
+            renderCart();
+        }
+
+        // 3. 渲染購物車與金額試算
+        function renderCart() {
+            const tbody = document.getElementById('cart-items-body');
+            tbody.innerHTML = '';
+
+            let goodsTotal = 0;
+            let cartTextDetails = [];
+            let hasItems = false;
+
+            for (const id in products) {
+                const qty = parseInt(document.getElementById(`qty-${id}`).value) || 0;
+                if (qty > 0) {
+                    hasItems = true;
+                    // 單品滿 10 包自動帶入批發價
+                    const unitPrice = qty >= 10 ? products[id].wholesale : products[id].retail;
+                    const subtotal = unitPrice * qty;
+                    goodsTotal += subtotal;
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${products[id].name} ${qty >= 10 ? '<span class="badge-wholesale">批發價</span>' : ''}</td>
+                        <td>${qty} 包</td>
+                        <td>${subtotal.toLocaleString()} VND</td>
+                    `;
+                    tbody.appendChild(row);
+
+                    cartTextDetails.push(`${products[id].name} x ${qty}包 (單價:${unitPrice.toLocaleString()} = ${subtotal.toLocaleString()} VND)`);
+                }
+            }
+
+            if (!hasItems) {
+                const lang = localStorage.getItem("selected_language") || "zh-TW";
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #999;">${translations[lang]["cart_empty"]}</td></tr>`;
+            }
+
+            // 運費計算 (滿 2,000,000 免運)
+            let shippingFee = (goodsTotal >= 2000000 || goodsTotal === 0) ? 0 : 30000;
+            let grandTotal = goodsTotal > 0 ? goodsTotal + shippingFee : 0;
+
+            document.getElementById('goods-total').innerText = `${goodsTotal.toLocaleString()} VND`;
+            document.getElementById('shipping-fee').innerText = `${shippingFee.toLocaleString()} VND`;
+            document.getElementById('grand-total').innerText = `${grandTotal.toLocaleString()} VND`;
+
+            // 將資料注入隱藏表單
+            document.getElementById('hidden-cart-summary').value = cartTextDetails.join(' | ');
+            document.getElementById('hidden-final-amount').value = `${grandTotal.toLocaleString()} VND`;
+        }
+
+        function validateCheckout() {
+            const grandTotalText = document.getElementById('grand-total').innerText;
+            if (grandTotalText === '0 VND') {
+                alert('請先選擇要購買的咖啡豆數量！');
+                return false;
+            }
+            return true;
+        }
+
+        // 4. 多國語言字典
         const translations = {
             "zh-TW": {
                 "nav_story": "品牌故事",
-                "nav_collections": "精品咖啡豆",
+                "nav_store": "採購商城",
                 "nav_faq": "常見問題",
-                "nav_contact": "聯絡我們",
                 "hero_subtitle": "HAUTE COFFEE COLLECTION",
                 "hero_slogan": "“享受一杯好咖啡，永遠不嫌晚。”",
-                "hero_btn": "探索精品咖啡豆",
-                "story_tag": "Our Atelier Heritage",
+                "hero_btn": "前往精品咖啡採購商城",
+                "story_tag": "Our Heritage",
                 "story_title": "品牌故事與工藝精神",
                 "story_p1": "VIEBUCKS 誕生於對咖啡工藝的極致追求。我們深信每一顆咖啡豆都蘊藏著大地的靈魂與烘焙師的匠心。從產地莊園的嚴選、精準的烘焙曲線，到完美風味的呈現，VIEBUCKS 始終堅持以 Haute Coffee（高級訂製咖啡）的哲學，為每一位熱愛咖啡的品味人士提供無與倫比的感官體驗。",
-                "story_p2": "無論是醇厚濃郁的羅布斯塔、層次豐富的阿拉比卡，或是風味獨特的巴西喜拉朵，我們都以嚴謹的標準對待。正如我們的信念：「It's never too late to drink coffee.」——享受一杯好咖啡，永遠不嫌晚。",
-                "coffee_tag": "Bean Heritage & Flavor Profiles",
-                "coffee_title": "頂級精品咖啡豆系列",
-                "arabica_sub": "越南阿拉比卡精品系列",
-                "robusta_sub": "羅布斯塔經典系列",
-                "brazil_sub": "巴西喜拉朵特選系列",
-                "label_origin": "產地",
-                "label_altitude": "海拔",
-                "label_process": "處理方式",
-                "arabica_origin": "越南 大叻 (Da Lat)",
-                "robusta_origin": "越南西原 (Central Highlands)",
-                "brazil_origin": "巴西喜拉朵 (Cerrado, Brazil)",
-                "process_washed": "水洗 (Washed)",
-                "process_natural": "天然日曬 (Natural)",
-                "process_pulped": "半水洗 (Pulped Natural)",
-                "arabica_desc": "“展現獨特的花香與黃檸檬果酸，伴隨黑糖甜感，口感清爽且尾韻回甘持久。”",
-                "robusta_desc": "“濃郁厚實的黑巧克力與烤核果香氣，苦甜平衡極佳，油脂豐厚且具備強烈穿透力。”",
-                "brazil_desc": "“散發濃郁的烤堅果、焦糖奶油與可可香氣，口感溫潤滑順，酸度低且餘韻香甜。”",
+                "store_tag": "Bespoke Atelier Store",
+                "store_title": "精品咖啡豆選購與採購試算",
+                "products_heading": "選擇咖啡豆品項 (500g/包)",
+                "cart_heading": "您的採購訂單清單",
+                "th_item": "品項",
+                "th_qty": "數量",
+                "th_subtotal": "小計",
+                "cart_empty": "尚未選擇商品",
+                "label_goods_total": "商品總額:",
+                "label_shipping": "預估運費:",
+                "free_ship_hint": "單筆滿 2,000,000 VND 享免運費",
+                "label_grand_total": "應付總額:",
+                "form_heading": "填寫配送與聯絡資訊",
+                "ph_name": "訂購人姓名 / Full Name",
+                "ph_phone": "聯絡電話 / Phone Number",
+                "ph_email": "電子郵件 / Email Address",
+                "ph_address": "詳細配送地址 / Shipping Address",
+                "btn_submit_order": "確認送出訂單",
                 "faq_tag": "FAQ & Policy",
                 "faq_title": "常見問題與採購須知",
                 "faq_q1": "Q: 批發門檻與優惠如何計算？",
                 "faq_a1": "單一品項購買滿 10 包（含）以上，系統將自動套用批發優惠價。如需大批次（100kg 以上）商業合作，歡迎點擊右下角 Zalo 洽詢專員。",
                 "faq_q2": "Q: 配送範圍與運費說明？",
-                "faq_a2": "支援全越南配送（平陽省、胡志明市及周邊省份快遞當日或隔日送達）。訂單金額滿 2,000,000 VND 即可享受免運費優惠。",
-                "faq_q3": "Q: 咖啡豆的新鮮度與烘焙日期？",
-                "faq_a3": "VIEBUCKS 堅持新鮮烘焙，所有精品豆均在下單後 3 天內烘焙完成封包出貨，包裝均附有單向排氣閥與精確烘焙日期標籤。",
-                "footer_address": "地址：365 QL13, Thủ Dầu Một, Hồ Chí Minh",
-                "footer_phone": "電話：0348246669 / 0839681380"
+                "faq_a2": "支援全越南配送（平陽省、胡志明市及周邊省份快遞當日或隔日送達）。訂單金額滿 2,000,000 VND 即可享受免運費優惠。"
             },
             "vi": {
                 "nav_story": "Câu Chuyện Thương Hiệu",
-                "nav_collections": "Bộ Sưu Tập Cà Phê",
-                "nav_faq": "Thắc Mắc Thường Gặp",
-                "nav_contact": "Liên Hệ",
+                "nav_store": "Cửa Hàng Bán Sỉ",
+                "nav_faq": "Hỏi Đáp",
                 "hero_subtitle": "BỘ SƯU TẬP CÀ PHÊ CAO CẤP",
                 "hero_slogan": "“Không bao giờ là quá muộn để thưởng thức cà phê.”",
-                "hero_btn": "Khám Phá Cà Phê Bán Chạy",
+                "hero_btn": "Đến Cửa Hàng Mua Cà Phê",
                 "story_tag": "Di Sản Thương Hiệu",
                 "story_title": "Câu Chuyện Thương Hiệu & Tinh Thần Thủ Công",
-                "story_p1": "VIEBUCKS ra đời từ sự theo đuổi tột cùng nghệ thuật cà phê. Chúng tôi tin rằng mỗi hạt cà phê đều chứa đựng linh hồn của đất trời và tâm huyết của người thợ rang. Từ tuyển chọn trang trại, đường cong rang chính xác đến hương vị hoàn hảo, VIEBUCKS luôn kiên trì với triết lý Haute Coffee.",
-                "story_p2": "Cho dù là Robusta đậm đà, Arabica phong phú hay Brazil Cerrado độc đáo, chúng tôi đều đối xử bằng tiêu chuẩn nghiêm ngặt nhất. Đúng như niềm tin của chúng tôi: 'It's never too late to drink coffee.'",
-                "coffee_tag": "Hồ Sơ Cà Phê & Hương Vị",
-                "coffee_title": "Bộ Sưu Tập Cà Phê Hạt Cao Cấp",
-                "arabica_sub": "Dòng Arabica Đà Lạt Cao Cấp",
-                "robusta_sub": "Dòng Robusta Tây Nguyên Cổ Điển",
-                "brazil_sub": "Dòng Brazil Cerrado Chọn Lọc",
-                "label_origin": "Xuất xứ",
-                "label_altitude": "Độ cao",
-                "label_process": "Phương pháp",
-                "arabica_origin": "Đà Lạt, Việt Nam",
-                "robusta_origin": "Tây Nguyên, Việt Nam",
-                "brazil_origin": "Cerrado, Brazil",
-                "process_washed": "Chế biến chanh (Washed)",
-                "process_natural": "Chế biến khô (Natural)",
-                "process_pulped": "Bán ướt (Pulped Natural)",
-                "arabica_desc": "“Hương hoa độc đáo, vị chua chanh vàng dịu nhẹ cùng hậu vị ngọt kéo dài.”",
-                "robusta_desc": "“Đậm đà hương socola đắng và hạt rang, crema dày và hậu vị mạnh mẽ.”",
-                "brazil_desc": "“Hương hạt nướng, bơ caramel và ca cao, vị êm dịu và độ chua thấp.”",
+                "story_p1": "VIEBUCKS ra đời từ sự theo đuổi tột cùng nghệ thuật cà phê. Chúng tôi tin rằng mỗi hạt cà phê đều chứa đựng linh hồn của đất trời và tâm huyết của người thợ rang.",
+                "store_tag": "Bảng Tính Giá Tùy Chỉnh",
+                "store_title": "Chọn Cà Phê & Tính Giá Đặt Hàng",
+                "products_heading": "Chọn Loại Cà Phê Hạt (500g/gói)",
+                "cart_heading": "Đơn Hàng Của Bạn",
+                "th_item": "Sản Phẩm",
+                "th_qty": "Số Lượng",
+                "th_subtotal": "Thành Tiền",
+                "cart_empty": "Chưa chọn sản phẩm nào",
+                "label_goods_total": "Tiền hàng:",
+                "label_shipping": "Phí vận chuyển:",
+                "free_ship_hint": "Miễn phí vận chuyển cho đơn từ 2.000.000 VNĐ",
+                "label_grand_total": "Tổng cộng:",
+                "form_heading": "Thông Tin Giao Hàng & Liên Hệ",
+                "ph_name": "Họ và tên / Full Name",
+                "ph_phone": "Số điện thoại / Phone",
+                "ph_email": "Email",
+                "ph_address": "Địa chỉ giao hàng chi tiết",
+                "btn_submit_order": "Xác Nhận Đặt Hàng",
                 "faq_tag": "Hỏi Đáp & Chính Sách",
-                "faq_title": "Thắc Mắc Thường Gặp & Mua Hàng",
+                "faq_title": "Thắc Mắc Thường Gặp",
                 "faq_q1": "Q: Chính sách giá sỉ được tính như thế nào?",
-                "faq_a1": "Khi mua từ 10 gói trở lên cho một mặt hàng, hệ thống sẽ tự động áp dụng giá sỉ. Đối với đơn hàng lớn (trên 100kg), vui lòng liên hệ qua Zalo.",
+                "faq_a1": "Khi mua từ 10 gói trở lên cho một mặt hàng, hệ thống sẽ tự động áp dụng giá sỉ.",
                 "faq_q2": "Q: Phạm vi giao hàng và phí vận chuyển?",
-                "faq_a2": "Giao hàng toàn quốc Việt Nam (Bình Dương, TP.HCM giao trong ngày hoặc ngày hôm sau). Miễn phí vận chuyển cho đơn hàng từ 2.000.000 VNĐ.",
-                "faq_q3": "Q: Độ tươi và ngày rang của cà phê?",
-                "faq_a3": "VIEBUCKS cam kết rang mới. Cà phê được rang và đóng gói trong vòng 3 ngày sau khi đặt hàng, bao bì có van 1 chiều và tem ngày rang rõ ràng.",
-                "footer_address": "Địa chỉ: 365 QL13, Thủ Dầu Một, Hồ Chí Minh",
-                "footer_phone": "Điện thoại: 0348246669 / 0839681380"
+                "faq_a2": "Giao hàng toàn quốc Việt Nam. Miễn phí vận chuyển cho đơn hàng từ 2.000.000 VNĐ."
             },
             "en": {
                 "nav_story": "Brand Story",
-                "nav_collections": "Coffee Collections",
+                "nav_store": "Store & Wholesale",
                 "nav_faq": "FAQ",
-                "nav_contact": "Contact Us",
                 "hero_subtitle": "HAUTE COFFEE COLLECTION",
                 "hero_slogan": "“It's never too late to drink coffee.”",
-                "hero_btn": "Explore Fine Coffees",
-                "story_tag": "Our Atelier Heritage",
+                "hero_btn": "Shop Fine Coffees Now",
+                "story_tag": "Our Heritage",
                 "story_title": "Brand Story & Craftsmanship",
-                "story_p1": "VIEBUCKS was born out of the ultimate pursuit of coffee craftsmanship. We believe that every coffee bean contains the soul of the land and the dedication of the master roaster. From estate selection, precise roast profiling, to exquisite flavor presentation, VIEBUCKS adheres to the Haute Coffee philosophy.",
-                "story_p2": "Whether it's rich Robusta, complex Arabica, or distinct Brazil Cerrado, we treat every bean with rigorous standards. As our motto goes: 'It's never too late to drink coffee.'",
-                "coffee_tag": "Bean Heritage & Flavor Profiles",
-                "coffee_title": "Specialty Coffee Collection",
-                "arabica_sub": "Vietnam Da Lat Arabica Series",
-                "robusta_sub": "Central Highlands Robusta Series",
-                "brazil_sub": "Brazil Cerrado Selected Series",
-                "label_origin": "Origin",
-                "label_altitude": "Altitude",
-                "label_process": "Process",
-                "arabica_origin": "Da Lat, Vietnam",
-                "robusta_origin": "Central Highlands, Vietnam",
-                "brazil_origin": "Cerrado, Brazil",
-                "process_washed": "Washed",
-                "process_natural": "Natural",
-                "process_pulped": "Pulped Natural",
-                "arabica_desc": "“Floral notes, bright lemon acidity, and a long-lasting brown sugar sweetness.”",
-                "robusta_desc": "“Bold dark chocolate and roasted nut aromas, excellent crema, and intense body.”",
-                "brazil_desc": "“Rich roasted nuts, caramel butter, and cocoa with low acidity and a smooth finish.”",
+                "story_p1": "VIEBUCKS was born out of the ultimate pursuit of coffee craftsmanship. We believe that every coffee bean contains the soul of the land.",
+                "store_tag": "Bespoke Atelier Store",
+                "store_title": "Coffee Selection & Price Estimator",
+                "products_heading": "Select Coffee Beans (500g/bag)",
+                "cart_heading": "Your Shopping Cart",
+                "th_item": "Item",
+                "th_qty": "Qty",
+                "th_subtotal": "Subtotal",
+                "cart_empty": "No items selected",
+                "label_goods_total": "Goods Total:",
+                "label_shipping": "Estimated Shipping:",
+                "free_ship_hint": "Free shipping on orders over 2,000,000 VND",
+                "label_grand_total": "Grand Total:",
+                "form_heading": "Shipping & Contact Info",
+                "ph_name": "Full Name",
+                "ph_phone": "Phone Number",
+                "ph_email": "Email Address",
+                "ph_address": "Detailed Shipping Address",
+                "btn_submit_order": "Place Order Now",
                 "faq_tag": "FAQ & Policy",
                 "faq_title": "Frequently Asked Questions",
                 "faq_q1": "Q: How is wholesale pricing applied?",
-                "faq_a1": "Wholesale discount automatically applies when ordering 10 or more bags of a single item. For bulk business orders (>100kg), please contact us via Zalo.",
-                "faq_q2": "Q: Shipping areas and delivery policy?",
-                "faq_a2": "We deliver across Vietnam (Same-day/next-day delivery for Binh Duong and HCMC). Free shipping on orders over 2,000,000 VND.",
-                "faq_q3": "Q: Freshness and roast dates?",
-                "faq_a3": "VIEBUCKS guarantees freshly roasted beans. All orders are roasted within 3 days before dispatch, equipped with a 1-way valve and clear roast date label.",
-                "footer_address": "Address: 365 QL13, Thu Dau Mot, Ho Chi Minh",
-                "footer_phone": "Phone: 0348246669 / 0839681380"
+                "faq_a1": "Wholesale discount applies automatically when ordering 10 or more bags of a single item.",
+                "faq_q2": "Q: Shipping areas & policies?",
+                "faq_a2": "We ship nationwide across Vietnam. Free shipping on orders over 2,000,000 VND."
             }
         };
 
-        // 2. 切換語言的核心 Function
         function changeLanguage(lang) {
             if (!translations[lang]) lang = "zh-TW";
             localStorage.setItem("selected_language", lang);
             document.documentElement.lang = lang;
 
-            const elements = document.querySelectorAll("[data-i18n]");
-            elements.forEach(element => {
-                const key = element.getAttribute("data-i18n");
-                if (translations[lang][key]) {
-                    element.innerText = translations[lang][key];
-                }
+            document.querySelectorAll("[data-i18n]").forEach(el => {
+                const key = el.getAttribute("data-i18n");
+                if (translations[lang][key]) el.innerText = translations[lang][key];
+            });
+
+            document.querySelectorAll("[data-i18n-ph]").forEach(el => {
+                const key = el.getAttribute("data-i18n-ph");
+                if (translations[lang][key]) el.placeholder = translations[lang][key];
             });
 
             const langSelect = document.getElementById("language-select");
             if (langSelect) langSelect.value = lang;
+
+            renderCart();
         }
 
-        // 3. 頁面載入初始化
         document.addEventListener("DOMContentLoaded", () => {
             const savedLang = localStorage.getItem("selected_language") || "zh-TW";
             changeLanguage(savedLang);
 
-            const langSelect = document.getElementById("language-select");
-            if (langSelect) {
-                langSelect.addEventListener("change", (e) => {
-                    changeLanguage(e.target.value);
-                });
-            }
+            document.getElementById("language-select").addEventListener("change", (e) => {
+                changeLanguage(e.target.value);
+            });
         });
     </script>
 </body>
