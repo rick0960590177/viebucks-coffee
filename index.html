@@ -950,8 +950,8 @@
                 th_price: "單價 / Unit Price",
                 th_subtotal: "小計 / Subtotal",
                 est_total: "Estimated Grand Total",
-                note_retail: "（標準零售價）",
-                note_wholesale: "（已達10包門檻 - 享批發價）",
+                note_retail: "標準零售價",
+                note_wholesale: "已達10包門檻 - 享批發價",
                 total_note_desc: "多筆品項總計金額",
                 btn_confirm: "確認選購與填寫資料 / Confirm Order",
                 form_title: "填寫訂購人與配送資訊 / Shipping Information",
@@ -1026,8 +1026,8 @@
                 th_price: "Đơn giá / Unit Price",
                 th_subtotal: "Thành tiền / Subtotal",
                 est_total: "Tổng Tiền Giỏ Hàng",
-                note_retail: "（Giá bán lẻ）",
-                note_wholesale: "（Đã đạt mức sỉ 10 gói）",
+                note_retail: "Giá bán lẻ",
+                note_wholesale: "Đã đạt mức sỉ 10 gói",
                 total_note_desc: "Tổng tiền các mặt hàng trong giỏ",
                 btn_confirm: "Xác Nhận Đặt Hàng / Confirm Order",
                 form_title: "Thông Tin Đơn Hàng & Giao Nhận / Shipping Information",
@@ -1102,8 +1102,8 @@
                 th_price: "Unit Price",
                 th_subtotal: "Subtotal",
                 est_total: "Estimated Grand Total",
-                note_retail: "（Retail Price）",
-                note_wholesale: "（Wholesale Price Applied）",
+                note_retail: "Retail Price",
+                note_wholesale: "Wholesale Price Applied",
                 total_note_desc: "Grand total for all cart items",
                 btn_confirm: "Confirm Order",
                 form_title: "Shipping & Contact Information",
@@ -1161,7 +1161,6 @@
                 }
             });
 
-            // 動態更新下拉選單商品項目與規格語系
             renderProductSelect();
             renderCart();
         }
@@ -1299,17 +1298,31 @@
         async function submitOrder(event) {
             event.preventDefault();
 
-            if (cart.length === 0) return;
+            if (cart.length === 0) {
+                alert('購物車內無商品！');
+                return;
+            }
 
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
             const address = document.getElementById('custAddress').value;
             const grandTotal = document.getElementById('calcTotal').innerText;
 
-            const itemsSummary = cart.map(i => `${i.name} x ${i.qty} (VND ${i.subtotal.toLocaleString()})`).join(' | ');
+            // 1. 彙整資料
+            const itemsSummary = cart.map(i => `${i.name} [${i.pricingNote}] x ${i.qty}`).join('\n');
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            const planTypes = [...new Set(cart.map(i => i.pricingNote))].join(', ');
 
+            // 2. 組裝可全方位相容後端欄位（舊版單筆與新版多筆）的 Payload
             const orderData = {
                 recipientEmail: 'rick0960590177@gmail.com',
+                
+                // 相容舊版/特定欄位名稱 (避免後端讀取 e.parameter / e.product 等產生 undefined)
+                product: cart.map(i => i.name).join('; '),  // 訂購品項
+                quantity: totalQty,                         // 購買數量
+                type: planTypes,                            // 方案類型
+                
+                // 多筆與詳細資料
                 items: itemsSummary,
                 cartDetails: cart,
                 total: grandTotal,
