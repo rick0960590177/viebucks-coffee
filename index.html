@@ -106,7 +106,7 @@
 
     /* ===== Hero 區塊 ===== */
     .hero {
-      height: 60vh;
+      height: 50vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -140,6 +140,7 @@
       border: none;
       cursor: pointer;
       transition: opacity 0.3s;
+      text-align: center;
     }
 
     .btn:hover {
@@ -155,6 +156,16 @@
     .btn-secondary:hover {
       color: var(--text-main);
       border-color: var(--text-main);
+    }
+
+    .btn-zalo {
+      background: #0068ff;
+      color: #fff;
+    }
+
+    .btn-gmail {
+      background: #ea4335;
+      color: #fff;
     }
 
     /* ===== 主容器佈局 ===== */
@@ -288,9 +299,9 @@
     .cart-drawer {
       position: fixed;
       top: 0;
-      right: -420px;
+      right: -450px;
       width: 100%;
-      max-width: 420px;
+      max-width: 450px;
       height: 100%;
       background: var(--bg-card);
       z-index: 201;
@@ -341,8 +352,8 @@
     }
 
     .cart-item-img {
-      width: 70px;
-      height: 70px;
+      width: 60px;
+      height: 60px;
       object-fit: cover;
       border-radius: 4px;
     }
@@ -378,12 +389,9 @@
       border-radius: 4px;
       cursor: pointer;
       display: flex;
-      justify-content: center;
+      justify-content: justify;
       align-items: center;
-    }
-
-    .qty-btn:hover {
-      border-color: var(--accent-gold);
+      justify-content: center;
     }
 
     .remove-item {
@@ -409,16 +417,57 @@
       margin-bottom: 1.2rem;
     }
 
-    .cart-actions {
+    /* ===== 電子彈出單據 Modal ===== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 300;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--accent-gold);
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .invoice-box {
+      background: #121212;
+      border: 1px dashed var(--border-color);
+      padding: 1rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: #e0e0e0;
+      white-space: pre-wrap;
+      max-height: 250px;
+      overflow-y: auto;
+      margin: 1rem 0;
+    }
+
+    .modal-actions {
       display: flex;
       flex-direction: column;
       gap: 0.8rem;
-    }
-
-    .empty-cart-msg {
-      text-align: center;
-      color: var(--text-muted);
-      margin-top: 3rem;
+      margin-top: 1rem;
     }
 
     /* ===== 頁尾 (Footer) ===== */
@@ -493,9 +542,7 @@
       <button class="close-cart" onclick="closeCart()">&times;</button>
     </div>
     
-    <div class="cart-items" id="cart-items-container">
-      <!-- 動態渲染購物車項目 -->
-    </div>
+    <div class="cart-items" id="cart-items-container"></div>
 
     <div class="cart-footer">
       <div class="cart-total">
@@ -503,8 +550,25 @@
         <span id="cart-total-price" style="color: var(--accent-gold);">NT$ 0</span>
       </div>
       <div class="cart-actions">
-        <button class="btn" onclick="checkout()">前往結帳</button>
+        <button class="btn" onclick="generateInvoice()">前往結帳（生成單據）</button>
         <button class="btn btn-secondary" onclick="clearCart()">清空購物車</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 電子單據 Modal -->
+  <div class="modal-overlay" id="invoice-modal">
+    <div class="modal-card">
+      <h3 style="color: var(--accent-gold); font-family: var(--font-serif);">📄 VIEBUCKS 電子訂單單據</h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">單據已自動生成，請複製明細或透過以下管道傳送給客服：</p>
+      
+      <div class="invoice-box" id="invoice-text"></div>
+
+      <div class="modal-actions">
+        <button class="btn" onclick="copyInvoiceText()">📋 一鍵複製訂單內文</button>
+        <button class="btn btn-gmail" onclick="sendToGmail()">✉️ 透過 Gmail 傳送訂單</button>
+        <button class="btn btn-zalo" onclick="sendToZalo()">💬 開啟 Zalo 貼上發送</button>
+        <button class="btn btn-secondary" onclick="closeInvoiceModal()">關閉視窗</button>
       </div>
     </div>
   </div>
@@ -516,6 +580,10 @@
 
   <!-- JavaScript 邏輯 -->
   <script>
+    // 店家與客服設定
+    const STORE_EMAIL = "order@viebucks.com"; // 您的接收訂單 Email
+    const ZALO_PHONE = "0912345678";          // 您的 Zalo / 電話號碼
+
     // 1. 商品資料庫
     const products = [
       {
@@ -552,10 +620,10 @@
       }
     ];
 
-    // 2. 購物車狀態陣列 [{ product, quantity }]
     let cart = [];
+    let currentInvoiceString = "";
 
-    // 渲染主頁商品
+    // 渲染商品
     function renderProducts(items) {
       const container = document.getElementById('product-container');
       container.innerHTML = '';
@@ -583,7 +651,7 @@
       });
     }
 
-    // 商品篩選邏輯
+    // 篩選器
     function filterProducts() {
       const checkedBoxes = Array.from(document.querySelectorAll('.filter-sidebar input[type="checkbox"]:checked'))
                                .map(cb => cb.value);
@@ -601,7 +669,7 @@
       renderProducts(filtered);
     }
 
-    // 3. 購物車核心邏輯
+    // 購物車操作
     function addToCart(productId) {
       const product = products.find(p => p.id === productId);
       const cartItem = cart.find(item => item.product.id === productId);
@@ -621,7 +689,6 @@
       if (!cartItem) return;
 
       cartItem.quantity += delta;
-
       if (cartItem.quantity <= 0) {
         removeFromCart(productId);
       } else {
@@ -639,19 +706,16 @@
       updateCartUI();
     }
 
-    // 更新購物車 UI (列表、計算總額與 Badge)
     function updateCartUI() {
       const cartItemsContainer = document.getElementById('cart-items-container');
       const badge = document.getElementById('cart-badge');
       const totalPriceEl = document.getElementById('cart-total-price');
 
-      // 更新 Badge 總件數
       const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
       badge.innerText = totalCount;
 
-      // 渲染購物車內的列表
       if (cart.length === 0) {
-        cartItemsContainer.innerHTML = '<div class="empty-cart-msg">購物車目前是空的 ☕</div>';
+        cartItemsContainer.innerHTML = '<div style="text-align:center; color: var(--text-muted); margin-top:3rem;">購物車目前是空的 ☕</div>';
         totalPriceEl.innerText = 'NT$ 0';
         return;
       }
@@ -684,7 +748,81 @@
       totalPriceEl.innerText = `NT$ ${grandTotal}`;
     }
 
-    // 面板開啟/關閉控制
+    // 4. 電子訂單生成與轉發模組
+    function generateInvoice() {
+      if (cart.length === 0) {
+        alert("購物車是空的，無法生成訂單！");
+        return;
+      }
+
+      const now = new Date();
+      const dateStr = now.toISOString().slice(0,10).replace(/-/g,"");
+      const randomNum = Math.floor(1000 + Math.random() * 9000);
+      const orderId = `VIE-${dateStr}-${randomNum}`;
+      
+      let grandTotal = 0;
+      let itemsText = "";
+
+      cart.forEach((item, index) => {
+        const subtotal = item.product.price * item.quantity;
+        grandTotal += subtotal;
+        itemsText += `${index + 1}. ${item.product.title} x${item.quantity} (NT$ ${subtotal})\n`;
+      });
+
+      currentInvoiceString = `================================
+☕ VIEBUCKS 精品咖啡 訂單明細
+================================
+訂單編號：${orderId}
+日期時間：${now.toLocaleString('zh-TW')}
+
+【訂購商品】
+${itemsText}
+--------------------------------
+總計金額：NT$ ${grandTotal}
+================================
+請填寫以下收件資訊並回覆此訊息：
+姓名：
+電話：
+收件地址 / 超商門市名稱：
+備註 (如：代客研磨需求)：
+================================`;
+
+      document.getElementById('invoice-text').innerText = currentInvoiceString;
+      document.getElementById('invoice-modal').classList.add('active');
+    }
+
+    // 複製文字
+    function copyInvoiceText() {
+      navigator.clipboard.writeText(currentInvoiceString).then(() => {
+        alert("訂單內容已複製到剪貼簿！您可以直接貼給客服。");
+      }).catch(err => {
+        alert("複製失敗，請手動選取文字複製。");
+      });
+    }
+
+    // 發送到 Gmail
+    function sendToGmail() {
+      const subject = encodeURIComponent("【VIEBUCKS 新訂單】訂單號碼生成");
+      const body = encodeURIComponent(currentInvoiceString);
+      const mailtoUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${STORE_EMAIL}&su=${subject}&body=${body}`;
+      window.open(mailtoUrl, '_blank');
+    }
+
+    // 發送到 Zalo
+    function sendToZalo() {
+      // 先複製文字
+      navigator.clipboard.writeText(currentInvoiceString);
+      alert("訂單內容已自動複製！即將為您開啟 Zalo，請直接在對話框中「貼上」傳送。");
+      
+      // 開啟 Zalo Web 或 搜尋電話
+      const zaloUrl = `https://zalo.me/${ZALO_PHONE}`;
+      window.open(zaloUrl, '_blank');
+    }
+
+    function closeInvoiceModal() {
+      document.getElementById('invoice-modal').classList.remove('active');
+    }
+
     function openCart() {
       document.getElementById('cart-drawer').classList.add('active');
       document.getElementById('cart-overlay').classList.add('active');
@@ -695,15 +833,7 @@
       document.getElementById('cart-overlay').classList.remove('active');
     }
 
-    function checkout() {
-      if (cart.length === 0) {
-        alert("購物車是空的，無法結帳！");
-        return;
-      }
-      alert("感謝您的訂購！即將跳轉至金流支付頁面...");
-    }
-
-    // 初始化渲染
+    // 初始化
     renderProducts(products);
     updateCartUI();
   </script>
