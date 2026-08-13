@@ -51,7 +51,9 @@
     .btn-secondary:hover { color: var(--text-main); border-color: var(--text-main); }
     .btn-block { width: 100%; }
     .btn-zalo { background: #0068ff; color: #fff; }
+    .btn-zalo:hover { background: #0056d6; }
     .btn-gmail { background: #ea4335; color: #fff; }
+    .btn-gmail:hover { background: #d33828; }
 
     /* ===== Main Layout ===== */
     .main-layout { max-width: 1200px; margin: 3rem auto; display: grid; grid-template-columns: 260px 1fr; gap: 2.5rem; padding: 0 2rem; }
@@ -283,22 +285,23 @@
         <label>付款方式</label>
         <select class="form-control" id="cust-payment">
           <option value="銀行轉帳 / 匯款">銀行轉帳 / 匯款</option>
-          <option value="貨到付款">貨到付款</option>
+          <option value="超商取貨付款">超商取貨付款</option>
+          <option value="LINE Pay / 街口支付">LINE Pay / 街口支付</option>
         </select>
       </div>
 
       <button class="btn btn-block" onclick="generateFinalInvoice()">確認並生成電子訂單單據</button>
 
-      <!-- 生成的訂單展示 -->
+      <!-- 生成的訂單展示與快捷傳送 -->
       <div id="invoice-result-section" style="display:none; margin-top: 1.5rem;">
         <hr style="border-color: var(--border-color); margin-bottom: 1rem;">
         <h4 style="color: var(--accent-gold);">單據已成功生成：</h4>
         <div class="invoice-box" id="invoice-text-content"></div>
 
         <div style="display:flex; flex-direction:column; gap: 0.6rem;">
-          <button class="btn" onclick="copyInvoiceText()">📋 一鍵複製訂單全文</button>
-          <button class="btn btn-gmail" onclick="sendToGmail()">✉️ 透過 Gmail 寄送給店家</button>
-          <button class="btn btn-zalo" onclick="sendToZalo()">💬 開啟 Zalo 貼上對話</button>
+          <button class="btn" id="btn-copy-invoice" onclick="copyInvoiceText()">📋 一鍵複製訂單全文</button>
+          <button class="btn btn-gmail" onclick="sendToGmail()">✉️ 直接傳送 Gmail（自動帶入標題與內文）</button>
+          <button class="btn btn-zalo" id="btn-zalo" onclick="sendToZalo()">💬 開啟 Zalo 客服對話框（自動複製內文）</button>
         </div>
       </div>
     </div>
@@ -308,13 +311,17 @@
     <p>&copy; 2026 VIEBUCKS Specialty Coffee Store. All Rights Reserved.</p>
   </footer>
 
-  <!-- 全套前端 JavaScript 邏輯 -->
+  <!-- 前端 JavaScript 完整邏輯 -->
   <script>
     // 店家接收資訊設定
-    const STORE_EMAIL = "rick0960590177@gmail.com";
-    const ZALO_PHONE = "0348246669";
+    const STORE_EMAIL = "order@viebucks.com";
+    const ZALO_PHONE = "0912345678";
 
-    // 1. 精品咖啡商品資料庫 (內建杯測分數)
+    // 全局訂單編號與內文變數
+    let currentOrderId = "";
+    let finalGeneratedInvoice = "";
+
+    // 1. 精品咖啡商品資料庫
     const products = [
       {
         id: 1,
@@ -358,12 +365,11 @@
       }
     ];
 
-    // 全局狀態
+    // 全局購物車與折扣狀態
     let cart = [];
-    let selectedDiscountRate = 0; // 折扣趴數
-    let selectedDiscountAmount = 0; // 折扣固定金額
+    let selectedDiscountRate = 0;
+    let selectedDiscountAmount = 0;
     let currentActiveProduct = null;
-    let finalGeneratedInvoice = "";
 
     // 2. 渲染商品主列表
     function renderProducts(items) {
@@ -393,7 +399,7 @@
       });
     }
 
-    // 3. 篩選邏輯
+    // 3. 多維度篩選邏輯
     function filterProducts() {
       const checkedBoxes = Array.from(document.querySelectorAll('.filter-sidebar input[type="checkbox"]:checked')).map(cb => cb.value);
       if (checkedBoxes.length === 0) { renderProducts(products); return; }
@@ -411,7 +417,7 @@
       document.getElementById('modal-product-title').innerText = currentActiveProduct.title;
       document.getElementById('modal-product-desc').innerText = currentActiveProduct.desc;
 
-      // 渲染杯測圖條
+      // 渲染杯測條
       const m = currentActiveProduct.meters;
       document.getElementById('modal-flavor-meters').innerHTML = `
         <div class="meter-item"><span class="meter-label">酸度 Acidity</span><div class="meter-bar-bg"><div class="meter-bar-fill" style="width:${m.acidity}%"></div></div><span>${m.acidity}</span></div>
@@ -445,7 +451,6 @@
       const selectedGrind = grindSelect.value;
       const finalPrice = currentActiveProduct.basePrice + priceAdd;
 
-      // 檢查是否已有完全相同規格的商品在購物車
       const cartIndex = cart.findIndex(item => item.product.id === currentActiveProduct.id && item.size === selectedSize && item.grind === selectedGrind);
 
       if (cartIndex > -1) {
@@ -465,7 +470,7 @@
       openCart();
     }
 
-    // 5. 購物車運算與 UI
+    // 5. 購物車邏輯
     function updateQuantity(index, delta) {
       cart[index].quantity += delta;
       if (cart[index].quantity <= 0) {
@@ -486,7 +491,7 @@
         selectedDiscountRate = 0;
         alert("成功折扣 NT$ 100 元！");
       } else if (code === "WELCOME") {
-        selectedDiscountRate = 0.1; // 9折
+        selectedDiscountRate = 0.1;
         selectedDiscountAmount = 0;
         alert("成功套用 9 折優惠！");
       } else {
@@ -542,13 +547,9 @@
         container.appendChild(el);
       });
 
-      // 計算折扣
       let discountVal = 0;
-      if (selectedDiscountRate > 0) {
-        discountVal = Math.round(subtotal * selectedDiscountRate);
-      } else if (selectedDiscountAmount > 0) {
-        discountVal = selectedDiscountAmount;
-      }
+      if (selectedDiscountRate > 0) discountVal = Math.round(subtotal * selectedDiscountRate);
+      else if (selectedDiscountAmount > 0) discountVal = selectedDiscountAmount;
 
       const finalTotal = Math.max(0, subtotal - discountVal);
 
@@ -571,7 +572,7 @@
       document.getElementById('cart-overlay').classList.remove('active');
     }
 
-    // 6. 結帳與生成電子單據
+    // 6. 結帳與生成單據
     function openCheckoutModal() {
       if (cart.length === 0) { alert("購物車目前沒有商品！"); return; }
       closeCart();
@@ -593,7 +594,7 @@
       }
 
       const now = new Date();
-      const orderId = `VIE-${now.toISOString().slice(0,10).replace(/-/g,"")}-${Math.floor(1000+Math.random()*9000)}`;
+      currentOrderId = `VIE-${now.toISOString().slice(0,10).replace(/-/g,"")}-${Math.floor(1000+Math.random()*9000)}`;
 
       let subtotal = 0;
       let itemsText = "";
@@ -613,7 +614,7 @@
       finalGeneratedInvoice = `================================
 ☕ VIEBUCKS 精品咖啡 訂單明細
 ================================
-訂單編號：${orderId}
+訂單編號：${currentOrderId}
 訂購時間：${now.toLocaleString('zh-TW')}
 
 【訂購人資訊】
@@ -635,25 +636,89 @@ ${itemsText}
       document.getElementById('invoice-result-section').style.display = 'block';
     }
 
+    // ★★★ 核心快捷發送與優化剪貼簿邏輯 ★★★
+
+    // 1. 一鍵複製訂單全文 (含廣域相容 Fallback)
     function copyInvoiceText() {
-      navigator.clipboard.writeText(finalGeneratedInvoice).then(() => {
-        alert("訂單內文已成功複製到剪貼簿！");
-      });
+      const btn = document.getElementById('btn-copy-invoice');
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(finalGeneratedInvoice)
+          .then(() => showCopySuccess(btn))
+          .catch(() => fallbackCopy(btn));
+      } else {
+        fallbackCopy(btn);
+      }
     }
 
+    function fallbackCopy(btn) {
+      const textArea = document.createElement("textarea");
+      textArea.value = finalGeneratedInvoice;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showCopySuccess(btn);
+      } catch (err) {
+        alert("複製失敗，請手動全選複製。");
+      }
+      document.body.removeChild(textArea);
+    }
+
+    function showCopySuccess(btn) {
+      const originalText = btn.innerText;
+      btn.innerText = "✅ 訂單全文已成功複製！";
+      btn.style.background = "#2e7d32";
+      setTimeout(() => {
+        btn.innerText = originalText;
+        btn.style.background = "var(--accent-gold)";
+      }, 2500);
+    }
+
+    // 2. 直接傳送 Gmail (智慧判定手機 App 或網頁版)
     function sendToGmail() {
-      const subject = encodeURIComponent("【VIEBUCKS 新訂單】訂單已建立");
+      if (!finalGeneratedInvoice) {
+        alert("請先生成訂單單據！");
+        return;
+      }
+      const subject = encodeURIComponent(`【VIEBUCKS 咖啡訂單】${currentOrderId}`);
       const body = encodeURIComponent(finalGeneratedInvoice);
-      window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${STORE_EMAIL}&su=${subject}&body=${body}`, '_blank');
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+      if (isMobile) {
+        // 手機端喚醒預設郵件/Gmail App
+        window.location.href = `mailto:${STORE_EMAIL}?subject=${subject}&body=${body}`;
+      } else {
+        // 電腦端開啟 Gmail 網頁版並填入標題與內文
+        const webGmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${STORE_EMAIL}&su=${subject}&body=${body}`;
+        window.open(webGmailUrl, '_blank');
+      }
     }
 
+    // 3. 開啟 Zalo 客服對話框 (無感自動複製內文並開啟)
     function sendToZalo() {
-      navigator.clipboard.writeText(finalGeneratedInvoice);
-      alert("訂單已複製！即將為您打開 Zalo，請直接「貼上」傳送給客服。");
-      window.open(`https://zalo.me/${ZALO_PHONE}`, '_blank');
+      if (!finalGeneratedInvoice) {
+        alert("請先生成訂單單據！");
+        return;
+      }
+
+      // 執行複製
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(finalGeneratedInvoice).finally(() => {
+          window.open(`https://zalo.me/${ZALO_PHONE}`, '_blank');
+        });
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = finalGeneratedInvoice;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(textArea);
+        window.open(`https://zalo.me/${ZALO_PHONE}`, '_blank');
+      }
     }
 
-    // 初始化
+    // 初始化頁面
     renderProducts(products);
     updateCartUI();
   </script>
