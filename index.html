@@ -3,486 +3,132 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VIEBUCKS | 精品咖啡品牌官網 & 電商</title>
-  <!-- Google Fonts: Inter & Noto Serif TC -->
+  <title>VIEBUCKS Specialty Coffee | 精品咖啡品牌官網</title>
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
   
   <style>
-    /* ===== 全局與變數設定 ===== */
     :root {
       --bg-dark: #121212;
-      --bg-card: #1e1e1e;
+      --bg-card: #1c1c1e;
+      --bg-modal: #242426;
       --accent-gold: #c9a063;
+      --accent-gold-hover: #dbb375;
       --text-main: #f5f5f7;
       --text-muted: #a1a1a6;
       --border-color: #2c2c2e;
+      --danger-color: #ff453a;
       --font-serif: 'Noto Serif TC', serif;
       --font-sans: 'Inter', sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background-color: var(--bg-dark); color: var(--text-main); font-family: var(--font-sans); line-height: 1.6; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
 
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      font-family: var(--font-sans);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
+    /* ===== Navbar ===== */
+    header { position: sticky; top: 0; z-index: 100; background: rgba(18, 18, 18, 0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-color); }
+    .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; }
+    .logo { font-family: var(--font-serif); font-size: 1.8rem; font-weight: 700; letter-spacing: 2px; color: var(--accent-gold); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a:hover { color: var(--accent-gold); transition: color 0.3s; }
+    .cart-btn { position: relative; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 1px solid var(--border-color); border-radius: 20px; background: transparent; color: var(--text-main); transition: 0.3s; }
+    .cart-btn:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+    .cart-badge { background: var(--accent-gold); color: var(--bg-dark); font-size: 0.75rem; font-weight: bold; border-radius: 50%; padding: 2px 7px; }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    /* ===== Hero Section ===== */
+    .hero { height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: linear-gradient(rgba(0,0,0,0.65), rgba(18,18,18,1)), url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat; padding: 0 1rem; }
+    .hero h1 { font-family: var(--font-serif); font-size: 3rem; margin-bottom: 1rem; color: #fff; }
+    .hero p { font-size: 1.15rem; color: var(--text-muted); max-width: 650px; margin-bottom: 2rem; }
 
-    /* ===== 導覽列 (Navbar) ===== */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(18, 18, 18, 0.9);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border-color);
-    }
+    /* ===== UI Buttons ===== */
+    .btn { display: inline-block; padding: 0.75rem 1.6rem; background: var(--accent-gold); color: var(--bg-dark); font-weight: 600; border-radius: 6px; border: none; transition: 0.3s; text-align: center; }
+    .btn:hover { background: var(--accent-gold-hover); }
+    .btn-secondary { background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); }
+    .btn-secondary:hover { color: var(--text-main); border-color: var(--text-main); }
+    .btn-block { width: 100%; }
+    .btn-zalo { background: #0068ff; color: #fff; }
+    .btn-gmail { background: #ea4335; color: #fff; }
 
-    .nav-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.2rem 2rem;
-    }
+    /* ===== Main Layout ===== */
+    .main-layout { max-width: 1200px; margin: 3rem auto; display: grid; grid-template-columns: 260px 1fr; gap: 2.5rem; padding: 0 2rem; }
 
-    .logo {
-      font-family: var(--font-serif);
-      font-size: 1.8rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: var(--accent-gold);
-    }
+    /* ===== Sidebar Filters ===== */
+    .filter-sidebar { background: var(--bg-card); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); height: fit-content; }
+    .filter-group { margin-bottom: 1.8rem; }
+    .filter-group h3 { font-size: 0.95rem; color: var(--accent-gold); margin-bottom: 0.8rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 1px; }
+    .filter-option { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem; font-size: 0.9rem; color: var(--text-muted); cursor: pointer; }
+    .filter-option input { accent-color: var(--accent-gold); }
 
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
+    /* ===== Product Grid ===== */
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.8rem; }
+    .product-card { background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s, border-color 0.3s; }
+    .product-card:hover { transform: translateY(-5px); border-color: var(--accent-gold); }
+    .product-img { width: 100%; height: 210px; object-fit: cover; cursor: pointer; }
+    .product-info { padding: 1.2rem; display: flex; flex-direction: column; flex-grow: 1; }
+    .product-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.4rem; cursor: pointer; }
+    .product-title:hover { color: var(--accent-gold); }
+    .flavor-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.6rem 0 1rem 0; }
+    .tag { font-size: 0.75rem; background: #2a2a2d; color: var(--accent-gold); padding: 2px 8px; border-radius: 4px; }
+    .product-price { font-size: 1.25rem; font-weight: bold; color: var(--text-main); margin-top: auto; margin-bottom: 1rem; }
 
-    .nav-links a:hover {
-      color: var(--accent-gold);
-      transition: color 0.3s;
-    }
+    /* ===== Drawer Cart ===== */
+    .cart-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); z-index: 200; opacity: 0; visibility: hidden; transition: 0.3s; }
+    .cart-overlay.active { opacity: 1; visibility: visible; }
+    .cart-drawer { position: fixed; top: 0; right: -460px; width: 100%; max-width: 460px; height: 100%; background: var(--bg-card); z-index: 201; display: flex; flex-direction: column; transition: right 0.3s ease-in-out; border-left: 1px solid var(--border-color); }
+    .cart-drawer.active { right: 0; }
+    .cart-header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+    .cart-items { flex: 1; overflow-y: auto; padding: 1.5rem; }
+    .cart-item { display: flex; gap: 1rem; margin-bottom: 1.2rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--border-color); align-items: center; }
+    .cart-item-img { width: 65px; height: 65px; object-fit: cover; border-radius: 6px; }
+    .cart-item-details { flex: 1; }
+    .cart-item-title { font-size: 0.95rem; font-weight: 600; }
+    .cart-item-meta { font-size: 0.8rem; color: var(--text-muted); margin: 2px 0; }
+    .cart-item-price { color: var(--accent-gold); font-weight: 600; font-size: 0.9rem; }
+    .quantity-controls { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.4rem; }
+    .qty-btn { background: var(--bg-dark); color: var(--text-main); border: 1px solid var(--border-color); width: 26px; height: 26px; border-radius: 4px; display: flex; justify-content: center; align-items: center; }
+    .remove-item { background: none; border: none; color: var(--danger-color); font-size: 0.8rem; cursor: pointer; margin-left: auto; }
+    .cart-footer { padding: 1.5rem; border-top: 1px solid var(--border-color); background: var(--bg-dark); }
+    .coupon-box { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+    .coupon-box input { flex: 1; padding: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-color); color: #fff; border-radius: 4px; }
+    .cart-summary-line { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+    .cart-total { display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: bold; margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid var(--border-color); }
 
-    .cart-icon {
-      position: relative;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.4rem 0.8rem;
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      transition: border-color 0.3s;
-    }
+    /* ===== Modals (Product Details & Checkout) ===== */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); z-index: 300; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: 0.3s; padding: 1rem; }
+    .modal-overlay.active { opacity: 1; visibility: visible; }
+    .modal-card { background: var(--bg-modal); border: 1px solid var(--border-color); border-radius: 10px; width: 100%; max-width: 550px; max-height: 90vh; overflow-y: auto; padding: 2rem; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+    .close-modal { position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; color: var(--text-muted); font-size: 1.5rem; }
 
-    .cart-icon:hover {
-      border-color: var(--accent-gold);
-    }
+    /* Flavor Meter Bars */
+    .meter-group { margin: 1rem 0; }
+    .meter-item { display: flex; align-items: center; margin-bottom: 0.5rem; font-size: 0.85rem; }
+    .meter-label { width: 80px; color: var(--text-muted); }
+    .meter-bar-bg { flex: 1; height: 8px; background: var(--bg-dark); border-radius: 4px; overflow: hidden; margin: 0 10px; }
+    .meter-bar-fill { height: 100%; background: var(--accent-gold); border-radius: 4px; }
 
-    .cart-badge {
-      background: var(--accent-gold);
-      color: var(--bg-dark);
-      font-size: 0.75rem;
-      font-weight: bold;
-      border-radius: 50%;
-      padding: 2px 7px;
-    }
+    /* Form Inputs */
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+    .form-control { width: 100%; padding: 0.7rem; background: var(--bg-dark); border: 1px solid var(--border-color); color: #fff; border-radius: 6px; font-size: 0.95rem; }
+    .form-control:focus { border-color: var(--accent-gold); outline: none; }
 
-    /* ===== Hero 區塊 ===== */
-    .hero {
-      height: 50vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      background: linear-gradient(rgba(0,0,0,0.6), rgba(18,18,18,1)), 
-                  url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
-      padding: 0 1rem;
-    }
+    .invoice-box { background: #121212; border: 1px dashed var(--accent-gold); padding: 1.2rem; border-radius: 6px; font-family: monospace; font-size: 0.85rem; color: #e0e0e0; white-space: pre-wrap; margin: 1rem 0; max-height: 220px; overflow-y: auto; }
 
-    .hero h1 {
-      font-family: var(--font-serif);
-      font-size: 2.8rem;
-      margin-bottom: 1rem;
-    }
+    /* Brand Story */
+    .brand-story { background: var(--bg-card); border-y: 1px solid var(--border-color); padding: 4rem 2rem; margin-top: 5rem; text-align: center; }
+    .story-content { max-width: 800px; margin: 0 auto; }
+    .story-content h2 { font-family: var(--font-serif); font-size: 2.2rem; color: var(--accent-gold); margin-bottom: 1.5rem; }
 
-    .hero p {
-      font-size: 1.1rem;
-      color: var(--text-muted);
-      max-width: 600px;
-      margin-bottom: 2rem;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 0.8rem 1.8rem;
-      background: var(--accent-gold);
-      color: var(--bg-dark);
-      font-weight: 600;
-      border-radius: 4px;
-      border: none;
-      cursor: pointer;
-      transition: opacity 0.3s;
-      text-align: center;
-    }
-
-    .btn:hover {
-      opacity: 0.9;
-    }
-
-    .btn-secondary {
-      background: transparent;
-      color: var(--text-muted);
-      border: 1px solid var(--border-color);
-    }
-
-    .btn-secondary:hover {
-      color: var(--text-main);
-      border-color: var(--text-main);
-    }
-
-    .btn-zalo {
-      background: #0068ff;
-      color: #fff;
-    }
-
-    .btn-gmail {
-      background: #ea4335;
-      color: #fff;
-    }
-
-    /* ===== 主容器佈局 ===== */
-    .main-layout {
-      max-width: 1200px;
-      margin: 3rem auto;
-      display: grid;
-      grid-template-columns: 250px 1fr;
-      gap: 2.5rem;
-      padding: 0 2rem;
-    }
-
-    /* ===== 側邊風味篩選器 ===== */
-    .filter-sidebar {
-      background: var(--bg-card);
-      padding: 1.5rem;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-      height: fit-content;
-    }
-
-    .filter-group {
-      margin-bottom: 1.8rem;
-    }
-
-    .filter-group h3 {
-      font-size: 1rem;
-      color: var(--accent-gold);
-      margin-bottom: 0.8rem;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 0.4rem;
-    }
-
-    .filter-option {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.5rem;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-
-    .filter-option input {
-      accent-color: var(--accent-gold);
-    }
-
-    /* ===== 商品列表區塊 ===== */
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .product-card {
-      background: var(--bg-card);
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.3s, border-color 0.3s;
-    }
-
-    .product-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--accent-gold);
-    }
-
-    .product-img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-
-    .product-info {
-      padding: 1.2rem;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
-
-    .product-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 0.4rem;
-    }
-
-    .flavor-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      margin: 0.6rem 0;
-    }
-
-    .tag {
-      font-size: 0.75rem;
-      background: #2a2a2d;
-      color: var(--accent-gold);
-      padding: 2px 8px;
-      border-radius: 4px;
-    }
-
-    .product-price {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: var(--text-main);
-      margin-top: auto;
-      margin-bottom: 1rem;
-    }
-
-    /* ===== 側滑購物車面板 (Drawer Cart) ===== */
-    .cart-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 200;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s, visibility 0.3s;
-    }
-
-    .cart-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .cart-drawer {
-      position: fixed;
-      top: 0;
-      right: -450px;
-      width: 100%;
-      max-width: 450px;
-      height: 100%;
-      background: var(--bg-card);
-      z-index: 201;
-      display: flex;
-      flex-direction: column;
-      transition: right 0.3s ease-in-out;
-      border-left: 1px solid var(--border-color);
-    }
-
-    .cart-drawer.active {
-      right: 0;
-    }
-
-    .cart-header {
-      padding: 1.5rem;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .cart-header h2 {
-      font-family: var(--font-serif);
-      font-size: 1.3rem;
-    }
-
-    .close-cart {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    .cart-items {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1.5rem;
-    }
-
-    .cart-item {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.2rem;
-      padding-bottom: 1.2rem;
-      border-bottom: 1px solid var(--border-color);
-      align-items: center;
-    }
-
-    .cart-item-img {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 4px;
-    }
-
-    .cart-item-details {
-      flex: 1;
-    }
-
-    .cart-item-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-    }
-
-    .cart-item-price {
-      color: var(--accent-gold);
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .quantity-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .qty-btn {
-      background: var(--bg-dark);
-      color: var(--text-main);
-      border: 1px solid var(--border-color);
-      width: 26px;
-      height: 26px;
-      border-radius: 4px;
-      cursor: pointer;
-      display: flex;
-      justify-content: justify;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .remove-item {
-      background: none;
-      border: none;
-      color: #ff5555;
-      font-size: 0.8rem;
-      cursor: pointer;
-      margin-left: auto;
-    }
-
-    .cart-footer {
-      padding: 1.5rem;
-      border-top: 1px solid var(--border-color);
-      background: var(--bg-dark);
-    }
-
-    .cart-total {
-      display: flex;
-      justify-content: space-between;
-      font-size: 1.2rem;
-      font-weight: bold;
-      margin-bottom: 1.2rem;
-    }
-
-    /* ===== 電子彈出單據 Modal ===== */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      z-index: 300;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s;
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .modal-card {
-      background: var(--bg-card);
-      border: 1px solid var(--accent-gold);
-      border-radius: 8px;
-      width: 90%;
-      max-width: 500px;
-      padding: 2rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    .invoice-box {
-      background: #121212;
-      border: 1px dashed var(--border-color);
-      padding: 1rem;
-      border-radius: 4px;
-      font-family: monospace;
-      font-size: 0.85rem;
-      color: #e0e0e0;
-      white-space: pre-wrap;
-      max-height: 250px;
-      overflow-y: auto;
-      margin: 1rem 0;
-    }
-
-    .modal-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-      margin-top: 1rem;
-    }
-
-    /* ===== 頁尾 (Footer) ===== */
-    footer {
-      text-align: center;
-      padding: 2rem;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      border-top: 1px solid var(--border-color);
-      margin-top: 4rem;
-    }
+    footer { text-align: center; padding: 2.5rem; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border-color); }
 
     @media (max-width: 768px) {
       .main-layout { grid-template-columns: 1fr; }
       .cart-drawer { max-width: 100%; }
+      .hero h1 { font-size: 2.2rem; }
     }
   </style>
 </head>
@@ -496,23 +142,22 @@
         <li><a href="#shop">線上商店</a></li>
         <li><a href="#story">品牌故事</a></li>
       </ul>
-      <div class="cart-icon" onclick="openCart()">
-        🛒 購物車
-        <span class="cart-badge" id="cart-badge">0</span>
-      </div>
+      <button class="cart-btn" onclick="openCart()">
+        🛒 購物車 <span class="cart-badge" id="cart-badge">0</span>
+      </button>
     </div>
   </header>
 
-  <!-- Hero 區塊 -->
+  <!-- Banner 區塊 -->
   <section class="hero">
-    <h1>從微小的豆表細節，淬鍊出極致饗宴</h1>
-    <p>VIEBUCKS 嚴選全球頂級莊園微批次生豆，匠人烘焙，為追求極致風味的咖啡玩家而生。</p>
+    <h1>從微小的豆表細節，淬鍊極致感官饗宴</h1>
+    <p>VIEBUCKS 嚴選全球頂級莊園微批次生豆，匠人微烘焙，為追求極致風味的咖啡玩家而生。</p>
     <a href="#shop" class="btn">探索精品咖啡豆</a>
   </section>
 
-  <!-- 主內容區：商品與篩選器 -->
+  <!-- 主商店區塊 -->
   <div class="main-layout" id="shop">
-    <!-- 左側篩選器 -->
+    <!-- 側邊多維度篩選器 -->
     <aside class="filter-sidebar">
       <div class="filter-group">
         <h3>風味主調 (Flavor)</h3>
@@ -530,106 +175,204 @@
       </div>
     </aside>
 
-    <!-- 右側商品展示區 -->
+    <!-- 商品列表展示區 -->
     <main class="product-grid" id="product-container"></main>
   </div>
+
+  <!-- 品牌故事 -->
+  <section class="brand-story" id="story">
+    <div class="story-content">
+      <h2>對完美的執念，源自每一顆生豆的呼吸</h2>
+      <p>在 VIEBUCKS，我們相信一杯頂級的咖啡，絕非偶然的產物，而是科學與藝術的精準交會。</p>
+      <p>我們親自尋訪恪守永續與精緻處理法的合作莊園，透過專業的烘焙曲線紀錄與杯測校準，完整釋放咖啡豆內隱藏的花果香與溫潤甜感。無論是一晨清冽的手沖，或是午後冰爽的西西里特調，我們為您鎖住最純粹的萃取風味。</p>
+    </div>
+  </section>
 
   <!-- 側滑購物車 (Drawer Cart) -->
   <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
   <div class="cart-drawer" id="cart-drawer">
     <div class="cart-header">
       <h2>您的購物車</h2>
-      <button class="close-cart" onclick="closeCart()">&times;</button>
+      <button class="close-modal" onclick="closeCart()">&times;</button>
     </div>
     
     <div class="cart-items" id="cart-items-container"></div>
 
     <div class="cart-footer">
+      <!-- 優惠碼輸入 -->
+      <div class="coupon-box">
+        <input type="text" id="coupon-input" placeholder="輸入優惠碼 (如 VIE100 / WELCOME)">
+        <button class="btn btn-secondary" onclick="applyCoupon()">套用</button>
+      </div>
+
+      <div class="cart-summary-line">
+        <span>小計</span>
+        <span id="cart-subtotal">NT$ 0</span>
+      </div>
+      <div class="cart-summary-line" id="discount-row" style="display:none; color: var(--accent-gold);">
+        <span>折扣折抵</span>
+        <span id="cart-discount">-NT$ 0</span>
+      </div>
       <div class="cart-total">
         <span>總計金額</span>
         <span id="cart-total-price" style="color: var(--accent-gold);">NT$ 0</span>
       </div>
-      <div class="cart-actions">
-        <button class="btn" onclick="generateInvoice()">前往結帳（生成單據）</button>
-        <button class="btn btn-secondary" onclick="clearCart()">清空購物車</button>
-      </div>
+
+      <button class="btn btn-block" style="margin-top: 1rem;" onclick="openCheckoutModal()">前往填寫資料與結帳</button>
     </div>
   </div>
 
-  <!-- 電子單據 Modal -->
-  <div class="modal-overlay" id="invoice-modal">
+  <!-- Modal 1: 商品詳情與選規格 Modal -->
+  <div class="modal-overlay" id="product-modal">
     <div class="modal-card">
-      <h3 style="color: var(--accent-gold); font-family: var(--font-serif);">📄 VIEBUCKS 電子訂單單據</h3>
-      <p style="font-size: 0.85rem; color: var(--text-muted);">單據已自動生成，請複製明細或透過以下管道傳送給客服：</p>
-      
-      <div class="invoice-box" id="invoice-text"></div>
+      <button class="close-modal" onclick="closeProductModal()">&times;</button>
+      <h2 id="modal-product-title" style="font-family: var(--font-serif); color: var(--accent-gold);">商品名稱</h2>
+      <p id="modal-product-desc" style="color: var(--text-muted); font-size: 0.9rem; margin: 0.5rem 0;"></p>
 
-      <div class="modal-actions">
-        <button class="btn" onclick="copyInvoiceText()">📋 一鍵複製訂單內文</button>
-        <button class="btn btn-gmail" onclick="sendToGmail()">✉️ 透過 Gmail 傳送訂單</button>
-        <button class="btn btn-zalo" onclick="sendToZalo()">💬 開啟 Zalo 貼上發送</button>
-        <button class="btn btn-secondary" onclick="closeInvoiceModal()">關閉視窗</button>
+      <!-- 杯測風味輪參數 -->
+      <div class="meter-group" id="modal-flavor-meters"></div>
+
+      <hr style="border-color: var(--border-color); margin: 1rem 0;">
+
+      <!-- 規格選擇 -->
+      <div class="form-group">
+        <label>選擇包裝規格：</label>
+        <select class="form-control" id="select-size" onchange="updateModalPrice()">
+          <option value="200g" data-price-add="0">200g (標準包裝)</option>
+          <option value="半磅 (227g)" data-price-add="50">半磅 227g (+NT$ 50)</option>
+          <option value="1磅 (454g)" data-price-add="380">1磅 454g (+NT$ 380)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>代客研磨服務：</label>
+        <select class="form-control" id="select-grind">
+          <option value="原豆 (不研磨)">原豆 (不研磨 - 保持新鮮度首選)</option>
+          <option value="手沖 / 濾滴刻度">手沖 / 濾滴刻度 (中等研磨)</option>
+          <option value="義式濃縮刻度">義式濃縮刻度 (極細研磨)</option>
+          <option value="摩卡壺 / 濾掛刻度">摩卡壺 / 濾掛刻度 (中細研磨)</option>
+        </select>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+        <span style="font-size: 1.4rem; font-weight: bold; color: var(--accent-gold);" id="modal-final-price">NT$ 0</span>
+        <button class="btn" onclick="confirmAddToCart()">加入購物車</button>
       </div>
     </div>
   </div>
 
-  <!-- 頁尾 -->
+  <!-- Modal 2: 填寫收件資料與生成單據 Modal -->
+  <div class="modal-overlay" id="checkout-modal">
+    <div class="modal-card">
+      <button class="close-modal" onclick="closeCheckoutModal()">&times;</button>
+      <h2 style="font-family: var(--font-serif); color: var(--accent-gold); margin-bottom: 1rem;">📋 填寫收件與訂購資料</h2>
+      
+      <div class="form-group">
+        <label>訂購人姓名 *</label>
+        <input type="text" class="form-control" id="cust-name" placeholder="請輸入姓名">
+      </div>
+      <div class="form-group">
+        <label>聯絡電話 *</label>
+        <input type="tel" class="form-control" id="cust-phone" placeholder="0912345678">
+      </div>
+      <div class="form-group">
+        <label>寄送地址 / 超商門市名稱 *</label>
+        <input type="text" class="form-control" id="cust-address" placeholder="宅配地址或 7-11/全家 門市名稱">
+      </div>
+      <div class="form-group">
+        <label>付款方式</label>
+        <select class="form-control" id="cust-payment">
+          <option value="銀行轉帳 / 匯款">銀行轉帳 / 匯款</option>
+          <option value="超商取貨付款">超商取貨付款</option>
+          <option value="LINE Pay / 街口支付">LINE Pay / 街口支付</option>
+        </select>
+      </div>
+
+      <button class="btn btn-block" onclick="generateFinalInvoice()">確認並生成電子訂單單據</button>
+
+      <!-- 生成的訂單展示 -->
+      <div id="invoice-result-section" style="display:none; margin-top: 1.5rem;">
+        <hr style="border-color: var(--border-color); margin-bottom: 1rem;">
+        <h4 style="color: var(--accent-gold);">單據已成功生成：</h4>
+        <div class="invoice-box" id="invoice-text-content"></div>
+
+        <div style="display:flex; flex-direction:column; gap: 0.6rem;">
+          <button class="btn" onclick="copyInvoiceText()">📋 一鍵複製訂單全文</button>
+          <button class="btn btn-gmail" onclick="sendToGmail()">✉️ 透過 Gmail 寄送給店家</button>
+          <button class="btn btn-zalo" onclick="sendToZalo()">💬 開啟 Zalo 貼上對話</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer>
-    <p>&copy; 2026 VIEBUCKS Specialty Coffee. All Rights Reserved.</p>
+    <p>&copy; 2026 VIEBUCKS Specialty Coffee Store. All Rights Reserved.</p>
   </footer>
 
-  <!-- JavaScript 邏輯 -->
+  <!-- 全套前端 JavaScript 邏輯 -->
   <script>
-    // 店家與客服設定
-    const STORE_EMAIL = "order@viebucks.com"; // 您的接收訂單 Email
-    const ZALO_PHONE = "0912345678";          // 您的 Zalo / 電話號碼
+    // 店家接收資訊設定
+    const STORE_EMAIL = "order@viebucks.com";
+    const ZALO_PHONE = "0912345678";
 
-    // 1. 商品資料庫
+    // 1. 精品咖啡商品資料庫 (內建杯測分數)
     const products = [
       {
         id: 1,
-        title: "衣索比亞 耶加雪菲",
+        title: "衣索比亞 耶加雪菲 (Ethiopia Yirgacheffe)",
+        desc: "帶有典雅茉莉花香與檸檬塔酸甜感，尾韻具甜美蜂蜜感受，手沖與西西里冰咖啡絕佳選擇。",
         roast: "淺焙",
-        price: 480,
+        basePrice: 480,
         flavors: ["花香/柑橘", "亮麗果香"],
+        meters: { acidity: 85, sweetness: 75, body: 60, aroma: 95 },
         img: "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=600&q=80"
       },
       {
         id: 2,
-        title: "哥倫比亞 蕙蘭 厭氧發酵",
+        title: "哥倫比亞 蕙蘭 厭氧發酵 (Colombia Huila)",
         roast: "淺焙",
-        price: 550,
+        desc: "獨特的葡萄酒香與蘭姆酒漬櫻桃氣息，層次豐富、甜度極高，適合追求特殊發酵感的咖啡玩家。",
+        basePrice: 550,
         flavors: ["酒香/發酵", "亮麗果香"],
+        meters: { acidity: 70, sweetness: 90, body: 80, aroma: 90 },
         img: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=600&q=80"
       },
       {
         id: 3,
-        title: "VIEBUCKS 招牌義式配方豆",
+        title: "VIEBUCKS 招牌義式特調配方豆",
         roast: "中焙",
-        price: 420,
+        desc: "極佳的平衡感，帶有黑巧克力與榛果香氣，做 Espresso 厚實滑順，加牛奶調製拿鐵具堅果甜香。",
+        basePrice: 420,
         flavors: ["堅果/可可"],
+        meters: { acidity: 40, sweetness: 85, body: 90, aroma: 80 },
         img: "https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&w=600&q=80"
       },
       {
         id: 4,
-        title: "瓜地馬拉 安提瓜 深焙",
+        title: "瓜地馬拉 安提瓜 火山火山豆",
         roast: "深焙",
-        price: 450,
+        desc: "濃郁的黑巧克力與煙燻焦糖餘韻，酸度極低、醇厚感極強，極度適合熱壓壺與摩卡壺沖煮。",
+        basePrice: 450,
         flavors: ["堅果/可可"],
+        meters: { acidity: 20, sweetness: 80, body: 95, aroma: 85 },
         img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80"
       }
     ];
 
+    // 全局狀態
     let cart = [];
-    let currentInvoiceString = "";
+    let selectedDiscountRate = 0; // 折扣趴數
+    let selectedDiscountAmount = 0; // 折扣固定金額
+    let currentActiveProduct = null;
+    let finalGeneratedInvoice = "";
 
-    // 渲染商品
+    // 2. 渲染商品主列表
     function renderProducts(items) {
       const container = document.getElementById('product-container');
       container.innerHTML = '';
 
       if (items.length === 0) {
-        container.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1;">沒有找到符合條件的商品。</p>';
+        container.innerHTML = '<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 2rem;">沒有找到符合篩選條件的精品豆。</p>';
         return;
       }
 
@@ -639,198 +382,276 @@
         const tagsHtml = [p.roast, ...p.flavors].map(tag => `<span class="tag">#${tag}</span>`).join('');
 
         card.innerHTML = `
-          <img src="${p.img}" alt="${p.title}" class="product-img">
+          <img src="${p.img}" alt="${p.title}" class="product-img" onclick="openProductModal(${p.id})">
           <div class="product-info">
-            <div class="product-title">${p.title}</div>
+            <div class="product-title" onclick="openProductModal(${p.id})">${p.title}</div>
             <div class="flavor-tags">${tagsHtml}</div>
-            <div class="product-price">NT$ ${p.price}</div>
-            <button class="btn" onclick="addToCart(${p.id})">加入購物車</button>
+            <div class="product-price">NT$ ${p.basePrice} <span style="font-size:0.75rem; font-weight:normal; color:var(--text-muted)">起</span></div>
+            <button class="btn" onclick="openProductModal(${p.id})">選擇規格與加入</button>
           </div>
         `;
         container.appendChild(card);
       });
     }
 
-    // 篩選器
+    // 3. 篩選邏輯
     function filterProducts() {
-      const checkedBoxes = Array.from(document.querySelectorAll('.filter-sidebar input[type="checkbox"]:checked'))
-                               .map(cb => cb.value);
-
-      if (checkedBoxes.length === 0) {
-        renderProducts(products);
-        return;
-      }
-
+      const checkedBoxes = Array.from(document.querySelectorAll('.filter-sidebar input[type="checkbox"]:checked')).map(cb => cb.value);
+      if (checkedBoxes.length === 0) { renderProducts(products); return; }
+      
       const filtered = products.filter(p => {
-        const productTraits = [p.roast, ...p.flavors];
-        return checkedBoxes.some(trait => productTraits.includes(trait));
+        const traits = [p.roast, ...p.flavors];
+        return checkedBoxes.some(trait => traits.includes(trait));
       });
-
       renderProducts(filtered);
     }
 
-    // 購物車操作
-    function addToCart(productId) {
-      const product = products.find(p => p.id === productId);
-      const cartItem = cart.find(item => item.product.id === productId);
+    // 4. 打開商品詳情與選擇規格 Modal
+    function openProductModal(productId) {
+      currentActiveProduct = products.find(p => p.id === productId);
+      document.getElementById('modal-product-title').innerText = currentActiveProduct.title;
+      document.getElementById('modal-product-desc').innerText = currentActiveProduct.desc;
 
-      if (cartItem) {
-        cartItem.quantity += 1;
+      // 渲染杯測圖條
+      const m = currentActiveProduct.meters;
+      document.getElementById('modal-flavor-meters').innerHTML = `
+        <div class="meter-item"><span class="meter-label">酸度 Acidity</span><div class="meter-bar-bg"><div class="meter-bar-fill" style="width:${m.acidity}%"></div></div><span>${m.acidity}</span></div>
+        <div class="meter-item"><span class="meter-label">甜度 Sweetness</span><div class="meter-bar-bg"><div class="meter-bar-fill" style="width:${m.sweetness}%"></div></div><span>${m.sweetness}</span></div>
+        <div class="meter-item"><span class="meter-label">醇厚 Body</span><div class="meter-bar-bg"><div class="meter-bar-fill" style="width:${m.body}%"></div></div><span>${m.body}</span></div>
+        <div class="meter-item"><span class="meter-label">香氣 Aroma</span><div class="meter-bar-bg"><div class="meter-bar-fill" style="width:${m.aroma}%"></div></div><span>${m.aroma}</span></div>
+      `;
+
+      updateModalPrice();
+      document.getElementById('product-modal').classList.add('active');
+    }
+
+    function updateModalPrice() {
+      if(!currentActiveProduct) return;
+      const sizeSelect = document.getElementById('select-size');
+      const priceAdd = parseInt(sizeSelect.options[sizeSelect.selectedIndex].getAttribute('data-price-add'));
+      const finalPrice = currentActiveProduct.basePrice + priceAdd;
+      document.getElementById('modal-final-price').innerText = `NT$ ${finalPrice}`;
+    }
+
+    function closeProductModal() {
+      document.getElementById('product-modal').classList.remove('active');
+    }
+
+    function confirmAddToCart() {
+      const sizeSelect = document.getElementById('select-size');
+      const grindSelect = document.getElementById('select-grind');
+      
+      const selectedSize = sizeSelect.value;
+      const priceAdd = parseInt(sizeSelect.options[sizeSelect.selectedIndex].getAttribute('data-price-add'));
+      const selectedGrind = grindSelect.value;
+      const finalPrice = currentActiveProduct.basePrice + priceAdd;
+
+      // 檢查是否已有完全相同規格的商品在購物車
+      const cartIndex = cart.findIndex(item => item.product.id === currentActiveProduct.id && item.size === selectedSize && item.grind === selectedGrind);
+
+      if (cartIndex > -1) {
+        cart[cartIndex].quantity += 1;
       } else {
-        cart.push({ product, quantity: 1 });
+        cart.push({
+          product: currentActiveProduct,
+          size: selectedSize,
+          grind: selectedGrind,
+          unitPrice: finalPrice,
+          quantity: 1
+        });
       }
 
+      closeProductModal();
       updateCartUI();
       openCart();
     }
 
-    function updateQuantity(productId, delta) {
-      const cartItem = cart.find(item => item.product.id === productId);
-      if (!cartItem) return;
-
-      cartItem.quantity += delta;
-      if (cartItem.quantity <= 0) {
-        removeFromCart(productId);
-      } else {
-        updateCartUI();
+    // 5. 購物車運算與 UI
+    function updateQuantity(index, delta) {
+      cart[index].quantity += delta;
+      if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
       }
-    }
-
-    function removeFromCart(productId) {
-      cart = cart.filter(item => item.product.id !== productId);
       updateCartUI();
     }
 
-    function clearCart() {
-      cart = [];
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCartUI();
+    }
+
+    function applyCoupon() {
+      const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+      if (code === "VIE100") {
+        selectedDiscountAmount = 100;
+        selectedDiscountRate = 0;
+        alert("成功折扣 NT$ 100 元！");
+      } else if (code === "WELCOME") {
+        selectedDiscountRate = 0.1; // 9折
+        selectedDiscountAmount = 0;
+        alert("成功套用 9 折優惠！");
+      } else {
+        alert("無效的優惠碼");
+        selectedDiscountAmount = 0;
+        selectedDiscountRate = 0;
+      }
       updateCartUI();
     }
 
     function updateCartUI() {
-      const cartItemsContainer = document.getElementById('cart-items-container');
+      const container = document.getElementById('cart-items-container');
       const badge = document.getElementById('cart-badge');
+      const subtotalEl = document.getElementById('cart-subtotal');
+      const discountRow = document.getElementById('discount-row');
+      const discountEl = document.getElementById('cart-discount');
       const totalPriceEl = document.getElementById('cart-total-price');
 
       const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
       badge.innerText = totalCount;
 
       if (cart.length === 0) {
-        cartItemsContainer.innerHTML = '<div style="text-align:center; color: var(--text-muted); margin-top:3rem;">購物車目前是空的 ☕</div>';
+        container.innerHTML = '<div style="text-align:center; color: var(--text-muted); margin-top:3rem;">購物車目前是空的 ☕</div>';
+        subtotalEl.innerText = 'NT$ 0';
+        discountRow.style.display = 'none';
         totalPriceEl.innerText = 'NT$ 0';
         return;
       }
 
-      cartItemsContainer.innerHTML = '';
-      let grandTotal = 0;
+      container.innerHTML = '';
+      let subtotal = 0;
 
-      cart.forEach(item => {
-        const itemTotal = item.product.price * item.quantity;
-        grandTotal += itemTotal;
+      cart.forEach((item, idx) => {
+        const itemTotal = item.unitPrice * item.quantity;
+        subtotal += itemTotal;
 
-        const itemEl = document.createElement('div');
-        itemEl.className = 'cart-item';
-        itemEl.innerHTML = `
-          <img src="${item.product.img}" alt="${item.product.title}" class="cart-item-img">
+        const el = document.createElement('div');
+        el.className = 'cart-item';
+        el.innerHTML = `
+          <img src="${item.product.img}" class="cart-item-img">
           <div class="cart-item-details">
             <div class="cart-item-title">${item.product.title}</div>
-            <div class="cart-item-price">NT$ ${item.product.price}</div>
+            <div class="cart-item-meta">規格: ${item.size} | ${item.grind}</div>
+            <div class="cart-item-price">NT$ ${item.unitPrice}</div>
             <div class="quantity-controls">
-              <button class="qty-btn" onclick="updateQuantity(${item.product.id}, -1)">-</button>
+              <button class="qty-btn" onclick="updateQuantity(${idx}, -1)">-</button>
               <span>${item.quantity}</span>
-              <button class="qty-btn" onclick="updateQuantity(${item.product.id}, 1)">+</button>
+              <button class="qty-btn" onclick="updateQuantity(${idx}, 1)">+</button>
             </div>
           </div>
-          <button class="remove-item" onclick="removeFromCart(${item.product.id})">移除</button>
+          <button class="remove-item" onclick="removeFromCart(${idx})">刪除</button>
         `;
-        cartItemsContainer.appendChild(itemEl);
+        container.appendChild(el);
       });
 
-      totalPriceEl.innerText = `NT$ ${grandTotal}`;
-    }
-
-    // 4. 電子訂單生成與轉發模組
-    function generateInvoice() {
-      if (cart.length === 0) {
-        alert("購物車是空的，無法生成訂單！");
-        return;
+      // 計算折扣
+      let discountVal = 0;
+      if (selectedDiscountRate > 0) {
+        discountVal = Math.round(subtotal * selectedDiscountRate);
+      } else if (selectedDiscountAmount > 0) {
+        discountVal = selectedDiscountAmount;
       }
 
-      const now = new Date();
-      const dateStr = now.toISOString().slice(0,10).replace(/-/g,"");
-      const randomNum = Math.floor(1000 + Math.random() * 9000);
-      const orderId = `VIE-${dateStr}-${randomNum}`;
-      
-      let grandTotal = 0;
-      let itemsText = "";
+      const finalTotal = Math.max(0, subtotal - discountVal);
 
-      cart.forEach((item, index) => {
-        const subtotal = item.product.price * item.quantity;
-        grandTotal += subtotal;
-        itemsText += `${index + 1}. ${item.product.title} x${item.quantity} (NT$ ${subtotal})\n`;
-      });
-
-      currentInvoiceString = `================================
-☕ VIEBUCKS 精品咖啡 訂單明細
-================================
-訂單編號：${orderId}
-日期時間：${now.toLocaleString('zh-TW')}
-
-【訂購商品】
-${itemsText}
---------------------------------
-總計金額：NT$ ${grandTotal}
-================================
-請填寫以下收件資訊並回覆此訊息：
-姓名：
-電話：
-收件地址 / 超商門市名稱：
-備註 (如：代客研磨需求)：
-================================`;
-
-      document.getElementById('invoice-text').innerText = currentInvoiceString;
-      document.getElementById('invoice-modal').classList.add('active');
-    }
-
-    // 複製文字
-    function copyInvoiceText() {
-      navigator.clipboard.writeText(currentInvoiceString).then(() => {
-        alert("訂單內容已複製到剪貼簿！您可以直接貼給客服。");
-      }).catch(err => {
-        alert("複製失敗，請手動選取文字複製。");
-      });
-    }
-
-    // 發送到 Gmail
-    function sendToGmail(rick0960590177@gmail.com) {
-      const subject = encodeURIComponent("【VIEBUCKS 新訂單】訂單號碼生成");
-      const body = encodeURIComponent(currentInvoiceString);
-      const mailtoUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${STORE_EMAIL}&su=${subject}&body=${body}`;
-      window.open(mailtoUrl, '_blank');
-    }
-
-    // 發送到 Zalo
-    function sendToZalo() {
-      // 先複製文字
-      navigator.clipboard.writeText(currentInvoiceString);
-      alert("訂單內容已自動複製！即將為您開啟 Zalo，請直接在對話框中「貼上」傳送。");
-      
-      // 開啟 Zalo Web 或 搜尋電話
-      const zaloUrl = `https://zalo.me/${ZALO_PHONE}`;
-      window.open(zaloUrl, '_blank');
-    }
-
-    function closeInvoiceModal() {
-      document.getElementById('invoice-modal').classList.remove('active');
+      subtotalEl.innerText = `NT$ ${subtotal}`;
+      if (discountVal > 0) {
+        discountRow.style.display = 'flex';
+        discountEl.innerText = `-NT$ ${discountVal}`;
+      } else {
+        discountRow.style.display = 'none';
+      }
+      totalPriceEl.innerText = `NT$ ${finalTotal}`;
     }
 
     function openCart() {
       document.getElementById('cart-drawer').classList.add('active');
       document.getElementById('cart-overlay').classList.add('active');
     }
-
     function closeCart() {
       document.getElementById('cart-drawer').classList.remove('active');
       document.getElementById('cart-overlay').classList.remove('active');
+    }
+
+    // 6. 結帳與生成電子單據
+    function openCheckoutModal() {
+      if (cart.length === 0) { alert("購物車目前沒有商品！"); return; }
+      closeCart();
+      document.getElementById('checkout-modal').classList.add('active');
+    }
+    function closeCheckoutModal() {
+      document.getElementById('checkout-modal').classList.remove('active');
+    }
+
+    function generateFinalInvoice() {
+      const name = document.getElementById('cust-name').value.trim();
+      const phone = document.getElementById('cust-phone').value.trim();
+      const address = document.getElementById('cust-address').value.trim();
+      const payment = document.getElementById('cust-payment').value;
+
+      if (!name || !phone || !address) {
+        alert("請填寫完整的姓名、電話與地址/門市資訊！");
+        return;
+      }
+
+      const now = new Date();
+      const orderId = `VIE-${now.toISOString().slice(0,10).replace(/-/g,"")}-${Math.floor(1000+Math.random()*9000)}`;
+
+      let subtotal = 0;
+      let itemsText = "";
+
+      cart.forEach((item, index) => {
+        const itemSub = item.unitPrice * item.quantity;
+        subtotal += itemSub;
+        itemsText += `${index + 1}. ${item.product.title}\n   └ 規格：${item.size} / ${item.grind}\n   └ 數量：${item.quantity} 個 × NT$ ${item.unitPrice} = NT$ ${itemSub}\n`;
+      });
+
+      let discountVal = 0;
+      if (selectedDiscountRate > 0) discountVal = Math.round(subtotal * selectedDiscountRate);
+      else if (selectedDiscountAmount > 0) discountVal = selectedDiscountAmount;
+
+      const grandTotal = Math.max(0, subtotal - discountVal);
+
+      finalGeneratedInvoice = `================================
+☕ VIEBUCKS 精品咖啡 訂單明細
+================================
+訂單編號：${orderId}
+訂購時間：${now.toLocaleString('zh-TW')}
+
+【訂購人資訊】
+姓名：${name}
+電話：${phone}
+寄送地址/門市：${address}
+付款方式：${payment}
+
+【訂購商品明細】
+${itemsText}
+--------------------------------
+商品小計：NT$ ${subtotal}
+優惠折抵：-NT$ ${discountVal}
+應付總金額：NT$ ${grandTotal}
+================================
+感謝您的訂購！VIEBUCKS 匠人烘焙師將為您新鮮準備。`;
+
+      document.getElementById('invoice-text-content').innerText = finalGeneratedInvoice;
+      document.getElementById('invoice-result-section').style.display = 'block';
+    }
+
+    function copyInvoiceText() {
+      navigator.clipboard.writeText(finalGeneratedInvoice).then(() => {
+        alert("訂單內文已成功複製到剪貼簿！");
+      });
+    }
+
+    function sendToGmail() {
+      const subject = encodeURIComponent("【VIEBUCKS 新訂單】訂單已建立");
+      const body = encodeURIComponent(finalGeneratedInvoice);
+      window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${STORE_EMAIL}&su=${subject}&body=${body}`, '_blank');
+    }
+
+    function sendToZalo() {
+      navigator.clipboard.writeText(finalGeneratedInvoice);
+      alert("訂單已複製！即將為您打開 Zalo，請直接「貼上」傳送給客服。");
+      window.open(`https://zalo.me/${ZALO_PHONE}`, '_blank');
     }
 
     // 初始化
