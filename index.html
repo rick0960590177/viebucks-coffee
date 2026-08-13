@@ -3,1065 +3,1150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viebucks Coffee Roasters | Specialty Coffee Order</title>
-    <!-- Google Fonts 載入文青感字體 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Noto+Serif+TC:wght@400;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #f7f4ef;          /* 暖燕麥色背景 */
-            --card-bg: #ffffff;          /* 純白紙質感卡片 */
-            --primary-color: #3d2b1f;      /* 靜謐深焙棕 */
-            --secondary-color: #8c7a6b;    /* 淺烘咖啡木色 */
-            --accent-color: #c49a6c;       /* 溫潤金黃琥珀色 */
-            --accent-light: #f1e9db;      /* 柔和奶茶光澤 */
-            --text-main: #2b2521;         /* 炭黑字體 */
-            --text-muted: #786e65;        /* 柔和灰棕字體 */
-            --border-color: #e8e2d8;      /* 細緻質感邊框 */
-            --radius-main: 16px;
-            --radius-sub: 8px;
-            --font-serif: 'Marcellus', 'Noto Serif TC', serif;
-            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: var(--font-sans);
-            padding: 40px 15px;
-            line-height: 1.6;
-            background-image: radial-gradient(#e3dcd1 0.75px, transparent 0.75px);
-            background-size: 16px 16px;
-        }
-
-        .container {
-            max-width: 780px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            padding: 45px 40px;
-            border-radius: var(--radius-main);
-            box-shadow: 0 10px 30px rgba(61, 43, 31, 0.05);
-            border: 1px solid var(--border-color);
-        }
-
-        /* 頂部 Header 風格重塑 */
-        .header {
-            text-align: center;
-            border-bottom: 1px dashed var(--border-color);
-            padding-bottom: 25px;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        .brand-subtitle {
-            font-family: var(--font-serif);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            font-size: 12px;
-            color: var(--secondary-color);
-            margin-bottom: 6px;
-        }
-
-        .header h1 {
-            font-family: var(--font-serif);
-            color: var(--primary-color);
-            font-size: 26px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .lang-switch {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 15px;
-        }
-
-        .lang-switch button {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            padding: 4px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 12px;
-            color: var(--text-muted);
-            transition: all 0.3s ease;
-            font-family: var(--font-sans);
-        }
-
-        .lang-switch button.active, .lang-switch button:hover {
-            background: var(--primary-color);
-            color: #fff;
-            border-color: var(--primary-color);
-        }
-
-        /* 免運提示進度條 */
-        .freeship-progress-container {
-            background: var(--bg-color);
-            border-radius: var(--radius-sub);
-            padding: 16px 20px;
-            margin-bottom: 35px;
-            border: 1px solid var(--border-color);
-        }
-
-        .freeship-text {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .progress-bar-bg {
-            background: #e6dfd5;
-            height: 6px;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            background: var(--accent-color);
-            height: 100%;
-            width: 0%;
-            transition: width 0.4s ease;
-        }
-
-        /* 商品列表卡片 */
-        .section-title {
-            font-family: var(--font-serif);
-            font-size: 18px;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section-title::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: var(--border-color);
-        }
-
-        .product-card {
-            border-bottom: 1px solid var(--border-color);
-            padding: 20px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            transition: opacity 0.2s ease;
-        }
-
-        .product-card:last-child {
-            border-bottom: none;
-        }
-
-        .product-info h3 {
-            font-family: var(--font-serif);
-            color: var(--primary-color);
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .product-info p {
-            color: var(--text-muted);
-            font-size: 13px;
-        }
-
-        .product-controls {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        select {
-            padding: 8px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sub);
-            font-size: 13px;
-            color: var(--text-main);
-            background-color: var(--bg-color);
-            outline: none;
-            cursor: pointer;
-            font-family: var(--font-sans);
-        }
-
-        /* 手機端數值加減器 */
-        .qty-picker {
-            display: flex;
-            align-items: center;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sub);
-            background: var(--bg-color);
-            overflow: hidden;
-        }
-
-        .qty-btn {
-            background: transparent;
-            border: none;
-            width: 32px;
-            height: 32px;
-            font-size: 15px;
-            color: var(--primary-color);
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .qty-btn:hover {
-            background: var(--accent-light);
-        }
-
-        .qty-input {
-            width: 36px;
-            height: 32px;
-            border: none;
-            text-align: center;
-            font-size: 13px;
-            background: transparent;
-            color: var(--primary-color);
-            font-weight: 600;
-            outline: none;
-        }
-
-        /* 表單區域 */
-        .customer-form {
-            margin-top: 40px;
-            background: var(--bg-color);
-            padding: 28px;
-            border-radius: var(--radius-main);
-            border: 1px solid var(--border-color);
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 12px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            color: var(--secondary-color);
-            font-weight: 600;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sub);
-            font-size: 14px;
-            background: #fff;
-            color: var(--text-main);
-            outline: none;
-            transition: border-color 0.2s ease;
-        }
-
-        .form-group input:focus {
-            border-color: var(--accent-color);
-        }
-
-        /* 優惠碼與試算 */
-        .coupon-section {
-            display: flex;
-            gap: 10px;
-            margin-top: 25px;
-            justify-content: flex-end;
-        }
-
-        .coupon-section input {
-            width: 160px;
-            padding: 8px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sub);
-            font-size: 13px;
-            outline: none;
-        }
-
-        .coupon-section button {
-            padding: 8px 16px;
-            background: var(--secondary-color);
-            color: white;
-            border: none;
-            border-radius: var(--radius-sub);
-            cursor: pointer;
-            font-size: 13px;
-            transition: background 0.2s ease;
-        }
-
-        .coupon-section button:hover {
-            background: var(--primary-color);
-        }
-
-        .summary-box {
-            margin-top: 25px;
-            text-align: right;
-            font-size: 14px;
-            color: var(--text-muted);
-            line-height: 1.8;
-        }
-
-        .summary-box .final-total {
-            font-family: var(--font-serif);
-            font-size: 22px;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-top: 8px;
-            border-top: 1px dashed var(--border-color);
-            padding-top: 8px;
-            display: inline-block;
-        }
-
-        .btn-submit {
-            width: 100%;
-            background: var(--primary-color);
-            color: #fff;
-            border: none;
-            padding: 16px;
-            font-size: 15px;
-            font-family: var(--font-serif);
-            letter-spacing: 1px;
-            border-radius: var(--radius-main);
-            cursor: pointer;
-            margin-top: 30px;
-            box-shadow: 0 4px 12px rgba(61, 43, 31, 0.15);
-            transition: all 0.3s ease;
-        }
-
-        .btn-submit:hover {
-            background: #281c14;
-            transform: translateY(-1px);
-        }
-
-        /* Modal 訂單彈窗風格 */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(43, 37, 33, 0.5);
-            backdrop-filter: blur(4px);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: #fff;
-            padding: 35px 30px;
-            border-radius: var(--radius-main);
-            max-width: 520px;
-            width: 90%;
-            max-height: 88vh;
-            overflow-y: auto;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-
-        .modal-header {
-            font-family: var(--font-serif);
-            font-size: 20px;
-            color: var(--primary-color);
-            text-align: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-
-        .modal-body p {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        .modal-body p strong {
-            color: var(--primary-color);
-        }
-
-        .receipt-list {
-            list-style: none;
-            margin: 15px 0;
-            background: var(--bg-color);
-            padding: 15px;
-            border-radius: var(--radius-sub);
-        }
-
-        .receipt-list li {
-            padding: 6px 0;
-            border-bottom: 1px dashed var(--border-color);
-            font-size: 13px;
-            color: var(--text-main);
-        }
-
-        .receipt-list li:last-child {
-            border-bottom: none;
-        }
-
-        /* VietQR 質感化 */
-        .qr-container {
-            text-align: center;
-            margin-top: 12px;
-            padding: 15px;
-            background: #fff;
-            border-radius: var(--radius-sub);
-            border: 1px solid var(--border-color);
-        }
-
-        .qr-container img {
-            max-width: 180px;
-            height: auto;
-            border-radius: 4px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 25px;
-            flex-wrap: wrap;
-        }
-
-        .modal-buttons button {
-            flex: 1;
-            padding: 10px 12px;
-            border: none;
-            border-radius: var(--radius-sub);
-            cursor: pointer;
-            font-size: 12px;
-            font-family: var(--font-sans);
-            transition: opacity 0.2s ease;
-            min-width: 90px;
-        }
-
-        .modal-buttons button:hover {
-            opacity: 0.9;
-        }
-
-        .btn-close { background: #e0d8cd; color: var(--text-main); }
-        .btn-copy { background: var(--secondary-color); color: #fff; }
-        .btn-print { background: var(--primary-color); color: #fff; }
-        .btn-zalo { background: #0068ff; color: #fff; }
-        .btn-email { background: #c44e47; color: #fff; }
-
-        @media (max-width: 600px) {
-            .container { padding: 25px 20px; }
-            .product-card { flex-direction: column; align-items: flex-start; }
-            .product-controls { width: 100%; justify-content: space-between; }
-        }
-
-        @media print {
-            body * { visibility: hidden; }
-            #receipt-modal, #receipt-modal * { visibility: visible; }
-            #receipt-modal {
-                position: absolute;
-                left: 0; top: 0; width: 100%; height: auto;
-                background: white;
+    <title>Viebucks 精品咖啡 - 極致品質，隨手可得</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        amber: {
+                            850: '#683B1A',
+                            950: '#2C180B',
+                        },
+                        coffee: {
+                            100: '#F5EBE6',
+                            200: '#E6D2C4',
+                            500: '#A67B5B',
+                            700: '#6F4E37',
+                            800: '#4A3525',
+                            900: '#1F140E',
+                            gold: '#D4A359'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Noto Serif TC"', 'serif'],
+                        sans: ['"Poppins"', 'sans-serif'],
+                    }
+                }
             }
-            .modal-buttons { display: none !important; }
         }
+    </script>
+    <style>
+        body { font-family: 'Poppins', 'Noto Serif TC', sans-serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body>
+<body class="bg-[#FAF7F2] text-gray-800 antialiased min-h-screen flex flex-col">
 
-<div class="container">
-    <div class="header">
-        <div class="brand-subtitle">Artisanal Specialty Coffee</div>
-        <h1 id="txt-title">Viebucks 珈琲自家烘焙訂購單</h1>
-        <div class="lang-switch">
-            <button onclick="changeLang('zh')" class="active" id="btn-zh">繁體中文</button>
-            <button onclick="changeLang('vn')" id="btn-vn">Tiếng Việt</button>
-            <button onclick="changeLang('en')" id="btn-en">English</button>
-        </div>
+    <!-- 頂部公告欄 -->
+    <div class="bg-coffee-900 text-amber-100 text-xs py-2 text-center tracking-wider border-b border-coffee-800">
+        ☕ Viebucks 慶祝浸泡包新登場 | 首購輸入 <span class="font-bold text-coffee-gold">VIEBUCKS100</span> 現折 $100 | 滿 $800 全館免運
     </div>
 
-    <!-- 免運門檻提示條 -->
-    <div class="freeship-progress-container">
-        <div class="freeship-text" id="freeship-msg">載入中...</div>
-        <div class="progress-bar-bg">
-            <div class="progress-bar-fill" id="freeship-bar"></div>
-        </div>
-    </div>
+    <!-- 導覽列 -->
+    <header class="sticky top-0 z-40 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-coffee-200 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- 行動裝置選單按鈕 -->
+                <button id="mobile-menu-btn" class="md:hidden text-coffee-800 hover:text-coffee-600 focus:outline-none">
+                    <i class="fa-solid fa-bars text-2xl"></i>
+                </button>
 
-    <!-- 商品列表 -->
-    <div class="section-title" id="txt-section-coffee">Coffee Beans & Packs / 精選咖啡與隨行包</div>
-    <div id="product-list">
-        <!-- 商品 1: 耶加雪菲 -->
-        <div class="product-card" data-price="250000" data-name-zh="Ethiopia Yirgacheffe 埃塞俄比亞 耶加雪菲" data-name-vn="Ethiopia Yirgacheffe (Cà Phê)" data-name-en="Ethiopia Yirgacheffe">
-            <div class="product-info">
-                <h3 class="prod-name">Ethiopia Yirgacheffe 埃塞俄比亞 耶加雪菲</h3>
-                <p><span class="txt-price-lbl">單價：</span>250,000 VND / 250g</p>
-            </div>
-            <div class="product-controls">
-                <select class="grind-select"></select>
-                <div class="qty-picker">
-                    <button class="qty-btn" onclick="updateQty(this, -1)">-</button>
-                    <input type="number" class="qty-input" value="0" min="0" onchange="calculateTotal()">
-                    <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="navigateTo('home')">
+                    <div class="w-10 h-10 rounded-full bg-coffee-900 flex items-center justify-center text-coffee-gold shadow-md border border-coffee-gold/40">
+                        <i class="fa-solid fa-mug-saucer text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="font-serif font-bold text-2xl tracking-wider text-coffee-900 block leading-none">Viebucks</span>
+                        <span class="text-[10px] tracking-widest text-coffee-500 uppercase font-medium">Craft Coffee & Roasters</span>
+                    </div>
+                </div>
+
+                <!-- 電腦版選單 -->
+                <nav class="hidden md:flex space-x-7 text-sm font-medium text-coffee-800">
+                    <button onclick="navigateTo('products')" class="hover:text-coffee-gold transition-colors py-2">所有商品</button>
+                    <button onclick="filterCategory('steeped')" class="hover:text-coffee-gold transition-colors py-2 font-semibold text-coffee-gold flex items-center gap-1">
+                        <i class="fa-solid fa-note-sticky text-xs"></i> 浸泡咖啡包
+                    </button>
+                    <button onclick="filterCategory('single-origin')" class="hover:text-coffee-gold transition-colors py-2">單品莊園豆</button>
+                    <button onclick="filterCategory('drip')" class="hover:text-coffee-gold transition-colors py-2">隨身濾掛包</button>
+                    <button onclick="navigateTo('subscriptions')" class="hover:text-coffee-gold transition-colors py-2 flex items-center gap-1">
+                        <i class="fa-solid fa-arrows-rotate text-xs text-coffee-gold"></i> 定期訂閱
+                    </button>
+                    <button onclick="navigateTo('ai-quiz')" class="hover:text-coffee-gold transition-colors py-2 text-coffee-800 flex items-center gap-1">
+                        <i class="fa-solid fa-wand-magic-sparkles text-coffee-gold"></i> 風味測驗
+                    </button>
+                </nav>
+
+                <!-- 右側圖標 -->
+                <div class="flex items-center space-x-5">
+                    <button onclick="toggleSearchModal()" class="text-coffee-800 hover:text-coffee-gold transition-colors">
+                        <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                    </button>
+                    <button onclick="toggleCartModal()" class="text-coffee-800 hover:text-coffee-gold transition-colors relative">
+                        <i class="fa-solid fa-bag-shopping text-xl"></i>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-coffee-gold text-coffee-900 text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow">0</span>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- 商品 2: 哥倫比亞 -->
-        <div class="product-card" data-price="220000" data-name-zh="Colombia Supremo 哥倫比亞 蘇普雷摩" data-name-vn="Colombia Supremo (Cà Phê)" data-name-en="Colombia Supremo">
-            <div class="product-info">
-                <h3 class="prod-name">Colombia Supremo 哥倫比亞 蘇普雷摩</h3>
-                <p><span class="txt-price-lbl">單價：</span>220,000 VND / 250g</p>
-            </div>
-            <div class="product-controls">
-                <select class="grind-select"></select>
-                <div class="qty-picker">
-                    <button class="qty-btn" onclick="updateQty(this, -1)">-</button>
-                    <input type="number" class="qty-input" value="0" min="0" onchange="calculateTotal()">
-                    <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+        <!-- 行動裝置抽屜選單 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-[#FAF7F2] border-b border-coffee-200 px-4 pt-2 pb-6 space-y-3">
+            <button onclick="navigateTo('products')" class="block w-full text-left py-2 font-medium text-coffee-900">所有商品</button>
+            <button onclick="filterCategory('steeped')" class="block w-full text-left py-2 font-semibold text-coffee-gold">浸泡咖啡包 (熱銷)</button>
+            <button onclick="filterCategory('single-origin')" class="block w-full text-left py-2 font-medium text-coffee-900">單品莊園豆</button>
+            <button onclick="filterCategory('drip')" class="block w-full text-left py-2 font-medium text-coffee-900">隨身濾掛包</button>
+            <button onclick="navigateTo('subscriptions')" class="block w-full text-left py-2 font-medium text-coffee-900">定期訂閱專區</button>
+            <button onclick="navigateTo('ai-quiz')" class="block w-full text-left py-2 font-medium text-coffee-900">風味測驗推薦</button>
+        </div>
+    </header>
+
+    <!-- 主要內容動態載入區 -->
+    <main id="app-content" class="flex-grow">
+        <!-- 內容由 JavaScript 注入 -->
+    </main>
+
+    <!-- 頁尾 -->
+    <footer class="bg-coffee-900 text-coffee-200 mt-20 pt-16 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-10">
+            <div>
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-8 h-8 rounded-full bg-coffee-gold flex items-center justify-center text-coffee-900">
+                        <i class="fa-solid fa-mug-saucer text-sm"></i>
+                    </div>
+                    <span class="font-serif font-bold text-xl tracking-wider text-white">Viebucks</span>
                 </div>
+                <p class="text-sm text-coffee-200/80 leading-relaxed mb-4">
+                    Viebucks 致力於將極致品質的莊園咖啡融入您的日常生活。無論是手沖豆或隨身浸泡包，隨時隨地享受純粹回甘。
+                </p>
+                <div class="flex space-x-4 text-coffee-gold">
+                    <a href="https://zalo.me/0839681380" target="_blank" class="hover:text-white transition flex items-center gap-1 text-xs bg-coffee-800 px-3 py-1.5 rounded-full border border-coffee-700">
+                        <i class="fa-solid fa-comment-dots text-coffee-gold"></i> Zalo 客服: 0839681380
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-serif text-white font-semibold mb-4 tracking-wider">探索 Viebucks</h4>
+                <ul class="space-y-2 text-sm text-coffee-200/80">
+                    <li><a href="#" onclick="filterCategory('steeped')" class="hover:text-coffee-gold transition">隨身浸泡咖啡包系列</a></li>
+                    <li><a href="#" onclick="filterCategory('single-origin')" class="hover:text-coffee-gold transition">精品單品莊園豆</a></li>
+                    <li><a href="#" onclick="filterCategory('blend')" class="hover:text-coffee-gold transition">經典義式配方豆</a></li>
+                    <li><a href="#" onclick="filterCategory('drip')" class="hover:text-coffee-gold transition">傳統隨身濾掛包</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-serif text-white font-semibold mb-4 tracking-wider">顧客服務</h4>
+                <ul class="space-y-2 text-sm text-coffee-200/80">
+                    <li><a href="https://zalo.me/0839681380" target="_blank" class="hover:text-coffee-gold transition">Zalo 快速聯絡 (0839681380)</a></li>
+                    <li><a href="#" class="hover:text-coffee-gold transition">浸泡包沖煮與冷萃說明</a></li>
+                    <li><a href="#" class="hover:text-coffee-gold transition">退換貨與鑑賞期須知</a></li>
+                    <li><a href="#" class="hover:text-coffee-gold transition">企業採購與禮盒客製化</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-serif text-white font-semibold mb-4 tracking-wider">訂閱 Viebucks 電子報</h4>
+                <p class="text-sm text-coffee-200/80 mb-3">獲得新上市微批次浸泡包優先購買權與優惠折扣。</p>
+                <form onsubmit="subscribeNewsletter(event)" class="flex">
+                    <input type="email" placeholder="輸入您的 Email" required class="px-3 py-2 text-sm bg-coffee-800 text-white rounded-l border border-coffee-700 focus:outline-none focus:border-coffee-gold w-full">
+                    <button type="submit" class="bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold px-4 text-sm rounded-r transition">訂閱</button>
+                </form>
             </div>
         </div>
 
-        <!-- 商品 3: 巴西 喜拉朵 (新增) -->
-        <div class="product-card" data-price="210000" data-name-zh="Brazil Cerrado 巴西 喜拉朵" data-name-vn="Brazil Cerrado (Cà Phê)" data-name-en="Brazil Cerrado">
-            <div class="product-info">
-                <h3 class="prod-name">Brazil Cerrado 巴西 喜拉朵</h3>
-                <p><span class="txt-price-lbl">單價：</span>210,000 VND / 250g</p>
-            </div>
-            <div class="product-controls">
-                <select class="grind-select"></select>
-                <div class="qty-picker">
-                    <button class="qty-btn" onclick="updateQty(this, -1)">-</button>
-                    <input type="number" class="qty-input" value="0" min="0" onchange="calculateTotal()">
-                    <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
-                </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-6 border-t border-coffee-800 flex flex-col md:flex-row justify-between items-center text-xs text-coffee-200/50">
+            <p>&copy; 2026 Viebucks Coffee Co. All rights reserved.</p>
+            <div class="flex space-x-4 mt-4 md:mt-0">
+                <span>隱私權條款</span>
+                <span>服務條款</span>
+                <span>Zalo 服專線：0839681380</span>
             </div>
         </div>
+    </footer>
 
-        <!-- 商品 4: 越南 林同 阿拉比卡 (新增) -->
-        <div class="product-card" data-price="190000" data-name-zh="Vietnam Lam Dong Arabica 越南 林同 阿拉比卡" data-name-vn="Việt Nam Lâm Đồng Arabica" data-name-en="Vietnam Lam Dong Arabica">
-            <div class="product-info">
-                <h3 class="prod-name">Vietnam Lam Dong Arabica 越南 林同 阿拉比卡</h3>
-                <p><span class="txt-price-lbl">單價：</span>190,000 VND / 250g</p>
-            </div>
-            <div class="product-controls">
-                <select class="grind-select"></select>
-                <div class="qty-picker">
-                    <button class="qty-btn" onclick="updateQty(this, -1)">-</button>
-                    <input type="number" class="qty-input" value="0" min="0" onchange="calculateTotal()">
-                    <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+    <!-- 側邊購物車 Modal -->
+    <div id="cart-modal" class="fixed inset-0 z-50 overflow-hidden hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="toggleCartModal()"></div>
+        <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-[#FAF7F2] shadow-2xl flex flex-col">
+                <!-- Cart Header -->
+                <div class="p-6 bg-coffee-900 text-white flex justify-between items-center">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-bag-shopping text-coffee-gold"></i>
+                        <h2 class="font-serif text-lg font-bold tracking-wide">您的 Viebucks 購物車</h2>
+                    </div>
+                    <button onclick="toggleCartModal()" class="text-gray-400 hover:text-white text-xl">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
                 </div>
-            </div>
-        </div>
 
-        <!-- 商品 5: 越南 林同 羅布斯塔 (新增) -->
-        <div class="product-card" data-price="150000" data-name-zh="Vietnam Lam Dong Robusta 越南 林同 羅布斯塔" data-name-vn="Việt Nam Lâm Đồng Robusta" data-name-en="Vietnam Lam Dong Robusta">
-            <div class="product-info">
-                <h3 class="prod-name">Vietnam Lam Dong Robusta 越南 林同 羅布斯塔</h3>
-                <p><span class="txt-price-lbl">單價：</span>150,000 VND / 250g</p>
-            </div>
-            <div class="product-controls">
-                <select class="grind-select"></select>
-                <div class="qty-picker">
-                    <button class="qty-btn" onclick="updateQty(this, -1)">-</button>
-                    <input type="number" class="qty-input" value="0" min="0" onchange="calculateTotal()">
-                    <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+                <!-- 訂購人簡意資訊 -->
+                <div class="p-4 bg-coffee-100 border-b border-coffee-200 text-xs space-y-2">
+                    <span class="font-bold text-coffee-900 block">聯絡資料（發送通知用）：</span>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input id="checkout-name" type="text" placeholder="收件人姓名" class="p-2 border border-coffee-200 rounded text-xs bg-white focus:outline-none focus:border-coffee-gold">
+                        <input id="checkout-phone" type="tel" placeholder="電話號碼" class="p-2 border border-coffee-200 rounded text-xs bg-white focus:outline-none focus:border-coffee-gold">
+                    </div>
+                    <input id="checkout-address" type="text" placeholder="收件地址" class="w-full p-2 border border-coffee-200 rounded text-xs bg-white focus:outline-none focus:border-coffee-gold">
                 </div>
-            </div>
-        </div>
 
-        <!-- 商品 6: 西西里特調 -->
-        <div class="product-card" data-price="180000" data-name-zh="Sicilian Style Coffee Blend 西西里風味特調豆" data-name-vn="Cà phê phối trộn phong cách Sicilian" data-name-en="Sicilian Style Specialty Blend">
-            <div class="product-info">
-                <h3 class="prod-name">Sicilian Style Coffee Blend 西西里風味特調豆</h3>
-                <p><span class="txt-price-lbl">單價：</span>180,000 VND / 250g</p>
-            </div>
-            <div class="product-controls">
-                <select class="grind-select"></select>
-                <div class="qty-picker">
-                    <button class="qty-btn" onclick="updateQty(this, -1)">-</button>
-                    <input type="number" class="qty-input" value="0" min="0" onchange="calculateTotal()">
-                    <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+                <!-- Cart Items List -->
+                <div id="cart-items-container" class="flex-grow overflow-y-auto p-6 space-y-4">
+                    <!-- Dynamic Cart Content -->
+                </div>
+
+                <!-- Cart Footer -->
+                <div class="p-6 bg-white border-t border-coffee-200 space-y-4 shadow-lg">
+                    <div class="space-y-1 text-sm">
+                        <div class="flex justify-between text-gray-600">
+                            <span>小計</span>
+                            <span id="cart-subtotal">$0</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>運費</span>
+                            <span id="cart-shipping">$60</span>
+                        </div>
+                        <div id="discount-row" class="flex justify-between text-emerald-600 hidden">
+                            <span>折扣 (VIEBUCKS100)</span>
+                            <span id="cart-discount">-$100</span>
+                        </div>
+                        <div class="flex justify-between font-bold text-lg text-coffee-900 pt-2 border-t">
+                            <span>總計</span>
+                            <span id="cart-total" class="text-coffee-gold">$0</span>
+                        </div>
+                    </div>
+
+                    <!-- Coupon Code Input -->
+                    <div class="flex gap-2">
+                        <input id="coupon-input" type="text" placeholder="折扣碼 (輸入 VIEBUCKS100)" class="px-3 py-2 text-xs border border-gray-300 rounded focus:outline-none focus:border-coffee-gold uppercase flex-grow">
+                        <button onclick="applyCoupon()" class="bg-coffee-800 text-white text-xs px-3 py-2 rounded hover:bg-coffee-700 transition">套用</button>
+                    </div>
+
+                    <button onclick="checkout()" class="w-full bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold py-3.5 rounded-lg text-center tracking-wider shadow hover:shadow-md transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> 結帳並發送訂單至 Gmail / Zalo
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 訂購人資訊 -->
-    <div class="customer-form">
-        <div class="section-title" id="txt-cust-info-title" style="margin-bottom: 15px;">Customer Info / 訂購人資料</div>
-        <div class="form-group">
-            <label id="lbl-name">姓名 / Họ và tên / Full Name</label>
-            <input type="text" id="cust-name" placeholder="Ex: Chang Yu Wei">
-        </div>
-        <div class="form-group">
-            <label id="lbl-phone">電話 / Số điện thoại / Phone</label>
-            <input type="text" id="cust-phone" placeholder="Ex: 0912345678">
-        </div>
-        <div class="form-group">
-            <label id="lbl-address">送貨地址 / Địa chỉ giao hàng / Address</label>
-            <input type="text" id="cust-address" placeholder="Ex: Ho Chi Minh City...">
-        </div>
-        <div class="form-group">
-            <label id="lbl-note">備註 / Ghi chú / Note</label>
-            <input type="text" id="cust-note" placeholder="Ex: 特殊需求或研磨指示等">
+    <!-- 結帳成功與發送訂單彈窗 Modal -->
+    <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeCheckoutModal()"></div>
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-lg w-full relative z-10 p-6 space-y-5 text-center">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div>
+                <h3 class="font-serif font-bold text-2xl text-coffee-900">訂單已建立成功！</h3>
+                <p class="text-xs text-gray-500 mt-1">訂單資訊已自動複製，可透過 Gmail 發送郵件或貼上至 Zalo。</p>
+            </div>
+
+            <!-- 複製預覽框 -->
+            <div class="bg-coffee-100/60 p-4 rounded-xl border border-coffee-200 text-left text-xs text-coffee-900 font-mono space-y-1 max-h-48 overflow-y-auto">
+                <div id="order-summary-text" class="whitespace-pre-line"></div>
+            </div>
+
+            <div class="space-y-3 pt-2">
+                <!-- 動作按鈕 1：自動傳送 Gmail -->
+                <button onclick="sendGmailNotification()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg shadow transition flex items-center justify-center gap-2 text-sm">
+                    <i class="fa-solid fa-envelope"></i> 開啟 Gmail 發送確認郵件
+                </button>
+
+                <!-- 動作按鈕 2：開啟 Zalo 發送 -->
+                <a id="zalo-link" href="https://zalo.me/0839681380" target="_blank" onclick="copyOrderTextToClipboard()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow transition flex items-center justify-center gap-2 text-sm block">
+                    <i class="fa-solid fa-comment"></i> 開啟 Zalo 貼上發送 (0839681380)
+                </a>
+
+                <!-- 手動複製按鈕 -->
+                <button onclick="copyOrderTextToClipboard(true)" class="w-full bg-coffee-100 hover:bg-coffee-200 text-coffee-900 font-bold py-2.5 rounded-lg text-xs transition">
+                    <i class="fa-solid fa-copy"></i> 手動複製訂單內容
+                </button>
+            </div>
+
+            <button onclick="closeCheckoutModal()" class="text-xs text-gray-400 underline hover:text-gray-600 pt-2 block mx-auto">
+                關閉視窗
+            </button>
         </div>
     </div>
 
-    <!-- 優惠碼輸入區 -->
-    <div class="coupon-section">
-        <input type="text" id="coupon-code" placeholder="PROMO CODE" onkeypress="if(event.key==='Enter') applyCoupon()">
-        <button onclick="applyCoupon()" id="btn-coupon">套用優惠</button>
+    <!-- 商品快速預覽 Modal -->
+    <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeProductModal()"></div>
+        <div id="product-modal-content" class="bg-white rounded-xl shadow-2xl overflow-hidden max-w-2xl w-full relative z-10 max-h-[90vh] overflow-y-auto">
+            <!-- Dynamic Content -->
+        </div>
     </div>
 
-    <!-- 總計金額區塊 -->
-    <div class="summary-box">
-        <div><span id="txt-subtotal-lbl">商品小計：</span> <span id="subtotal-amount">0</span> VND</div>
-        <div><span id="txt-discount-lbl">折扣金額：</span> -<span id="discount-amount">0</span> VND</div>
-        <div><span id="txt-shipping-lbl">預估運費：</span> <span id="shipping-amount">30,000</span> VND</div>
-        <div><span id="txt-total-lbl" class="final-total">應付總金額： <span id="total-amount">0</span> VND</span></div>
-    </div>
-
-    <button class="btn-submit" onclick="generateReceipt()" id="btn-submit">確認並生成訂購單</button>
-</div>
-
-<!-- 訂購單視窗 Modal -->
-<div class="modal-overlay" id="receipt-modal">
-    <div class="modal-content">
-        <div class="modal-header" id="txt-modal-header">Viebucks 訂單明細確認</div>
-        <div class="modal-body">
-            <p><strong><span id="txt-rec-id-lbl">訂單編號：</span></strong> <span id="rec-id"></span></p>
-            <p><strong><span id="txt-rec-name-lbl">訂購人：</span></strong> <span id="rec-name"></span></p>
-            <p><strong><span id="txt-rec-phone-lbl">電話：</span></strong> <span id="rec-phone"></span></p>
-            <p><strong><span id="txt-rec-addr-lbl">地址：</span></strong> <span id="rec-address"></span></p>
-            
-            <ul class="receipt-list" id="rec-items"></ul>
-            
-            <p style="text-align: right; font-weight: 600; font-size: 15px; color: var(--primary-color);">
-                <span id="txt-rec-total-lbl">應付總金額：</span> <span id="rec-total" style="color: var(--accent-color);"></span> VND
-            </p>
-            
-            <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">
-                <strong><span id="txt-rec-note-lbl">備註：</span></strong> <span id="rec-note"></span>
-            </p>
-
-            <!-- 銀行轉帳與動態 VietQR 區塊 -->
-            <div style="background: var(--bg-color); padding: 15px; border-radius: var(--radius-sub); margin-top: 15px; border: 1px solid var(--border-color); font-size: 12px;">
-                <p style="font-weight: 600; color: var(--primary-color); margin-bottom: 6px;" id="txt-bank-title">💳 銀行轉帳資訊：</p>
-                <p><strong id="lbl-bank-name">銀行：</strong> MB Bank</p>
-                <p><strong id="lbl-bank-holder">戶名：</strong> CÔNG TY TNHH VIEBUCKS</p>
-                <p><strong id="lbl-bank-acc">帳號：</strong> 0348246669</p>
-                
-                <div class="qr-container">
-                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;" id="txt-qr-tip">掃描 VietQR 自動帶入轉帳資訊</p>
-                    <img id="vietqr-img" src="" alt="VietQR Code">
-                </div>
-                <p style="color: #b24338; margin-top: 6px; font-size: 11px;" id="txt-bank-note">* 轉帳備註請務必填寫訂單編號</p>
+    <!-- 全站搜尋 Modal -->
+    <div id="search-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-start justify-center pt-24 hidden px-4">
+        <div class="bg-white rounded-xl max-w-xl w-full p-6 shadow-2xl relative">
+            <button onclick="toggleSearchModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <h3 class="font-serif font-bold text-lg text-coffee-900 mb-4">搜尋 Viebucks 商品</h3>
+            <div class="relative mb-6">
+                <input id="search-input" type="text" oninput="handleSearch(event)" placeholder="搜尋浸泡包、產地、咖啡豆 (如: 浸泡, 莫札特, 耶加雪菲)..." class="w-full px-4 py-3 border border-coffee-200 rounded-lg focus:outline-none focus:border-coffee-gold pl-11 text-sm">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-gray-400"></i>
+            </div>
+            <div id="search-results" class="max-h-60 overflow-y-auto space-y-2">
+                <p class="text-xs text-gray-400 text-center py-4">輸入關鍵字開始搜尋...</p>
             </div>
         </div>
-
-        <div class="modal-buttons">
-            <button class="btn-copy" onclick="copyReceiptText()" id="btn-copy-txt">複製文字</button>
-            <button class="btn-zalo" onclick="sendViaZalo()">Zalo 傳送</button>
-            <button class="btn-email" onclick="sendViaEmail()">Email 傳送</button>
-            <button class="btn-print" onclick="window.print()" id="btn-print-txt">列印</button>
-            <button class="btn-close" onclick="closeModal()" id="btn-close-txt">關閉</button>
-        </div>
     </div>
-</div>
 
-<script>
-    let currentLang = 'zh';
-    const FREESHIP_THRESHOLD = 500000;
-    const STANDARD_SHIPPING = 30000;
-    let discountAmount = 0;
-    let appliedCoupon = "";
+    <!-- 提示訊息 Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-coffee-900 text-white px-5 py-3 rounded-lg shadow-xl z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 border-l-4 border-coffee-gold">
+        <i class="fa-solid fa-circle-check text-coffee-gold text-lg"></i>
+        <span id="toast-message" class="text-sm font-medium">已新增至購物車！</span>
+    </div>
 
-    const TARGET_EMAIL = "viebuckscoffee@gmail.com"; 
-    const ZALO_PHONE = "0348246669"; 
-
-    const i18n = {
-        zh: {
-            title: "Viebucks 珈琲自家烘焙訂購單",
-            sectionCoffee: "Coffee Beans & Packs / 精選咖啡與隨行包",
-            priceLbl: "單價：",
-            custTitle: "Customer Info / 訂購人資料",
-            subtotalLbl: "商品小計：",
-            discountLbl: "折扣金額：",
-            shippingLbl: "預估運費：",
-            totalLbl: "應付總金額：",
-            btnSubmit: "確認並生成訂購單",
-            btnCoupon: "套用優惠",
-            modalHeader: "Viebucks 訂單明細確認",
-            recId: "訂單編號：",
-            recName: "訂購人：",
-            recPhone: "電話：",
-            recAddr: "送貨地址：",
-            recTotal: "應付總金額：",
-            recNote: "備註：",
-            btnCopy: "複製文字",
-            btnPrint: "列印單據",
-            btnClose: "關閉",
-            bankTitle: "💳 銀行轉帳資訊：",
-            bankName: "銀行：",
-            bankHolder: "戶名：",
-            bankAcc: "帳號：",
-            bankNote: "* 轉帳備註請務必填寫訂單編號",
-            qrTip: "掃描 VietQR 自動帶入轉帳資訊",
-            freeshipReach: "☕ 已達滿額免運門檻！享免費配送",
-            freeshipLack: "再選購 {amount} VND 即可享免運配送",
-            copySuccess: "訂單內容已成功複製！",
-            zaloNotice: "訂單已複製！即將開啟 Zalo，請直接貼上訊息給客服。",
-            grindOptions: [
-                "規格: 咖啡原豆 (Beans)",
-                "規格: 濾掛咖啡包 (Drip Bag)",
-                "規格: 浸泡式咖啡包 (Brew Bag)",
-                "研磨: 義式濃縮 (Espresso)",
-                "研磨: 手沖/塞風 (Medium)",
-                "研磨: 摩卡壺 (Fine)",
-                "研磨: 法壓壺 (Coarse)"
-            ]
-        },
-        vn: {
-            title: "Đơn Đặt Hàng Cà Phê Viebucks",
-            sectionCoffee: "Hạt Cà Phê & Túi Lọc",
-            priceLbl: "Đơn giá: ",
-            custTitle: "Thông tin người nhận",
-            subtotalLbl: "Tiền hàng: ",
-            discountLbl: "Giảm giá: ",
-            shippingLbl: "Phí vận chuyển: ",
-            totalLbl: "Tổng thanh toán: ",
-            btnSubmit: "Xác Nhận & Tạo Đơn Hàng",
-            btnCoupon: "Áp dụng",
-            modalHeader: "Xác Nhận Đơn Hàng Viebucks",
-            recId: "Mã đơn hàng: ",
-            recName: "Người đặt: ",
-            recPhone: "Số điện thoại: ",
-            recAddr: "Địa chỉ giao: ",
-            recTotal: "Tổng thanh toán: ",
-            recNote: "Ghi chú: ",
-            btnCopy: "Sao chép",
-            btnPrint: "In đơn hàng",
-            btnClose: "Đóng",
-            bankTitle: "💳 Thông tin chuyển khoản:",
-            bankName: "Ngân hàng: ",
-            bankHolder: "Chủ tài khoản: ",
-            bankAcc: "Số tài khoản: ",
-            bankNote: "* Vui lòng ghi Mã đơn hàng khi chuyển khoản",
-            qrTip: "Quét VietQR để tự động điền thông tin",
-            freeshipReach: "☕ Đã đạt điều kiện Freeship!",
-            freeshipLack: "Mua thêm {amount} VND để nhận Freeship!",
-            copySuccess: "Đã sao chép đơn hàng!",
-            zaloNotice: "Đã sao chép! Mở Zalo và dán tin nhắn để gửi cho chúng tôi.",
-            grindOptions: [
-                "Loại: Hạt nguyên (Beans)",
-                "Loại: Cà phê Túi Lọc (Drip Bag)",
-                "Loại: Cà phê Ngâm (Brew Bag)",
-                "Xay: Pha Máy (Espresso)",
-                "Xay: Pha Phin / Pour Over (Medium)",
-                "Xay: Ấm Moka (Fine)",
-                "Xay: French Press (Coarse)"
-            ]
-        },
-        en: {
-            title: "Viebucks Specialty Coffee Order",
-            sectionCoffee: "Specialty Coffee Beans & Coffee Bags",
-            priceLbl: "Price: ",
-            custTitle: "Customer Details",
-            subtotalLbl: "Subtotal: ",
-            discountLbl: "Discount: ",
-            shippingLbl: "Shipping Fee: ",
-            totalLbl: "Total Amount: ",
-            btnSubmit: "Place Order & Generate Receipt",
-            btnCoupon: "Apply",
-            modalHeader: "Order Confirmation",
-            recId: "Order ID: ",
-            recName: "Customer: ",
-            recPhone: "Phone: ",
-            recAddr: "Address: ",
-            recTotal: "Total Amount: ",
-            recNote: "Note: ",
-            btnCopy: "Copy Text",
-            btnPrint: "Print",
-            btnClose: "Close",
-            bankTitle: "💳 Bank Transfer Info:",
-            bankName: "Bank: ",
-            bankHolder: "Account Name: ",
-            bankAcc: "Account No.: ",
-            bankNote: "* Please input Order ID in transfer reference",
-            qrTip: "Scan VietQR for automatic transfer",
-            freeshipReach: "☕ Qualified for Free Shipping!",
-            freeshipLack: "Add {amount} VND more for Free Shipping!",
-            copySuccess: "Order copied to clipboard!",
-            zaloNotice: "Order copied! Opening Zalo, please paste message in chat.",
-            grindOptions: [
-                "Option: Whole Beans",
-                "Option: Drip Coffee Bag",
-                "Option: Steeped Coffee Bag (Brew Bag)",
-                "Grind: Espresso",
-                "Grind: Medium (Filter/Drip)",
-                "Grind: Fine (Moka Pot)",
-                "Grind: Coarse (French Press)"
-            ]
-        }
-    };
-
-    window.onload = function() {
-        loadSavedCustomerData();
-        changeLang('zh');
-    };
-
-    function updateQty(btn, change) {
-        const input = btn.parentElement.querySelector('.qty-input');
-        let val = parseInt(input.value) || 0;
-        val = Math.max(0, val + change);
-        input.value = val;
-        calculateTotal();
-    }
-
-    function changeLang(lang) {
-        currentLang = lang;
-        document.querySelectorAll('.lang-switch button').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(`btn-${lang}`).classList.add('active');
-
-        const t = i18n[lang];
-        document.getElementById('txt-title').innerText = t.title;
-        document.getElementById('txt-section-coffee').innerText = t.sectionCoffee;
-        document.getElementById('txt-cust-info-title').innerText = t.custTitle;
-        document.getElementById('txt-subtotal-lbl').innerText = t.subtotalLbl;
-        document.getElementById('txt-discount-lbl').innerText = t.discountLbl;
-        document.getElementById('txt-shipping-lbl').innerText = t.shippingLbl;
-        document.getElementById('btn-submit').innerText = t.btnSubmit;
-        document.getElementById('btn-coupon').innerText = t.btnCoupon;
-        document.getElementById('txt-modal-header').innerText = t.modalHeader;
-        document.getElementById('txt-rec-id-lbl').innerText = t.recId;
-        document.getElementById('txt-rec-name-lbl').innerText = t.recName;
-        document.getElementById('txt-rec-phone-lbl').innerText = t.recPhone;
-        document.getElementById('txt-rec-addr-lbl').innerText = t.recAddr;
-        document.getElementById('txt-rec-total-lbl').innerText = t.recTotal;
-        document.getElementById('txt-rec-note-lbl').innerText = t.recNote;
-        document.getElementById('btn-copy-txt').innerText = t.btnCopy;
-        document.getElementById('btn-print-txt').innerText = t.btnPrint;
-        document.getElementById('btn-close-txt').innerText = t.btnClose;
-        document.getElementById('txt-bank-title').innerText = t.bankTitle;
-        document.getElementById('lbl-bank-name').innerText = t.bankName;
-        document.getElementById('lbl-bank-holder').innerText = t.bankHolder;
-        document.getElementById('lbl-bank-acc').innerText = t.bankAcc;
-        document.getElementById('txt-bank-note').innerText = t.bankNote;
-        document.getElementById('txt-qr-tip').innerText = t.qrTip;
-
-        document.querySelectorAll('.txt-price-lbl').forEach(el => el.innerText = t.priceLbl);
-
-        document.querySelectorAll('.product-card').forEach(card => {
-            const name = card.getAttribute(`data-name-${lang}`);
-            card.querySelector('.prod-name').innerText = name;
-
-            const select = card.querySelector('.grind-select');
-            const selectedIdx = select.selectedIndex >= 0 ? select.selectedIndex : 0;
-            select.innerHTML = '';
-            t.grindOptions.forEach(optText => {
-                const opt = document.createElement('option');
-                opt.value = optText;
-                opt.innerText = optText;
-                select.appendChild(opt);
-            });
-            select.selectedIndex = selectedIdx;
-        });
-
-        calculateTotal();
-    }
-
-    function applyCoupon() {
-        const code = document.getElementById('coupon-code').value.trim().toUpperCase();
-        if (code === "VIE10") {
-            appliedCoupon = "VIE10 (9折)";
-            alert(currentLang === 'zh' ? "已套用 VIE10 優惠折扣！" : "Đã áp dụng mã VIE10!");
-        } else if (code === "FREESHIP") {
-            appliedCoupon = "FREESHIP";
-            alert(currentLang === 'zh' ? "已套用 FREESHIP 免運優惠！" : "Đã áp dụng FREESHIP!");
-        } else {
-            alert(currentLang === 'zh' ? "無效的優惠碼" : "Mã không hợp lệ");
-            appliedCoupon = "";
-        }
-        calculateTotal();
-    }
-
-    function calculateTotal() {
-        let subtotal = 0;
-        document.querySelectorAll('.product-card').forEach(card => {
-            const price = parseInt(card.getAttribute('data-price'));
-            const qty = parseInt(card.querySelector('.qty-input').value) || 0;
-            subtotal += price * qty;
-        });
-
-        const t = i18n[currentLang];
-        const progressBar = document.getElementById('freeship-bar');
-        const progressMsg = document.getElementById('freeship-msg');
-        
-        let percent = Math.min((subtotal / FREESHIP_THRESHOLD) * 100, 100);
-        progressBar.style.width = percent + "%";
-
-        if (subtotal >= FREESHIP_THRESHOLD) {
-            progressMsg.innerText = t.freeshipReach;
-        } else {
-            let lack = FREESHIP_THRESHOLD - subtotal;
-            progressMsg.innerText = t.freeshipLack.replace('{amount}', lack.toLocaleString());
-        }
-
-        discountAmount = 0;
-        if (appliedCoupon.includes("9折")) {
-            discountAmount = Math.round(subtotal * 0.1);
-        }
-
-        let shipping = (subtotal >= FREESHIP_THRESHOLD || appliedCoupon === "FREESHIP" || subtotal === 0) ? 0 : STANDARD_SHIPPING;
-        let finalTotal = Math.max(0, subtotal - discountAmount + shipping);
-
-        document.getElementById('subtotal-amount').innerText = subtotal.toLocaleString();
-        document.getElementById('discount-amount').innerText = discountAmount.toLocaleString();
-        document.getElementById('shipping-amount').innerText = shipping.toLocaleString();
-        document.getElementById('total-amount').innerText = finalTotal.toLocaleString();
-
-        return { subtotal, discountAmount, shipping, finalTotal };
-    }
-
-    function saveCustomerData(name, phone, address) {
-        localStorage.setItem('vb_cust_name', name);
-        localStorage.setItem('vb_cust_phone', phone);
-        localStorage.setItem('vb_cust_address', address);
-    }
-
-    function loadSavedCustomerData() {
-        if (localStorage.getItem('vb_cust_name')) {
-            document.getElementById('cust-name').value = localStorage.getItem('vb_cust_name');
-            document.getElementById('cust-phone').value = localStorage.getItem('vb_cust_phone');
-            document.getElementById('cust-address').value = localStorage.getItem('vb_cust_address');
-        }
-    }
-
-    function generateReceipt() {
-        const { subtotal, finalTotal } = calculateTotal();
-        const name = document.getElementById('cust-name').value.trim();
-        const phone = document.getElementById('cust-phone').value.trim();
-        const address = document.getElementById('cust-address').value.trim();
-        const note = document.getElementById('cust-note').value.trim();
-
-        if (subtotal === 0) {
-            alert(currentLang === 'zh' ? '請至少選擇一項商品' : 'Vui lòng chọn sản phẩm');
-            return;
-        }
-        if (!name || !phone || !address) {
-            alert(currentLang === 'zh' ? '請填寫完整配送資訊' : 'Vui lòng điền thông tin');
-            return;
-        }
-
-        saveCustomerData(name, phone, address);
-
-        const dateStr = new Date().toISOString().slice(0,10).replace(/-/g,"");
-        const randomNum = Math.floor(1000 + Math.random() * 9000);
-        const orderId = `VB${dateStr}-${randomNum}`;
-        document.getElementById('rec-id').innerText = orderId;
-
-        document.getElementById('rec-name').innerText = name;
-        document.getElementById('rec-phone').innerText = phone;
-        document.getElementById('rec-address').innerText = address;
-        document.getElementById('rec-note').innerText = note || 'N/A';
-        document.getElementById('rec-total').innerText = finalTotal.toLocaleString();
-
-        const itemsUl = document.getElementById('rec-items');
-        itemsUl.innerHTML = '';
-
-        document.querySelectorAll('.product-card').forEach(card => {
-            const qty = parseInt(card.querySelector('.qty-input').value) || 0;
-            if (qty > 0) {
-                const name = card.getAttribute(`data-name-${currentLang}`);
-                const price = parseInt(card.getAttribute('data-price'));
-                const grind = card.querySelector('.grind-select').value;
-                const itemSubtotal = price * qty;
-
-                const li = document.createElement('li');
-                li.innerText = `${name} × ${qty} [${grind}] — ${itemSubtotal.toLocaleString()} VND`;
-                itemsUl.appendChild(li);
+    <!-- JavaScript 邏輯區 -->
+    <script>
+        // --- Viebucks 商品資料庫 ---
+        const products = [
+            {
+                id: 'p-s1',
+                name: 'Viebucks 莫札特 蜜處理 浸泡咖啡包 (10入)',
+                category: 'steeped',
+                roast: '淺中焙 (Light-Medium)',
+                roastLevel: 2,
+                price: 460,
+                origin: 'Costa Rica Canet Musician',
+                process: '葡萄Raisin蜜處理',
+                flavor: ['玫瑰花香', '草莓', '蜂蜜', '葡萄乾'],
+                rating: 5.0,
+                reviews: 58,
+                image: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=600&q=80',
+                description: '【全升級浸泡式體驗】精準研磨與氮氣充填。像浸茶包一樣方便，倒入 85-92°C 熱水浸泡 4 分鐘即可。亦可加入冷開水放入冰箱冷藏 12 小時，做成極致香甜的冷萃咖啡 (Cold Brew)！',
+                roastNotes: '推薦：熱泡 4分鐘 / 冰萃 12-16小時。'
+            },
+            {
+                id: 'p-s2',
+                name: 'Viebucks 耶加雪菲 柑橘花香 浸泡包 (10入)',
+                category: 'steeped',
+                roast: '淺焙 (Light Roast)',
+                roastLevel: 1,
+                price: 420,
+                origin: 'Ethiopia Yirgacheffe',
+                process: '水洗 (Washed)',
+                flavor: ['檸檬柑橘', '白花香', '高山茶感', '水蜜桃'],
+                rating: 4.9,
+                reviews: 37,
+                image: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=600&q=80',
+                description: '不需專業手沖技術，隨時隨地只需熱水與杯子。清爽明亮的花果甜香即刻展現，特別適合忙碌辦公室或露營使用。',
+                roastNotes: '熱泡浸泡時間越長越甘甜，建議輕搖袋身。'
+            },
+            {
+                id: 'p-s3',
+                name: '夜漫漫 低因黑巧克力 浸泡咖啡包 (10入)',
+                category: 'steeped',
+                roast: '深焙 (Dark Roast)',
+                roastLevel: 5,
+                price: 450,
+                origin: 'Colombia Swiss Water Decaf',
+                process: '瑞士水處理低因 (Swiss Water)',
+                flavor: ['黑巧克力', '烤杏仁', '黑糖甜感', '無負擔'],
+                rating: 4.8,
+                reviews: 24,
+                image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&w=600&q=80',
+                description: '採用 100% 天然瑞士水去除 99.9% 咖啡因，保留濃郁黑巧克力與堅果香氣。夜晚想喝咖啡時的最佳無負擔首選。',
+                roastNotes: '熱泡浸泡 5 分鐘，加入牛奶即成香濃低因拿鐵。'
+            },
+            {
+                id: 'p1',
+                name: 'Viebucks 衣索比亞 歌德貝 (半磅/227g)',
+                category: 'single-origin',
+                roast: '淺焙 (Light Roast)',
+                roastLevel: 1,
+                price: 450,
+                origin: 'Ethiopia Yirgacheffe Gedeo',
+                process: '全水洗處理 (Washed)',
+                flavor: ['茉莉花香', '檸檬柑橘', '白桃甜感', '佛手柑'],
+                rating: 4.9,
+                reviews: 42,
+                image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=600&q=80',
+                description: '經典水洗耶加雪菲，入口展現極其優雅的茉莉花香與明亮檸檬酸調，中後段帶有如高山茶般的甜潤餘韻。',
+                roastNotes: '適合手沖 (V60/Kono)，建議水溫 91-93°C。'
+            },
+            {
+                id: 'p2',
+                name: '巴拿馬 翡翠莊園 綠標藝伎 Geisha (半磅)',
+                category: 'single-origin',
+                roast: '淺焙 (Light Roast)',
+                roastLevel: 1,
+                price: 880,
+                origin: 'Panama Boquete Hacienda La Esmeralda',
+                process: '高海拔水洗 (Washed)',
+                flavor: ['佛手柑', '佛手柑花香', '蜂蜜', '洋甘菊'],
+                rating: 5.0,
+                reviews: 19,
+                image: 'https://images.unsplash.com/photo-1610889556528-9a770e32642f?auto=format&fit=crop&w=600&q=80',
+                description: '傳奇藝伎品種。優雅精緻的佛手柑花香，質地宛如高級白葡萄酒，極具奢華感的口感體驗。',
+                roastNotes: '建議精準控制水溫 92°C，手沖細緻萃取。'
+            },
+            {
+                id: 'p3',
+                name: '肯亞 AA 尼耶利 奇里雅加 (半磅/227g)',
+                category: 'single-origin',
+                roast: '中焙 (Medium Roast)',
+                roastLevel: 3,
+                price: 480,
+                origin: 'Kenya Nyeri',
+                process: '傳統72小時發酵水洗',
+                flavor: ['烏梅', '黑加侖', '黑醋栗', '蔗糖甜感'],
+                rating: 4.8,
+                reviews: 35,
+                image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80',
+                description: '充滿力量感的肯亞風味，飽滿的黑加侖與烏梅酸甜交織，多汁感強烈，尾韻伴隨沉穩的黑糖甜香。',
+                roastNotes: '適合壓濾壺、手沖或做成冷萃咖啡。'
+            },
+            {
+                id: 'p4',
+                name: 'Viebucks 晨光花香 經典配方豆 (半磅)',
+                category: 'blend',
+                roast: '淺中焙 (Light-Medium)',
+                roastLevel: 2,
+                price: 380,
+                origin: 'Ethiopia + Colombia',
+                process: 'Viebucks 獨家配方 Blend',
+                flavor: ['柑橘果香', '太妃糖', '堅果', '滑順口感'],
+                rating: 4.7,
+                reviews: 64,
+                image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=600&q=80',
+                description: '專為早晨設計的清爽質感配方，完美平衡果酸與堅果甜潤，做成美式或美式黑咖啡皆十分出色。',
+                roastNotes: '義式濃縮、美式咖啡機首選。'
+            },
+            {
+                id: 'p6',
+                name: '精品莊園 隨身濾掛咖啡禮盒 (12入)',
+                category: 'drip',
+                roast: '綜合風味 (Assorted)',
+                roastLevel: 3,
+                price: 420,
+                origin: '精選多國產地',
+                process: '充氮防氧獨立掛耳包',
+                flavor: ['花香產地', '果香產地', '堅果濃郁'],
+                rating: 4.9,
+                reviews: 89,
+                image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80',
+                description: '包含 4 款嚴選單品莊園豆（各3包），採用充氮防氧化封裝，隨時隨地享用經典濾掛手沖質感。',
+                roastNotes: '辦公室、旅遊露營最佳伴侶。'
             }
+        ];
+
+        // --- 全局狀態 ---
+        let cart = [];
+        let appliedCoupon = false;
+        let currentFilter = 'all';
+        let currentOrderText = '';
+        let currentOrderSubject = '';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadCartFromStorage();
+            navigateTo('home');
+            setupMobileMenu();
         });
 
-        const bankId = "MB";
-        const accountNo = "0348246669";
-        const accountName = "CONG TY TNHH VIEBUCKS";
-        const qrUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-compact2.png?amount=${finalTotal}&addInfo=${orderId}&accountName=${encodeURIComponent(accountName)}`;
-        document.getElementById('vietqr-img').src = qrUrl;
+        function navigateTo(page, param = null) {
+            const content = document.getElementById('app-content');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        document.getElementById('receipt-modal').style.display = 'flex';
-    }
+            if (page === 'home') {
+                content.innerHTML = renderHomePage();
+            } else if (page === 'products') {
+                content.innerHTML = renderProductsPage(param || currentFilter);
+            } else if (page === 'subscriptions') {
+                content.innerHTML = renderSubscriptionPage();
+            } else if (page === 'ai-quiz') {
+                content.innerHTML = renderAIQuizPage();
+            }
 
-    function closeModal() {
-        document.getElementById('receipt-modal').style.display = 'none';
-    }
-
-    function getReceiptPlainText() {
-        const id = document.getElementById('rec-id').innerText;
-        const name = document.getElementById('rec-name').innerText;
-        const phone = document.getElementById('rec-phone').innerText;
-        const addr = document.getElementById('rec-address').innerText;
-        const total = document.getElementById('rec-total').innerText;
-        const note = document.getElementById('rec-note').innerText;
-
-        let itemsText = '';
-        document.querySelectorAll('#rec-items li').forEach(li => {
-            itemsText += `• ${li.innerText}\n`;
-        });
-
-        return `【Viebucks Order Confirmation】\n` +
-               `Order ID: ${id}\n` +
-               `Customer: ${name} (${phone})\n` +
-               `Address: ${addr}\n` +
-               `------------------------\n` +
-               `${itemsText}` +
-               `------------------------\n` +
-               `Total: ${total} VND\n` +
-               `Note: ${note}\n\n` +
-               `Bank: MB Bank\n` +
-               `Account: 0348246669 (VIEBUCKS)`;
-    }
-
-    function copyReceiptText() {
-        const text = getReceiptPlainText();
-        if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert(i18n[currentLang].copySuccess);
-            });
-        } else {
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            alert(i18n[currentLang].copySuccess);
+            document.getElementById('mobile-menu').classList.add('hidden');
         }
-    }
 
-    function sendViaZalo() {
-        copyReceiptText();
-        alert(i18n[currentLang].zaloNotice);
-        window.open(`https://zalo.me/${ZALO_PHONE}`, '_blank');
-    }
+        function setupMobileMenu() {
+            document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
+            });
+        }
 
-    function sendViaEmail() {
-        const id = document.getElementById('rec-id').innerText;
-        const name = document.getElementById('rec-name').innerText;
-        const text = getReceiptPlainText();
+        // --- 首頁渲染 ---
+        function renderHomePage() {
+            return `
+                <section class="relative bg-coffee-900 text-white overflow-hidden py-24 md:py-32 px-4 sm:px-6 lg:px-8">
+                    <div class="absolute inset-0 opacity-35 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1600&q=80');"></div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-coffee-900 via-coffee-900/85 to-transparent"></div>
+                    <div class="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                        <div class="space-y-6">
+                            <span class="inline-block px-3 py-1 bg-coffee-gold/20 text-coffee-gold border border-coffee-gold/40 rounded-full text-xs font-semibold tracking-widest uppercase">
+                                ★ Viebucks 新品上市：浸泡咖啡包
+                            </span>
+                            <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
+                                像泡茶一樣簡單<br/><span class="text-coffee-gold italic font-normal">浸出莊園咖啡的優雅</span>
+                            </h1>
+                            <p class="text-coffee-200 text-base sm:text-lg max-w-xl leading-relaxed">
+                                Viebucks 最新推出「隨身浸泡咖啡包」，注入熱水即可享用手沖般香醇；冷萃 12 小時更顯甘甜果香。
+                            </p>
+                            <div class="flex flex-wrap gap-4 pt-2">
+                                <button onclick="filterCategory('steeped')" class="bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold px-8 py-3.5 rounded-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5">
+                                    探索浸泡咖啡包 <i class="fa-solid fa-arrow-right ml-2"></i>
+                                </button>
+                                <button onclick="navigateTo('products')" class="bg-transparent hover:bg-white/10 text-white border border-white/40 font-semibold px-6 py-3.5 rounded-lg transition">
+                                    瀏覽所有商品
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-        const subject = encodeURIComponent(`[Viebucks Order] ${id} - ${name}`);
-        const body = encodeURIComponent(text);
-        window.open(`mailto:${TARGET_EMAIL}?subject=${subject}&body=${body}`);
-    }
-</script>
+                <section class="py-16 bg-white border-b border-coffee-200">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="text-center max-w-2xl mx-auto mb-12">
+                            <span class="text-coffee-gold font-bold text-xs tracking-widest uppercase">Steeped Coffee Experience</span>
+                            <h2 class="font-serif text-3xl font-bold text-coffee-900 mt-1">為什麼選擇 Viebucks 浸泡咖啡包？</h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div class="text-center p-6 rounded-2xl bg-[#FAF7F2] border border-coffee-200/60">
+                                <div class="w-14 h-14 bg-coffee-800 text-coffee-gold rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                                    <i class="fa-solid fa-temperature-arrow-up"></i>
+                                </div>
+                                <h3 class="font-serif font-bold text-lg text-coffee-900 mb-2">熱泡香醇 4 分鐘</h3>
+                                <p class="text-xs text-gray-600 leading-relaxed">放入熱水杯中浸泡 4-5 分鐘，輕搖浸包即可散發誘人花果香氣，省去複雜器具。</p>
+                            </div>
 
+                            <div class="text-center p-6 rounded-2xl bg-[#FAF7F2] border border-coffee-200/60">
+                                <div class="w-14 h-14 bg-coffee-800 text-coffee-gold rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                                    <i class="fa-solid fa-snowflake"></i>
+                                </div>
+                                <h3 class="font-serif font-bold text-lg text-coffee-900 mb-2">冷萃 (Cold Brew) 極致甘甜</h3>
+                                <p class="text-xs text-gray-600 leading-relaxed">注入常溫水或冷水，放入冰箱冰萃 12-16 小時，享受夏日專屬清爽蜜桃酒香口感。</p>
+                            </div>
+
+                            <div class="text-center p-6 rounded-2xl bg-[#FAF7F2] border border-coffee-200/60">
+                                <div class="w-14 h-14 bg-coffee-800 text-coffee-gold rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                                    <i class="fa-solid fa-leaf"></i>
+                                </div>
+                                <h3 class="font-serif font-bold text-lg text-coffee-900 mb-2">環保材質與氮氣保鮮</h3>
+                                <p class="text-xs text-gray-600 leading-relaxed">採用玉米澱粉可降解濾袋與獨立充氮封裝，完整鎖住磨豆瞬間的細致香氣。</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                        <div>
+                            <span class="text-coffee-gold font-semibold text-xs tracking-widest uppercase">Popular Selection</span>
+                            <h2 class="font-serif text-3xl font-bold text-coffee-900 mt-1">Viebucks 本季熱銷嚴選</h2>
+                        </div>
+                        <button onclick="navigateTo('products')" class="text-coffee-700 hover:text-coffee-gold font-semibold text-sm mt-4 md:mt-0 flex items-center gap-1 transition">
+                            查看全系列商品 <i class="fa-solid fa-angle-right text-xs"></i>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        ${products.slice(0, 4).map(product => renderProductCard(product)).join('')}
+                    </div>
+                </section>
+            `;
+        }
+
+        // --- 商品列表頁 ---
+        function renderProductsPage(categoryFilter = 'all') {
+            currentFilter = categoryFilter;
+            let filteredProducts = products;
+            if (categoryFilter !== 'all') {
+                filteredProducts = products.filter(p => p.category === categoryFilter);
+            }
+
+            return `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                    <div class="text-center max-w-2xl mx-auto mb-12 space-y-2">
+                        <h1 class="font-serif text-3xl sm:text-4xl font-bold text-coffee-900">Viebucks 咖啡商品系列</h1>
+                        <p class="text-gray-600 text-sm">從極簡浸泡包到莊園單品豆，帶給您最高品質的咖啡時光。</p>
+                    </div>
+
+                    <div class="flex justify-center flex-wrap gap-2 mb-10">
+                        <button onclick="filterCategory('all')" class="px-5 py-2 rounded-full text-sm font-medium transition ${categoryFilter === 'all' ? 'bg-coffee-800 text-white shadow' : 'bg-white text-coffee-800 hover:bg-coffee-100 border border-coffee-200'}">
+                            全部商品 (${products.length})
+                        </button>
+                        <button onclick="filterCategory('steeped')" class="px-5 py-2 rounded-full text-sm font-medium transition ${categoryFilter === 'steeped' ? 'bg-coffee-gold text-coffee-900 font-bold shadow' : 'bg-white text-coffee-800 hover:bg-coffee-100 border border-coffee-200'}">
+                            ☕ 浸泡咖啡包 (熱門)
+                        </button>
+                        <button onclick="filterCategory('single-origin')" class="px-5 py-2 rounded-full text-sm font-medium transition ${categoryFilter === 'single-origin' ? 'bg-coffee-800 text-white shadow' : 'bg-white text-coffee-800 hover:bg-coffee-100 border border-coffee-200'}">
+                            單品莊園豆
+                        </button>
+                        <button onclick="filterCategory('blend')" class="px-5 py-2 rounded-full text-sm font-medium transition ${categoryFilter === 'blend' ? 'bg-coffee-800 text-white shadow' : 'bg-white text-coffee-800 hover:bg-coffee-100 border border-coffee-200'}">
+                            義式配方豆
+                        </button>
+                        <button onclick="filterCategory('drip')" class="px-5 py-2 rounded-full text-sm font-medium transition ${categoryFilter === 'drip' ? 'bg-coffee-800 text-white shadow' : 'bg-white text-coffee-800 hover:bg-coffee-100 border border-coffee-200'}">
+                            隨身濾掛包
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        ${filteredProducts.map(product => renderProductCard(product)).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderProductCard(product) {
+            const isSteeped = product.category === 'steeped';
+
+            return `
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 border border-coffee-200/60 flex flex-col group relative">
+                    ${isSteeped ? `<span class="absolute top-3 right-3 z-10 bg-coffee-gold text-coffee-900 text-[10px] font-bold px-2 py-0.5 rounded uppercase shadow">浸泡包</span>` : ''}
+
+                    <div class="relative overflow-hidden aspect-square cursor-pointer" onclick="openProductModal('${product.id}')">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <span class="absolute top-3 left-3 bg-coffee-900/80 backdrop-blur-sm text-white text-[11px] px-2.5 py-1 rounded font-medium">
+                            ${product.roast}
+                        </span>
+                    </div>
+
+                    <div class="p-5 flex flex-col flex-grow">
+                        <div class="flex items-center text-xs text-amber-500 mb-1 space-x-1">
+                            <i class="fa-solid fa-star"></i>
+                            <span class="font-bold text-gray-700">${product.rating}</span>
+                            <span class="text-gray-400">(${product.reviews})</span>
+                        </div>
+
+                        <h3 class="font-serif font-bold text-coffee-900 text-base mb-2 group-hover:text-coffee-gold transition cursor-pointer line-clamp-2" onclick="openProductModal('${product.id}')">
+                            ${product.name}
+                        </h3>
+
+                        <div class="flex flex-wrap gap-1 mb-4">
+                            ${product.flavor.map(f => `<span class="bg-coffee-100 text-coffee-800 text-[11px] px-2 py-0.5 rounded">${f}</span>`).join('')}
+                        </div>
+
+                        <div class="mt-auto flex items-center justify-between pt-3 border-t border-gray-100">
+                            <div>
+                                <span class="text-xs text-gray-400 block">${isSteeped ? '容量 / 10包入' : '售價'}</span>
+                                <span class="font-bold text-lg text-coffee-900">$${product.price}</span>
+                            </div>
+                            <button onclick="addToCart('${product.id}')" class="bg-coffee-800 hover:bg-coffee-700 text-white text-xs font-semibold px-4 py-2.5 rounded-lg transition flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-cart-plus"></i> 加入
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- 訂閱專區 ---
+        function renderSubscriptionPage() {
+            return `
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                    <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                        <span class="text-coffee-gold font-bold text-xs tracking-widest uppercase">Viebucks Club</span>
+                        <h1 class="font-serif text-4xl font-bold text-coffee-900">Viebucks 咖啡訂閱計劃</h1>
+                        <p class="text-gray-600">自動定期送達最新鮮的咖啡豆或浸泡包。隨時可暫停或變更品項。</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                        <div class="bg-white rounded-2xl p-8 border border-coffee-200 shadow-sm hover:shadow-lg transition flex flex-col">
+                            <h3 class="font-serif font-bold text-xl text-coffee-900 mb-2">浸泡隨身訂閱</h3>
+                            <p class="text-xs text-gray-500 mb-6">適合上班族、極簡快速沖煮需求</p>
+                            <div class="mb-6">
+                                <span class="text-3xl font-bold text-coffee-900">$780</span>
+                                <span class="text-xs text-gray-400">/ 每月 (20包浸泡包)</span>
+                            </div>
+                            <ul class="space-y-3 text-sm text-gray-600 mb-8 flex-grow">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> 每月 2 盒（精選單品與蜜處理浸泡包）</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> 充氮獨立保鮮包裝</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> 全台免運費直送</li>
+                            </ul>
+                            <button onclick="showToast('已選擇浸泡包訂閱方案！')" class="w-full bg-coffee-100 hover:bg-coffee-200 text-coffee-900 font-bold py-3 rounded-lg transition text-sm">
+                                立即訂閱
+                            </button>
+                        </div>
+
+                        <div class="bg-coffee-900 text-white rounded-2xl p-8 border-2 border-coffee-gold shadow-xl flex flex-col relative transform scale-105">
+                            <span class="absolute -top-3.5 right-6 bg-coffee-gold text-coffee-900 text-[11px] font-bold px-3 py-1 rounded-full uppercase">熱銷推薦</span>
+                            <h3 class="font-serif font-bold text-xl text-white mb-2">莊園極致玩家</h3>
+                            <p class="text-xs text-coffee-200 mb-6">適合手沖咖啡愛好者</p>
+                            <div class="mb-6">
+                                <span class="text-3xl font-bold text-coffee-gold">$980</span>
+                                <span class="text-xs text-coffee-200">/ 每月 (原價 $1,280)</span>
+                            </div>
+                            <ul class="space-y-3 text-sm text-coffee-200 mb-8 flex-grow">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-coffee-gold"></i> 每月 2 包 COE/微批次單品豆</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-coffee-gold"></i> 贈送新品浸泡咖啡試飲包</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-coffee-gold"></i> 全台免運直送</li>
+                            </ul>
+                            <button onclick="showToast('已選擇莊園玩家訂閱方案！')" class="w-full bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold py-3 rounded-lg transition text-sm shadow">
+                                立即訂閱
+                            </button>
+                        </div>
+
+                        <div class="bg-white rounded-2xl p-8 border border-coffee-200 shadow-sm hover:shadow-lg transition flex flex-col">
+                            <h3 class="font-serif font-bold text-xl text-coffee-900 mb-2">經典義式日常</h3>
+                            <p class="text-xs text-gray-500 mb-6">適合每天搭配牛奶製作拿鐵者</p>
+                            <div class="mb-6">
+                                <span class="text-3xl font-bold text-coffee-900">$680</span>
+                                <span class="text-xs text-gray-400">/ 每月 (2包半磅豆)</span>
+                            </div>
+                            <ul class="space-y-3 text-sm text-gray-600 mb-8 flex-grow">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> 每月 2 包 Viebucks 經典配方豆</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> 低酸醇厚巧克力風味</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> 全台免運配送</li>
+                            </ul>
+                            <button onclick="showToast('已選擇義式日常訂閱方案！')" class="w-full bg-coffee-100 hover:bg-coffee-200 text-coffee-900 font-bold py-3 rounded-lg transition text-sm">
+                                立即訂閱
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- 風味測驗 ---
+        function renderAIQuizPage() {
+            return `
+                <div class="max-w-3xl mx-auto px-4 py-16">
+                    <div class="bg-white rounded-2xl shadow-xl p-8 border border-coffee-200">
+                        <div class="text-center mb-8">
+                            <div class="w-12 h-12 rounded-full bg-coffee-100 text-coffee-gold flex items-center justify-center mx-auto mb-3 text-2xl">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            </div>
+                            <h1 class="font-serif text-2xl font-bold text-coffee-900">Viebucks 風味配對測試</h1>
+                            <p class="text-xs text-gray-500 mt-1">選出您偏好的口感與情境，為您推薦最適合的 Viebucks 咖啡！</p>
+                        </div>
+
+                        <form onsubmit="runAIRecommend(event)" class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-coffee-900 mb-2">1. 您平時最常在什麼情境喝咖啡？</label>
+                                <div class="grid grid-cols-3 gap-3">
+                                    <label class="border p-3 rounded-lg text-center cursor-pointer hover:border-coffee-gold transition">
+                                        <input type="radio" name="scenario" value="office" checked class="sr-only peer">
+                                        <span class="block text-xs font-bold text-gray-700 peer-checked:text-coffee-gold">辦公室 / 快速便利</span>
+                                    </label>
+                                    <label class="border p-3 rounded-lg text-center cursor-pointer hover:border-coffee-gold transition">
+                                        <input type="radio" name="scenario" value="home" class="sr-only peer">
+                                        <span class="block text-xs font-bold text-gray-700 peer-checked:text-coffee-gold">在家講究手沖</span>
+                                    </label>
+                                    <label class="border p-3 rounded-lg text-center cursor-pointer hover:border-coffee-gold transition">
+                                        <input type="radio" name="scenario" value="night" class="sr-only peer">
+                                        <span class="block text-xs font-bold text-gray-700 peer-checked:text-coffee-gold">傍晚 / 晚間無負擔</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-coffee-900 mb-2">2. 您喜好的口感酸甜度？</label>
+                                <div class="grid grid-cols-3 gap-3">
+                                    <label class="border p-3 rounded-lg text-center cursor-pointer hover:border-coffee-gold transition">
+                                        <input type="radio" name="acid" value="high" checked class="sr-only peer">
+                                        <span class="block text-xs font-bold text-gray-700 peer-checked:text-coffee-gold">花果甜酸 (明亮)</span>
+                                    </label>
+                                    <label class="border p-3 rounded-lg text-center cursor-pointer hover:border-coffee-gold transition">
+                                        <input type="radio" name="acid" value="med" class="sr-only peer">
+                                        <span class="block text-xs font-bold text-gray-700 peer-checked:text-coffee-gold">平衡柔順</span>
+                                    </label>
+                                    <label class="border p-3 rounded-lg text-center cursor-pointer hover:border-coffee-gold transition">
+                                        <input type="radio" name="acid" value="low" class="sr-only peer">
+                                        <span class="block text-xs font-bold text-gray-700 peer-checked:text-coffee-gold">不酸 / 堅果濃郁</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold py-3.5 rounded-lg shadow transition">
+                                獲得專屬推薦 <i class="fa-solid fa-sparkles ml-1"></i>
+                            </button>
+                        </form>
+
+                        <div id="ai-result" class="mt-8 pt-6 border-t border-gray-200 hidden">
+                            <!-- 推薦結果區塊 -->
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function runAIRecommend(e) {
+            e.preventDefault();
+            const form = e.target;
+            const scenario = form.scenario.value;
+            const acid = form.acid.value;
+
+            let recommended = products[0];
+
+            if (scenario === 'office' || scenario === 'night') {
+                if (scenario === 'night') {
+                    recommended = products.find(p => p.id === 'p-s3') || products[2];
+                } else {
+                    recommended = products.find(p => p.id === 'p-s1') || products[0];
+                }
+            } else if (acid === 'high') {
+                recommended = products.find(p => p.id === 'p1') || products[3];
+            } else {
+                recommended = products.find(p => p.id === 'p4') || products[6];
+            }
+
+            const resultDiv = document.getElementById('ai-result');
+            resultDiv.classList.remove('hidden');
+            resultDiv.innerHTML = `
+                <div class="bg-coffee-100/60 p-5 rounded-xl border border-coffee-200">
+                    <span class="text-xs font-bold text-coffee-gold tracking-widest uppercase block mb-1">RECOMMENDED FOR YOU</span>
+                    <h3 class="font-serif font-bold text-lg text-coffee-900 mb-2">Viebucks 為您推薦：</h3>
+                    
+                    <div class="flex items-center gap-4 bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                        <img src="${recommended.image}" class="w-20 h-20 object-cover rounded-lg">
+                        <div class="flex-grow">
+                            <h4 class="font-serif font-bold text-coffee-900">${recommended.name}</h4>
+                            <p class="text-xs text-gray-500 my-1">${recommended.description}</p>
+                            <span class="text-sm font-bold text-coffee-gold">$${recommended.price}</span>
+                        </div>
+                    </div>
+
+                    <button onclick="addToCart('${recommended.id}')" class="mt-4 w-full bg-coffee-800 hover:bg-coffee-700 text-white font-bold py-2.5 rounded-lg text-sm shadow transition">
+                        加入購物車
+                    </button>
+                </div>
+            `;
+        }
+
+        function filterCategory(cat) {
+            navigateTo('products', cat);
+        }
+
+        function openProductModal(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const modalContent = document.getElementById('product-modal-content');
+            modalContent.innerHTML = `
+                <button onclick="closeProductModal()" class="absolute top-4 right-4 z-20 bg-black/40 hover:bg-black/60 text-white w-8 h-8 rounded-full flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="grid grid-cols-1 md:grid-cols-2">
+                    <div class="h-64 md:h-full relative">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6 md:p-8 flex flex-col">
+                        <span class="text-xs text-coffee-gold font-semibold tracking-wider uppercase mb-1">${product.origin}</span>
+                        <h2 class="font-serif font-bold text-xl md:text-2xl text-coffee-900 mb-2">${product.name}</h2>
+                        
+                        <div class="flex items-center space-x-2 text-xs mb-4">
+                            <span class="bg-coffee-100 text-coffee-800 px-2.5 py-1 rounded font-medium">${product.roast}</span>
+                            <span class="text-gray-400">|</span>
+                            <span class="text-gray-600">${product.process}</span>
+                        </div>
+
+                        <p class="text-xs md:text-sm text-gray-600 leading-relaxed mb-6">${product.description}</p>
+
+                        <div class="bg-coffee-100/50 p-4 rounded-lg mb-6 space-y-2">
+                            <div class="text-xs font-bold text-coffee-900">主要風味 (Notes)：</div>
+                            <div class="flex flex-wrap gap-1.5">
+                                ${product.flavor.map(f => `<span class="bg-white border border-coffee-200 text-coffee-800 text-xs px-2.5 py-1 rounded">${f}</span>`).join('')}
+                            </div>
+                            <div class="text-xs text-gray-500 pt-2 border-t border-coffee-200/60">
+                                💡 <strong>品飲建議：</strong> ${product.roastNotes}
+                            </div>
+                        </div>
+
+                        <div class="mt-auto flex items-center justify-between pt-4 border-t">
+                            <div>
+                                <span class="text-xs text-gray-400 block">售價</span>
+                                <span class="font-bold text-2xl text-coffee-900">$${product.price}</span>
+                            </div>
+                            <button onclick="addToCart('${product.id}'); closeProductModal();" class="bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold px-6 py-3 rounded-lg shadow transition">
+                                加入購物車
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.add('hidden');
+        }
+
+        // --- 購物車與結帳邏輯 ---
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            saveCartToStorage();
+            updateCartUI();
+            showToast(`已新增「${product.name}」到購物車！`);
+        }
+
+        function updateQuantity(productId, delta) {
+            const item = cart.find(i => i.id === productId);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i.id !== productId);
+                }
+            }
+            saveCartToStorage();
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartContainer = document.getElementById('cart-items-container');
+            const cartCountBadge = document.getElementById('cart-count');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCountBadge.textContent = totalItems;
+
+            if (cart.length === 0) {
+                cartContainer.innerHTML = `
+                    <div class="text-center py-12 text-gray-400 space-y-3">
+                        <i class="fa-solid fa-basket-shopping text-4xl"></i>
+                        <p class="text-sm">您的 Viebucks 購物車目前是空的</p>
+                        <button onclick="toggleCartModal(); navigateTo('products');" class="bg-coffee-800 text-white text-xs px-4 py-2 rounded">瀏覽精品咖啡</button>
+                    </div>
+                `;
+            } else {
+                cartContainer.innerHTML = cart.map(item => `
+                    <div class="flex gap-4 items-center bg-white p-3 rounded-lg border border-coffee-200/60 shadow-sm">
+                        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded">
+                        <div class="flex-grow min-w-0">
+                            <h4 class="font-serif text-xs font-bold text-coffee-900 truncate">${item.name}</h4>
+                            <span class="text-xs text-gray-400 block">$${item.price}</span>
+                            <div class="flex items-center gap-2 mt-2">
+                                <button onclick="updateQuantity('${item.id}', -1)" class="w-5 h-5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded flex items-center justify-center text-xs font-bold">-</button>
+                                <span class="text-xs font-bold text-gray-700">${item.quantity}</span>
+                                <button onclick="updateQuantity('${item.id}', 1)" class="w-5 h-5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded flex items-center justify-center text-xs font-bold">+</button>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="font-bold text-sm text-coffee-900">$${item.price * item.quantity}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = subtotal >= 800 || subtotal === 0 ? 0 : 60;
+            const discount = appliedCoupon ? 100 : 0;
+            const total = Math.max(0, subtotal + shipping - discount);
+
+            document.getElementById('cart-subtotal').textContent = `$${subtotal}`;
+            document.getElementById('cart-shipping').textContent = shipping === 0 ? '免運' : `$${shipping}`;
+            document.getElementById('cart-total').textContent = `$${total}`;
+
+            const discountRow = document.getElementById('discount-row');
+            if (appliedCoupon) {
+                discountRow.classList.remove('hidden');
+            } else {
+                discountRow.classList.add('hidden');
+            }
+        }
+
+        function applyCoupon() {
+            const input = document.getElementById('coupon-input').value.trim().toUpperCase();
+            if (input === 'VIEBUCKS100') {
+                appliedCoupon = true;
+                showToast('已折抵 $100 元優惠！');
+                updateCartUI();
+            } else {
+                showToast('無效的折扣碼，請試輸入 VIEBUCKS100');
+            }
+        }
+
+        // --- 核心升級：結帳並生成訂單、複製文本與跳轉服務 ---
+        function checkout() {
+            if (cart.length === 0) {
+                showToast('購物車內沒有商品！');
+                return;
+            }
+
+            const name = document.getElementById('checkout-name').value.trim() || '貴賓顧客';
+            const phone = document.getElementById('checkout-phone').value.trim() || '未填寫';
+            const address = document.getElementById('checkout-address').value.trim() || '未填寫';
+
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = subtotal >= 800 ? 0 : 60;
+            const discount = appliedCoupon ? 100 : 0;
+            const total = Math.max(0, subtotal + shipping - discount);
+
+            const orderId = 'VB' + Math.floor(100000 + Math.random() * 900000);
+            const dateStr = new Date().toLocaleString('zh-TW');
+
+            let itemsListStr = cart.map(item => `・${item.name} x ${item.quantity} ($${item.price * item.quantity})`).join('\n');
+
+            currentOrderSubject = `【Viebucks 訂單通知】單號 #${orderId} - ${name} 先生/小姐`;
+            currentOrderText = 
+`☕ 【Viebucks 精品咖啡 - 新訂單通知】
+===========================
+訂單編號：#${orderId}
+訂購時間：${dateStr}
+
+【訂購人資訊】
+姓名：${name}
+電話：${phone}
+地址：${address}
+
+【購買明細】
+${itemsListStr}
+
+---------------------------
+商品小計：$${subtotal}
+運費：$${shipping === 0 ? '0 (滿額免運)' : '$' + shipping}
+${appliedCoupon ? '折扣優惠：-$100\n' : ''}應付總金額：$${total} 元
+===========================
+官方客服 Zalo：0839681380
+感謝您的訂購！我們將儘快為您備貨與寄送。`;
+
+            // 顯示預覽文案
+            document.getElementById('order-summary-text').textContent = currentOrderText;
+
+            // 自動執行一次複製到剪貼簿
+            copyOrderTextToClipboard(false);
+
+            // 清空購物車狀態
+            cart = [];
+            appliedCoupon = false;
+            saveCartToStorage();
+            updateCartUI();
+            toggleCartModal();
+
+            // 開啟確認視窗
+            document.getElementById('checkout-modal').classList.remove('hidden');
+        }
+
+        // 自動發送 Gmail 通知 (mailto 喚起預設郵件客戶端)
+        function sendGmailNotification() {
+            const encodedSubject = encodeURIComponent(currentOrderSubject);
+            const encodedBody = encodeURIComponent(currentOrderText);
+            const mailtoUrl = `mailto:service@viebucks.com?subject=${encodedSubject}&body=${encodedBody}`;
+            
+            window.open(mailtoUrl, '_blank');
+            showToast('已開啟 Gmail 準備發送！');
+        }
+
+        // 複製訂單文字至剪貼簿
+        function copyOrderTextToClipboard(showToastMsg = true) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(currentOrderText).then(() => {
+                    if (showToastMsg) showToast('訂單內容已成功複製！');
+                }).catch(() => fallbackCopyText());
+            } else {
+                fallbackCopyText();
+                if (showToastMsg) showToast('訂單內容已複製！');
+            }
+        }
+
+        function fallbackCopyText() {
+            const textArea = document.createElement("textarea");
+            textArea.value = currentOrderText;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+            } catch (err) {}
+            document.body.removeChild(textArea);
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkout-modal').classList.add('hidden');
+        }
+
+        function toggleCartModal() {
+            document.getElementById('cart-modal').classList.toggle('hidden');
+        }
+
+        // --- 搜尋功能 ---
+        function toggleSearchModal() {
+            const modal = document.getElementById('search-modal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                document.getElementById('search-input').focus();
+            }
+        }
+
+        function handleSearch(e) {
+            const query = e.target.value.toLowerCase().trim();
+            const resultsContainer = document.getElementById('search-results');
+
+            if (!query) {
+                resultsContainer.innerHTML = '<p class="text-xs text-gray-400 text-center py-4">輸入關鍵字開始搜尋...</p>';
+                return;
+            }
+
+            const matched = products.filter(p => 
+                p.name.toLowerCase().includes(query) ||
+                p.origin.toLowerCase().includes(query) ||
+                p.flavor.some(f => f.toLowerCase().includes(query)) ||
+                p.category.toLowerCase().includes(query)
+            );
+
+            if (matched.length === 0) {
+                resultsContainer.innerHTML = '<p class="text-xs text-gray-400 text-center py-4">查無符合的商品</p>';
+            } else {
+                resultsContainer.innerHTML = matched.map(p => `
+                    <div onclick="openProductModal('${p.id}'); toggleSearchModal();" class="flex items-center gap-3 p-2 hover:bg-coffee-100/60 rounded cursor-pointer transition">
+                        <img src="${p.image}" class="w-12 h-12 object-cover rounded">
+                        <div>
+                            <h4 class="font-serif font-bold text-xs text-coffee-900">${p.name}</h4>
+                            <span class="text-[11px] text-coffee-gold">$${p.price} · ${p.roast}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // --- Toast 彈窗 ---
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function subscribeNewsletter(e) {
+            e.preventDefault();
+            showToast('感謝訂閱 Viebucks 電子報！');
+            e.target.reset();
+        }
+
+        function saveCartToStorage() {
+            localStorage.setItem('viebucks_cart', JSON.stringify(cart));
+        }
+
+        function loadCartFromStorage() {
+            const saved = localStorage.getItem('viebucks_cart');
+            if (saved) {
+                try {
+                    cart = JSON.parse(saved);
+                    updateCartUI();
+                } catch(e) { cart = []; }
+            }
+        }
+    </script>
 </body>
 </html>
+
