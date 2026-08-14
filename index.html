@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Viebucks Craft Coffee - Chất Lượng Đỉnh Cao, Trong Tầm Tay</title>
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,13 +20,16 @@
                             950: '#2C180B',
                         },
                         coffee: {
+                            50: '#FAF7F2',
                             100: '#F5EBE6',
                             200: '#E6D2C4',
+                            300: '#D1B49F',
                             500: '#A67B5B',
                             700: '#6F4E37',
                             800: '#4A3525',
                             900: '#1F140E',
-                            gold: '#D4A359'
+                            gold: '#D4A359',
+                            goldHover: '#B88A43'
                         }
                     },
                     fontFamily: {
@@ -38,27 +41,35 @@
         }
     </script>
     <style>
-        body { font-family: 'Poppins', 'Noto Serif TC', sans-serif; }
+        body { font-family: 'Poppins', 'Noto Serif TC', sans-serif; background-color: #FAF7F2; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .transition-all-custom { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeIn 0.35s ease-out forwards; }
     </style>
 </head>
 <body class="bg-[#FAF7F2] text-gray-800 antialiased min-h-screen flex flex-col">
 
-    <div id="announcement-bar" class="bg-coffee-900 text-amber-100 text-xs py-2 text-center tracking-wider border-b border-coffee-800 px-2">
+    <!-- Top Announcement Bar -->
+    <div id="announcement-bar" class="bg-coffee-900 text-amber-100 text-xs py-2 text-center tracking-wider border-b border-coffee-800 px-4 transition-all">
         <!-- Content injected dynamically -->
     </div>
 
+    <!-- Main Navigation Header -->
     <header class="sticky top-0 z-40 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-coffee-200 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
-                <!-- Mobile Menu Toggle Button -->
-                <button id="mobile-menu-btn" class="md:hidden text-coffee-800 hover:text-coffee-600 focus:outline-none">
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden text-coffee-800 hover:text-coffee-600 focus:outline-none p-2">
                     <i class="fa-solid fa-bars text-2xl"></i>
                 </button>
 
                 <!-- Brand Logo -->
-                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="navigateTo('home')">
+                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer select-none" onclick="navigateTo('home')">
                     <div class="w-10 h-10 rounded-full bg-coffee-900 flex items-center justify-center text-coffee-gold shadow-md border border-coffee-gold/40">
                         <i class="fa-solid fa-mug-saucer text-xl"></i>
                     </div>
@@ -73,39 +84,44 @@
                     <!-- Dynamic navigation buttons injected by JS -->
                 </nav>
 
-                <!-- Right Utility Icons (Language Switcher & Cart) -->
-                <div class="flex items-center space-x-4">
-                    <!-- Language Switcher Dropdown -->
+                <!-- Right Utility Bar -->
+                <div class="flex items-center space-x-3 sm:space-x-4">
+                    <!-- Language Switcher -->
                     <div class="relative inline-block text-left">
-                        <select id="lang-selector" onchange="changeLanguage(this.value)" class="bg-coffee-100 text-coffee-900 font-semibold text-xs py-1.5 px-2.5 rounded-lg border border-coffee-300 focus:outline-none focus:border-coffee-gold cursor-pointer">
+                        <select id="lang-selector" onchange="changeLanguage(this.value)" class="bg-coffee-100 text-coffee-900 font-semibold text-xs py-1.5 px-2 rounded-lg border border-coffee-300 focus:outline-none focus:border-coffee-gold cursor-pointer">
                             <option value="vi">🇻🇳 Tiếng Việt</option>
                             <option value="zh">繁體中文</option>
                             <option value="en">🇺🇸 English</option>
                         </select>
                     </div>
 
-                    <button onclick="toggleSearchModal()" class="text-coffee-800 hover:text-coffee-gold transition-colors p-1">
+                    <!-- Search Button -->
+                    <button onclick="toggleSearchModal()" class="text-coffee-800 hover:text-coffee-gold transition-colors p-2 rounded-full hover:bg-coffee-100">
                         <i class="fa-solid fa-magnifying-glass text-lg"></i>
                     </button>
-                    <button onclick="toggleCartModal()" class="text-coffee-800 hover:text-coffee-gold transition-colors relative p-1">
+
+                    <!-- Cart Drawer Trigger Button -->
+                    <button onclick="toggleCartModal()" class="text-coffee-800 hover:text-coffee-gold transition-colors relative p-2 rounded-full hover:bg-coffee-100">
                         <i class="fa-solid fa-bag-shopping text-xl"></i>
-                        <span id="cart-count" class="absolute -top-2 -right-2 bg-coffee-gold text-coffee-900 text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow">0</span>
+                        <span id="cart-count" class="absolute top-0 right-0 bg-coffee-gold text-coffee-900 text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-md scale-100 transition-transform">0</span>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Mobile Drawer Navigation -->
+        <!-- Mobile Navigation Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-[#FAF7F2] border-b border-coffee-200 px-4 pt-2 pb-6 space-y-3">
             <!-- Dynamic Mobile Nav injected by JS -->
         </div>
     </header>
 
-    <main id="app-content" class="flex-grow">
-        <!-- Main dynamic content injected by JS -->
+    <!-- Main Dynamic Viewport -->
+    <main id="app-content" class="flex-grow min-h-[60vh]">
+        <!-- Dynamic Page Content render target -->
     </main>
 
-    <footer class="bg-coffee-900 text-coffee-200 mt-20 pt-16 pb-12">
+    <!-- Footer -->
+    <footer class="bg-coffee-900 text-coffee-200 mt-20 pt-16 pb-12 border-t border-coffee-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-10">
             <div>
                 <div class="flex items-center gap-3 mb-4">
@@ -117,8 +133,8 @@
                 <p id="footer-about" class="text-sm text-coffee-200/80 leading-relaxed mb-4">
                     <!-- Dynamic Text -->
                 </p>
-                <div class="flex space-x-4 text-coffee-gold">
-                    <a href="https://zalo.me/0839681380" target="_blank" class="hover:text-white transition flex items-center gap-1 text-xs bg-coffee-800 px-3 py-1.5 rounded-full border border-coffee-700">
+                <div class="flex flex-wrap gap-2 text-coffee-gold">
+                    <a href="https://zalo.me/0839681380" target="_blank" class="hover:text-white transition flex items-center gap-1.5 text-xs bg-coffee-800 px-3 py-1.5 rounded-full border border-coffee-700">
                         <i class="fa-solid fa-comment-dots text-coffee-gold"></i> Zalo Support: 0839681380
                     </a>
                 </div>
@@ -127,10 +143,10 @@
             <div>
                 <h4 id="footer-explore-title" class="font-serif text-white font-semibold mb-4 tracking-wider"></h4>
                 <ul class="space-y-2 text-sm text-coffee-200/80">
-                    <li><a href="#" onclick="filterCategory('steeped')" class="hover:text-coffee-gold transition" id="footer-cat-steeped"></a></li>
-                    <li><a href="#" onclick="filterCategory('single-origin')" class="hover:text-coffee-gold transition" id="footer-cat-single"></a></li>
-                    <li><a href="#" onclick="filterCategory('blend')" class="hover:text-coffee-gold transition" id="footer-cat-blend"></a></li>
-                    <li><a href="#" onclick="filterCategory('drip')" class="hover:text-coffee-gold transition" id="footer-cat-drip"></a></li>
+                    <li><a href="javascript:void(0)" onclick="filterCategory('steeped')" class="hover:text-coffee-gold transition" id="footer-cat-steeped"></a></li>
+                    <li><a href="javascript:void(0)" onclick="filterCategory('single-origin')" class="hover:text-coffee-gold transition" id="footer-cat-single"></a></li>
+                    <li><a href="javascript:void(0)" onclick="filterCategory('blend')" class="hover:text-coffee-gold transition" id="footer-cat-blend"></a></li>
+                    <li><a href="javascript:void(0)" onclick="filterCategory('drip')" class="hover:text-coffee-gold transition" id="footer-cat-drip"></a></li>
                 </ul>
             </div>
 
@@ -138,9 +154,9 @@
                 <h4 id="footer-service-title" class="font-serif text-white font-semibold mb-4 tracking-wider"></h4>
                 <ul class="space-y-2 text-sm text-coffee-200/80">
                     <li><a href="https://zalo.me/0839681380" target="_blank" class="hover:text-coffee-gold transition">Zalo Hotline: 0839681380</a></li>
-                    <li><a href="#" class="hover:text-coffee-gold transition" id="footer-brewing-guide"></a></li>
-                    <li><a href="#" class="hover:text-coffee-gold transition" id="footer-return-policy"></a></li>
-                    <li><a href="#" class="hover:text-coffee-gold transition" id="footer-b2b"></a></li>
+                    <li><a href="javascript:void(0)" onclick="showToast('Hướng dẫn pha chế đã được tải xuống!')" class="hover:text-coffee-gold transition" id="footer-brewing-guide"></a></li>
+                    <li><a href="javascript:void(0)" onclick="showToast('Hỗ trợ đổi trả miễn phí trong 7 ngày!')" class="hover:text-coffee-gold transition" id="footer-return-policy"></a></li>
+                    <li><a href="https://zalo.me/0839681380" target="_blank" class="hover:text-coffee-gold transition" id="footer-b2b"></a></li>
                 </ul>
             </div>
 
@@ -157,146 +173,162 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-6 border-t border-coffee-800 flex flex-col md:flex-row justify-between items-center text-xs text-coffee-200/50">
             <p>&copy; 2026 Viebucks Coffee Co. All rights reserved.</p>
             <div class="flex space-x-4 mt-4 md:mt-0">
-                <span>Privacy Policy</span>
-                <span>Terms of Service</span>
-                <span>Zalo Support: 0839681380</span>
+                <span class="hover:text-white cursor-pointer">Privacy Policy</span>
+                <span class="hover:text-white cursor-pointer">Terms of Service</span>
+                <span class="hover:text-white cursor-pointer">Zalo Support: 0839681380</span>
             </div>
         </div>
     </footer>
 
+    <!-- CART DRAWER MODAL -->
     <div id="cart-modal" class="fixed inset-0 z-50 overflow-hidden hidden">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="toggleCartModal()"></div>
         <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
-            <div class="w-screen max-w-md bg-[#FAF7F2] shadow-2xl flex flex-col">
+            <div class="w-screen max-w-md bg-[#FAF7F2] shadow-2xl flex flex-col h-full">
                 <!-- Cart Header -->
-                <div class="p-6 bg-coffee-900 text-white flex justify-between items-center">
+                <div class="p-5 bg-coffee-900 text-white flex justify-between items-center shadow">
                     <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-bag-shopping text-coffee-gold"></i>
+                        <i class="fa-solid fa-bag-shopping text-coffee-gold text-lg"></i>
                         <h2 id="cart-drawer-title" class="font-serif text-lg font-bold tracking-wide">Giỏ hàng Viebucks</h2>
                     </div>
-                    <button onclick="toggleCartModal()" class="text-gray-400 hover:text-white text-xl">
+                    <button onclick="toggleCartModal()" class="text-gray-400 hover:text-white text-xl p-1">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
 
-                <!-- Checkout Info Form -->
+                <!-- Customer Delivery Input Panel -->
                 <div class="p-4 bg-coffee-100 border-b border-coffee-200 text-xs space-y-2">
-                    <span id="cart-contact-label" class="font-bold text-coffee-900 block">Thông tin giao hàng:</span>
+                    <div class="flex justify-between items-center">
+                        <span id="cart-contact-label" class="font-bold text-coffee-900 block">Thông tin giao hàng:</span>
+                        <span class="text-[10px] text-coffee-500">*Cần thiết khi tạo đơn</span>
+                    </div>
                     <div class="grid grid-cols-2 gap-2">
                         <input id="checkout-name" type="text" placeholder="Họ và tên" class="p-2 border border-coffee-200 rounded text-xs bg-white focus:outline-none focus:border-coffee-gold">
                         <input id="checkout-phone" type="tel" placeholder="Số điện thoại" class="p-2 border border-coffee-200 rounded text-xs bg-white focus:outline-none focus:border-coffee-gold">
                     </div>
-                    <input id="checkout-address" type="text" placeholder="Địa chỉ nhận hàng" class="w-full p-2 border border-coffee-200 rounded text-xs bg-white focus:outline-none focus:border-coffee-gold">
+                    <input id="checkout-address" type="text" placeholder="Địa chỉ nhận hàng (Ví dụ: 123 Lê Lợi, Q1, TP.HCM)" class="w-full p-2 border border-coffee-200 rounded text-xs bg-white focus:outline-none focus:border-coffee-gold">
                 </div>
 
-                <!-- Cart Items Container -->
-                <div id="cart-items-container" class="flex-grow overflow-y-auto p-6 space-y-4">
-                    <!-- Dynamic Cart Content -->
+                <!-- Cart Items List Container -->
+                <div id="cart-items-container" class="flex-grow overflow-y-auto p-4 space-y-3">
+                    <!-- Dynamic Cart Content injected by JS -->
                 </div>
 
-                <!-- Cart Footer -->
-                <div class="p-6 bg-white border-t border-coffee-200 space-y-4 shadow-lg">
-                    <div class="space-y-1 text-sm">
+                <!-- Cart Footer / Calculation Panel -->
+                <div class="p-5 bg-white border-t border-coffee-200 space-y-3 shadow-lg">
+                    <div class="space-y-1.5 text-xs">
                         <div class="flex justify-between text-gray-600">
                             <span id="label-subtotal">Tạm tính</span>
-                            <span id="cart-subtotal">0 ₫</span>
+                            <span id="cart-subtotal" class="font-semibold text-coffee-900">0 ₫</span>
                         </div>
                         <div class="flex justify-between text-gray-600">
                             <span id="label-shipping">Phí vận chuyển</span>
-                            <span id="cart-shipping">40.000 ₫</span>
+                            <span id="cart-shipping" class="font-semibold text-coffee-900">40.000 ₫</span>
                         </div>
-                        <div id="discount-row" class="flex justify-between text-emerald-600 hidden">
-                            <span>Giảm giá (VIEBUCKS80K)</span>
+                        <div id="discount-row" class="flex justify-between text-emerald-700 hidden font-medium">
+                            <span id="discount-label">Giảm giá</span>
                             <span id="cart-discount">-80.000 ₫</span>
                         </div>
-                        <div class="flex justify-between font-bold text-lg text-coffee-900 pt-2 border-t">
+                        <div class="flex justify-between font-bold text-base text-coffee-900 pt-2 border-t border-gray-200">
                             <span id="label-total">Tổng cộng</span>
-                            <span id="cart-total" class="text-coffee-gold">0 ₫</span>
+                            <span id="cart-total" class="text-coffee-gold text-lg">0 ₫</span>
                         </div>
                     </div>
 
-                    <!-- Coupon Input -->
-                    <div class="flex gap-2">
-                        <input id="coupon-input" type="text" placeholder="Mã giảm giá (Nhập VIEBUCKS80K)" class="px-3 py-2 text-xs border border-gray-300 rounded focus:outline-none focus:border-coffee-gold uppercase flex-grow">
-                        <button onclick="applyCoupon()" id="btn-apply-coupon" class="bg-coffee-800 text-white text-xs px-3 py-2 rounded hover:bg-coffee-700 transition">Áp dụng</button>
+                    <!-- Promo Code Input -->
+                    <div class="flex gap-2 pt-1">
+                        <input id="coupon-input" type="text" placeholder="Mã giảm giá (Thử VIEBUCKS80K)" class="px-3 py-2 text-xs border border-gray-300 rounded focus:outline-none focus:border-coffee-gold uppercase flex-grow">
+                        <button onclick="applyCoupon()" id="btn-apply-coupon" class="bg-coffee-800 text-white text-xs px-3 py-2 rounded hover:bg-coffee-700 transition font-medium">Áp dụng</button>
                     </div>
 
-                    <button onclick="checkout()" id="btn-checkout" class="w-full bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold py-3.5 rounded-lg text-center tracking-wider shadow hover:shadow-md transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-paper-plane"></i> Đặt hàng qua Gmail / Zalo
+                    <!-- Checkout Button -->
+                    <button onclick="checkout()" id="btn-checkout" class="w-full bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold py-3 rounded-lg text-center tracking-wider shadow hover:shadow-md transition flex items-center justify-center gap-2 text-sm mt-2">
+                        <i class="fa-solid fa-paper-plane"></i> <span id="checkout-btn-text">Đặt hàng qua Gmail / Zalo</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- CHECKOUT SUCCESS MODAL -->
     <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4">
         <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeCheckoutModal()"></div>
-        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-lg w-full relative z-10 p-6 space-y-5 text-center">
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-lg w-full relative z-10 p-6 space-y-4 text-center animate-fade-in">
             <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl">
                 <i class="fa-solid fa-circle-check"></i>
             </div>
 
             <div>
                 <h3 id="checkout-success-title" class="font-serif font-bold text-2xl text-coffee-900">Đặt hàng thành công!</h3>
-                <p id="checkout-success-subtitle" class="text-xs text-gray-500 mt-1">Thông tin đơn hàng đã được sao chép. Bạn có thể gửi qua Gmail hoặc Zalo.</p>
+                <p id="checkout-success-subtitle" class="text-xs text-gray-500 mt-1">Thông tin đơn hàng đã được khởi tạo. Bạn có thể gửi trực tiếp qua Gmail hoặc Zalo.</p>
             </div>
 
-            <div class="bg-coffee-100/60 p-4 rounded-xl border border-coffee-200 text-left text-xs text-coffee-900 font-mono space-y-1 max-h-48 overflow-y-auto">
-                <div id="order-summary-text" class="whitespace-pre-line"></div>
+            <div class="bg-coffee-50 p-4 rounded-xl border border-coffee-200 text-left text-xs text-coffee-900 font-mono space-y-1 max-h-52 overflow-y-auto shadow-inner">
+                <div id="order-summary-text" class="whitespace-pre-line select-all"></div>
             </div>
 
-            <div class="space-y-3 pt-2">
-                <button onclick="sendGmailNotification()" id="btn-send-gmail" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg shadow transition flex items-center justify-center gap-2 text-sm">
+            <div class="space-y-2 pt-2">
+                <button onclick="sendGmailNotification()" id="btn-send-gmail" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-lg shadow transition flex items-center justify-center gap-2 text-xs">
                     <i class="fa-solid fa-envelope"></i> Mở Gmail để gửi đơn hàng
                 </button>
 
-                <a id="zalo-link" href="https://zalo.me/0839681380" target="_blank" onclick="copyOrderTextToClipboard()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow transition flex items-center justify-center gap-2 text-sm block">
-                    <i class="fa-solid fa-comment"></i> Mở Zalo dán gửi đơn (0839681380)
+                <a id="zalo-link" href="https://zalo.me/0839681380" target="_blank" onclick="copyOrderTextToClipboard()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg shadow transition flex items-center justify-center gap-2 text-xs block">
+                    <i class="fa-solid fa-comment text-sm"></i> Mở Zalo dán gửi đơn (0839681380)
                 </a>
 
-                <button onclick="copyOrderTextToClipboard(true)" id="btn-copy-order" class="w-full bg-coffee-100 hover:bg-coffee-200 text-coffee-900 font-bold py-2.5 rounded-lg text-xs transition">
-                    <i class="fa-solid fa-copy"></i> Sao chép thủ công
+                <button onclick="copyOrderTextToClipboard(true)" id="btn-copy-order" class="w-full bg-coffee-100 hover:bg-coffee-200 text-coffee-900 font-bold py-2 rounded-lg text-xs transition">
+                    <i class="fa-solid fa-copy"></i> Sao chép nội dung đơn hàng
                 </button>
             </div>
 
-            <button onclick="closeCheckoutModal()" id="btn-close-checkout" class="text-xs text-gray-400 underline hover:text-gray-600 pt-2 block mx-auto">
+            <button onclick="closeCheckoutModal()" id="btn-close-checkout" class="text-xs text-gray-400 underline hover:text-gray-600 pt-1 block mx-auto">
                 Đóng cửa sổ
             </button>
         </div>
     </div>
 
+    <!-- PRODUCT QUICK VIEW MODAL -->
     <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeProductModal()"></div>
-        <div id="product-modal-content" class="bg-white rounded-xl shadow-2xl overflow-hidden max-w-2xl w-full relative z-10 max-h-[90vh] overflow-y-auto">
-            <!-- Dynamic Content -->
+        <div id="product-modal-content" class="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-2xl w-full relative z-10 max-h-[90vh] overflow-y-auto animate-fade-in">
+            <!-- Dynamic Content Injected -->
         </div>
     </div>
 
-    <div id="search-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-start justify-center pt-24 hidden px-4">
-        <div class="bg-white rounded-xl max-w-xl w-full p-6 shadow-2xl relative">
-            <button onclick="toggleSearchModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+    <!-- SEARCH MODAL -->
+    <div id="search-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-start justify-center pt-20 hidden px-4">
+        <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl relative animate-fade-in">
+            <button onclick="toggleSearchModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 p-2">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
             <h3 id="search-modal-title" class="font-serif font-bold text-lg text-coffee-900 mb-4">Tìm kiếm sản phẩm Viebucks</h3>
-            <div class="relative mb-6">
-                <input id="search-input" type="text" oninput="handleSearch(event)" placeholder="Nhập từ khóa (Mozart, Steeped, Yirgacheffe...)..." class="w-full px-4 py-3 border border-coffee-200 rounded-lg focus:outline-none focus:border-coffee-gold pl-11 text-sm">
-                <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-gray-400"></i>
+            <div class="relative mb-4">
+                <input id="search-input" type="text" oninput="handleSearch(event)" placeholder="Nhập từ khóa (Mozart, Steeped, Yirgacheffe...)..." class="w-full px-4 py-3 border border-coffee-200 rounded-xl focus:outline-none focus:border-coffee-gold pl-11 text-sm">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-gray-400 text-sm"></i>
             </div>
-            <div id="search-results" class="max-h-60 overflow-y-auto space-y-2">
-                <p id="search-placeholder" class="text-xs text-gray-400 text-center py-4">Nhập từ khóa để bắt đầu tìm kiếm...</p>
+            <div id="search-results" class="max-h-64 overflow-y-auto space-y-2">
+                <p id="search-placeholder" class="text-xs text-gray-400 text-center py-6">Nhập từ khóa để bắt đầu tìm kiếm...</p>
             </div>
         </div>
     </div>
 
-    <div id="toast" class="fixed bottom-6 right-6 bg-coffee-900 text-white px-5 py-3 rounded-lg shadow-xl z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 border-l-4 border-coffee-gold">
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-coffee-900 text-white px-5 py-3 rounded-xl shadow-2xl z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 border-l-4 border-coffee-gold pointer-events-none">
         <i class="fa-solid fa-circle-check text-coffee-gold text-lg"></i>
-        <span id="toast-message" class="text-sm font-medium">Đã thêm vào giỏ hàng!</span>
+        <span id="toast-message" class="text-xs font-medium">Đã thêm vào giỏ hàng!</span>
     </div>
 
     <script>
-        // --- Multi-language i18n Dictionary ---
-        let currentLang = 'vi'; // Default Language: Vietnamese
+        // --- Global Application State ---
+        let currentLang = 'vi';
+        let currentCategory = 'all';
+        let activePage = 'home';
+        let cart = [];
+        let appliedCoupon = null;
+        let activeProductModalData = null;
+        let lastGeneratedOrder = null;
 
+        // --- Multi-language i18n Dictionary ---
         const i18n = {
             vi: {
                 announcement: '☕ Viebucks Ra Mắt Túi Cà Phê Ngâm | Nhập mã <span class="font-bold text-coffee-gold">VIEBUCKS80K</span> giảm ngay 80.000 ₫ | Miễn phí vận chuyển từ 600.000 ₫',
@@ -341,16 +373,16 @@
                 },
                 cart: {
                     title: 'Giỏ hàng Viebucks',
-                    contactLabel: 'Thông tin giao hàng (Dùng gửi xác nhận):',
+                    contactLabel: 'Thông tin giao hàng:',
                     nameHolder: 'Họ và tên người nhận',
                     phoneHolder: 'Số điện thoại',
-                    addressHolder: 'Địa chỉ giao hàng',
+                    addressHolder: 'Địa chỉ nhận hàng',
                     subtotal: 'Tạm tính',
                     shipping: 'Phí vận chuyển',
                     freeShip: 'Miễn phí',
-                    discount: 'Giảm giá (VIEBUCKS80K)',
+                    discount: 'Giảm giá',
                     total: 'Tổng cộng',
-                    couponHolder: 'Mã giảm giá (Nhập VIEBUCKS80K)',
+                    couponHolder: 'Mã giảm giá (Thử VIEBUCKS80K)',
                     applyBtn: 'Áp dụng',
                     checkoutBtn: 'Đặt hàng qua Gmail / Zalo',
                     emptyText: 'Giỏ hàng Viebucks hiện tại đang trống',
@@ -358,32 +390,32 @@
                 },
                 checkoutModal: {
                     title: 'Đặt hàng thành công!',
-                    subtitle: 'Thông tin đơn hàng đã được sao chép. Bạn có thể gửi trực tiếp qua Gmail hoặc Zalo.',
+                    subtitle: 'Thông tin đơn hàng đã được sao chép. Bạn có thể gửi qua Gmail hoặc Zalo.',
                     gmailBtn: 'Mở Gmail để gửi đơn xác nhận',
                     zaloBtn: 'Mở Zalo dán gửi đơn (0839681380)',
-                    copyBtn: 'Sao chép thủ công đơn hàng',
+                    copyBtn: 'Sao chép nội dung đơn hàng',
                     closeBtn: 'Đóng cửa sổ'
                 },
                 quiz: {
                     title: 'Trắc Nghiệm Hương Vị Viebucks',
-                    subtitle: 'Chọn sở thích và thói quen để tìm dòng cà phê Viebucks hoàn hảo nhất cho bạn!',
-                    q1: '1. Bạn thường uống cà phê trong hoàn cảnh nào?',
-                    q1a: 'Văn phòng / Nhanh gọn',
-                    q1b: 'Pha thủ công tại nhà',
-                    q1c: 'Buổi tối / Không ép phê',
-                    q2: '2. Bạn thích hương vị và độ chua như thế nào?',
-                    q2a: 'Chua trái cây mượt mà',
-                    q2b: 'Cân bằng, dịu nhẹ',
-                    q2c: 'Không chua / Đậm vị hạt',
-                    submitBtn: 'Nhận đề xuất phù hợp',
+                    subtitle: 'Trả lời 2 câu hỏi đơn giản để Viebucks đề xuất gu cà phê hoàn hảo dành cho bạn!',
+                    q1: '1. Bạn thường thưởng thức cà phê trong hoàn cảnh nào?',
+                    q1a: 'Văn phòng / Cần sự nhanh gọn tiện lợi',
+                    q1b: 'Thong thả pha Pour-over thủ công tại nhà',
+                    q1c: 'Thư giãn buổi tối / Tránh ép phê mất ngủ',
+                    q2: '2. Vị cà phê yêu thích của bạn là gì?',
+                    q2a: 'Hương hoa quả tươi, vị chua ngọt thanh mát',
+                    q2b: 'Vị cân bằng, dịu nhẹ, hậu vị ngọt',
+                    q2c: 'Đậm đà socola, hạt nướng, ít chua',
+                    submitBtn: 'Nhận đề xuất cà phê phù hợp',
                     recTag: 'ĐỀ XUẤT CHO BẠN',
                     addCart: 'Thêm vào giỏ hàng'
                 },
                 subPage: {
-                    title: 'Chương Trình Đăng Ký Cà Phê Định Kỳ',
-                    subtitle: 'Giao cà phê tươi mới tận nhà hàng tháng. Dễ dàng tạm dừng hoặc thay đổi gói.',
+                    title: 'Chương Trình Đăng Ký Cà Phê Định Kỳ Viebucks',
+                    subtitle: 'Giao cà phê tươi mới tận nhà hàng tháng. Dễ dàng tạm dừng hoặc thay đổi gói bất kỳ lúc nào.',
                     p1Title: 'Gói Ngâm Tiện Lợi',
-                    p1Desc: 'Dành cho dân văn phòng, cần sự nhanh gọn',
+                    p1Desc: 'Dành cho dân văn phòng, cần sự nhanh gọn hàng ngày',
                     p1Price: '600.000 ₫',
                     p1Unit: '/ tháng (20 túi ngâm)',
                     p1Item1: '2 hộp/tháng (Single Origin & Honey Processed)',
@@ -393,19 +425,19 @@
                     p2Title: 'Gói Chuyên Gia Trang Trại',
                     p2Desc: 'Dành cho người yêu thích pha thủ công Pour-over',
                     p2Price: '780.000 ₫',
-                    p2Unit: '/ tháng (Giá gốc 990.000 ₫)',
+                    p2Unit: '/ tháng (Tiết kiệm 200.000 ₫)',
                     p2Item1: '2 túi/tháng Cà phê Hạt vi mô COE cao cấp',
-                    p2Item2: 'Tặng kèm túi ngâm dùng thử',
+                    p2Item2: 'Tặng kèm túi ngâm dùng thử hàng tháng',
                     p2Item3: 'Miễn phí giao hàng toàn quốc',
 
-                    p3Title: 'Gói Ý Cổ Điển',
-                    p3Desc: 'Dành cho người thích uống Latte/Capuchino hàng ngày',
+                    p3Title: 'Gói Ý Cổ Điển Espresso',
+                    p3Desc: 'Dành cho người thích uống Latte / Cappuccino',
                     p3Price: '530.000 ₫',
                     p3Unit: '/ tháng (2 túi 227g)',
                     p3Item1: '2 túi/tháng Phối trộn độc quyền Viebucks',
                     p3Item2: 'Đậm đà hương Chocolate & Hạt',
                     p3Item3: 'Miễn phí giao hàng toàn quốc',
-                    btn: 'Đăng ký ngay'
+                    btn: 'Đăng ký gói này'
                 }
             },
             zh: {
@@ -451,16 +483,16 @@
                 },
                 cart: {
                     title: '您的 Viebucks 購物車',
-                    contactLabel: '聯絡資料（發送訂單與通知用）：',
+                    contactLabel: '聯絡資料：',
                     nameHolder: '收件人姓名',
                     phoneHolder: '電話號碼',
                     addressHolder: '收件地址',
                     subtotal: '小計',
                     shipping: '運費',
                     freeShip: '免運',
-                    discount: '折扣 (VIEBUCKS80K)',
+                    discount: '折扣',
                     total: '總計',
-                    couponHolder: '折扣碼 (輸入 VIEBUCKS80K)',
+                    couponHolder: '折扣碼 (試試 VIEBUCKS80K)',
                     applyBtn: '套用',
                     checkoutBtn: '結帳並發送訂單至 Gmail / Zalo',
                     emptyText: '您的 Viebucks 購物車目前是空的',
@@ -471,20 +503,20 @@
                     subtitle: '訂單資訊已自動複製，可透過 Gmail 發送郵件或貼上至 Zalo。',
                     gmailBtn: '開啟 Gmail 發送確認郵件',
                     zaloBtn: '開啟 Zalo 貼上發送 (0839681380)',
-                    copyBtn: '手動複製訂單內容',
+                    copyBtn: '複製訂單內容',
                     closeBtn: '關閉視窗'
                 },
                 quiz: {
                     title: 'Viebucks 風味配對測試',
-                    subtitle: '選出您偏好的口感與情境，為您推薦最適合的 Viebucks 咖啡！',
+                    subtitle: '回答 2 個簡單問題，讓 Viebucks 為您推薦最契合的咖啡！',
                     q1: '1. 您平時最常在什麼情境喝咖啡？',
                     q1a: '辦公室 / 快速便利',
-                    q1b: '在家講究手沖',
-                    q1c: '傍晚 / 晚間無負擔',
+                    q1b: '在家講究手沖 Pour-over',
+                    q1c: '傍晚 / 晚間無負擔避免失眠',
                     q2: '2. 您喜好的口感酸甜度？',
-                    q2a: '花果甜酸 (明亮)',
-                    q2b: '平衡柔順',
-                    q2c: '不酸 / 堅果濃郁',
+                    q2a: '明亮花果甜酸',
+                    q2b: '平衡柔順，回甘佳',
+                    q2c: '不酸 / 堅果濃郁黑巧克力',
                     submitBtn: '獲得專屬推薦',
                     recTag: 'RECOMMENDED FOR YOU',
                     addCart: '加入購物車'
@@ -503,7 +535,7 @@
                     p2Title: '莊園極致玩家',
                     p2Desc: '適合手沖咖啡愛好者',
                     p2Price: '780.000 ₫',
-                    p2Unit: '/ 每月 (原價 990.000 ₫)',
+                    p2Unit: '/ 每月 (省下 200.000 ₫)',
                     p2Item1: '每月 2 包 COE/微批次單品豆',
                     p2Item2: '贈送新品浸泡咖啡試飲包',
                     p2Item3: '全台免運直送',
@@ -561,14 +593,14 @@
                 },
                 cart: {
                     title: 'Your Viebucks Cart',
-                    contactLabel: 'Shipping Contact Info:',
+                    contactLabel: 'Shipping Information:',
                     nameHolder: 'Recipient Full Name',
                     phoneHolder: 'Phone Number',
                     addressHolder: 'Shipping Address',
                     subtotal: 'Subtotal',
                     shipping: 'Shipping',
                     freeShip: 'Free Shipping',
-                    discount: 'Discount (VIEBUCKS80K)',
+                    discount: 'Discount',
                     total: 'Total',
                     couponHolder: 'Promo Code (Try VIEBUCKS80K)',
                     applyBtn: 'Apply',
@@ -581,21 +613,21 @@
                     subtitle: 'Order details automatically copied. You can send via Gmail or paste into Zalo.',
                     gmailBtn: 'Open Gmail to Send Confirmation',
                     zaloBtn: 'Open Zalo to Send (0839681380)',
-                    copyBtn: 'Copy Order Text Manually',
+                    copyBtn: 'Copy Order Content',
                     closeBtn: 'Close Window'
                 },
                 quiz: {
                     title: 'Viebucks Flavor Match Quiz',
-                    subtitle: 'Tell us your habits to discover your ideal Viebucks roast!',
+                    subtitle: 'Answer 2 quick questions to discover your ideal Viebucks coffee!',
                     q1: '1. Where do you usually enjoy coffee?',
-                    q1a: 'Office / Quick & Easy',
-                    q1b: 'At Home Pour-over',
-                    q1c: 'Evening / Caffeine-free',
+                    q1a: 'Office / Quick & Convenient',
+                    q1b: 'Relaxed Pour-over brewing at home',
+                    q1c: 'Evening relaxation / Avoid caffeine',
                     q2: '2. What acidity and flavor profile do you prefer?',
-                    q2a: 'Bright Floral & Fruity',
-                    q2b: 'Balanced & Smooth',
-                    q2c: 'Low Acid / Nutty & Rich',
-                    submitBtn: 'Get Recommendation',
+                    q2a: 'Bright floral & refreshing fruit notes',
+                    q2b: 'Balanced, smooth & sweet aftertaste',
+                    q2c: 'Rich dark chocolate & roasted nuts',
+                    submitBtn: 'Get Coffee Recommendation',
                     recTag: 'RECOMMENDED FOR YOU',
                     addCart: 'Add to Cart'
                 },
@@ -613,7 +645,7 @@
                     p2Title: 'Estate Master Plan',
                     p2Desc: 'For dedicated hand pour-over enthusiasts',
                     p2Price: '780,000 ₫',
-                    p2Unit: '/ month (Reg. 990,000 ₫)',
+                    p2Unit: '/ month (Save 200,000 ₫)',
                     p2Item1: '2 bags/mo COE / Micro-lot beans',
                     p2Item2: 'Free bonus steeped sample pack',
                     p2Item3: 'Free shipping nationwide',
@@ -625,12 +657,12 @@
                     p3Item1: '2 bags/mo signature Viebucks espresso blend',
                     p3Item2: 'Low acidity with rich dark chocolate notes',
                     p3Item3: 'Free shipping nationwide',
-                    btn: 'Subscribe Now'
+                    btn: 'Subscribe Plan'
                 }
             }
         };
 
-        // --- Multilingual Product Database (Prices in VND) ---
+        // --- Complete Product Catalog Database ---
         const products = [
             {
                 id: 'p-s1',
@@ -641,6 +673,7 @@
                 image: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=600&q=80',
                 origin: 'Costa Rica Canet Musician',
                 roastLevel: 2,
+                options: ['Túi Ngâm Hộp 10 túi (Standard)', 'Túi Ngâm Hộp 20 túi (+300.000 ₫)'],
                 name: {
                     vi: 'Viebucks Mozart Chế Biến Mật Ong - Túi Ngâm (10 túi)',
                     zh: 'Viebucks 莫札特 蜜處理 浸泡咖啡包 (10入)',
@@ -681,6 +714,7 @@
                 image: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=600&q=80',
                 origin: 'Ethiopia Yirgacheffe',
                 roastLevel: 1,
+                options: ['Túi Ngâm Hộp 10 túi (Standard)', 'Túi Ngâm Hộp 20 túi (+280.000 ₫)'],
                 name: {
                     vi: 'Viebucks Yirgacheffe Hương Hoa Cam - Túi Ngâm (10 túi)',
                     zh: 'Viebucks 耶加雪菲 柑橘花香 浸泡包 (10入)',
@@ -692,7 +726,7 @@
                     en: 'Light Roast'
                 },
                 process: {
-                    vi: 'Chế biến Khô / Tự nhiên (Natural)',
+                    vi: 'Chế biến Ướt (Washed)',
                     zh: '水洗 (Washed)',
                     en: 'Washed Process'
                 },
@@ -721,6 +755,7 @@
                 image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&w=600&q=80',
                 origin: 'Colombia Swiss Water Decaf',
                 roastLevel: 5,
+                options: ['Túi Ngâm Hộp 10 túi (Standard)'],
                 name: {
                     vi: 'Túi Ngâm Tách Caffeine Chocolate Đen (10 túi)',
                     zh: '夜漫漫 低因黑巧克力 浸泡咖啡包 (10入)',
@@ -761,6 +796,7 @@
                 image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=600&q=80',
                 origin: 'Ethiopia Yirgacheffe Gedeo',
                 roastLevel: 1,
+                options: ['Nguyên hạt (Whole Bean)', 'Xay thủ công Pour-over', 'Xay máy Espresso', 'Xay pha Phin'],
                 name: {
                     vi: 'Hạt Cà Phê Ethiopia Gedeo (227g)',
                     zh: 'Viebucks 衣索比亞 歌德貝 (半磅/227g)',
@@ -801,6 +837,7 @@
                 image: 'https://images.unsplash.com/photo-1610889556528-9a770e32642f?auto=format&fit=crop&w=600&q=80',
                 origin: 'Panama Boquete Hacienda La Esmeralda',
                 roastLevel: 1,
+                options: ['Nguyên hạt (Whole Bean)', 'Xay thủ công Pour-over'],
                 name: {
                     vi: 'Panama La Esmeralda Geisha Nhãn Xanh (227g)',
                     zh: '巴拿馬 翡翠莊園 綠標藝伎 Geisha (半磅)',
@@ -839,8 +876,9 @@
                 rating: 4.8,
                 reviews: 35,
                 image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80',
-                origin: 'Kenya Nyeri',
+                origin: 'Kenya Nyeri Kirinyaga',
                 roastLevel: 3,
+                options: ['Nguyên hạt (Whole Bean)', 'Xay thủ công Pour-over', 'Xay pha Phin'],
                 name: {
                     vi: 'Hạt Cà Phê Kenya AA Nyeri Kirinyaga (227g)',
                     zh: '肯亞 AA 尼耶利 奇里雅加 (半磅/227g)',
@@ -865,7 +903,8 @@
                     vi: 'Vị cà phê Kenya đầy sức sống, chua ngọt đan xen của nho đen và mận mặn, hậu vị ngọt đậm nốt đường mía.',
                     zh: '充滿力量感的肯亞風味，飽滿的黑加侖與烏梅酸甜交織，多汁感強烈，尾韻伴隨沉穩的黑糖甜香。',
                     en: 'Powerful Kenyan cup profile juicy blackcurrant fruitiness paired with deep brown sugar sweetness.'
-                }, restNotes: {
+                },
+                roastNotes: {
                     vi: 'Phù hợp pha French Press, Pour-over hoặc Cold brew.',
                     zh: '適合壓濾壺、手沖或做成冷萃咖啡。',
                     en: 'Great for French Press, Pour-over, or Cold Brew.'
@@ -880,6 +919,7 @@
                 image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=600&q=80',
                 origin: 'Ethiopia + Colombia Blend',
                 roastLevel: 2,
+                options: ['Nguyên hạt (Whole Bean)', 'Xay máy Espresso', 'Xay pha Phin'],
                 name: {
                     vi: 'Phối Trộn Độc Quyền Viebucks Nắng Ban Mai (227g)',
                     zh: 'Viebucks 晨光花香 經典配方豆 (半磅)',
@@ -920,6 +960,7 @@
                 image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80',
                 origin: 'Đa quốc gia chọn lọc',
                 roastLevel: 3,
+                options: ['Hộp Quà Tặng 12 túi lọc (Assorted Pack)'],
                 name: {
                     vi: 'Hộp Quà Tặng Túi Lọc Drip Cao Cấp (12 túi)',
                     zh: '精品莊園 隨身濾掛咖啡禮盒 (12入)',
@@ -936,560 +977,404 @@
                     en: 'Nitrogen Flushed Drip Bags'
                 },
                 flavor: {
-                    vi: ['Hương hoa cỏ', 'Vị trái cây', 'Đậm đà hạt dẻ'],
-                    zh: ['花香產地', '果香產地', '堅果濃郁'],
-                    en: ['Floral Notes', 'Fruity Notes', 'Rich Nutty']
+                    vi: ['Đa dạng hương vị', 'Hoa quả', 'Socola', 'Hạt dẻ'],
+                    zh: ['綜合風味', '花果香', '黑巧克力', '堅果'],
+                    en: ['Assorted Flavors', 'Fruity', 'Chocolate', 'Nutty']
                 },
                 description: {
-                    vi: 'Gồm 4 dòng cà phê trang trại đơn nguồn (mỗi loại 3 túi), đóng gói bơm khí nitơ bảo quản hương vị pha tay truyền thống mọi lúc mọi nơi.',
-                    zh: '包含 4 款嚴選單品莊園豆（各3包），採用充氮防氧化封裝，隨時隨地享用經典濾掛手沖質感。',
-                    en: 'Contains 4 single-origin estate coffees (3 bags each), nitrogen flushed for peak pour-over taste on the go.'
+                    vi: 'Tuyển tập 12 túi lọc Drip tiện lợi từ các nông trại hàng đầu thế giới. Bơm Nitơ giữ nguyên vị tươi rang.',
+                    zh: '包含 12 包來自全球頂級莊園的濾掛咖啡包，獨立充氮保鮮，隨時體驗多樣化的極致風味。',
+                    en: 'Collection of 12 premium drip bags from top world farms. Nitrogen flushed for peak freshness.'
                 },
                 roastNotes: {
-                    vi: 'Bạn đồng hành lý tưởng cho văn phòng & du lịch.',
-                    zh: '辦公室、旅遊露營最佳伴侶。',
-                    en: 'Best companion for office and outdoor trips.'
+                    vi: 'Rót 150ml-180ml nước nóng 90°C từ từ qua túi lọc.',
+                    zh: '分段注入 150ml-180ml 約 90°C 熱水。',
+                    en: 'Pour 150-180ml of 90°C hot water gently through filter.'
                 }
             }
         ];
 
-        // --- App Global States ---
-        let cart = [];
-        let appliedCoupon = false;
-        let currentFilter = 'all';
-        let currentOrderText = '';
-        let currentOrderSubject = '';
-
-        // Helper: Format Prices into VND (₫) with thousands separator
-        function formatPrice(amount) {
-            return new Intl.NumberFormat('vi-VN').format(amount) + ' ₫';
+        // Utility Currency Formatter (VND)
+        function formatVND(amount) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount).replace('₫', '₫');
         }
 
-        // --- App Initialization ---
-        window.addEventListener('DOMContentLoaded', () => {
-            loadCartFromStorage();
-            setLanguage('vi');
-            setupMobileMenu();
-        });
+        // Navigation Switcher
+        function navigateTo(page) {
+            activePage = page;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            renderAppContent();
+        }
 
-        // --- Language Switcher Handler ---
+        // Language Changer
         function changeLanguage(lang) {
             currentLang = lang;
-            document.documentElement.lang = lang;
-            updateStaticText();
-            updateCartUI();
-            navigateTo(window.currentPage || 'home', window.currentParam || null);
-        }
-
-        function setLanguage(lang) {
             document.getElementById('lang-selector').value = lang;
-            changeLanguage(lang);
+            renderAll();
         }
 
-        // --- Update Static UI Text Elements based on currentLang ---
-        function updateStaticText() {
-            const t = i18n[currentLang];
-
-            // Announcement
-            document.getElementById('announcement-bar').innerHTML = t.announcement;
-
-            // Desktop Nav
-            document.getElementById('desktop-nav').innerHTML = `
-                <button onclick="navigateTo('products')" class="hover:text-coffee-gold transition-colors py-2">${t.nav.all}</button>
-                <button onclick="filterCategory('steeped')" class="hover:text-coffee-gold transition-colors py-2 font-semibold text-coffee-gold flex items-center gap-1">
-                    <i class="fa-solid fa-note-sticky text-xs"></i> ${t.nav.steeped}
-                </button>
-                <button onclick="filterCategory('single-origin')" class="hover:text-coffee-gold transition-colors py-2">${t.nav.single}</button>
-                <button onclick="filterCategory('drip')" class="hover:text-coffee-gold transition-colors py-2">${t.nav.drip}</button>
-                <button onclick="navigateTo('subscriptions')" class="hover:text-coffee-gold transition-colors py-2 flex items-center gap-1">
-                    <i class="fa-solid fa-arrows-rotate text-xs text-coffee-gold"></i> ${t.nav.sub}
-                </button>
-                <button onclick="navigateTo('ai-quiz')" class="hover:text-coffee-gold transition-colors py-2 flex items-center gap-1">
-                    <i class="fa-solid fa-wand-magic-sparkles text-coffee-gold"></i> ${t.nav.quiz}
-                </button>
-            `;
-
-            // Mobile Nav
-            document.getElementById('mobile-menu').innerHTML = `
-                <button onclick="navigateTo('products')" class="block w-full text-left py-2 font-medium text-coffee-900">${t.nav.all}</button>
-                <button onclick="filterCategory('steeped')" class="block w-full text-left py-2 font-semibold text-coffee-gold">${t.nav.steeped}</button>
-                <button onclick="filterCategory('single-origin')" class="block w-full text-left py-2 font-medium text-coffee-900">${t.nav.single}</button>
-                <button onclick="filterCategory('drip')" class="block w-full text-left py-2 font-medium text-coffee-900">${t.nav.drip}</button>
-                <button onclick="navigateTo('subscriptions')" class="block w-full text-left py-2 font-medium text-coffee-900">${t.nav.sub}</button>
-                <button onclick="navigateTo('ai-quiz')" class="block w-full text-left py-2 font-medium text-coffee-900">${t.nav.quiz}</button>
-            `;
-
-            // Footer Static Text
-            document.getElementById('footer-about').textContent = t.footer.about;
-            document.getElementById('footer-explore-title').textContent = t.footer.exploreTitle;
-            document.getElementById('footer-service-title').textContent = t.footer.serviceTitle;
-            document.getElementById('footer-newsletter-title').textContent = t.footer.newsletterTitle;
-            document.getElementById('footer-newsletter-desc').textContent = t.footer.newsletterDesc;
-            document.getElementById('footer-subscribe-btn').textContent = t.footer.subscribeBtn;
-
-            document.getElementById('footer-cat-steeped').textContent = t.nav.steeped;
-            document.getElementById('footer-cat-single').textContent = t.nav.single;
-            document.getElementById('footer-cat-blend').textContent = t.nav.all;
-            document.getElementById('footer-cat-drip').textContent = t.nav.drip;
-
-            document.getElementById('footer-brewing-guide').textContent = t.footer.brewingGuide;
-            document.getElementById('footer-return-policy').textContent = t.footer.returnPolicy;
-            document.getElementById('footer-b2b').textContent = t.footer.b2b;
-
-            // Cart Drawer static labels
-            document.getElementById('cart-drawer-title').textContent = t.cart.title;
-            document.getElementById('cart-contact-label').textContent = t.cart.contactLabel;
-            document.getElementById('checkout-name').placeholder = t.cart.nameHolder;
-            document.getElementById('checkout-phone').placeholder = t.cart.phoneHolder;
-            document.getElementById('checkout-address').placeholder = t.cart.addressHolder;
-
-            document.getElementById('label-subtotal').textContent = t.cart.subtotal;
-            document.getElementById('label-shipping').textContent = t.cart.shipping;
-            document.getElementById('label-total').textContent = t.cart.total;
-            document.getElementById('coupon-input').placeholder = t.cart.couponHolder;
-            document.getElementById('btn-apply-coupon').textContent = t.cart.applyBtn;
-            document.getElementById('btn-checkout').innerHTML = `<i class="fa-solid fa-paper-plane"></i> ${t.cart.checkoutBtn}`;
-
-            // Checkout Modal static labels
-            document.getElementById('checkout-success-title').textContent = t.checkoutModal.title;
-            document.getElementById('checkout-success-subtitle').textContent = t.checkoutModal.subtitle;
-            document.getElementById('btn-send-gmail').innerHTML = `<i class="fa-solid fa-envelope"></i> ${t.checkoutModal.gmailBtn}`;
-            document.getElementById('zalo-link').innerHTML = `<i class="fa-solid fa-comment"></i> ${t.checkoutModal.zaloBtn}`;
-            document.getElementById('btn-copy-order').innerHTML = `<i class="fa-solid fa-copy"></i> ${t.checkoutModal.copyBtn}`;
-            document.getElementById('btn-close-checkout').textContent = t.checkoutModal.closeBtn;
-
-            // Search Modal Title
-            document.getElementById('search-modal-title').textContent = i18n[currentLang].nav.all;
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const el = document.getElementById('mobile-menu');
+            el.classList.toggle('hidden');
         }
 
-        // --- Navigation Controller ---
-        function navigateTo(page, param = null) {
-            window.currentPage = page;
-            window.currentParam = param;
+        // Toast Notification System
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
 
-            const content = document.getElementById('app-content');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Search Modal Controller
+        function toggleSearchModal() {
+            const modal = document.getElementById('search-modal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                const input = document.getElementById('search-input');
+                input.value = '';
+                input.focus();
+                document.getElementById('search-results').innerHTML = `<p id="search-placeholder" class="text-xs text-gray-400 text-center py-6">${i18n[currentLang].cart.emptyText || 'Nhập từ khóa...'}</p>`;
+            }
+        }
 
-            if (page === 'home') {
-                content.innerHTML = renderHomePage();
-            } else if (page === 'products') {
-                content.innerHTML = renderProductsPage(param || currentFilter);
-            } else if (page === 'subscriptions') {
-                content.innerHTML = renderSubscriptionPage();
-            } else if (page === 'ai-quiz') {
-                content.innerHTML = renderAIQuizPage();
+        function handleSearch(e) {
+            const query = e.target.value.toLowerCase().trim();
+            const resultsContainer = document.getElementById('search-results');
+
+            if (!query) {
+                resultsContainer.innerHTML = `<p class="text-xs text-gray-400 text-center py-6">Nhập từ khóa để bắt đầu tìm kiếm...</p>`;
+                return;
             }
 
-            document.getElementById('mobile-menu').classList.add('hidden');
-        }
+            const matched = products.filter(p => 
+                p.name[currentLang].toLowerCase().includes(query) ||
+                p.origin.toLowerCase().includes(query) ||
+                p.flavor[currentLang].some(f => f.toLowerCase().includes(query))
+            );
 
-        function setupMobileMenu() {
-            document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-                document.getElementById('mobile-menu').classList.toggle('hidden');
-            });
-        }
-
-        // --- Home View ---
-        function renderHomePage() {
-            const t = i18n[currentLang];
-
-            return `
-                <section class="relative bg-coffee-900 text-white overflow-hidden py-24 md:py-32 px-4 sm:px-6 lg:px-8">
-                    <div class="absolute inset-0 opacity-35 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1600&q=80');"></div>
-                    <div class="absolute inset-0 bg-gradient-to-r from-coffee-900 via-coffee-900/85 to-transparent"></div>
-                    <div class="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                        <div class="space-y-6">
-                            <span class="inline-block px-3 py-1 bg-coffee-gold/20 text-coffee-gold border border-coffee-gold/40 rounded-full text-xs font-semibold tracking-widest uppercase">
-                                ${t.hero.badge}
-                            </span>
-                            <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
-                                ${t.hero.title}
-                            </h1>
-                            <p class="text-coffee-200 text-base sm:text-lg max-w-xl leading-relaxed">
-                                ${t.hero.desc}
-                            </p>
-                            <div class="flex flex-wrap gap-4 pt-2">
-                                <button onclick="filterCategory('steeped')" class="bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold px-8 py-3.5 rounded-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5">
-                                    ${t.hero.ctaSteeped} <i class="fa-solid fa-arrow-right ml-2"></i>
-                                </button>
-                                <button onclick="navigateTo('products')" class="bg-transparent hover:bg-white/10 text-white border border-white/40 font-semibold px-6 py-3.5 rounded-lg transition">
-                                    ${t.hero.ctaAll}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="py-16 bg-white border-b border-coffee-200">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="text-center max-w-2xl mx-auto mb-12">
-                            <span class="text-coffee-gold font-bold text-xs tracking-widest uppercase">${t.features.subtitle}</span>
-                            <h2 class="font-serif text-3xl font-bold text-coffee-900 mt-1">${t.features.title}</h2>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div class="text-center p-6 rounded-2xl bg-[#FAF7F2] border border-coffee-200/60">
-                                <div class="w-14 h-14 bg-coffee-800 text-coffee-gold rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
-                                    <i class="fa-solid fa-temperature-arrow-up"></i>
-                                </div>
-                                <h3 class="font-serif font-bold text-lg text-coffee-900 mb-2">${t.features.f1Title}</h3>
-                                <p class="text-xs text-gray-600 leading-relaxed">${t.features.f1Desc}</p>
-                            </div>
-
-                            <div class="text-center p-6 rounded-2xl bg-[#FAF7F2] border border-coffee-200/60">
-                                <div class="w-14 h-14 bg-coffee-800 text-coffee-gold rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
-                                    <i class="fa-solid fa-snowflake"></i>
-                                </div>
-                                <h3 class="font-serif font-bold text-lg text-coffee-900 mb-2">${t.features.f2Title}</h3>
-                                <p class="text-xs text-gray-600 leading-relaxed">${t.features.f2Desc}</p>
-                            </div>
-
-                            <div class="text-center p-6 rounded-2xl bg-[#FAF7F2] border border-coffee-200/60">
-                                <div class="w-14 h-14 bg-coffee-800 text-coffee-gold rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
-                                    <i class="fa-solid fa-leaf"></i>
-                                </div>
-                                <h3 class="font-serif font-bold text-lg text-coffee-900 mb-2">${t.features.f3Title}</h3>
-                                <p class="text-xs text-gray-600 leading-relaxed">${t.features.f3Desc}</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
-                        <div>
-                            <span class="text-coffee-gold font-semibold text-xs tracking-widest uppercase">${t.popularSubtitle}</span>
-                            <h2 class="font-serif text-3xl font-bold text-coffee-900 mt-1">${t.popularTitle}</h2>
-                        </div>
-                        <button onclick="navigateTo('products')" class="text-coffee-700 hover:text-coffee-gold font-semibold text-sm mt-4 md:mt-0 flex items-center gap-1 transition">
-                            ${t.viewAll} <i class="fa-solid fa-angle-right text-xs"></i>
-                        </button>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        ${products.slice(0, 4).map(product => renderProductCard(product)).join('')}
-                    </div>
-                </section>
-            `;
-        }
-
-        // --- Products Grid Page ---
-        function renderProductsPage(categoryFilter = 'all') {
-            currentFilter = categoryFilter;
-            const t = i18n[currentLang];
-
-            let filteredProducts = products;
-            if (categoryFilter !== 'all') {
-                filteredProducts = products.filter(p => p.category === categoryFilter);
+            if (matched.length === 0) {
+                resultsContainer.innerHTML = `<p class="text-xs text-gray-400 text-center py-6">Không tìm thấy sản phẩm nào phù hợp.</p>`;
+                return;
             }
 
-            return `
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                    <div class="text-center max-w-2xl mx-auto mb-12 space-y-2">
-                        <h1 class="font-serif text-3xl sm:text-4xl font-bold text-coffee-900">Viebucks Coffee</h1>
-                        <p class="text-gray-600 text-sm">${t.footer.about}</p>
+            resultsContainer.innerHTML = matched.map(p => `
+                <div onclick="openProductModal('${p.id}'); toggleSearchModal();" class="flex items-center gap-3 p-2.5 hover:bg-coffee-100/70 rounded-xl cursor-pointer transition">
+                    <img src="${p.image}" class="w-12 h-12 object-cover rounded-lg">
+                    <div class="flex-grow">
+                        <h4 class="text-xs font-bold text-coffee-900">${p.name[currentLang]}</h4>
+                        <p class="text-[10px] text-coffee-500">${p.origin} • ${formatVND(p.price)}</p>
                     </div>
-
-                    <div class="flex justify-center flex-wrap gap-2 mb-10">
-                        <button onclick="filterCategory('all')" class="px-5 py-2 rounded-full text-sm font-medium transition ${categoryFilter === 'all' ? 'bg-coffee-800 text-white shadow' : 'bg-white text-coffee-800 hover:bg-coffee-100 border border-coffee-200'}">
-                            ${t.nav.all} (${products.length})
-                        </button>
-                        <button onclick="filterCategory('steeped')" class="px-5 py-2 rounded-full text-sm font-medium transition ${categoryFilter === 'steeped' ? 'bg-coffee-gold text-coffee-900 font-bold shadow' : 'bg-white text-coffee-800 hover:bg-coffee-100 border border-coffee-200'}">
-                            ☕ ${t.nav.steeped}
-                        </button>
-                        <button onclick="filterCategory('single-origin')" class="px-5 py-2 rounded-full text-sm font-medium transition ${categoryFilter === 'single-origin' ? 'bg-coffee-800 text-white shadow' : 'bg-white text-coffee-800 hover:bg-coffee-100 border border-coffee-200'}">
-                            ${t.nav.single}
-                        </button>
-                        <button onclick="filterCategory('drip')" class="px-5 py-2 rounded-full text-sm font-medium transition ${categoryFilter === 'drip' ? 'bg-coffee-800 text-white shadow' : 'bg-white text-coffee-800 hover:bg-coffee-100 border border-coffee-200'}">
-                            ${t.nav.drip}
-                        </button>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        ${filteredProducts.map(product => renderProductCard(product)).join('')}
-                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
                 </div>
-            `;
+            `).join('');
         }
 
-        // --- Render Single Product Card Component ---
-        function renderProductCard(product) {
-            const isSteeped = product.category === 'steeped';
-            const name = product.name[currentLang] || product.name['vi'];
-            const roast = product.roast[currentLang] || product.roast['vi'];
-            const flavors = product.flavor[currentLang] || product.flavor['vi'];
-
-            return `
-                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 border border-coffee-200/60 flex flex-col group relative">
-                    ${isSteeped ? `<span class="absolute top-3 right-3 z-10 bg-coffee-gold text-coffee-900 text-[10px] font-bold px-2 py-0.5 rounded uppercase shadow">Steeped</span>` : ''}
-
-                    <div class="relative overflow-hidden aspect-square cursor-pointer" onclick="openProductModal('${product.id}')">
-                        <img src="${product.image}" alt="${name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                        <span class="absolute top-3 left-3 bg-coffee-900/80 backdrop-blur-sm text-white text-[11px] px-2.5 py-1 rounded font-medium">
-                            ${roast}
-                        </span>
-                    </div>
-
-                    <div class="p-5 flex flex-col flex-grow">
-                        <div class="flex items-center text-xs text-amber-500 mb-1 space-x-1">
-                            <i class="fa-solid fa-star"></i>
-                            <span class="font-bold text-gray-700">${product.rating}</span>
-                            <span class="text-gray-400">(${product.reviews})</span>
-                        </div>
-
-                        <h3 class="font-serif font-bold text-coffee-900 text-base mb-2 group-hover:text-coffee-gold transition cursor-pointer line-clamp-2" onclick="openProductModal('${product.id}')">
-                            ${name}
-                        </h3>
-
-                        <div class="flex flex-wrap gap-1 mb-4">
-                            ${flavors.map(f => `<span class="bg-coffee-100 text-coffee-800 text-[11px] px-2 py-0.5 rounded">${f}</span>`).join('')}
-                        </div>
-
-                        <div class="mt-auto flex items-center justify-between pt-3 border-t border-gray-100">
-                            <div>
-                                <span class="font-bold text-lg text-coffee-900">${formatPrice(product.price)}</span>
-                            </div>
-                            <button onclick="addToCart('${product.id}')" class="bg-coffee-800 hover:bg-coffee-700 text-white text-xs font-semibold px-4 py-2.5 rounded-lg transition flex items-center gap-1.5 shadow-sm">
-                                <i class="fa-solid fa-cart-plus"></i> +
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // --- Subscription Page ---
-        function renderSubscriptionPage() {
-            const s = i18n[currentLang].subPage;
-
-            return `
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                    <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
-                        <span class="text-coffee-gold font-bold text-xs tracking-widest uppercase">Viebucks Club</span>
-                        <h1 class="font-serif text-4xl font-bold text-coffee-900">${s.title}</h1>
-                        <p class="text-gray-600">${s.subtitle}</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                        <div class="bg-white rounded-2xl p-8 border border-coffee-200 shadow-sm hover:shadow-lg transition flex flex-col">
-                            <h3 class="font-serif font-bold text-xl text-coffee-900 mb-2">${s.p1Title}</h3>
-                            <p class="text-xs text-gray-500 mb-6">${s.p1Desc}</p>
-                            <div class="mb-6">
-                                <span class="text-3xl font-bold text-coffee-900">${s.p1Price}</span>
-                                <span class="text-xs text-gray-400">${s.p1Unit}</span>
-                            </div>
-                            <ul class="space-y-3 text-sm text-gray-600 mb-8 flex-grow">
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> ${s.p1Item1}</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> ${s.p1Item2}</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> ${s.p1Item3}</li>
-                            </ul>
-                            <button onclick="showToast('Đã chọn gói đăng ký!')" class="w-full bg-coffee-100 hover:bg-coffee-200 text-coffee-900 font-bold py-3 rounded-lg transition text-sm">
-                                ${s.btn}
-                            </button>
-                        </div>
-
-                        <div class="bg-coffee-900 text-white rounded-2xl p-8 border-2 border-coffee-gold shadow-xl flex flex-col relative transform scale-105">
-                            <span class="absolute -top-3.5 right-6 bg-coffee-gold text-coffee-900 text-[11px] font-bold px-3 py-1 rounded-full uppercase">Best Choice</span>
-                            <h3 class="font-serif font-bold text-xl text-white mb-2">${s.p2Title}</h3>
-                            <p class="text-xs text-coffee-200 mb-6">${s.p2Desc}</p>
-                            <div class="mb-6">
-                                <span class="text-3xl font-bold text-coffee-gold">${s.p2Price}</span>
-                                <span class="text-xs text-coffee-200">${s.p2Unit}</span>
-                            </div>
-                            <ul class="space-y-3 text-sm text-coffee-200 mb-8 flex-grow">
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-coffee-gold"></i> ${s.p2Item1}</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-coffee-gold"></i> ${s.p2Item2}</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-coffee-gold"></i> ${s.p2Item3}</li>
-                            </ul>
-                            <button onclick="showToast('Đã chọn gói cao cấp!')" class="w-full bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold py-3 rounded-lg transition text-sm shadow">
-                                ${s.btn}
-                            </button>
-                        </div>
-
-                        <div class="bg-white rounded-2xl p-8 border border-coffee-200 shadow-sm hover:shadow-lg transition flex flex-col">
-                            <h3 class="font-serif font-bold text-xl text-coffee-900 mb-2">${s.p3Title}</h3>
-                            <p class="text-xs text-gray-500 mb-6">${s.p3Desc}</p>
-                            <div class="mb-6">
-                                <span class="text-3xl font-bold text-coffee-900">${s.p3Price}</span>
-                                <span class="text-xs text-gray-400">${s.p3Unit}</span>
-                            </div>
-                            <ul class="space-y-3 text-sm text-gray-600 mb-8 flex-grow">
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> ${s.p3Item1}</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> ${s.p3Item2}</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> ${s.p3Item3}</li>
-                            </ul>
-                            <button onclick="showToast('Đã chọn gói Ý!')" class="w-full bg-coffee-100 hover:bg-coffee-200 text-coffee-900 font-bold py-3 rounded-lg transition text-sm">
-                                ${s.btn}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // --- AI Quiz Page ---
-        function renderAIQuizPage() {
-            const q = i18n[currentLang].quiz;
-
-            return `
-                <div class="max-w-3xl mx-auto px-4 py-16">
-                    <div class="bg-white rounded-2xl shadow-xl p-8 border border-coffee-200">
-                        <div class="text-center mb-8">
-                            <div class="w-12 h-12 rounded-full bg-coffee-100 text-coffee-gold flex items-center justify-center mx-auto mb-3 text-2xl">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i>
-                            </div>
-                            <h1 class="font-serif text-2xl font-bold text-coffee-900">${q.title}</h1>
-                            <p class="text-xs text-gray-500 mt-1">${q.subtitle}</p>
-                        </div>
-
-                        <form onsubmit="runAIRecommend(event)" class="space-y-6">
-                            <div>
-                                <label class="block text-sm font-semibold text-coffee-900 mb-2">${q.q1}</label>
-                                <div class="grid grid-cols-3 gap-3">
-                                    <label class="border p-3 rounded-lg text-center cursor-pointer hover:border-coffee-gold transition">
-                                        <input type="radio" name="scenario" value="office" checked class="sr-only peer">
-                                        <span class="block text-xs font-bold text-gray-700 peer-checked:text-coffee-gold">${q.q1a}</span>
-                                    </label>
-                                    <label class="border p-3 rounded-lg text-center cursor-pointer hover:border-coffee-gold transition">
-                                        <input type="radio" name="scenario" value="home" class="sr-only peer">
-                                        <span class="block text-xs font-bold text-gray-700 peer-checked:text-coffee-gold">${q.q1b}</span>
-                                    </label>
-                                    <label class="border p-3 rounded-lg text-center cursor-pointer hover:border-coffee-gold transition">
-                                        <input type="radio" name="scenario" value="night" class="sr-only peer">
-                                        <span class="block text-xs font-bold text-gray-700 peer-checked:text-coffee-gold">${q.q1c}</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-coffee-900 mb-2">${q.q2}</label>
-                                <div class="grid grid-cols-3 gap-3">
-                                    <label class="border p-3 rounded-lg text-center cursor-pointer hover:border-coffee-gold transition">
-                                        <input type="radio" name="acid" value="high" checked class="sr-only peer">
-                                        <span class="block text-xs font-bold text-gray-700 peer-checked:text-coffee-gold">${q.q2a}</span>
-                                    </label>
-                                    <label class="border p-3 rounded-lg text-center cursor-pointer hover:border-coffee-gold transition">
-                                        <input type="radio" name="acid" value="med" class="sr-only peer">
-                                        <span class="block text-xs font-bold text-gray-700 peer-checked:text-coffee-gold">${q.q2b}</span>
-                                    </label>
-                                    <label class="border p-3 rounded-lg text-center cursor-pointer hover:border-coffee-gold transition">
-                                        <input type="radio" name="acid" value="low" class="sr-only peer">
-                                        <span class="block text-xs font-bold text-gray-700 peer-checked:text-coffee-gold">${q.q2c}</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <button type="submit" class="w-full bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold py-3.5 rounded-lg shadow transition">
-                                ${q.submitBtn} <i class="fa-solid fa-sparkles ml-1"></i>
-                            </button>
-                        </form>
-
-                        <div id="ai-result" class="mt-8 pt-6 border-t border-gray-200 hidden">
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function runAIRecommend(e) {
+        // Newsletter Subscription
+        function subscribeNewsletter(e) {
             e.preventDefault();
-            const form = e.target;
-            const scenario = form.scenario.value;
-            const acid = form.acid.value;
-            const q = i18n[currentLang].quiz;
-
-            let recommended = products[0];
-
-            if (scenario === 'office' || scenario === 'night') {
-                if (scenario === 'night') {
-                    recommended = products.find(p => p.id === 'p-s3') || products[2];
-                } else {
-                    recommended = products.find(p => p.id === 'p-s1') || products[0];
-                }
-            } else if (acid === 'high') {
-                recommended = products.find(p => p.id === 'p1') || products[3];
-            } else {
-                recommended = products.find(p => p.id === 'p4') || products[6];
-            }
-
-            const recName = recommended.name[currentLang] || recommended.name['vi'];
-            const recDesc = recommended.description[currentLang] || recommended.description['vi'];
-
-            const resultDiv = document.getElementById('ai-result');
-            resultDiv.classList.remove('hidden');
-            resultDiv.innerHTML = `
-                <div class="bg-coffee-100/60 p-5 rounded-xl border border-coffee-200">
-                    <span class="text-xs font-bold text-coffee-gold tracking-widest uppercase block mb-1">${q.recTag}</span>
-                    <h3 class="font-serif font-bold text-lg text-coffee-900 mb-2">Viebucks Recommendation:</h3>
-                    
-                    <div class="flex items-center gap-4 bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-                        <img src="${recommended.image}" class="w-20 h-20 object-cover rounded-lg">
-                        <div class="flex-grow">
-                            <h4 class="font-serif font-bold text-coffee-900">${recName}</h4>
-                            <p class="text-xs text-gray-500 my-1 line-clamp-2">${recDesc}</p>
-                            <span class="text-sm font-bold text-coffee-gold">${formatPrice(recommended.price)}</span>
-                        </div>
-                    </div>
-
-                    <button onclick="addToCart('${recommended.id}')" class="mt-4 w-full bg-coffee-800 hover:bg-coffee-700 text-white font-bold py-2.5 rounded-lg text-sm shadow transition">
-                        ${q.addCart}
-                    </button>
-                </div>
-            `;
+            showToast('Cảm ơn bạn đã đăng ký nhận tin từ Viebucks!');
+            e.target.reset();
         }
 
-        function filterCategory(cat) {
-            navigateTo('products', cat);
-        }
-
-        // --- Product Quick View Modal ---
-        function openProductModal(productId) {
+        // Add To Cart Function
+        function addToCart(productId, selectedOptionIndex = 0, customQty = 1) {
             const product = products.find(p => p.id === productId);
             if (!product) return;
 
-            const name = product.name[currentLang] || product.name['vi'];
-            const roast = product.roast[currentLang] || product.roast['vi'];
-            const process = product.process[currentLang] || product.process['vi'];
-            const description = product.description[currentLang] || product.description['vi'];
-            const flavors = product.flavor[currentLang] || product.flavor['vi'];
-            const notes = product.roastNotes[currentLang] || product.roastNotes['vi'];
+            const optionName = product.options && product.options[selectedOptionIndex] ? product.options[selectedOptionIndex] : 'Tiêu chuẩn';
+            const cartItemKey = `${product.id}_${selectedOptionIndex}`;
+
+            const existingIndex = cart.findIndex(item => item.key === cartItemKey);
+            if (existingIndex > -1) {
+                cart[existingIndex].qty += customQty;
+            } else {
+                cart.push({
+                    key: cartItemKey,
+                    id: product.id,
+                    product: product,
+                    selectedOption: optionName,
+                    qty: customQty
+                });
+            }
+
+            updateCartBadge();
+            renderCartItems();
+            showToast(`Đã thêm ${product.name[currentLang].split('-')[0]} vào giỏ hàng!`);
+        }
+
+        // Cart Item Quantity Adjustment
+        function updateCartQty(key, delta) {
+            const idx = cart.findIndex(item => item.key === key);
+            if (idx > -1) {
+                cart[idx].qty += delta;
+                if (cart[idx].qty <= 0) {
+                    cart.splice(idx, 1);
+                }
+            }
+            updateCartBadge();
+            renderCartItems();
+        }
+
+        function removeFromCart(key) {
+            cart = cart.filter(item => item.key !== key);
+            updateCartBadge();
+            renderCartItems();
+        }
+
+        function updateCartBadge() {
+            const count = cart.reduce((acc, item) => acc + item.qty, 0);
+            const badge = document.getElementById('cart-count');
+            badge.innerText = count;
+            badge.classList.add('scale-125');
+            setTimeout(() => badge.classList.remove('scale-125'), 200);
+        }
+
+        // Cart Coupon Logic
+        function applyCoupon() {
+            const input = document.getElementById('coupon-input');
+            const code = input.value.trim().toUpperCase();
+            if (code === 'VIEBUCKS80K') {
+                appliedCoupon = { code: 'VIEBUCKS80K', amount: 80000 };
+                showToast('Áp dụng mã giảm giá 80.000 ₫ thành công!');
+            } else if (code === 'FREESHIP') {
+                appliedCoupon = { code: 'FREESHIP', amount: 40000, freeShip: true };
+                showToast('Áp dụng mã miễn phí vận chuyển thành công!');
+            } else {
+                showToast('Mã giảm giá không hợp lệ hoặc đã hết hạn!');
+                appliedCoupon = null;
+            }
+            renderCartItems();
+        }
+
+        // Cart Drawer Render
+        function renderCartItems() {
+            const container = document.getElementById('cart-items-container');
+            const subtotalEl = document.getElementById('cart-subtotal');
+            const shippingEl = document.getElementById('cart-shipping');
+            const discountRow = document.getElementById('discount-row');
+            const discountEl = document.getElementById('cart-discount');
+            const totalEl = document.getElementById('cart-total');
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 space-y-4">
+                        <div class="w-16 h-16 rounded-full bg-coffee-100 flex items-center justify-center mx-auto text-coffee-500 text-2xl">
+                            <i class="fa-solid fa-bag-shopping"></i>
+                        </div>
+                        <p class="text-xs text-gray-500 font-medium">${i18n[currentLang].cart.emptyText}</p>
+                        <button onclick="toggleCartModal(); navigateTo('home')" class="bg-coffee-900 text-white text-xs px-4 py-2.5 rounded-lg hover:bg-coffee-800 transition font-medium">
+                            ${i18n[currentLang].cart.browseBtn}
+                        </button>
+                    </div>
+                `;
+                subtotalEl.innerText = '0 ₫';
+                shippingEl.innerText = '0 ₫';
+                discountRow.classList.add('hidden');
+                totalEl.innerText = '0 ₫';
+                return;
+            }
+
+            container.innerHTML = cart.map(item => `
+                <div class="flex items-center gap-3 p-3 bg-white rounded-xl border border-coffee-200/80 shadow-sm relative">
+                    <img src="${item.product.image}" class="w-16 h-16 object-cover rounded-lg border">
+                    <div class="flex-grow min-w-0">
+                        <h4 class="text-xs font-bold text-coffee-900 truncate">${item.product.name[currentLang]}</h4>
+                        <p class="text-[10px] text-coffee-500 font-medium mt-0.5">${item.selectedOption}</p>
+                        <div class="text-xs font-bold text-coffee-gold mt-1">${formatVND(item.product.price)}</div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <div class="flex items-center border border-coffee-200 rounded-lg overflow-hidden bg-coffee-50">
+                            <button onclick="updateCartQty('${item.key}', -1)" class="w-6 h-6 flex items-center justify-center text-xs text-coffee-800 hover:bg-coffee-200 transition">-</button>
+                            <span class="w-6 text-center text-xs font-bold text-coffee-900">${item.qty}</span>
+                            <button onclick="updateCartQty('${item.key}', 1)" class="w-6 h-6 flex items-center justify-center text-xs text-coffee-800 hover:bg-coffee-200 transition">+</button>
+                        </div>
+                        <button onclick="removeFromCart('${item.key}')" class="text-gray-400 hover:text-red-500 text-xs p-1">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Calculations
+            const subtotal = cart.reduce((acc, item) => acc + (item.product.price * item.qty), 0);
+            let shipping = subtotal >= 600000 ? 0 : 40000;
+            let discount = 0;
+
+            if (appliedCoupon) {
+                if (appliedCoupon.freeShip) {
+                    shipping = 0;
+                } else {
+                    discount = appliedCoupon.amount;
+                }
+            }
+
+            const total = Math.max(0, subtotal + shipping - discount);
+
+            subtotalEl.innerText = formatVND(subtotal);
+            shippingEl.innerText = shipping === 0 ? i18n[currentLang].cart.freeShip : formatVND(shipping);
+
+            if (discount > 0 || (appliedCoupon && appliedCoupon.freeShip)) {
+                discountRow.classList.remove('hidden');
+                discountEl.innerText = `-${formatVND(discount)}`;
+            } else {
+                discountRow.classList.add('hidden');
+            }
+
+            totalEl.innerText = formatVND(total);
+        }
+
+        function toggleCartModal() {
+            const modal = document.getElementById('cart-modal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) {
+                renderCartItems();
+            }
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                showToast('Giỏ hàng của bạn đang trống!');
+                return;
+            }
+
+            const name = document.getElementById('checkout-name').value.trim();
+            const phone = document.getElementById('checkout-phone').value.trim();
+            const address = document.getElementById('checkout-address').value.trim();
+
+            if (!name || !phone || !address) {
+                showToast('Vui lòng điền đầy đủ tên, số điện thoại và địa chỉ nhận hàng!');
+                return;
+            }
+
+            const orderId = 'VB-' + Math.floor(100000 + Math.random() * 900000);
+            const subtotal = cart.reduce((acc, item) => acc + (item.product.price * item.qty), 0);
+            let shipping = subtotal >= 600000 ? 0 : 40000;
+            let discount = appliedCoupon ? appliedCoupon.amount || 0 : 0;
+            const total = Math.max(0, subtotal + shipping - discount);
+
+            let orderText = `[ĐƠN HÀNG VIEBUCKS #${orderId}]\n`;
+            orderText += `Khách hàng: ${name}\n`;
+            orderText += `SĐT: ${phone}\n`;
+            orderText += `Địa chỉ: ${address}\n`;
+            orderText += `--------------------------------\n`;
+            cart.forEach((item, idx) => {
+                orderText += `${idx + 1}. ${item.product.name[currentLang]} (${item.selectedOption}) x${item.qty} = ${formatVND(item.product.price * item.qty)}\n`;
+            });
+            orderText += `--------------------------------\n`;
+            orderText += `Tạm tính: ${formatVND(subtotal)}\n`;
+            orderText += `Phí ship: ${shipping === 0 ? 'Miễn phí' : formatVND(shipping)}\n`;
+            if (discount > 0) orderText += `Giảm giá: -${formatVND(discount)}\n`;
+            orderText += `TỔNG THANH TOÁN: ${formatVND(total)}\n`;
+            orderText += `Thời gian tạo: ${new Date().toLocaleString('vi-VN')}\n`;
+
+            lastGeneratedOrder = {
+                id: orderId,
+                name: name,
+                phone: phone,
+                address: address,
+                total: total,
+                text: orderText
+            };
+
+            document.getElementById('order-summary-text').innerText = orderText;
+            toggleCartModal();
+            document.getElementById('checkout-modal').classList.remove('hidden');
+
+            // Auto copy to clipboard
+            copyOrderTextToClipboard(false);
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkout-modal').classList.add('hidden');
+        }
+
+        function copyOrderTextToClipboard(notify = true) {
+            if (!lastGeneratedOrder) return;
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(lastGeneratedOrder.text);
+            } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = lastGeneratedOrder.text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+            }
+            if (notify) showToast('Đã sao chép nội dung đơn hàng!');
+        }
+
+        function sendGmailNotification() {
+            if (!lastGeneratedOrder) return;
+            copyOrderTextToClipboard(false);
+            const subject = encodeURIComponent(`[Viebucks Order] Đơn hàng #${lastGeneratedOrder.id} - ${lastGeneratedOrder.name}`);
+            const body = encodeURIComponent(lastGeneratedOrder.text);
+            window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=viebucks.coffee@gmail.com&su=${subject}&body=${body}`, '_blank');
+        }
+
+        function openProductModal(productId) {
+            const p = products.find(item => item.id === productId);
+            if (!p) return;
+            activeProductModalData = p;
 
             const modalContent = document.getElementById('product-modal-content');
             modalContent.innerHTML = `
-                <button onclick="closeProductModal()" class="absolute top-4 right-4 z-20 bg-black/40 hover:bg-black/60 text-white w-8 h-8 rounded-full flex items-center justify-center transition">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-                <div class="grid grid-cols-1 md:grid-cols-2">
-                    <div class="h-64 md:h-full relative">
-                        <img src="${product.image}" alt="${name}" class="w-full h-full object-cover">
+                <div class="relative flex flex-col md:flex-row">
+                    <button onclick="closeProductModal()" class="absolute top-4 right-4 z-10 w-8 h-8 bg-black/40 text-white rounded-full flex items-center justify-center hover:bg-black/60 transition">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    
+                    <div class="md:w-1/2 h-64 md:h-auto relative bg-coffee-100">
+                        <img src="${p.image}" class="w-full h-full object-cover">
+                        <div class="absolute bottom-3 left-3 bg-coffee-900/80 backdrop-blur text-coffee-gold text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                            ${p.origin}
+                        </div>
                     </div>
-                    <div class="p-6 md:p-8 flex flex-col">
-                        <span class="text-xs text-coffee-gold font-semibold tracking-wider uppercase mb-1">${product.origin}</span>
-                        <h2 class="font-serif font-bold text-xl md:text-2xl text-coffee-900 mb-2">${name}</h2>
-                        
-                        <div class="flex items-center space-x-2 text-xs mb-4">
-                            <span class="bg-coffee-100 text-coffee-800 px-2.5 py-1 rounded font-medium">${roast}</span>
-                            <span class="text-gray-400">|</span>
-                            <span class="text-gray-600">${process}</span>
+
+                    <div class="md:w-1/2 p-6 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center gap-1 text-coffee-gold text-xs mb-1">
+                                <i class="fa-solid fa-star"></i>
+                                <span class="font-bold text-coffee-900">${p.rating}</span>
+                                <span class="text-gray-400">(${p.reviews} đánh giá)</span>
+                            </div>
+                            <h3 class="font-serif font-bold text-xl text-coffee-900 leading-tight">${p.name[currentLang]}</h3>
+                            <div class="text-lg font-bold text-coffee-gold mt-2">${formatVND(p.price)}</div>
+
+                            <p class="text-xs text-gray-600 mt-3 leading-relaxed">${p.description[currentLang]}</p>
+
+                            <!-- Flavor Pills -->
+                            <div class="mt-4">
+                                <span class="text-[10px] uppercase tracking-wider text-coffee-500 font-bold block mb-1.5">Tông vị chính:</span>
+                                <div class="flex flex-wrap gap-1.5">
+                                    ${p.flavor[currentLang].map(f => `<span class="bg-coffee-100 text-coffee-800 text-[10px] font-semibold px-2.5 py-1 rounded-md border border-coffee-200">${f}</span>`).join('')}
+                                </div>
+                            </div>
+
+                            <!-- Options Dropdown -->
+                            <div class="mt-4">
+                                <label class="text-[10px] uppercase tracking-wider text-coffee-500 font-bold block mb-1">Tùy chọn đóng gói / Mức xay:</label>
+                                <select id="product-modal-option" class="w-full p-2.5 bg-coffee-50 border border-coffee-200 rounded-lg text-xs text-coffee-900 focus:outline-none focus:border-coffee-gold">
+                                    ${(p.options || ['Tiêu chuẩn']).map((opt, idx) => `<option value="${idx}">${opt}</option>`).join('')}
+                                </select>
+                            </div>
                         </div>
 
-                        <p class="text-xs md:text-sm text-gray-600 leading-relaxed mb-6">${description}</p>
+                        <div class="pt-2 border-t border-coffee-200 flex gap-3">
+                            <div class="flex items-center border border-coffee-200 rounded-lg overflow-hidden bg-coffee-50">
+                                <button onclick="adjustModalQty(-1)" class="w-8 h-10 flex items-center justify-center text-sm font-bold text-coffee-800 hover:bg-coffee-200">-</button>
+                                <span id="modal-qty" class="w-8 text-center text-xs font-bold text-coffee-900">1</span>
+                                <button onclick="adjustModalQty(1)" class="w-8 h-10 flex items-center justify-center text-sm font-bold text-coffee-800 hover:bg-coffee-200">+</button>
+                            </div>
 
-                        <div class="bg-coffee-100/50 p-4 rounded-lg mb-6 space-y-2">
-                            <div class="text-xs font-bold text-coffee-900">Flavor Notes:</div>
-                            <div class="flex flex-wrap gap-1.5">
-                                ${flavors.map(f => `<span class="bg-white border border-coffee-200 text-coffee-800 text-xs px-2.5 py-1 rounded">${f}</span>`).join('')}
-                            </div>
-                            <div class="text-xs text-gray-500 pt-2 border-t border-coffee-200/60">
-                                💡 <strong>Brew Tip:</strong> ${notes}
-                            </div>
-                        </div>
-
-                        <div class="mt-auto flex items-center justify-between pt-4 border-t">
-                            <div>
-                                <span class="font-bold text-2xl text-coffee-900">${formatPrice(product.price)}</span>
-                            </div>
-                            <button onclick="addToCart('${product.id}'); closeProductModal();" class="bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold px-6 py-3 rounded-lg shadow transition">
-                                ${i18n[currentLang].quiz.addCart}
+                            <button onclick="confirmModalAddToCart()" class="flex-grow bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold text-xs py-3 rounded-lg shadow transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-bag-shopping"></i> Thêm vào giỏ hàng
                             </button>
                         </div>
                     </div>
@@ -1499,281 +1384,439 @@
             document.getElementById('product-modal').classList.remove('hidden');
         }
 
+        let currentModalQty = 1;
+        function adjustModalQty(delta) {
+            currentModalQty = Math.max(1, currentModalQty + delta);
+            document.getElementById('modal-qty').innerText = currentModalQty;
+        }
+
+        function confirmModalAddToCart() {
+            if (!activeProductModalData) return;
+            const optIdx = parseInt(document.getElementById('product-modal-option').value) || 0;
+            addToCart(activeProductModalData.id, optIdx, currentModalQty);
+            closeProductModal();
+            currentModalQty = 1;
+        }
+
         function closeProductModal() {
             document.getElementById('product-modal').classList.add('hidden');
+            activeProductModalData = null;
         }
 
-        // --- Cart and Checkout Logic ---
-        function addToCart(productId) {
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
-
-            const existingItem = cart.find(item => item.id === productId);
-            if (existingItem) {
-                existingItem.quantity += 1;
+        function filterCategory(cat) {
+            currentCategory = cat;
+            if (activePage !== 'home') {
+                navigateTo('home');
             } else {
-                cart.push({ ...product, quantity: 1 });
+                renderProductsSection();
             }
-
-            saveCartToStorage();
-            updateCartUI();
-            
-            const prodName = product.name[currentLang] || product.name['vi'];
-            showToast(`+1 "${prodName}"`);
         }
 
-        function updateQuantity(productId, delta) {
-            const item = cart.find(i => i.id === productId);
-            if (item) {
-                item.quantity += delta;
-                if (item.quantity <= 0) {
-                    cart = cart.filter(i => i.id !== productId);
-                }
-            }
-            saveCartToStorage();
-            updateCartUI();
+        function renderAll() {
+            renderHeaderAndFooter();
+            renderAppContent();
         }
 
-        function updateCartUI() {
-            const cartContainer = document.getElementById('cart-items-container');
-            const cartCountBadge = document.getElementById('cart-count');
-            const t = i18n[currentLang].cart;
+        function renderHeaderAndFooter() {
+            const t = i18n[currentLang];
 
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartCountBadge.textContent = totalItems;
+            // Top bar
+            document.getElementById('announcement-bar').innerHTML = t.announcement;
 
-            if (cart.length === 0) {
-                cartContainer.innerHTML = `
-                    <div class="text-center py-12 text-gray-400 space-y-3">
-                        <i class="fa-solid fa-basket-shopping text-4xl"></i>
-                        <p class="text-sm">${t.emptyText}</p>
-                        <button onclick="toggleCartModal(); navigateTo('products');" class="bg-coffee-800 text-white text-xs px-4 py-2 rounded">${t.browseBtn}</button>
+            // Desktop Nav
+            document.getElementById('desktop-nav').innerHTML = `
+                <button onclick="filterCategory('all'); navigateTo('home')" class="hover:text-coffee-gold transition ${currentCategory === 'all' && activePage === 'home' ? 'text-coffee-gold font-bold' : ''}">${t.nav.all}</button>
+                <button onclick="filterCategory('steeped'); navigateTo('home')" class="hover:text-coffee-gold transition ${currentCategory === 'steeped' ? 'text-coffee-gold font-bold' : ''}">${t.nav.steeped}</button>
+                <button onclick="filterCategory('single-origin'); navigateTo('home')" class="hover:text-coffee-gold transition ${currentCategory === 'single-origin' ? 'text-coffee-gold font-bold' : ''}">${t.nav.single}</button>
+                <button onclick="navigateTo('sub')" class="hover:text-coffee-gold transition ${activePage === 'sub' ? 'text-coffee-gold font-bold' : ''}">${t.nav.sub}</button>
+                <button onclick="navigateTo('quiz')" class="hover:text-coffee-gold transition ${activePage === 'quiz' ? 'text-coffee-gold font-bold' : ''}">${t.nav.quiz}</button>
+            `;
+
+            // Mobile Nav
+            document.getElementById('mobile-menu').innerHTML = `
+                <button onclick="filterCategory('all'); navigateTo('home'); toggleMobileMenu()" class="block w-full text-left py-2 text-sm text-coffee-800">${t.nav.all}</button>
+                <button onclick="filterCategory('steeped'); navigateTo('home'); toggleMobileMenu()" class="block w-full text-left py-2 text-sm text-coffee-800">${t.nav.steeped}</button>
+                <button onclick="filterCategory('single-origin'); navigateTo('home'); toggleMobileMenu()" class="block w-full text-left py-2 text-sm text-coffee-800">${t.nav.single}</button>
+                <button onclick="navigateTo('sub'); toggleMobileMenu()" class="block w-full text-left py-2 text-sm text-coffee-800">${t.nav.sub}</button>
+                <button onclick="navigateTo('quiz'); toggleMobileMenu()" class="block w-full text-left py-2 text-sm text-coffee-800">${t.nav.quiz}</button>
+            `;
+
+            // Footer dynamic
+            document.getElementById('footer-about').innerText = t.footer.about;
+            document.getElementById('footer-explore-title').innerText = t.footer.exploreTitle;
+            document.getElementById('footer-cat-steeped').innerText = t.nav.steeped;
+            document.getElementById('footer-cat-single').innerText = t.nav.single;
+            document.getElementById('footer-cat-blend').innerText = 'Viebucks Blend';
+            document.getElementById('footer-cat-drip').innerText = t.nav.drip;
+
+            document.getElementById('footer-service-title').innerText = t.footer.serviceTitle;
+            document.getElementById('footer-brewing-guide').innerText = t.footer.brewingGuide;
+            document.getElementById('footer-return-policy').innerText = t.footer.returnPolicy;
+            document.getElementById('footer-b2b').innerText = t.footer.b2b;
+
+            document.getElementById('footer-newsletter-title').innerText = t.footer.newsletterTitle;
+            document.getElementById('footer-newsletter-desc').innerText = t.footer.newsletterDesc;
+            document.getElementById('footer-subscribe-btn').innerText = t.footer.subscribeBtn;
+
+            // Cart Drawer text
+            document.getElementById('cart-drawer-title').innerText = t.cart.title;
+            document.getElementById('cart-contact-label').innerText = t.cart.contactLabel;
+            document.getElementById('checkout-name').placeholder = t.cart.nameHolder;
+            document.getElementById('checkout-phone').placeholder = t.cart.phoneHolder;
+            document.getElementById('checkout-address').placeholder = t.cart.addressHolder;
+            document.getElementById('label-subtotal').innerText = t.cart.subtotal;
+            document.getElementById('label-shipping').innerText = t.cart.shipping;
+            document.getElementById('label-total').innerText = t.cart.total;
+            document.getElementById('coupon-input').placeholder = t.cart.couponHolder;
+            document.getElementById('btn-apply-coupon').innerText = t.cart.applyBtn;
+            document.getElementById('checkout-btn-text').innerText = t.cart.checkoutBtn;
+
+            // Checkout Modal
+            document.getElementById('checkout-success-title').innerText = t.checkoutModal.title;
+            document.getElementById('checkout-success-subtitle').innerText = t.checkoutModal.subtitle;
+            document.getElementById('btn-send-gmail').innerHTML = `<i class="fa-solid fa-envelope"></i> ${t.checkoutModal.gmailBtn}`;
+            document.getElementById('zalo-link').innerHTML = `<i class="fa-solid fa-comment"></i> ${t.checkoutModal.zaloBtn}`;
+            document.getElementById('btn-copy-order').innerHTML = `<i class="fa-solid fa-copy"></i> ${t.checkoutModal.copyBtn}`;
+            document.getElementById('btn-close-checkout').innerText = t.checkoutModal.closeBtn;
+        }
+
+        function renderAppContent() {
+            const main = document.getElementById('app-content');
+            if (activePage === 'home') {
+                renderHomeView(main);
+            } else if (activePage === 'quiz') {
+                renderQuizView(main);
+            } else if (activePage === 'sub') {
+                renderSubscriptionView(main);
+            }
+        }
+
+        function renderHomeView(container) {
+            const t = i18n[currentLang];
+            container.innerHTML = `
+                <!-- Hero Section -->
+                <section class="relative bg-coffee-900 text-white overflow-hidden">
+                    <div class="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center"></div>
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 relative z-10 flex flex-col items-center text-center">
+                        <span class="inline-block bg-coffee-gold/20 text-coffee-gold border border-coffee-gold/30 text-xs font-semibold px-4 py-1.5 rounded-full mb-6 backdrop-blur">
+                            ${t.hero.badge}
+                        </span>
+                        <h1 class="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight max-w-4xl leading-tight">
+                            ${t.hero.title}
+                        </h1>
+                        <p class="mt-6 text-sm sm:text-base text-coffee-200/90 max-w-2xl leading-relaxed">
+                            ${t.hero.desc}
+                        </p>
+                        <div class="mt-8 flex flex-wrap justify-center gap-4">
+                            <button onclick="filterCategory('steeped')" class="bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold px-7 py-3.5 rounded-xl shadow-lg transition tracking-wide text-xs sm:text-sm">
+                                ${t.hero.ctaSteeped}
+                            </button>
+                            <button onclick="filterCategory('all')" class="bg-coffee-800 hover:bg-coffee-700 text-white font-medium px-7 py-3.5 rounded-xl border border-coffee-700 transition text-xs sm:text-sm">
+                                ${t.hero.ctaAll}
+                            </button>
+                        </div>
                     </div>
-                `;
-            } else {
-                cartContainer.innerHTML = cart.map(item => {
-                    const itemName = item.name[currentLang] || item.name['vi'];
-                    return `
-                        <div class="flex gap-4 items-center bg-white p-3 rounded-lg border border-coffee-200/60 shadow-sm">
-                            <img src="${item.image}" alt="${itemName}" class="w-16 h-16 object-cover rounded">
-                            <div class="flex-grow min-w-0">
-                                <h4 class="font-serif text-xs font-bold text-coffee-900 truncate">${itemName}</h4>
-                                <span class="text-xs text-gray-400 block">${formatPrice(item.price)}</span>
-                                <div class="flex items-center gap-2 mt-2">
-                                    <button onclick="updateQuantity('${item.id}', -1)" class="w-5 h-5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded flex items-center justify-center text-xs font-bold">-</button>
-                                    <span class="text-xs font-bold text-gray-700">${item.quantity}</span>
-                                    <button onclick="updateQuantity('${item.id}', 1)" class="w-5 h-5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded flex items-center justify-center text-xs font-bold">+</button>
+                </section>
+
+                <!-- Feature Cards -->
+                <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-xl border border-coffee-200/80 hover:shadow-2xl transition duration-300">
+                            <div class="w-12 h-12 rounded-xl bg-coffee-100 text-coffee-700 flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-mug-hot"></i>
+                            </div>
+                            <h3 class="font-serif font-bold text-base text-coffee-900">${t.features.f1Title}</h3>
+                            <p class="text-xs text-gray-500 mt-2 leading-relaxed">${t.features.f1Desc}</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl shadow-xl border border-coffee-200/80 hover:shadow-2xl transition duration-300">
+                            <div class="w-12 h-12 rounded-xl bg-coffee-100 text-coffee-700 flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-snowflake"></i>
+                            </div>
+                            <h3 class="font-serif font-bold text-base text-coffee-900">${t.features.f2Title}</h3>
+                            <p class="text-xs text-gray-500 mt-2 leading-relaxed">${t.features.f2Desc}</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl shadow-xl border border-coffee-200/80 hover:shadow-2xl transition duration-300">
+                            <div class="w-12 h-12 rounded-xl bg-coffee-100 text-coffee-700 flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-leaf"></i>
+                            </div>
+                            <h3 class="font-serif font-bold text-base text-coffee-900">${t.features.f3Title}</h3>
+                            <p class="text-xs text-gray-500 mt-2 leading-relaxed">${t.features.f3Desc}</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Product Catalog Section -->
+                <section id="products-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-coffee-200 pb-4">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-widest text-coffee-gold block">${t.popularSubtitle}</span>
+                            <h2 class="font-serif font-bold text-2xl sm:text-3xl text-coffee-900 mt-1">${t.popularTitle}</h2>
+                        </div>
+
+                        <!-- Filter Pills -->
+                        <div class="flex flex-wrap gap-2 mt-4 md:mt-0">
+                            <button onclick="filterCategory('all')" class="px-4 py-2 rounded-xl text-xs font-semibold transition ${currentCategory === 'all' ? 'bg-coffee-900 text-coffee-gold shadow' : 'bg-coffee-100 text-coffee-800 hover:bg-coffee-200'}">Tất cả</button>
+                            <button onclick="filterCategory('steeped')" class="px-4 py-2 rounded-xl text-xs font-semibold transition ${currentCategory === 'steeped' ? 'bg-coffee-900 text-coffee-gold shadow' : 'bg-coffee-100 text-coffee-800 hover:bg-coffee-200'}">Túi Ngâm</button>
+                            <button onclick="filterCategory('single-origin')" class="px-4 py-2 rounded-xl text-xs font-semibold transition ${currentCategory === 'single-origin' ? 'bg-coffee-900 text-coffee-gold shadow' : 'bg-coffee-100 text-coffee-800 hover:bg-coffee-200'}">Hạt Đơn Nguồn</button>
+                            <button onclick="filterCategory('blend')" class="px-4 py-2 rounded-xl text-xs font-semibold transition ${currentCategory === 'blend' ? 'bg-coffee-900 text-coffee-gold shadow' : 'bg-coffee-100 text-coffee-800 hover:bg-coffee-200'}">Viebucks Blend</button>
+                            <button onclick="filterCategory('drip')" class="px-4 py-2 rounded-xl text-xs font-semibold transition ${currentCategory === 'drip' ? 'bg-coffee-900 text-coffee-gold shadow' : 'bg-coffee-100 text-coffee-800 hover:bg-coffee-200'}">Túi Lọc Drip</button>
+                        </div>
+                    </div>
+
+                    <!-- Products Grid Target -->
+                    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Dynamic product cards -->
+                    </div>
+                </section>
+            `;
+
+            renderProductsSection();
+        }
+
+        function renderProductsSection() {
+            const grid = document.getElementById('product-grid');
+            if (!grid) return;
+
+            const filtered = currentCategory === 'all' ? products : products.filter(p => p.category === currentCategory);
+
+            grid.innerHTML = filtered.map(p => `
+                <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-coffee-200/70 flex flex-col justify-between group">
+                    <div>
+                        <!-- Product Image & Origin Tag -->
+                        <div class="relative h-56 overflow-hidden bg-coffee-100 cursor-pointer" onclick="openProductModal('${p.id}')">
+                            <img src="${p.image}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <span class="absolute top-3 left-3 bg-coffee-900/80 backdrop-blur text-coffee-gold text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                                ${p.origin}
+                            </span>
+                        </div>
+
+                        <!-- Info Area -->
+                        <div class="p-5">
+                            <div class="flex items-center justify-between text-xs text-coffee-gold mb-1">
+                                <div class="flex items-center gap-1">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span class="font-bold text-coffee-900">${p.rating}</span>
+                                    <span class="text-gray-400">(${p.reviews})</span>
+                                </div>
+                                <span class="text-[10px] bg-coffee-100 text-coffee-800 font-bold px-2 py-0.5 rounded">${p.roast[currentLang]}</span>
+                            </div>
+
+                            <h3 onclick="openProductModal('${p.id}')" class="font-serif font-bold text-base text-coffee-900 cursor-pointer hover:text-coffee-gold transition line-clamp-1">
+                                ${p.name[currentLang]}
+                            </h3>
+
+                            <p class="text-xs text-gray-500 mt-2 line-clamp-2 leading-relaxed">
+                                ${p.description[currentLang]}
+                            </p>
+
+                            <!-- Flavor Tags -->
+                            <div class="flex flex-wrap gap-1 mt-3">
+                                ${p.flavor[currentLang].slice(0, 3).map(f => `<span class="bg-coffee-50 text-coffee-700 text-[10px] font-medium px-2 py-0.5 rounded border border-coffee-200">${f}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Action Bar -->
+                    <div class="px-5 pb-5 pt-2 flex items-center justify-between border-t border-coffee-100">
+                        <span class="font-bold text-coffee-gold text-base">${formatVND(p.price)}</span>
+                        <div class="flex gap-2">
+                            <button onclick="openProductModal('${p.id}')" class="p-2.5 bg-coffee-100 hover:bg-coffee-200 text-coffee-900 rounded-lg text-xs transition">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                            <button onclick="addToCart('${p.id}', 0, 1)" class="bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold px-4 py-2.5 rounded-lg text-xs shadow transition flex items-center gap-1">
+                                <i class="fa-solid fa-bag-shopping"></i> Mua ngay
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderQuizView(container) {
+            const t = i18n[currentLang].quiz;
+            container.innerHTML = `
+                <section class="max-w-3xl mx-auto px-4 py-16">
+                    <div class="bg-white rounded-2xl shadow-xl p-8 border border-coffee-200 text-center">
+                        <span class="text-xs font-bold uppercase tracking-widest text-coffee-gold">Viebucks Flavor AI</span>
+                        <h2 class="font-serif font-bold text-2xl sm:text-3xl text-coffee-900 mt-1">${t.title}</h2>
+                        <p class="text-xs text-gray-500 mt-2">${t.subtitle}</p>
+
+                        <form id="quiz-form" onsubmit="calculateQuiz(event)" class="mt-8 text-left space-y-6">
+                            <div class="p-4 bg-coffee-50 rounded-xl border border-coffee-200">
+                                <label class="font-bold text-sm text-coffee-900 block mb-3">${t.q1}</label>
+                                <div class="space-y-2 text-xs">
+                                    <label class="flex items-center gap-2 cursor-pointer p-2 bg-white rounded border hover:border-coffee-gold">
+                                        <input type="radio" name="q1" value="a" required class="accent-coffee-gold">
+                                        <span>${t.q1a}</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer p-2 bg-white rounded border hover:border-coffee-gold">
+                                        <input type="radio" name="q1" value="b" class="accent-coffee-gold">
+                                        <span>${t.q1b}</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer p-2 bg-white rounded border hover:border-coffee-gold">
+                                        <input type="radio" name="q1" value="c" class="accent-coffee-gold">
+                                        <span>${t.q1c}</span>
+                                    </label>
                                 </div>
                             </div>
-                            <div class="text-right">
-                                <span class="font-bold text-sm text-coffee-900">${formatPrice(item.price * item.quantity)}</span>
+
+                            <div class="p-4 bg-coffee-50 rounded-xl border border-coffee-200">
+                                <label class="font-bold text-sm text-coffee-900 block mb-3">${t.q2}</label>
+                                <div class="space-y-2 text-xs">
+                                    <label class="flex items-center gap-2 cursor-pointer p-2 bg-white rounded border hover:border-coffee-gold">
+                                        <input type="radio" name="q2" value="a" required class="accent-coffee-gold">
+                                        <span>${t.q2a}</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer p-2 bg-white rounded border hover:border-coffee-gold">
+                                        <input type="radio" name="q2" value="b" class="accent-coffee-gold">
+                                        <span>${t.q2b}</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer p-2 bg-white rounded border hover:border-coffee-gold">
+                                        <input type="radio" name="q2" value="c" class="accent-coffee-gold">
+                                        <span>${t.q2c}</span>
+                                    </label>
+                                </div>
                             </div>
+
+                            <button type="submit" class="w-full bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold py-3.5 rounded-xl shadow transition text-xs sm:text-sm uppercase tracking-wider">
+                                ${t.submitBtn}
+                            </button>
+                        </form>
+
+                        <div id="quiz-result" class="mt-8 hidden animate-fade-in border-t border-coffee-200 pt-6">
+                            <!-- Injected Result -->
                         </div>
-                    `;
-                }).join('');
-            }
-
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const shipping = (subtotal >= 600000 || subtotal === 0) ? 0 : 40000;
-            const discount = appliedCoupon ? 80000 : 0;
-            const total = Math.max(0, subtotal + shipping - discount);
-
-            document.getElementById('cart-subtotal').textContent = formatPrice(subtotal);
-            document.getElementById('cart-shipping').textContent = shipping === 0 ? t.freeShip : formatPrice(shipping);
-            document.getElementById('cart-total').textContent = formatPrice(total);
-
-            const discountRow = document.getElementById('discount-row');
-            if (appliedCoupon) {
-                discountRow.classList.remove('hidden');
-            } else {
-                discountRow.classList.add('hidden');
-            }
+                    </div>
+                </section>
+            `;
         }
 
-        function applyCoupon() {
-            const input = document.getElementById('coupon-input').value.trim().toUpperCase();
-            if (input === 'VIEBUCKS80K' || input === 'VIEBUCKS100') {
-                appliedCoupon = true;
-                showToast('Đã áp dụng giảm 80.000 ₫!');
-                updateCartUI();
-            } else {
-                showToast('Mã giảm giá không hợp lệ!');
-            }
-        }
-
-        // --- Checkout & Generate Order Text ---
-        function checkout() {
-            if (cart.length === 0) {
-                showToast('Giỏ hàng trống!');
-                return;
-            }
-
-            const name = document.getElementById('checkout-name').value.trim() || 'Quý khách';
-            const phone = document.getElementById('checkout-phone').value.trim() || 'Chưa cung cấp';
-            const address = document.getElementById('checkout-address').value.trim() || 'Chưa cung cấp';
-
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const shipping = subtotal >= 600000 ? 0 : 40000;
-            const discount = appliedCoupon ? 80000 : 0;
-            const total = Math.max(0, subtotal + shipping - discount);
-
-            const orderId = 'VB' + Math.floor(100000 + Math.random() * 900000);
-            const dateStr = new Date().toLocaleString('vi-VN');
-
-            let itemsListStr = cart.map(item => {
-                const iName = item.name[currentLang] || item.name['vi'];
-                return `・${iName} x ${item.quantity} (${formatPrice(item.price * item.quantity)})`;
-            }).join('\n');
-
-            currentOrderSubject = `[Đơn Hàng Viebucks] #${orderId} - Khách hàng ${name}`;
-            currentOrderText = 
-`☕ 【VIEBUCKS CRAFT COFFEE - THÔNG TIN ĐƠN HÀNG】
-===========================
-Mã đơn hàng: #${orderId}
-Thời gian: ${dateStr}
-
-【THÔNG TIN NGƯỜI NHẬN】
-Họ tên: ${name}
-Điện thoại: ${phone}
-Địa chỉ: ${address}
-
-【DANH SÁCH CÀ PHÊ ĐẶT MUA】
-${itemsListStr}
-
----------------------------
-Tạm tính: ${formatPrice(subtotal)}
-Phí giao hàng: ${shipping === 0 ? '0 ₫ (Miễn phí vận chuyển)' : formatPrice(shipping)}
-${appliedCoupon ? 'Mã giảm giá: -80.000 ₫\n' : ''}TỔNG THANH TOÁN: ${formatPrice(total)}
-===========================
-Hotline Zalo: 0839681380
-Cảm ơn bạn đã lựa chọn Viebucks! Chúng tôi sẽ chuẩn bị đơn hàng ngay.`;
-
-            document.getElementById('order-summary-text').textContent = currentOrderText;
-            copyOrderTextToClipboard(false);
-
-            cart = [];
-            appliedCoupon = false;
-            saveCartToStorage();
-            updateCartUI();
-            toggleCartModal();
-
-            document.getElementById('checkout-modal').classList.remove('hidden');
-        }
-
-        function sendGmailNotification() {
-            const encodedSubject = encodeURIComponent(currentOrderSubject);
-            const encodedBody = encodeURIComponent(currentOrderText);
-            const mailtoUrl = `mailto:service@viebucks.com?subject=${encodedSubject}&body=${encodedBody}`;
-            
-            window.open(mailtoUrl, '_blank');
-            showToast('Đã mở Gmail!');
-        }
-
-        function copyOrderTextToClipboard(showToastMsg = true) {
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(currentOrderText).then(() => {
-                    if (showToastMsg) showToast('Đã sao chép đơn hàng!');
-                }).catch(() => fallbackCopyText());
-            } else {
-                fallbackCopyText();
-                if (showToastMsg) showToast('Đã sao chép đơn hàng!');
-            }
-        }
-
-        function fallbackCopyText() {
-            const textArea = document.createElement("textarea");
-            textArea.value = currentOrderText;
-            textArea.style.position = "fixed";
-            textArea.style.left = "-9999px";
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            try {
-                document.execCommand('copy');
-            } catch (err) {}
-            document.body.removeChild(textArea);
-        }
-
-        function closeCheckoutModal() {
-            document.getElementById('checkout-modal').classList.add('hidden');
-        }
-
-        function toggleCartModal() {
-            document.getElementById('cart-modal').classList.toggle('hidden');
-        }
-
-        // --- Search Functionality ---
-        function toggleSearchModal() {
-            const modal = document.getElementById('search-modal');
-            modal.classList.toggle('hidden');
-            if (!modal.classList.contains('hidden')) {
-                document.getElementById('search-input').focus();
-            }
-        }
-
-        function handleSearch(e) {
-            const query = e.target.value.toLowerCase().trim();
-            const resultsContainer = document.getElementById('search-results');
-
-            if (!query) {
-                resultsContainer.innerHTML = '<p class="text-xs text-gray-400 text-center py-4">Nhập từ khóa...</p>';
-                return;
-            }
-
-            const matched = products.filter(p => {
-                const pName = (p.name[currentLang] || p.name['vi']).toLowerCase();
-                const pDesc = (p.description[currentLang] || p.description['vi']).toLowerCase();
-                return pName.includes(query) || pDesc.includes(query) || p.origin.toLowerCase().includes(query);
-            });
-
-            if (matched.length === 0) {
-                resultsContainer.innerHTML = '<p class="text-xs text-gray-400 text-center py-4">Không tìm thấy sản phẩm phù hợp</p>';
-            } else {
-                resultsContainer.innerHTML = matched.map(p => {
-                    const pName = p.name[currentLang] || p.name['vi'];
-                    return `
-                        <div onclick="openProductModal('${p.id}'); toggleSearchModal();" class="flex items-center gap-3 p-2 hover:bg-coffee-100/60 rounded cursor-pointer transition">
-                            <img src="${p.image}" class="w-12 h-12 object-cover rounded">
-                            <div>
-                                <h4 class="font-serif font-bold text-xs text-coffee-900">${p.name[currentLang] || p.name['vi']}</h4>
-                                <span class="text-[11px] text-coffee-gold">${formatPrice(p.price)}</span>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-        }
-
-        // --- Toast Notifications ---
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-message').textContent = message;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
-        }
-
-        function subscribeNewsletter(e) {
+        function calculateQuiz(e) {
             e.preventDefault();
-            showToast('Cảm ơn bạn đã đăng ký Viebucks!');
-            e.target.reset();
-        }
+            const form = e.target;
+            const q1 = form.q1.value;
+            const q2 = form.q2.value;
 
-        function saveCartToStorage() {
-            localStorage.setItem('viebucks_cart', JSON.stringify(cart));
-        }
-
-        function loadCartFromStorage() {
-            const saved = localStorage.getItem('viebucks_cart');
-            if (saved) {
-                try {
-                    cart = JSON.parse(saved);
-                    updateCartUI();
-                } catch(e) { cart = []; }
+            let recProduct = products[0]; // Default Mozart Steeped
+            if (q1 === 'a' || q2 === 'a') {
+                recProduct = products.find(p => p.id === 'p-s1') || products[0];
+            } else if (q1 === 'b' || q2 === 'b') {
+                recProduct = products.find(p => p.id === 'p1') || products[3];
+            } else if (q1 === 'c' || q2 === 'c') {
+                recProduct = products.find(p => p.id === 'p-s3') || products[2];
             }
+
+            const resDiv = document.getElementById('quiz-result');
+            resDiv.innerHTML = `
+                <span class="bg-coffee-gold text-coffee-900 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">${i18n[currentLang].quiz.recTag}</span>
+                <div class="mt-4 p-4 bg-coffee-50 rounded-xl border border-coffee-200 flex flex-col sm:flex-row items-center gap-4 text-left">
+                    <img src="${recProduct.image}" class="w-20 h-20 object-cover rounded-xl border">
+                    <div class="flex-grow">
+                        <h4 class="font-serif font-bold text-base text-coffee-900">${recProduct.name[currentLang]}</h4>
+                        <p class="text-xs text-gray-500 mt-1">${recProduct.description[currentLang]}</p>
+                        <div class="text-sm font-bold text-coffee-gold mt-2">${formatVND(recProduct.price)}</div>
+                    </div>
+                    <button onclick="addToCart('${recProduct.id}', 0, 1)" class="w-full sm:w-auto bg-coffee-900 text-coffee-gold font-bold text-xs px-4 py-3 rounded-lg hover:bg-coffee-800 transition whitespace-nowrap">
+                        ${i18n[currentLang].quiz.addCart}
+                    </button>
+                </div>
+            `;
+            resDiv.classList.remove('hidden');
         }
+
+        function renderSubscriptionView(container) {
+            const t = i18n[currentLang].subPage;
+            container.innerHTML = `
+                <section class="max-w-7xl mx-auto px-4 py-16">
+                    <div class="text-center max-w-3xl mx-auto mb-12">
+                        <span class="text-xs font-bold uppercase tracking-widest text-coffee-gold block">Subscribe & Save 20%</span>
+                        <h2 class="font-serif font-bold text-3xl sm:text-4xl text-coffee-900 mt-1">${t.title}</h2>
+                        <p class="text-xs sm:text-sm text-gray-500 mt-3">${t.subtitle}</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Plan 1 -->
+                        <div class="bg-white rounded-2xl p-6 border border-coffee-200 shadow-lg hover:shadow-xl transition flex flex-col justify-between">
+                            <div>
+                                <span class="bg-coffee-100 text-coffee-800 text-[10px] font-bold px-3 py-1 rounded-full uppercase">Phổ biến nhất</span>
+                                <h3 class="font-serif font-bold text-xl text-coffee-900 mt-3">${t.p1Title}</h3>
+                                <p class="text-xs text-gray-500 mt-1">${t.p1Desc}</p>
+
+                                <div class="mt-6 mb-6">
+                                    <span class="text-2xl font-bold text-coffee-gold">${t.p1Price}</span>
+                                    <span class="text-xs text-gray-400">${t.p1Unit}</span>
+                                </div>
+
+                                <ul class="space-y-3 text-xs text-gray-600 border-t border-coffee-100 pt-4">
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> ${t.p1Item1}</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> ${t.p1Item2}</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> ${t.p1Item3}</li>
+                                </ul>
+                            </div>
+
+                            <button onclick="addToCart('p-s1', 0, 2); toggleCartModal()" class="w-full mt-8 bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold py-3 rounded-xl transition text-xs uppercase tracking-wider">
+                                ${t.btn}
+                            </button>
+                        </div>
+
+                        <!-- Plan 2 -->
+                        <div class="bg-coffee-900 text-white rounded-2xl p-6 border-2 border-coffee-gold shadow-2xl relative flex flex-col justify-between scale-105">
+                            <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-coffee-gold text-coffee-900 text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-wider">Khuyên Dùng</div>
+                            <div>
+                                <h3 class="font-serif font-bold text-xl text-white mt-3">${t.p2Title}</h3>
+                                <p class="text-xs text-coffee-200/80 mt-1">${t.p2Desc}</p>
+
+                                <div class="mt-6 mb-6">
+                                    <span class="text-2xl font-bold text-coffee-gold">${t.p2Price}</span>
+                                    <span class="text-xs text-coffee-200/60">${t.p2Unit}</span>
+                                </div>
+
+                                <ul class="space-y-3 text-xs text-coffee-200/90 border-t border-coffee-800 pt-4">
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-coffee-gold"></i> ${t.p2Item1}</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-coffee-gold"></i> ${t.p2Item2}</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-coffee-gold"></i> ${t.p2Item3}</li>
+                                </ul>
+                            </div>
+
+                            <button onclick="addToCart('p1', 0, 2); toggleCartModal()" class="w-full mt-8 bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold py-3.5 rounded-xl transition text-xs uppercase tracking-wider shadow">
+                                ${t.btn}
+                            </button>
+                        </div>
+
+                        <!-- Plan 3 -->
+                        <div class="bg-white rounded-2xl p-6 border border-coffee-200 shadow-lg hover:shadow-xl transition flex flex-col justify-between">
+                            <div>
+                                <span class="bg-coffee-100 text-coffee-800 text-[10px] font-bold px-3 py-1 rounded-full uppercase">Đậm vị Espresso</span>
+                                <h3 class="font-serif font-bold text-xl text-coffee-900 mt-3">${t.p3Title}</h3>
+                                <p class="text-xs text-gray-500 mt-1">${t.p3Desc}</p>
+
+                                <div class="mt-6 mb-6">
+                                    <span class="text-2xl font-bold text-coffee-gold">${t.p3Price}</span>
+                                    <span class="text-xs text-gray-400">${t.p3Unit}</span>
+                                </div>
+
+                                <ul class="space-y-3 text-xs text-gray-600 border-t border-coffee-100 pt-4">
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> ${t.p3Item1}</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> ${t.p3Item2}</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> ${t.p3Item3}</li>
+                                </ul>
+                            </div>
+
+                            <button onclick="addToCart('p4', 0, 2); toggleCartModal()" class="w-full mt-8 bg-coffee-gold hover:bg-amber-600 text-coffee-900 font-bold py-3 rounded-xl transition text-xs uppercase tracking-wider">
+                                ${t.btn}
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            `;
+        }
+
+        // App Initializer
+        window.onload = function() {
+            renderAll();
+        };
     </script>
 </body>
 </html>
