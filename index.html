@@ -1,360 +1,802 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>精品咖啡系列與線上訂購</title>
-  <!-- 引入 EmailJS SDK -->
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  <style>
-    :root {
-      --primary: #432818;
-      --primary-hover: #99582a;
-      --accent: #bb9457;
-      --bg: #f8f5f0;
-      --card-bg: #ffffff;
-      --text-main: #2b2d42;
-      --text-muted: #6c757d;
-      --border: #e9ecef;
-      --radius: 12px;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: var(--bg);
-      color: var(--text-main);
-      padding: 24px 16px;
-      line-height: 1.5;
-    }
-
-    .container { max-width: 1200px; margin: 0 auto; }
-    header { text-align: center; margin-bottom: 32px; }
-    header h1 { font-size: 2rem; color: var(--primary); margin-bottom: 8px; }
-    header p { color: var(--text-muted); font-size: 1rem; }
-
-    /* 2-3 網格卡片佈局 */
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-bottom: 40px;
-    }
-    @media (max-width: 1024px) { .grid-container { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 640px) { .grid-container { grid-template-columns: 1fr; } }
-
-    .card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      padding: 24px;
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-      display: flex; flex-direction: column; justify-content: space-between;
-    }
-    .card-title { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
-    .card-subtitle { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; }
-    .card-desc { font-size: 0.95rem; color: #495057; margin-bottom: 16px; min-height: 48px; }
-    
-    .form-group { margin-bottom: 12px; }
-    .form-label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; display: block; }
-    select, input, textarea {
-      width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border); background-color: #f8f9fa; font-size: 0.9rem; outline: none;
-    }
-    select:focus, input:focus, textarea:focus { border-color: var(--primary); }
-
-    .card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--border); }
-    .price-tag { font-size: 1.25rem; font-weight: 700; color: var(--primary-hover); }
-    
-    .btn {
-      background: var(--primary); color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s;
-    }
-    .btn:hover { background: var(--primary-hover); }
-    .btn-checkout { background: #2a9d8f; width: 100%; margin-top: 16px; font-size: 1.1rem; }
-    .btn-checkout:hover { background: #218376; }
-
-    /* 購物車面板 */
-    .cart-section {
-      background: var(--card-bg); border-radius: var(--radius); padding: 24px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    }
-    .cart-title { font-size: 1.2rem; color: var(--primary); margin-bottom: 16px; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
-    .cart-items { list-style: none; margin-bottom: 16px; }
-    .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed var(--border); }
-    .cart-item-remove { color: #e63946; cursor: pointer; margin-left: 12px; font-weight: bold; }
-    .cart-summary { display: flex; justify-content: space-between; align-items: center; font-size: 1.2rem; font-weight: 700; color: var(--primary); padding: 12px 0; }
-
-    /* 客戶資訊表單 */
-    .customer-form { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
-    @media (max-width: 640px) { .customer-form { grid-template-columns: 1fr; } }
-
-    /* 訂購單彈出視窗 Modal */
-    .modal {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; padding: 16px;
-    }
-    .modal-content {
-      background: #fff; border-radius: var(--radius); width: 100%; max-width: 600px; padding: 32px; max-height: 90vh; overflow-y: auto;
-    }
-    .order-header { text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 12px; margin-bottom: 20px; }
-    .order-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-    .order-table th, .order-table td { border-bottom: 1px solid var(--border); padding: 8px; text-align: left; }
-    .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viebucks Specialty Coffee | 精品咖啡品牌</title>
+    <meta name="description" content="Công ty TNHH VIEBUCKS 提供精選阿拉比卡、羅布斯塔與巴西喜拉朵咖啡豆，支援中越雙語服務與大宗批發。">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        coffee: {
+                            50: '#fdfbf7',
+                            100: '#f7f0e6',
+                            200: '#e9d7c3',
+                            500: '#a67c52',
+                            700: '#6f4e37',
+                            800: '#4a3222',
+                            900: '#2c1a0e',
+                            950: '#1a0f08'
+                        },
+                        amber_gold: '#d4af37'
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        .hero-bg {
+            background: linear-gradient(rgba(28, 15, 8, 0.75), rgba(28, 15, 8, 0.85)), url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
 </head>
-<body>
+<body class="font-sans bg-coffee-50 text-gray-800 antialiased">
 
-<div class="container">
-  <header>
-    <h1>☕ 精品咖啡系列線上訂購</h1>
-    <p>獨立充氮包裝與手沖熟豆，提供最高品質的品飲體驗。</p>
-  </header>
+    <!-- Navigation Header -->
+    <header class="fixed w-full z-40 bg-coffee-900/95 backdrop-blur-md text-white shadow-lg transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="flex items-center space-x-3">
+                <i class="fa-solid fa-mug-hot text-amber-500 text-2xl"></i>
+                <span class="font-serif text-2xl font-bold tracking-wider text-amber-100">VIEBUCKS</span>
+            </a>
 
-  <!-- 2-3 網格產品區域 -->
-  <div class="grid-container">
-    <!-- 埃塞俄比亞 -->
-    <div class="card" data-name="埃塞俄比亞">
-      <div>
-        <div class="card-title">埃塞俄比亞</div>
-        <div class="card-subtitle">Ethiopia</div>
-        <div class="card-desc">花果香調、明亮柑橘酸質、花香餘韻。</div>
-      </div>
-      <div>
-        <div class="form-group">
-          <label class="form-label">規格：</label>
-          <select onchange="updatePrice(this)">
-            <option value="熟豆半磅 (227g)" data-price="450">熟豆半磅 (227g)</option>
-            <option value="濾掛咖啡包 (10入)" data-price="380">濾掛咖啡包 (10入/盒)</option>
-            <option value="浸泡式咖啡包 (10入)" data-price="380">浸泡式咖啡包 (10入/盒)</option>
-          </select>
+            <!-- Desktop Menu -->
+            <nav class="hidden md:flex items-center space-x-8 font-medium">
+                <a href="#about" class="hover:text-amber-400 transition-colors">關於我們</a>
+                <a href="#products" class="hover:text-amber-400 transition-colors">產品與價格</a>
+                <a href="#b2b" class="hover:text-amber-400 transition-colors">商業合作</a>
+                <a href="#contact" class="hover:text-amber-400 transition-colors">聯絡我們</a>
+            </nav>
+
+            <!-- CTA & Cart Button -->
+            <div class="flex items-center space-x-4">
+                <!-- Cart Trigger Button -->
+                <button id="cart-btn" onclick="toggleCart()" class="relative p-2.5 bg-coffee-800 hover:bg-amber-600 rounded-full transition-colors text-amber-200 hover:text-white">
+                    <i class="fa-solid fa-cart-shopping text-lg"></i>
+                    <span id="cart-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-coffee-900 hidden">0</span>
+                </button>
+
+                <a href="#contact" class="hidden md:inline-flex bg-amber-600 hover:bg-amber-500 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    <i class="fa-solid fa-paper-plane mr-2"></i>索取報價
+                </a>
+
+                <!-- Mobile Menu Toggle Button -->
+                <button id="menu-btn" class="md:hidden text-2xl focus:outline-none text-amber-200 ml-2">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
         </div>
-        <div class="card-footer">
-          <div class="price-tag">NT$ <span class="price-val">450</span></div>
-          <button class="btn" onclick="addToCart(this)">＋ 加入</button>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden bg-coffee-900 border-t border-coffee-800 px-4 pt-4 pb-6 space-y-3">
+            <a href="#about" class="block text-gray-200 hover:text-amber-400 py-2 font-medium">關於我們</a>
+            <a href="#products" class="block text-gray-200 hover:text-amber-400 py-2 font-medium">產品與價格</a>
+            <a href="#b2b" class="block text-gray-200 hover:text-amber-400 py-2 font-medium">商業合作</a>
+            <a href="#contact" class="block text-gray-200 hover:text-amber-400 py-2 font-medium">聯絡我們</a>
+            <a href="#contact" class="block text-center bg-amber-600 text-white py-2.5 rounded-lg font-semibold mt-4">索取批發報價</a>
         </div>
-      </div>
-    </div>
+    </header>
 
-    <!-- 哥倫比亞 -->
-    <div class="card" data-name="哥倫比亞">
-      <div>
-        <div class="card-title">哥倫比亞</div>
-        <div class="card-subtitle">Colombia</div>
-        <div class="card-desc">堅果榛果香氣、焦糖甜感、口感均衡。</div>
-      </div>
-      <div>
-        <div class="form-group">
-          <label class="form-label">規格：</label>
-          <select onchange="updatePrice(this)">
-            <option value="熟豆半磅 (227g)" data-price="400">熟豆半磅 (227g)</option>
-            <option value="濾掛咖啡包 (10入)" data-price="350">濾掛咖啡包 (10入/盒)</option>
-            <option value="浸泡式咖啡包 (10入)" data-price="350">浸泡式咖啡包 (10入/盒)</option>
-          </select>
+    <!-- Slide-over Shopping Cart Drawer -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden pointer-events-none hidden">
+        <div id="cart-backdrop" onclick="toggleCart()" class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+        
+        <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+            <div id="cart-panel" class="w-screen max-w-md bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col pointer-events-auto">
+                
+                <!-- Drawer Header -->
+                <div class="p-6 bg-coffee-900 text-white flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-bag-shopping text-amber-400 text-xl"></i>
+                        <h2 class="text-xl font-bold font-serif">您的採購購物車</h2>
+                    </div>
+                    <button onclick="toggleCart()" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fa-solid fa-xmark text-2xl"></i>
+                    </button>
+                </div>
+
+                <!-- Drawer Body (Items List) -->
+                <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4 divide-y divide-gray-100">
+                    <!-- JavaScript 將在此動態渲染購物車項目 -->
+                </div>
+
+                <!-- Drawer Footer (Total & Checkout) -->
+                <div class="p-6 bg-coffee-50 border-t border-coffee-100 space-y-4">
+                    <div class="flex justify-between items-center text-lg font-bold text-coffee-900">
+                        <span>預估總金額 (VND)</span>
+                        <span id="cart-total" class="text-amber-700 text-xl">0 VND</span>
+                    </div>
+                    <p class="text-xs text-gray-500">* 大宗採購折扣與運費將於下單後由專人聯繫確認。</p>
+                    <button onclick="openCheckoutModal()" class="w-full py-3.5 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-xl transition-all shadow-lg flex items-center justify-center space-x-2">
+                        <span>前往填寫採購單</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
         </div>
-        <div class="card-footer">
-          <div class="price-tag">NT$ <span class="price-val">400</span></div>
-          <button class="btn" onclick="addToCart(this)">＋ 加入</button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-bg min-h-screen flex items-center justify-center pt-20 px-4 sm:px-6 text-center text-white relative">
+        <div class="max-w-4xl mx-auto space-y-6">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-sm font-medium tracking-wide">
+                Specialty Coffee & B2B Solutions
+            </span>
+            <h1 class="text-4xl sm:text-6xl font-serif font-bold leading-tight tracking-wide text-amber-50">
+                "It's never too late to drink coffee."
+            </h1>
+            <p class="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto font-light leading-relaxed">
+                嚴選高品質阿拉比卡與羅布斯塔，提供精準烘焙、靈活採購與客製化合作的專業咖啡方案。
+            </p>
+            <div class="pt-4 flex flex-col sm:flex-row justify-center items-center gap-4">
+                <a href="#products" class="w-full sm:w-auto px-8 py-3.5 bg-amber-600 hover:bg-amber-500 text-white rounded-full font-semibold text-lg transition-all shadow-lg hover:shadow-amber-600/30">
+                    <i class="fa-solid fa-store mr-2"></i>瀏覽產品目錄
+                </a>
+                <a href="#contact" class="w-full sm:w-auto px-8 py-3.5 bg-coffee-800/80 hover:bg-coffee-800 text-amber-200 border border-amber-500/30 rounded-full font-semibold text-lg transition-all">
+                    <i class="fa-solid fa-comments mr-2"></i>線上諮詢採購
+                </a>
+            </div>
         </div>
-      </div>
-    </div>
+    </section>
 
-    <!-- 西西里風味調飲配方 -->
-    <div class="card" data-name="西西里風味調飲配方">
-      <div>
-        <div class="card-title">西西里風味調飲配方</div>
-        <div class="card-subtitle">Sicilian Style Blend</div>
-        <div class="card-desc">特別適合搭配柑橘類果汁或冷萃，風味濃郁順口。</div>
-      </div>
-      <div>
-        <div class="form-group">
-          <label class="form-label">規格：</label>
-          <select onchange="updatePrice(this)">
-            <option value="熟豆半磅 (227g)" data-price="420">熟豆半磅 (227g)</option>
-            <option value="濾掛咖啡包 (10入)" data-price="360">濾掛咖啡包 (10入/盒)</option>
-            <option value="浸泡式咖啡包 (10入)" data-price="360">浸泡式咖啡包 (10入/盒)</option>
-          </select>
+    <!-- About Us Section -->
+    <section id="about" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <span class="text-amber-700 font-bold uppercase tracking-wider text-sm">About Us / 關於我們</span>
+                    <h2 class="text-3xl sm:text-4xl font-serif font-bold text-coffee-900">
+                        Công ty TNHH VIEBUCKS<br>
+                        <span class="text-xl font-sans text-coffee-700 font-normal">極致風味與品質穩定的專業咖啡供應商</span>
+                    </h2>
+                    <p class="text-gray-600 leading-relaxed text-base">
+                        Công ty TNHH VIEBUCKS 致力於精緻咖啡產業的發展，專注於風味表現與品質穩定。從精品阿拉比卡、在地羅布斯塔到單品巴西喜拉朵，我們為咖啡愛好者與餐飲業者提供最佳的選豆與烘焙解決方案。
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                        <div class="p-4 bg-coffee-50 rounded-xl border border-coffee-100">
+                            <i class="fa-solid fa-language text-amber-600 text-2xl mb-2"></i>
+                            <h3 class="font-bold text-coffee-900">中越雙語支援</h3>
+                            <p class="text-sm text-gray-500">專業雙語團隊，跨國採購與商務溝通無障礙。</p>
+                        </div>
+                        <div class="p-4 bg-coffee-50 rounded-xl border border-coffee-100">
+                            <i class="fa-solid fa-boxes-packing text-amber-600 text-2xl mb-2"></i>
+                            <h3 class="font-bold text-coffee-900">彈性批發體系</h3>
+                            <p class="text-sm text-gray-500">超低起訂門檻，全面滿足大小企業與連鎖餐飲。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=1000&auto=format&fit=crop" alt="Coffee Roasting" class="rounded-2xl shadow-2xl w-full object-cover h-[450px]">
+                    <div class="absolute -bottom-6 -left-6 bg-coffee-900 text-white p-6 rounded-2xl shadow-xl hidden sm:block border border-coffee-700">
+                        <div class="text-3xl font-serif font-bold text-amber-400">100%</div>
+                        <div class="text-sm text-gray-300">精選頂級原豆與在地契作</div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-footer">
-          <div class="price-tag">NT$ <span class="price-val">420</span></div>
-          <button class="btn" onclick="addToCart(this)">＋ 加入</button>
+    </section>
+
+    <!-- Products & Pricing Section -->
+    <section id="products" class="py-24 bg-coffee-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <span class="text-amber-700 font-bold uppercase tracking-wider text-sm">Bảng Giá Cà Phê / 產品定價表</span>
+                <h2 class="text-3xl sm:text-4xl font-serif font-bold text-coffee-900">精選咖啡豆與便利包系列</h2>
+                <p class="text-gray-600">提供零售與門檻極佳的大宗批發方案，點擊按鈕即可加入購物車。</p>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="flex justify-center mb-10">
+                <div class="inline-flex p-1.5 bg-coffee-200/60 rounded-full text-sm font-medium">
+                    <button onclick="switchTab('arabica')" id="tab-arabica" class="tab-btn px-6 py-2.5 rounded-full transition-all shadow-sm bg-coffee-800 text-white font-semibold">
+                        阿拉比卡 Arabica
+                    </button>
+                    <button onclick="switchTab('robusta')" id="tab-robusta" class="tab-btn px-6 py-2.5 rounded-full transition-all text-coffee-800 hover:text-coffee-900">
+                        羅布斯塔 Robusta
+                    </button>
+                    <button onclick="switchTab('brazil')" id="tab-brazil" class="tab-btn px-6 py-2.5 rounded-full transition-all text-coffee-800 hover:text-coffee-900">
+                        巴西喜拉朵 Brazil
+                    </button>
+                </div>
+            </div>
+
+            <!-- Arabica Table Content -->
+            <div id="content-arabica" class="tab-content">
+                <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-coffee-100">
+                    <div class="p-6 bg-coffee-900 text-white flex justify-between items-center">
+                        <div>
+                            <h3 class="text-xl font-bold text-amber-200">阿拉比卡系列 / Dòng Arabica</h3>
+                            <p class="text-sm text-gray-300">香氣濃郁、酸甜平衡，最受精品咖啡市場喜愛的經典品類</p>
+                        </div>
+                        <span class="hidden sm:inline-block px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full text-xs">Arabica Premium</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-coffee-100/60 text-coffee-900 text-sm uppercase tracking-wider border-b border-coffee-200">
+                                    <th class="py-4 px-6 font-bold">項目 / Sản phẩm</th>
+                                    <th class="py-4 px-6 font-bold">零售單價</th>
+                                    <th class="py-4 px-6 font-bold">批發單價</th>
+                                    <th class="py-4 px-6 font-bold">批發門檻</th>
+                                    <th class="py-4 px-6 font-bold text-center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-sm">
+                                <tr class="hover:bg-coffee-50/80 transition-colors">
+                                    <td class="py-4 px-6 font-semibold text-coffee-900">阿拉比卡 咖啡豆 (250g)</td>
+                                    <td class="py-4 px-6 text-gray-700">144,853 VND</td>
+                                    <td class="py-4 px-6 font-semibold text-amber-700">105,348 VND</td>
+                                    <td class="py-4 px-6 text-gray-600">20 包</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <button onclick="addToCart('阿拉比卡 咖啡豆 (250g)', 144853)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center justify-center space-x-1 mx-auto">
+                                            <i class="fa-solid fa-plus"></i><span>加購物車</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-coffee-50/80 transition-colors">
+                                    <td class="py-4 px-6 font-semibold text-coffee-900">阿拉比卡 咖啡豆 (500g)</td>
+                                    <td class="py-4 px-6 text-gray-700">279,706 VND</td>
+                                    <td class="py-4 px-6 font-semibold text-amber-700">203,422 VND</td>
+                                    <td class="py-4 px-6 text-gray-600">10 包</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <button onclick="addToCart('阿拉比卡 咖啡豆 (500g)', 279706)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center justify-center space-x-1 mx-auto">
+                                            <i class="fa-solid fa-plus"></i><span>加購物車</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-coffee-50/80 transition-colors">
+                                    <td class="py-4 px-6 font-semibold text-coffee-900">阿拉比卡 咖啡豆 (1000g)</td>
+                                    <td class="py-4 px-6 text-gray-700">549,412 VND</td>
+                                    <td class="py-4 px-6 font-semibold text-amber-700">399,572 VND</td>
+                                    <td class="py-4 px-6 text-gray-600">5 包</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <button onclick="addToCart('阿拉比卡 咖啡豆 (1000g)', 549412)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center justify-center space-x-1 mx-auto">
+                                            <i class="fa-solid fa-plus"></i><span>加購物車</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-coffee-50/80 transition-colors">
+                                    <td class="py-4 px-6 font-semibold text-coffee-900">阿拉比卡 濾掛包 (12g)</td>
+                                    <td class="py-4 px-6 text-gray-700">15,832 VND</td>
+                                    <td class="py-4 px-6 font-semibold text-amber-700">10,075 VND</td>
+                                    <td class="py-4 px-6 text-gray-600">100 包</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <button onclick="addToCart('阿拉比卡 濾掛包 (12g)', 15832)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center justify-center space-x-1 mx-auto">
+                                            <i class="fa-solid fa-plus"></i><span>加購物車</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-coffee-50/80 transition-colors">
+                                    <td class="py-4 px-6 font-semibold text-coffee-900">阿拉比卡 冷萃包 (10g)</td>
+                                    <td class="py-4 px-6 text-gray-700">12,462 VND</td>
+                                    <td class="py-4 px-6 font-semibold text-amber-700">10,385 VND</td>
+                                    <td class="py-4 px-6 text-gray-600">100 包</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <button onclick="addToCart('阿拉比卡 冷萃包 (10g)', 12462)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center justify-center space-x-1 mx-auto">
+                                            <i class="fa-solid fa-plus"></i><span>加購物車</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Robusta Table Content -->
+            <div id="content-robusta" class="tab-content hidden">
+                <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-coffee-100">
+                    <div class="p-6 bg-coffee-900 text-white flex justify-between items-center">
+                        <div>
+                            <h3 class="text-xl font-bold text-amber-200">羅布斯塔系列 / Dòng Robusta</h3>
+                            <p class="text-sm text-gray-300">口感醇厚、油脂豐富，完美傳達越南在地經典風味</p>
+                        </div>
+                        <span class="hidden sm:inline-block px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full text-xs">Robusta Bold</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-coffee-100/60 text-coffee-900 text-sm uppercase tracking-wider border-b border-coffee-200">
+                                    <th class="py-4 px-6 font-bold">項目 / Sản phẩm</th>
+                                    <th class="py-4 px-6 font-bold">零售單價</th>
+                                    <th class="py-4 px-6 font-bold">批發單價</th>
+                                    <th class="py-4 px-6 font-bold">批發門檻</th>
+                                    <th class="py-4 px-6 font-bold text-center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-sm">
+                                <tr class="hover:bg-coffee-50/80 transition-colors">
+                                    <td class="py-4 px-6 font-semibold text-coffee-900">羅布斯塔 咖啡豆 (250g)</td>
+                                    <td class="py-4 px-6 text-gray-700">91,176 VND</td>
+                                    <td class="py-4 px-6 font-semibold text-amber-700">66,310 VND</td>
+                                    <td class="py-4 px-6 text-gray-600">20 包</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <button onclick="addToCart('羅布斯塔 咖啡豆 (250g)', 91176)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center justify-center space-x-1 mx-auto">
+                                            <i class="fa-solid fa-plus"></i><span>加購物車</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-coffee-50/80 transition-colors">
+                                    <td class="py-4 px-6 font-semibold text-coffee-900">羅布斯塔 咖啡豆 (500g)</td>
+                                    <td class="py-4 px-6 text-gray-700">172,353 VND</td>
+                                    <td class="py-4 px-6 font-semibold text-amber-700">125,348 VND</td>
+                                    <td class="py-4 px-6 text-gray-600">10 包</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <button onclick="addToCart('羅布斯塔 咖啡豆 (500g)', 172353)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center justify-center space-x-1 mx-auto">
+                                            <i class="fa-solid fa-plus"></i><span>加購物車</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-coffee-50/80 transition-colors">
+                                    <td class="py-4 px-6 font-semibold text-coffee-900">羅布斯塔 咖啡豆 (1000g)</td>
+                                    <td class="py-4 px-6 text-gray-700">334,706 VND</td>
+                                    <td class="py-4 px-6 font-semibold text-amber-700">243,422 VND</td>
+                                    <td class="py-4 px-6 text-gray-600">5 包</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <button onclick="addToCart('羅布斯塔 咖啡豆 (1000g)', 334706)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center justify-center space-x-1 mx-auto">
+                                            <i class="fa-solid fa-plus"></i><span>加購物車</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-coffee-50/80 transition-colors">
+                                    <td class="py-4 px-6 font-semibold text-coffee-900">羅布斯塔 濾掛包 (12g)</td>
+                                    <td class="py-4 px-6 text-gray-700">12,887 VND</td>
+                                    <td class="py-4 px-6 font-semibold text-amber-700">8,201 VND</td>
+                                    <td class="py-4 px-6 text-gray-600">100 包</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <button onclick="addToCart('羅布斯塔 濾掛包 (12g)', 12887)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center justify-center space-x-1 mx-auto">
+                                            <i class="fa-solid fa-plus"></i><span>加購物車</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-coffee-50/80 transition-colors">
+                                    <td class="py-4 px-6 font-semibold text-coffee-900">羅布斯塔 冷萃包 (10g)</td>
+                                    <td class="py-4 px-6 text-gray-700">7,045 VND</td>
+                                    <td class="py-4 px-6 font-semibold text-amber-700">5,574 VND</td>
+                                    <td class="py-4 px-6 text-gray-600">100 包</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <button onclick="addToCart('羅布斯塔 冷萃包 (10g)', 7045)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center justify-center space-x-1 mx-auto">
+                                            <i class="fa-solid fa-plus"></i><span>加購物車</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brazil Table Content -->
+            <div id="content-brazil" class="tab-content hidden">
+                <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-coffee-100">
+                    <div class="p-6 bg-coffee-900 text-white flex justify-between items-center">
+                        <div>
+                            <h3 class="text-xl font-bold text-amber-200">巴西喜拉朵系列 / Brazil Cerrado</h3>
+                            <p class="text-sm text-gray-300">帶有堅果與巧克力甜香，口感滑順，大眾接受度極高</p>
+                        </div>
+                        <span class="hidden sm:inline-block px-3 py-1 bg-amber-500/20 text-amber-300 rounded-full text-xs">Single Origin</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-coffee-100/60 text-coffee-900 text-sm uppercase tracking-wider border-b border-coffee-200">
+                                    <th class="py-4 px-6 font-bold">項目 / Sản phẩm</th>
+                                    <th class="py-4 px-6 font-bold">零售單價</th>
+                                    <th class="py-4 px-6 font-bold">批發單價</th>
+                                    <th class="py-4 px-6 font-bold">批發門檻</th>
+                                    <th class="py-4 px-6 font-bold text-center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-sm">
+                                <tr class="hover:bg-coffee-50/80 transition-colors">
+                                    <td class="py-4 px-6 font-semibold text-coffee-900">巴西喜拉朵 咖啡豆 (250g)</td>
+                                    <td class="py-4 px-6 text-gray-700">200,000 VND</td>
+                                    <td class="py-4 px-6 font-semibold text-amber-700">145,455 VND</td>
+                                    <td class="py-4 px-6 text-gray-600">20 包</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <button onclick="addToCart('巴西喜拉朵 咖啡豆 (250g)', 200000)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center justify-center space-x-1 mx-auto">
+                                            <i class="fa-solid fa-plus"></i><span>加購物車</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-coffee-50/80 transition-colors">
+                                    <td class="py-4 px-6 font-semibold text-coffee-900">巴西喜拉朵 咖啡豆 (500g)</td>
+                                    <td class="py-4 px-6 text-gray-700">390,000 VND</td>
+                                    <td class="py-4 px-6 font-semibold text-amber-700">283,636 VND</td>
+                                    <td class="py-4 px-6 text-gray-600">10 包</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <button onclick="addToCart('巴西喜拉朵 咖啡豆 (500g)', 390000)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center justify-center space-x-1 mx-auto">
+                                            <i class="fa-solid fa-plus"></i><span>加購物車</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-coffee-50/80 transition-colors">
+                                    <td class="py-4 px-6 font-semibold text-coffee-900">巴西喜拉朵 咖啡豆 (1000g)</td>
+                                    <td class="py-4 px-6 text-gray-700">770,000 VND</td>
+                                    <td class="py-4 px-6 font-semibold text-amber-700">560,000 VND</td>
+                                    <td class="py-4 px-6 text-gray-600">5 包</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <button onclick="addToCart('巴西喜拉朵 咖啡豆 (1000g)', 770000)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center justify-center space-x-1 mx-auto">
+                                            <i class="fa-solid fa-plus"></i><span>加購物車</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-coffee-50/80 transition-colors">
+                                    <td class="py-4 px-6 font-semibold text-coffee-900">巴西喜拉朵 濾掛包 (12g)</td>
+                                    <td class="py-4 px-6 text-gray-700">18,857 VND</td>
+                                    <td class="py-4 px-6 font-semibold text-amber-700">12,000 VND</td>
+                                    <td class="py-4 px-6 text-gray-600">100 包</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <button onclick="addToCart('巴西喜拉朵 濾掛包 (12g)', 18857)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center justify-center space-x-1 mx-auto">
+                                            <i class="fa-solid fa-plus"></i><span>加購物車</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-coffee-50/80 transition-colors">
+                                    <td class="py-4 px-6 font-semibold text-coffee-900">巴西喜拉朵 冷萃包 (10g)</td>
+                                    <td class="py-4 px-6 text-gray-700">15,000 VND</td>
+                                    <td class="py-4 px-6 font-semibold text-amber-700">13,273 VND</td>
+                                    <td class="py-4 px-6 text-gray-600">100 包</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <button onclick="addToCart('巴西喜拉朵 冷萃包 (10g)', 15000)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center justify-center space-x-1 mx-auto">
+                                            <i class="fa-solid fa-plus"></i><span>加購物車</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </div>
-      </div>
+    </section>
+
+    <!-- B2B Services Section -->
+    <section id="b2b" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <span class="text-amber-700 font-bold uppercase tracking-wider text-sm">B2B Solutions / 企業合作</span>
+                <h2 class="text-3xl sm:text-4xl font-serif font-bold text-coffee-900">專為商業客戶打造的靈活方案</h2>
+                <p class="text-gray-600">從咖啡店採購、企業辦公室供應到節慶禮盒客製，Viebucks 為您提供最給力的後盾。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-8 rounded-2xl bg-coffee-50 border border-coffee-100 space-y-4 hover:shadow-xl transition-all">
+                    <div class="w-14 h-14 rounded-full bg-coffee-800 text-amber-300 flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-shop"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-coffee-900">餐飲與連鎖門市批發</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        提供商業用 1000g 大容量包裝與穩定的烘焙品質，確保您的門市出杯風味始終如一。
+                    </p>
+                </div>
+                <div class="p-8 rounded-2xl bg-coffee-50 border border-coffee-100 space-y-4 hover:shadow-xl transition-all">
+                    <div class="w-14 h-14 rounded-full bg-coffee-800 text-amber-300 flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-building"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-coffee-900">企業辦公室專案</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        打造優質的茶水間咖啡體驗！定期配送濾掛包與新鮮咖啡豆，提升團隊工作效率與滿意度。
+                    </p>
+                </div>
+                <div class="p-8 rounded-2xl bg-coffee-50 border border-coffee-100 space-y-4 hover:shadow-xl transition-all">
+                    <div class="w-14 h-14 rounded-full bg-coffee-800 text-amber-300 flex items-center justify-center text-2xl">
+                        <i class="fa-solid fa-gift"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-coffee-900">客製化禮盒與 OEM</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        支援濾掛包與冷萃包外包裝客製設計，打造符合您品牌形象的專屬節慶禮盒與贈品。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section id="contact" class="py-24 bg-coffee-900 text-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                
+                <div class="space-y-8">
+                    <div>
+                        <span class="text-amber-400 font-bold uppercase tracking-wider text-sm">Contact Us / 聯絡我們</span>
+                        <h2 class="text-3xl sm:text-4xl font-serif font-bold text-amber-100 mt-2">
+                            開始您的高品質咖啡之旅
+                        </h2>
+                        <p class="text-gray-300 mt-4 leading-relaxed">
+                            歡迎隨時與我們聯繫！無論是索取咖啡豆樣品、批發報價或諮詢客製化合作，我們的團隊將儘速為您服務。
+                        </p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-full bg-coffee-800 text-amber-400 flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-building"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-amber-200">生產商 / Nhà sản xuất</h4>
+                                <p class="text-gray-300">Công ty TNHH VIEBUCKS</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-full bg-coffee-800 text-amber-400 flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-amber-200">地址 / Địa chỉ</h4>
+                                <p class="text-gray-300">365 QL13, Thủ Dầu Một, Hồ Chí Minh</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-full bg-coffee-800 text-amber-400 flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-amber-200">聯絡電話 / Điện thoại</h4>
+                                <p class="text-gray-300">0348246669 / 0839681380</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <div class="inline-block p-4 rounded-xl bg-coffee-800/60 border border-coffee-700">
+                            <p class="text-amber-300 font-serif italic text-lg">"It's never too late to drink coffee."</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-8 text-gray-800 shadow-2xl">
+                    <h3 class="text-2xl font-bold text-coffee-900 mb-6">線上需求表單</h3>
+                    <form onsubmit="alert('感謝您的留言！我們將儘速與您聯繫。'); return false;" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">您的姓名 / 寶號 *</label>
+                            <input type="text" required placeholder="例如：張先生 / ABC 咖啡館" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">聯絡電話 *</label>
+                                <input type="tel" required placeholder="例如：0348246669" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">電子郵件</label>
+                                <input type="email" placeholder="example@gmail.com" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">需求類型</label>
+                            <select class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                                <option>大宗批發採購</option>
+                                <option>索取樣品</option>
+                                <option>餐飲門市供豆合作</option>
+                                <option>企業禮盒客製 (OEM)</option>
+                                <option>其他需求</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">諮詢內容 / 需求數量</label>
+                            <textarea rows="4" placeholder="請填寫您感興趣的產品種類（如阿拉比卡 1000g）或預計採購數量..." class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-3.5 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition-all shadow-md">
+                            送出諮詢訊息
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-6 shadow-2xl relative">
+            <button onclick="closeCheckoutModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div class="border-b pb-4">
+                <h3 class="text-xl font-bold text-coffee-900">確認採購明細</h3>
+                <p class="text-xs text-gray-500 mt-1">填寫下方資訊，專員將與您聯繫確認配送與批發優惠價。</p>
+            </div>
+            <form onsubmit="submitCheckout(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">姓名 / 寶號 *</label>
+                    <input type="text" required placeholder="張先生" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">聯絡電話 *</label>
+                    <input type="tel" required placeholder="0348246669" class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">送貨地址</label>
+                    <input type="text" placeholder="胡志明市..." class="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                </div>
+                <button type="submit" class="w-full py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-lg transition-all shadow-md text-sm">
+                    確認送出訂單
+                </button>
+            </form>
+        </div>
     </div>
-  </div>
 
-  <!-- 購物車與訂購資料面板 -->
-  <div class="cart-section">
-    <div class="cart-title">🛒 購物車與結帳資料</div>
-    <ul class="cart-items" id="cart-list">
-      <li style="color: var(--text-muted);" id="empty-msg">購物車目前是空的。</li>
-    </ul>
-    
-    <div class="cart-summary">
-      <span>總計金額：</span>
-      <span>NT$ <span id="cart-total">0</span></span>
-    </div>
+    <!-- Footer -->
+    <footer class="bg-coffee-950 text-gray-400 py-8 border-t border-coffee-800 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+            <div>
+                © 2026 Công ty TNHH VIEBUCKS. All Rights Reserved.
+            </div>
+            <div class="flex space-x-6">
+                <a href="#" class="hover:text-amber-400">隱私權政策</a>
+                <a href="#" class="hover:text-amber-400">服務條款</a>
+                <a href="#contact" class="hover:text-amber-400">聯絡我們</a>
+            </div>
+        </div>
+    </footer>
 
-    <!-- 訂購人資訊 -->
-    <form id="checkout-form" class="customer-form" onsubmit="handleCheckout(event)">
-      <div class="form-group">
-        <label class="form-label">訂購人姓名 *</label>
-        <input type="text" id="cust-name" required placeholder="張先生/小姐">
-      </div>
-      <div class="form-group">
-        <label class="form-label">聯絡電話 *</label>
-        <input type="tel" id="cust-phone" required placeholder="0912-345-678">
-      </div>
-      <div class="form-group" style="grid-column: span 2;">
-        <label class="form-label">收件地址 *</label>
-        <input type="text" id="cust-address" required placeholder="請填寫完整配送地址">
-      </div>
-      <div class="form-group" style="grid-column: span 2;">
-        <label class="form-label">備註事項（如研磨粗細）</label>
-        <textarea id="cust-note" rows="2" placeholder="手沖/摩卡壺研磨，或特殊寄送需求"></textarea>
-      </div>
-      <button type="submit" class="btn btn-checkout" style="grid-column: span 2;">送出訂單並生成訂購單 📄</button>
-    </form>
-  </div>
-</div>
+    <!-- Interactive JavaScript -->
+    <script>
+        // Global Cart State
+        let cart = [];
 
-<!-- 訂購單 Modal (可列印) -->
-<div class="modal" id="order-modal">
-  <div class="modal-content" id="print-area">
-    <div class="order-header">
-      <h2>☕ 精品咖啡 訂購確認單</h2>
-      <p style="font-size:0.85rem; color:#666;" id="order-date"></p>
-    </div>
-    <div id="order-info" style="font-size:0.9rem; margin-bottom: 16px;"></div>
-    <table class="order-table">
-      <thead>
-        <tr><th>品項與規格</th><th style="text-align:right;">小計</th></tr>
-      </thead>
-      <tbody id="order-items-body"></tbody>
-    </table>
-    <div style="text-align: right; font-weight: bold; font-size: 1.1rem; margin-top: 12px;">
-      總計：NT$ <span id="modal-total"></span>
-    </div>
-    <div class="modal-actions">
-      <button class="btn" style="flex:1;" onclick="window.print()">🖨️ 列印 / 存為 PDF</button>
-      <button class="btn" style="flex:1; background:#6c757d;" onclick="closeModal()">關閉</button>
-    </div>
-  </div>
-</div>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
 
-<script>
-  // 初始化 EmailJS (請替換為您的 EmailJS Public Key)
-  (function(){
-    emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
-  })();
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
 
-  let cart = [];
+        // Tab Switcher for Products
+        function switchTab(tabKey) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`content-${tabKey}`).classList.remove('hidden');
 
-  function updatePrice(selectElem) {
-    const price = selectElem.options[selectElem.selectedIndex].getAttribute('data-price');
-    selectElem.closest('.card').querySelector('.price-val').textContent = price;
-  }
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-coffee-800', 'text-white', 'font-semibold');
+                btn.classList.add('text-coffee-800');
+            });
 
-  function addToCart(btn) {
-    const card = btn.closest('.card');
-    const name = card.getAttribute('data-name');
-    const select = card.querySelector('select');
-    const spec = select.value;
-    const price = parseInt(card.querySelector('.price-val').textContent, 10);
+            const activeBtn = document.getElementById(`tab-${tabKey}`);
+            activeBtn.classList.add('bg-coffee-800', 'text-white', 'font-semibold');
+            activeBtn.classList.remove('text-coffee-800');
+        }
 
-    cart.push({ name, spec, price });
-    renderCart();
-  }
+        // Cart Drawer Control
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            const backdrop = document.getElementById('cart-backdrop');
+            const panel = document.getElementById('cart-panel');
 
-  function removeFromCart(index) {
-    cart.splice(index, 1);
-    renderCart();
-  }
+            if (drawer.classList.contains('hidden')) {
+                drawer.classList.remove('hidden');
+                setTimeout(() => {
+                    backdrop.classList.remove('opacity-0');
+                    panel.classList.remove('translate-x-full');
+                }, 10);
+            } else {
+                backdrop.classList.add('opacity-0');
+                panel.classList.add('translate-x-full');
+                setTimeout(() => {
+                    drawer.classList.add('hidden');
+                }, 300);
+            }
+        }
 
-  function renderCart() {
-    const cartList = document.getElementById('cart-list');
-    const cartTotal = document.getElementById('cart-total');
+        // Add Product to Cart
+        function addToCart(name, price) {
+            const existingItem = cart.find(item => item.name === name);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ name, price, quantity: 1 });
+            }
+            updateCartUI();
+            toggleCart();
+        }
 
-    if (cart.length === 0) {
-      cartList.innerHTML = '<li style="color: var(--text-muted);" id="empty-msg">購物車目前是空的。</li>';
-      cartTotal.textContent = '0';
-      return;
-    }
+        // Update Cart Quantity
+        function updateQuantity(name, delta) {
+            const item = cart.find(item => item.name === name);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i.name !== name);
+                }
+            }
+            updateCartUI();
+        }
 
-    cartList.innerHTML = '';
-    let total = 0;
-    cart.forEach((item, index) => {
-      total += item.price;
-      const li = document.createElement('li');
-      li.className = 'cart-item';
-      li.innerHTML = `
-        <span><strong>${item.name}</strong> - ${item.spec} (NT$ ${item.price})</span>
-        <span class="cart-item-remove" onclick="removeFromCart(${index})">✕ 移除</span>
-      `;
-      cartList.appendChild(li);
-    });
-    cartTotal.textContent = total;
-  }
+        // Render Cart UI
+        function updateCartUI() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            const cartBadge = document.getElementById('cart-badge');
 
-  // 結帳處理
-  function handleCheckout(event) {
-    event.preventDefault();
-    if (cart.length === 0) {
-      alert("購物車是空的，請先挑選商品！");
-      return;
-    }
+            // Total Quantity
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            if (totalCount > 0) {
+                cartBadge.innerText = totalCount;
+                cartBadge.classList.remove('hidden');
+            } else {
+                cartBadge.classList.add('hidden');
+            }
 
-    const name = document.getElementById('cust-name').value;
-    const phone = document.getElementById('cust-phone').value;
-    const address = document.getElementById('cust-address').value;
-    const note = document.getElementById('cust-note').value || "無";
-    const total = document.getElementById('cart-total').textContent;
+            // Cart Items
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="text-center py-12 text-gray-400 space-y-3">
+                        <i class="fa-solid fa-basket-shopping text-4xl text-gray-300"></i>
+                        <p class="text-sm">您的購物車目前是空的</p>
+                    </div>
+                `;
+                cartTotal.innerText = '0 VND';
+                return;
+            }
 
-    // 組裝購物清單字串
-    let itemsText = cart.map(i => `${i.name} (${i.spec}) - NT$${i.price}`).join("\n");
+            let total = 0;
+            cartItemsContainer.innerHTML = cart.map(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                return `
+                    <div class="flex items-center justify-between pt-4 first:pt-0">
+                        <div class="flex-1 pr-4">
+                            <h4 class="font-bold text-coffee-900 text-sm">${item.name}</h4>
+                            <p class="text-xs text-amber-700 font-medium">${item.price.toLocaleString()} VND / 件</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="updateQuantity('${item.name}', -1)" class="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-minus"></i>
+                            </button>
+                            <span class="text-sm font-bold w-6 text-center">${item.quantity}</span>
+                            <button onclick="updateQuantity('${item.name}', 1)" class="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
 
-    // 1. 自動發送 Gmail 通知商家 (EmailJS)
-    const templateParams = {
-      to_email: 'your_merchant_email@gmail.com', // 商家接收 Email
-      cust_name: name,
-      cust_phone: phone,
-      cust_address: address,
-      cust_note: note,
-      order_items: itemsText,
-      total_price: total
-    };
+            cartTotal.innerText = `${total.toLocaleString()} VND`;
+        }
 
-    /* 取消註解以啟用 EmailJS 寄信：
-    emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
-      .then(() => console.log('Gmail 通知已成功發送！'))
-      .catch((err) => console.error('發送失敗：', err));
-    */
+        // Checkout Modal Control
+        function openCheckoutModal() {
+            if (cart.length === 0) {
+                alert('您的購物車內尚無商品！');
+                return;
+            }
+            toggleCart();
+            document.getElementById('checkout-modal').classList.remove('hidden');
+        }
 
-    // 2. 生成訂購單 Modal
-    showOrderModal(name, phone, address, note, total);
-  }
+        function closeCheckoutModal() {
+            document.getElementById('checkout-modal').classList.add('hidden');
+        }
 
-  function showOrderModal(name, phone, address, note, total) {
-    document.getElementById('order-date').textContent = "訂購日期：" + new Date().toLocaleString('zh-TW');
-    document.getElementById('order-info').innerHTML = `
-      <strong>訂購人：</strong>${name}<br>
-      <strong>電話：</strong>${phone}<br>
-      <strong>地址：</strong>${address}<br>
-      <strong>備註：</strong>${note}
-    `;
-
-    const tbody = document.getElementById('order-items-body');
-    tbody.innerHTML = '';
-    cart.forEach(item => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${item.name} (${item.spec})</td><td style="text-align:right;">NT$ ${item.price}</td>`;
-      tbody.appendChild(tr);
-    });
-
-    document.getElementById('modal-total').textContent = total;
-    document.getElementById('order-modal').style.display = 'flex';
-  }
-
-  function closeModal() {
-    document.getElementById('order-modal').style.display = 'none';
-  }
-</script>
-
+        function submitCheckout(e) {
+            e.preventDefault();
+            alert('感謝您的訂購！Viebucks 專員將於第一時間與您聯繫確認價格與送貨事宜。');
+            cart = [];
+            updateCartUI();
+            closeCheckoutModal();
+        }
+    </script>
 </body>
 </html>
