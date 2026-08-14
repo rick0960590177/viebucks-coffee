@@ -3,442 +3,356 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>精品咖啡系列與線上訂購目錄</title>
+  <title>精品咖啡系列與線上訂購</title>
+  <!-- 引入 EmailJS SDK -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style>
     :root {
-      --primary-color: #78350f;
-      --primary-hover: #451a03;
-      --accent-color: #d97706;
-      --bg-color: #f8fafc;
+      --primary: #432818;
+      --primary-hover: #99582a;
+      --accent: #bb9457;
+      --bg: #f8f5f0;
       --card-bg: #ffffff;
-      --text-main: #1e293b;
-      --text-muted: #64748b;
-      --border-color: #e2e8f0;
-      --tag-bg: #f1f5f9;
-      --tag-accent-bg: #fef3c7;
-      --tag-accent-text: #92400e;
+      --text-main: #2b2d42;
+      --text-muted: #6c757d;
+      --border: #e9ecef;
+      --radius: 12px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background-color: var(--bg-color);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
       color: var(--text-main);
-      line-height: 1.6;
-      padding: 24px 12px;
+      padding: 24px 16px;
+      line-height: 1.5;
     }
 
-    .container {
-      max-width: 1080px;
-      margin: 0 auto;
+    .container { max-width: 1200px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 32px; }
+    header h1 { font-size: 2rem; color: var(--primary); margin-bottom: 8px; }
+    header p { color: var(--text-muted); font-size: 1rem; }
+
+    /* 2-3 網格卡片佈局 */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 1024px) { .grid-container { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .grid-container { grid-template-columns: 1fr; } }
+
+    .card {
       background: var(--card-bg);
-      padding: 32px;
-      border-radius: 16px;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
-      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      display: flex; flex-direction: column; justify-content: space-between;
     }
+    .card-title { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+    .card-subtitle { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; }
+    .card-desc { font-size: 0.95rem; color: #495057; margin-bottom: 16px; min-height: 48px; }
+    
+    .form-group { margin-bottom: 12px; }
+    .form-label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; display: block; }
+    select, input, textarea {
+      width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border); background-color: #f8f9fa; font-size: 0.9rem; outline: none;
+    }
+    select:focus, input:focus, textarea:focus { border-color: var(--primary); }
 
-    .header {
-      border-bottom: 2px solid var(--border-color);
-      padding-bottom: 20px;
-      margin-bottom: 24px;
+    .card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--border); }
+    .price-tag { font-size: 1.25rem; font-weight: 700; color: var(--primary-hover); }
+    
+    .btn {
+      background: var(--primary); color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s;
     }
+    .btn:hover { background: var(--primary-hover); }
+    .btn-checkout { background: #2a9d8f; width: 100%; margin-top: 16px; font-size: 1.1rem; }
+    .btn-checkout:hover { background: #218376; }
 
-    .header h1 {
-      font-size: 1.8rem;
-      color: var(--primary-color);
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    /* 購物車面板 */
+    .cart-section {
+      background: var(--card-bg); border-radius: var(--radius); padding: 24px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     }
+    .cart-title { font-size: 1.2rem; color: var(--primary); margin-bottom: 16px; border-bottom: 2px solid var(--border); padding-bottom: 8px; }
+    .cart-items { list-style: none; margin-bottom: 16px; }
+    .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed var(--border); }
+    .cart-item-remove { color: #e63946; cursor: pointer; margin-left: 12px; font-weight: bold; }
+    .cart-summary { display: flex; justify-content: space-between; align-items: center; font-size: 1.2rem; font-weight: 700; color: var(--primary); padding: 12px 0; }
 
-    .header p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-    }
+    /* 客戶資訊表單 */
+    .customer-form { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    @media (max-width: 640px) { .customer-form { grid-template-columns: 1fr; } }
 
-    /* 規格切換按鈕 */
-    .filter-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
+    /* 訂購單彈出視窗 Modal */
+    .modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; padding: 16px;
     }
-
-    .filter-label {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-muted);
+    .modal-content {
+      background: #fff; border-radius: var(--radius); width: 100%; max-width: 600px; padding: 32px; max-height: 90vh; overflow-y: auto;
     }
-
-    .filter-btn {
-      background: var(--tag-bg);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .filter-btn:hover, .filter-btn.active {
-      background: var(--primary-color);
-      color: #ffffff;
-      border-color: var(--primary-color);
-    }
-
-    /* 表格樣式 */
-    .table-wrapper {
-      overflow-x: auto;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-    }
-
-    .product-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      background: #ffffff;
-    }
-
-    .product-table th, 
-    .product-table td {
-      padding: 16px;
-      border-bottom: 1px solid var(--border-color);
-      vertical-align: middle;
-    }
-
-    .product-table th {
-      background-color: #f8fafc;
-      color: var(--text-muted);
-      font-weight: 600;
-      font-size: 0.9rem;
-      white-space: nowrap;
-    }
-
-    .product-name {
-      font-weight: 700;
-      font-size: 1.05rem;
-      color: var(--text-main);
-    }
-
-    .product-en {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .desc {
-      font-size: 0.95rem;
-      color: #334155;
-    }
-
-    /* 下拉選單與價格 */
-    .spec-select {
-      width: 100%;
-      padding: 6px 10px;
-      border-radius: 6px;
-      border: 1px solid var(--border-color);
-      background-color: #fff;
-      font-size: 0.88rem;
-      color: var(--text-main);
-      margin-bottom: 4px;
-      outline: none;
-    }
-
-    .spec-select:focus {
-      border-color: var(--primary-color);
-    }
-
-    .price-tag {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--accent-color);
-    }
-
-    .price-unit {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      font-weight: normal;
-    }
-
-    /* 下單按鈕 */
-    .btn-cart {
-      background-color: var(--primary-color);
-      color: #ffffff;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: background-color 0.2s ease;
-      white-space: nowrap;
-    }
-
-    .btn-cart:hover {
-      background-color: var(--primary-hover);
-    }
-
-    /* 說明區塊 */
-    .footer-notes {
-      margin-top: 28px;
-      padding: 20px;
-      background-color: #fffbeb;
-      border-left: 4px solid var(--accent-color);
-      border-radius: 6px;
-      font-size: 0.9rem;
-    }
-
-    .footer-notes h3 {
-      color: #92400e;
-      font-size: 1rem;
-      margin-bottom: 8px;
-    }
-
-    .footer-notes ul {
-      list-style-type: disc;
-      padding-left: 20px;
-      color: #78350f;
-    }
-
-    /* RWD 行動端優化 */
-    @media (max-width: 768px) {
-      .container { padding: 16px; }
-      .product-table, .product-table thead, .product-table tbody, .product-table th, .product-table td, .product-table tr {
-        display: block;
-      }
-      .product-table thead { display: none; }
-      .product-table tr {
-        border-bottom: 1px solid var(--border-color);
-        padding: 16px 8px;
-      }
-      .product-table td {
-        border: none;
-        padding: 6px 0;
-      }
-      .action-cell {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 8px;
-      }
-    }
+    .order-header { text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 12px; margin-bottom: 20px; }
+    .order-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    .order-table th, .order-table td { border-bottom: 1px solid var(--border); padding: 8px; text-align: left; }
+    .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <header class="header">
+  <header>
     <h1>☕ 精品咖啡系列線上訂購</h1>
-    <p>選取規格、即時查看價格，並輕鬆加入購物車。</p>
+    <p>獨立充氮包裝與手沖熟豆，提供最高品質的品飲體驗。</p>
   </header>
 
-  <!-- 規格快速篩選 -->
-  <div class="filter-bar">
-    <span class="filter-label">快速切換預設規格：</span>
-    <button class="filter-btn active" onclick="setAllSpecs('bean', this)">熟豆半磅 (227g)</button>
-    <button class="filter-btn" onclick="setAllSpecs('drip', this)">濾掛咖啡包 (10入/盒)</button>
-    <button class="filter-btn" onclick="setAllSpecs('steep', this)">浸泡式咖啡包 (10入/盒)</button>
+  <!-- 2-3 網格產品區域 -->
+  <div class="grid-container">
+    <!-- 埃塞俄比亞 -->
+    <div class="card" data-name="埃塞俄比亞">
+      <div>
+        <div class="card-title">埃塞俄比亞</div>
+        <div class="card-subtitle">Ethiopia</div>
+        <div class="card-desc">花果香調、明亮柑橘酸質、花香餘韻。</div>
+      </div>
+      <div>
+        <div class="form-group">
+          <label class="form-label">規格：</label>
+          <select onchange="updatePrice(this)">
+            <option value="熟豆半磅 (227g)" data-price="450">熟豆半磅 (227g)</option>
+            <option value="濾掛咖啡包 (10入)" data-price="380">濾掛咖啡包 (10入/盒)</option>
+            <option value="浸泡式咖啡包 (10入)" data-price="380">浸泡式咖啡包 (10入/盒)</option>
+          </select>
+        </div>
+        <div class="card-footer">
+          <div class="price-tag">NT$ <span class="price-val">450</span></div>
+          <button class="btn" onclick="addToCart(this)">＋ 加入</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 哥倫比亞 -->
+    <div class="card" data-name="哥倫比亞">
+      <div>
+        <div class="card-title">哥倫比亞</div>
+        <div class="card-subtitle">Colombia</div>
+        <div class="card-desc">堅果榛果香氣、焦糖甜感、口感均衡。</div>
+      </div>
+      <div>
+        <div class="form-group">
+          <label class="form-label">規格：</label>
+          <select onchange="updatePrice(this)">
+            <option value="熟豆半磅 (227g)" data-price="400">熟豆半磅 (227g)</option>
+            <option value="濾掛咖啡包 (10入)" data-price="350">濾掛咖啡包 (10入/盒)</option>
+            <option value="浸泡式咖啡包 (10入)" data-price="350">浸泡式咖啡包 (10入/盒)</option>
+          </select>
+        </div>
+        <div class="card-footer">
+          <div class="price-tag">NT$ <span class="price-val">400</span></div>
+          <button class="btn" onclick="addToCart(this)">＋ 加入</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 西西里風味調飲配方 -->
+    <div class="card" data-name="西西里風味調飲配方">
+      <div>
+        <div class="card-title">西西里風味調飲配方</div>
+        <div class="card-subtitle">Sicilian Style Blend</div>
+        <div class="card-desc">特別適合搭配柑橘類果汁或冷萃，風味濃郁順口。</div>
+      </div>
+      <div>
+        <div class="form-group">
+          <label class="form-label">規格：</label>
+          <select onchange="updatePrice(this)">
+            <option value="熟豆半磅 (227g)" data-price="420">熟豆半磅 (227g)</option>
+            <option value="濾掛咖啡包 (10入)" data-price="360">濾掛咖啡包 (10入/盒)</option>
+            <option value="浸泡式咖啡包 (10入)" data-price="360">浸泡式咖啡包 (10入/盒)</option>
+          </select>
+        </div>
+        <div class="card-footer">
+          <div class="price-tag">NT$ <span class="price-val">420</span></div>
+          <button class="btn" onclick="addToCart(this)">＋ 加入</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="table-wrapper">
-    <table class="product-table">
-      <thead>
-        <tr>
-          <th style="width: 25%;">產品名稱</th>
-          <th style="width: 35%;">風味特色 / 簡介</th>
-          <th style="width: 20%;">選取規格</th>
-          <th style="width: 10%;">價格</th>
-          <th style="width: 10%; text-align: center;">訂購</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- 埃塞俄比亞 -->
-        <tr data-product="埃塞俄比亞">
-          <td>
-            <div class="product-name">埃塞俄比亞</div>
-            <div class="product-en">Ethiopia</div>
-          </td>
-          <td class="desc">花果香調、明亮柑橘酸質、花香餘韻。</td>
-          <td>
-            <select class="spec-select" onchange="updatePrice(this)">
-              <option value="bean" data-price="450">熟豆半磅 (227g)</option>
-              <option value="drip" data-price="380">濾掛咖啡包 (10入/盒)</option>
-              <option value="steep" data-price="380">浸泡式咖啡包 (10入/盒)</option>
-            </select>
-          </td>
-          <td>
-            <div class="price-tag">NT$ <span class="price-val">450</span></div>
-          </td>
-          <td style="text-align: center;" class="action-cell">
-            <button class="btn-cart" onclick="addToCart(this)">🛒 購買</button>
-          </td>
-        </tr>
-
-        <!-- 哥倫比亞 -->
-        <tr data-product="哥倫比亞">
-          <td>
-            <div class="product-name">哥倫比亞</div>
-            <div class="product-en">Colombia</div>
-          </td>
-          <td class="desc">堅果榛果香氣、焦糖甜感、口感均衡。</td>
-          <td>
-            <select class="spec-select" onchange="updatePrice(this)">
-              <option value="bean" data-price="400">熟豆半磅 (227g)</option>
-              <option value="drip" data-price="350">濾掛咖啡包 (10入/盒)</option>
-              <option value="steep" data-price="350">浸泡式咖啡包 (10入/盒)</option>
-            </select>
-          </td>
-          <td>
-            <div class="price-tag">NT$ <span class="price-val">400</span></div>
-          </td>
-          <td style="text-align: center;" class="action-cell">
-            <button class="btn-cart" onclick="addToCart(this)">🛒 購買</button>
-          </td>
-        </tr>
-
-        <!-- 巴西 喜拉朵 -->
-        <tr data-product="巴西 喜拉朵">
-          <td>
-            <div class="product-name">巴西 喜拉朵</div>
-            <div class="product-en">Brazil Cerrado</div>
-          </td>
-          <td class="desc">經典堅果與黑巧克力風味、低酸度、醇厚度高。</td>
-          <td>
-            <select class="spec-select" onchange="updatePrice(this)">
-              <option value="bean" data-price="380">熟豆半磅 (227g)</option>
-              <option value="drip" data-price="320">濾掛咖啡包 (10入/盒)</option>
-              <option value="steep" data-price="320">浸泡式咖啡包 (10入/盒)</option>
-            </select>
-          </td>
-          <td>
-            <div class="price-tag">NT$ <span class="price-val">380</span></div>
-          </td>
-          <td style="text-align: center;" class="action-cell">
-            <button class="btn-cart" onclick="addToCart(this)">🛒 購買</button>
-          </td>
-        </tr>
-
-        <!-- 越南 林同 阿拉比卡 -->
-        <tr data-product="越南 林同 阿拉比卡">
-          <td>
-            <div class="product-name">越南 林同 阿拉比卡</div>
-            <div class="product-en">Vietnam Lam Dong Arabica</div>
-          </td>
-          <td class="desc">高海拔栽植，具柔和微酸、木質香氣與乾淨甜感。</td>
-          <td>
-            <select class="spec-select" onchange="updatePrice(this)">
-              <option value="bean" data-price="360">熟豆半磅 (227g)</option>
-              <option value="drip" data-price="300">濾掛咖啡包 (10入/盒)</option>
-              <option value="steep" data-price="300">浸泡式咖啡包 (10入/盒)</option>
-            </select>
-          </td>
-          <td>
-            <div class="price-tag">NT$ <span class="price-val">360</span></div>
-          </td>
-          <td style="text-align: center;" class="action-cell">
-            <button class="btn-cart" onclick="addToCart(this)">🛒 購買</button>
-          </td>
-        </tr>
-
-        <!-- 越南 林同 羅布斯塔 -->
-        <tr data-product="越南 林同 羅布斯塔">
-          <td>
-            <div class="product-name">越南 林同 羅布斯塔</div>
-            <div class="product-en">Vietnam Lam Dong Robusta</div>
-          </td>
-          <td class="desc">濃郁油脂與醇厚口感，帶焦糖麥芽與可可香氣。</td>
-          <td>
-            <select class="spec-select" onchange="updatePrice(this)">
-              <option value="bean" data-price="320">熟豆半磅 (227g)</option>
-              <option value="drip" data-price="280">濾掛咖啡包 (10入/盒)</option>
-              <option value="steep" data-price="280">浸泡式咖啡包 (10入/盒)</option>
-            </select>
-          </td>
-          <td>
-            <div class="price-tag">NT$ <span class="price-val">320</span></div>
-          </td>
-          <td style="text-align: center;" class="action-cell">
-            <button class="btn-cart" onclick="addToCart(this)">🛒 購買</button>
-          </td>
-        </tr>
-
-        <!-- 西西里風味調飲配方 -->
-        <tr data-product="西西里風味調飲配方">
-          <td>
-            <div class="product-name">西西里風味調飲配方</div>
-            <div class="product-en">Sicilian Style Blend</div>
-          </td>
-          <td class="desc">特別適合搭配柑橘類果汁或冷萃，風味濃郁順口。</td>
-          <td>
-            <select class="spec-select" onchange="updatePrice(this)">
-              <option value="bean" data-price="420">熟豆半磅 (227g)</option>
-              <option value="drip" data-price="360">濾掛咖啡包 (10入/盒)</option>
-              <option value="steep" data-price="360">浸泡式咖啡包 (10入/盒)</option>
-            </select>
-          </td>
-          <td>
-            <div class="price-tag">NT$ <span class="price-val">420</span></div>
-          </td>
-          <td style="text-align: center;" class="action-cell">
-            <button class="btn-cart" onclick="addToCart(this)">🛒 購買</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <footer class="footer-notes">
-    <h3>💡 購物須知與規格說明：</h3>
-    <ul>
-      <li><strong>熟豆/粉裝</strong>：半磅 227g 裝，若需研磨請於結帳備註粗細。</li>
-      <li><strong>濾掛/浸泡包</strong>：每盒 10 入，採用充氮防潮獨立包裝。</li>
-      <li><strong>價格調整</strong>：可自由修改程式碼中 `data-price` 數值以符合貴店實際定價。</li>
+  <!-- 購物車與訂購資料面板 -->
+  <div class="cart-section">
+    <div class="cart-title">🛒 購物車與結帳資料</div>
+    <ul class="cart-items" id="cart-list">
+      <li style="color: var(--text-muted);" id="empty-msg">購物車目前是空的。</li>
     </ul>
-  </footer>
+    
+    <div class="cart-summary">
+      <span>總計金額：</span>
+      <span>NT$ <span id="cart-total">0</span></span>
+    </div>
+
+    <!-- 訂購人資訊 -->
+    <form id="checkout-form" class="customer-form" onsubmit="handleCheckout(event)">
+      <div class="form-group">
+        <label class="form-label">訂購人姓名 *</label>
+        <input type="text" id="cust-name" required placeholder="張先生/小姐">
+      </div>
+      <div class="form-group">
+        <label class="form-label">聯絡電話 *</label>
+        <input type="tel" id="cust-phone" required placeholder="0912-345-678">
+      </div>
+      <div class="form-group" style="grid-column: span 2;">
+        <label class="form-label">收件地址 *</label>
+        <input type="text" id="cust-address" required placeholder="請填寫完整配送地址">
+      </div>
+      <div class="form-group" style="grid-column: span 2;">
+        <label class="form-label">備註事項（如研磨粗細）</label>
+        <textarea id="cust-note" rows="2" placeholder="手沖/摩卡壺研磨，或特殊寄送需求"></textarea>
+      </div>
+      <button type="submit" class="btn btn-checkout" style="grid-column: span 2;">送出訂單並生成訂購單 📄</button>
+    </form>
+  </div>
+</div>
+
+<!-- 訂購單 Modal (可列印) -->
+<div class="modal" id="order-modal">
+  <div class="modal-content" id="print-area">
+    <div class="order-header">
+      <h2>☕ 精品咖啡 訂購確認單</h2>
+      <p style="font-size:0.85rem; color:#666;" id="order-date"></p>
+    </div>
+    <div id="order-info" style="font-size:0.9rem; margin-bottom: 16px;"></div>
+    <table class="order-table">
+      <thead>
+        <tr><th>品項與規格</th><th style="text-align:right;">小計</th></tr>
+      </thead>
+      <tbody id="order-items-body"></tbody>
+    </table>
+    <div style="text-align: right; font-weight: bold; font-size: 1.1rem; margin-top: 12px;">
+      總計：NT$ <span id="modal-total"></span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" style="flex:1;" onclick="window.print()">🖨️ 列印 / 存為 PDF</button>
+      <button class="btn" style="flex:1; background:#6c757d;" onclick="closeModal()">關閉</button>
+    </div>
+  </div>
 </div>
 
 <script>
-  // 單一下拉選單切換價格
+  // 初始化 EmailJS (請替換為您的 EmailJS Public Key)
+  (function(){
+    emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
+  })();
+
+  let cart = [];
+
   function updatePrice(selectElem) {
-    const selectedOption = selectElem.options[selectElem.selectedIndex];
-    const price = selectedOption.getAttribute('data-price');
-    const row = selectElem.closest('tr');
-    row.querySelector('.price-val').textContent = price;
+    const price = selectElem.options[selectElem.selectedIndex].getAttribute('data-price');
+    selectElem.closest('.card').querySelector('.price-val').textContent = price;
   }
 
-  // 頂部批次切換規格
-  function setAllSpecs(specType, btnElement) {
-    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-    btnElement.classList.add('active');
-
-    const selects = document.querySelectorAll('.spec-select');
-    selects.forEach(select => {
-      select.value = specType;
-      updatePrice(select);
-    });
-  }
-
-  // 點擊下單 / 加入購物車邏輯
   function addToCart(btn) {
-    const row = btn.closest('tr');
-    const productName = row.getAttribute('data-product');
-    const select = row.querySelector('.spec-select');
-    const specText = select.options[select.selectedIndex].text;
-    const price = row.querySelector('.price-val').textContent;
+    const card = btn.closest('.card');
+    const name = card.getAttribute('data-name');
+    const select = card.querySelector('select');
+    const spec = select.value;
+    const price = parseInt(card.querySelector('.price-val').textContent, 10);
 
-    alert(`已將【${productName} - ${specText}】（NT$ ${price}）加入購物車！`);
+    cart.push({ name, spec, price });
+    renderCart();
+  }
+
+  function removeFromCart(index) {
+    cart.splice(index, 1);
+    renderCart();
+  }
+
+  function renderCart() {
+    const cartList = document.getElementById('cart-list');
+    const cartTotal = document.getElementById('cart-total');
+
+    if (cart.length === 0) {
+      cartList.innerHTML = '<li style="color: var(--text-muted);" id="empty-msg">購物車目前是空的。</li>';
+      cartTotal.textContent = '0';
+      return;
+    }
+
+    cartList.innerHTML = '';
+    let total = 0;
+    cart.forEach((item, index) => {
+      total += item.price;
+      const li = document.createElement('li');
+      li.className = 'cart-item';
+      li.innerHTML = `
+        <span><strong>${item.name}</strong> - ${item.spec} (NT$ ${item.price})</span>
+        <span class="cart-item-remove" onclick="removeFromCart(${index})">✕ 移除</span>
+      `;
+      cartList.appendChild(li);
+    });
+    cartTotal.textContent = total;
+  }
+
+  // 結帳處理
+  function handleCheckout(event) {
+    event.preventDefault();
+    if (cart.length === 0) {
+      alert("購物車是空的，請先挑選商品！");
+      return;
+    }
+
+    const name = document.getElementById('cust-name').value;
+    const phone = document.getElementById('cust-phone').value;
+    const address = document.getElementById('cust-address').value;
+    const note = document.getElementById('cust-note').value || "無";
+    const total = document.getElementById('cart-total').textContent;
+
+    // 組裝購物清單字串
+    let itemsText = cart.map(i => `${i.name} (${i.spec}) - NT$${i.price}`).join("\n");
+
+    // 1. 自動發送 Gmail 通知商家 (EmailJS)
+    const templateParams = {
+      to_email: 'your_merchant_email@gmail.com', // 商家接收 Email
+      cust_name: name,
+      cust_phone: phone,
+      cust_address: address,
+      cust_note: note,
+      order_items: itemsText,
+      total_price: total
+    };
+
+    /* 取消註解以啟用 EmailJS 寄信：
+    emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+      .then(() => console.log('Gmail 通知已成功發送！'))
+      .catch((err) => console.error('發送失敗：', err));
+    */
+
+    // 2. 生成訂購單 Modal
+    showOrderModal(name, phone, address, note, total);
+  }
+
+  function showOrderModal(name, phone, address, note, total) {
+    document.getElementById('order-date').textContent = "訂購日期：" + new Date().toLocaleString('zh-TW');
+    document.getElementById('order-info').innerHTML = `
+      <strong>訂購人：</strong>${name}<br>
+      <strong>電話：</strong>${phone}<br>
+      <strong>地址：</strong>${address}<br>
+      <strong>備註：</strong>${note}
+    `;
+
+    const tbody = document.getElementById('order-items-body');
+    tbody.innerHTML = '';
+    cart.forEach(item => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${item.name} (${item.spec})</td><td style="text-align:right;">NT$ ${item.price}</td>`;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById('modal-total').textContent = total;
+    document.getElementById('order-modal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('order-modal').style.display = 'none';
   }
 </script>
 
