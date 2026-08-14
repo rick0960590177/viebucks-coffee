@@ -1,1265 +1,446 @@
 <!DOCTYPE html>
-<html lang="zh-TW" class="scroll-smooth">
+<html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIEBUCKS | 專業咖啡豆批發生產 & 烘焙教學學院</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        coffee: {
-                            50: '#fdfbf7',
-                            100: '#f7f0e6',
-                            200: '#ebdccb',
-                            300: '#dcbe9f',
-                            400: '#cb9a71',
-                            500: '#bd7b49',
-                            600: '#af643d',
-                            700: '#914e34',
-                            800: '#75402f',
-                            900: '#5f3529',
-                            950: '#331a14',
-                        },
-                        amber: {
-                            gold: '#D4A373',
-                            warm: '#FAEDCD',
-                            dark: '#1E130C'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'Noto Sans TC', 'sans-serif'],
-                        serif: ['Noto Serif TC', 'serif'],
-                    }
-                }
-            }
-        }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>精品咖啡系列與線上訂購目錄</title>
+  <style>
+    :root {
+      --primary-color: #78350f;
+      --primary-hover: #451a03;
+      --accent-color: #d97706;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --tag-bg: #f1f5f9;
+      --tag-accent-bg: #fef3c7;
+      --tag-accent-text: #92400e;
+    }
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
-            background-color: #FAF8F5;
-            color: #2C221E;
-        }
-        .serif-title {
-            font-family: 'Noto Serif TC', serif;
-        }
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1ebd9;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #bd7b49;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #914e34;
-        }
-    </style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 24px 12px;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+      border: 1px solid var(--border-color);
+    }
+
+    .header {
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 20px;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* 規格切換按鈕 */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .filter-btn {
+      background: var(--tag-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--primary-color);
+      color: #ffffff;
+      border-color: var(--primary-color);
+    }
+
+    /* 表格樣式 */
+    .table-wrapper {
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+    }
+
+    .product-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      background: #ffffff;
+    }
+
+    .product-table th, 
+    .product-table td {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    .product-table th {
+      background-color: #f8fafc;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .product-name {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text-main);
+    }
+
+    .product-en {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .desc {
+      font-size: 0.95rem;
+      color: #334155;
+    }
+
+    /* 下拉選單與價格 */
+    .spec-select {
+      width: 100%;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background-color: #fff;
+      font-size: 0.88rem;
+      color: var(--text-main);
+      margin-bottom: 4px;
+      outline: none;
+    }
+
+    .spec-select:focus {
+      border-color: var(--primary-color);
+    }
+
+    .price-tag {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent-color);
+    }
+
+    .price-unit {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: normal;
+    }
+
+    /* 下單按鈕 */
+    .btn-cart {
+      background-color: var(--primary-color);
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background-color 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-cart:hover {
+      background-color: var(--primary-hover);
+    }
+
+    /* 說明區塊 */
+    .footer-notes {
+      margin-top: 28px;
+      padding: 20px;
+      background-color: #fffbeb;
+      border-left: 4px solid var(--accent-color);
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    .footer-notes h3 {
+      color: #92400e;
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .footer-notes ul {
+      list-style-type: disc;
+      padding-left: 20px;
+      color: #78350f;
+    }
+
+    /* RWD 行動端優化 */
+    @media (max-width: 768px) {
+      .container { padding: 16px; }
+      .product-table, .product-table thead, .product-table tbody, .product-table th, .product-table td, .product-table tr {
+        display: block;
+      }
+      .product-table thead { display: none; }
+      .product-table tr {
+        border-bottom: 1px solid var(--border-color);
+        padding: 16px 8px;
+      }
+      .product-table td {
+        border: none;
+        padding: 6px 0;
+      }
+      .action-cell {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 8px;
+      }
+    }
+  </style>
 </head>
-<body class="bg-[#FAF8F5] text-[#2C221E] antialiased selection:bg-coffee-300 selection:text-coffee-950">
+<body>
+
+<div class="container">
+  <header class="header">
+    <h1>☕ 精品咖啡系列線上訂購</h1>
+    <p>選取規格、即時查看價格，並輕鬆加入購物車。</p>
+  </header>
+
+  <!-- 規格快速篩選 -->
+  <div class="filter-bar">
+    <span class="filter-label">快速切換預設規格：</span>
+    <button class="filter-btn active" onclick="setAllSpecs('bean', this)">熟豆半磅 (227g)</button>
+    <button class="filter-btn" onclick="setAllSpecs('drip', this)">濾掛咖啡包 (10入/盒)</button>
+    <button class="filter-btn" onclick="setAllSpecs('steep', this)">浸泡式咖啡包 (10入/盒)</button>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="product-table">
+      <thead>
+        <tr>
+          <th style="width: 25%;">產品名稱</th>
+          <th style="width: 35%;">風味特色 / 簡介</th>
+          <th style="width: 20%;">選取規格</th>
+          <th style="width: 10%;">價格</th>
+          <th style="width: 10%; text-align: center;">訂購</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 埃塞俄比亞 -->
+        <tr data-product="埃塞俄比亞">
+          <td>
+            <div class="product-name">埃塞俄比亞</div>
+            <div class="product-en">Ethiopia</div>
+          </td>
+          <td class="desc">花果香調、明亮柑橘酸質、花香餘韻。</td>
+          <td>
+            <select class="spec-select" onchange="updatePrice(this)">
+              <option value="bean" data-price="450">熟豆半磅 (227g)</option>
+              <option value="drip" data-price="380">濾掛咖啡包 (10入/盒)</option>
+              <option value="steep" data-price="380">浸泡式咖啡包 (10入/盒)</option>
+            </select>
+          </td>
+          <td>
+            <div class="price-tag">NT$ <span class="price-val">450</span></div>
+          </td>
+          <td style="text-align: center;" class="action-cell">
+            <button class="btn-cart" onclick="addToCart(this)">🛒 購買</button>
+          </td>
+        </tr>
+
+        <!-- 哥倫比亞 -->
+        <tr data-product="哥倫比亞">
+          <td>
+            <div class="product-name">哥倫比亞</div>
+            <div class="product-en">Colombia</div>
+          </td>
+          <td class="desc">堅果榛果香氣、焦糖甜感、口感均衡。</td>
+          <td>
+            <select class="spec-select" onchange="updatePrice(this)">
+              <option value="bean" data-price="400">熟豆半磅 (227g)</option>
+              <option value="drip" data-price="350">濾掛咖啡包 (10入/盒)</option>
+              <option value="steep" data-price="350">浸泡式咖啡包 (10入/盒)</option>
+            </select>
+          </td>
+          <td>
+            <div class="price-tag">NT$ <span class="price-val">400</span></div>
+          </td>
+          <td style="text-align: center;" class="action-cell">
+            <button class="btn-cart" onclick="addToCart(this)">🛒 購買</button>
+          </td>
+        </tr>
+
+        <!-- 巴西 喜拉朵 -->
+        <tr data-product="巴西 喜拉朵">
+          <td>
+            <div class="product-name">巴西 喜拉朵</div>
+            <div class="product-en">Brazil Cerrado</div>
+          </td>
+          <td class="desc">經典堅果與黑巧克力風味、低酸度、醇厚度高。</td>
+          <td>
+            <select class="spec-select" onchange="updatePrice(this)">
+              <option value="bean" data-price="380">熟豆半磅 (227g)</option>
+              <option value="drip" data-price="320">濾掛咖啡包 (10入/盒)</option>
+              <option value="steep" data-price="320">浸泡式咖啡包 (10入/盒)</option>
+            </select>
+          </td>
+          <td>
+            <div class="price-tag">NT$ <span class="price-val">380</span></div>
+          </td>
+          <td style="text-align: center;" class="action-cell">
+            <button class="btn-cart" onclick="addToCart(this)">🛒 購買</button>
+          </td>
+        </tr>
+
+        <!-- 越南 林同 阿拉比卡 -->
+        <tr data-product="越南 林同 阿拉比卡">
+          <td>
+            <div class="product-name">越南 林同 阿拉比卡</div>
+            <div class="product-en">Vietnam Lam Dong Arabica</div>
+          </td>
+          <td class="desc">高海拔栽植，具柔和微酸、木質香氣與乾淨甜感。</td>
+          <td>
+            <select class="spec-select" onchange="updatePrice(this)">
+              <option value="bean" data-price="360">熟豆半磅 (227g)</option>
+              <option value="drip" data-price="300">濾掛咖啡包 (10入/盒)</option>
+              <option value="steep" data-price="300">浸泡式咖啡包 (10入/盒)</option>
+            </select>
+          </td>
+          <td>
+            <div class="price-tag">NT$ <span class="price-val">360</span></div>
+          </td>
+          <td style="text-align: center;" class="action-cell">
+            <button class="btn-cart" onclick="addToCart(this)">🛒 購買</button>
+          </td>
+        </tr>
+
+        <!-- 越南 林同 羅布斯塔 -->
+        <tr data-product="越南 林同 羅布斯塔">
+          <td>
+            <div class="product-name">越南 林同 羅布斯塔</div>
+            <div class="product-en">Vietnam Lam Dong Robusta</div>
+          </td>
+          <td class="desc">濃郁油脂與醇厚口感，帶焦糖麥芽與可可香氣。</td>
+          <td>
+            <select class="spec-select" onchange="updatePrice(this)">
+              <option value="bean" data-price="320">熟豆半磅 (227g)</option>
+              <option value="drip" data-price="280">濾掛咖啡包 (10入/盒)</option>
+              <option value="steep" data-price="280">浸泡式咖啡包 (10入/盒)</option>
+            </select>
+          </td>
+          <td>
+            <div class="price-tag">NT$ <span class="price-val">320</span></div>
+          </td>
+          <td style="text-align: center;" class="action-cell">
+            <button class="btn-cart" onclick="addToCart(this)">🛒 購買</button>
+          </td>
+        </tr>
+
+        <!-- 西西里風味調飲配方 -->
+        <tr data-product="西西里風味調飲配方">
+          <td>
+            <div class="product-name">西西里風味調飲配方</div>
+            <div class="product-en">Sicilian Style Blend</div>
+          </td>
+          <td class="desc">特別適合搭配柑橘類果汁或冷萃，風味濃郁順口。</td>
+          <td>
+            <select class="spec-select" onchange="updatePrice(this)">
+              <option value="bean" data-price="420">熟豆半磅 (227g)</option>
+              <option value="drip" data-price="360">濾掛咖啡包 (10入/盒)</option>
+              <option value="steep" data-price="360">浸泡式咖啡包 (10入/盒)</option>
+            </select>
+          </td>
+          <td>
+            <div class="price-tag">NT$ <span class="price-val">420</span></div>
+          </td>
+          <td style="text-align: center;" class="action-cell">
+            <button class="btn-cart" onclick="addToCart(this)">🛒 購買</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="footer-notes">
+    <h3>💡 購物須知與規格說明：</h3>
+    <ul>
+      <li><strong>熟豆/粉裝</strong>：半磅 227g 裝，若需研磨請於結帳備註粗細。</li>
+      <li><strong>濾掛/浸泡包</strong>：每盒 10 入，採用充氮防潮獨立包裝。</li>
+      <li><strong>價格調整</strong>：可自由修改程式碼中 `data-price` 數值以符合貴店實際定價。</li>
+    </ul>
+  </footer>
+</div>
+
+<script>
+  // 單一下拉選單切換價格
+  function updatePrice(selectElem) {
+    const selectedOption = selectElem.options[selectElem.selectedIndex];
+    const price = selectedOption.getAttribute('data-price');
+    const row = selectElem.closest('tr');
+    row.querySelector('.price-val').textContent = price;
+  }
+
+  // 頂部批次切換規格
+  function setAllSpecs(specType, btnElement) {
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+    btnElement.classList.add('active');
+
+    const selects = document.querySelectorAll('.spec-select');
+    selects.forEach(select => {
+      select.value = specType;
+      updatePrice(select);
+    });
+  }
+
+  // 點擊下單 / 加入購物車邏輯
+  function addToCart(btn) {
+    const row = btn.closest('tr');
+    const productName = row.getAttribute('data-product');
+    const select = row.querySelector('.spec-select');
+    const specText = select.options[select.selectedIndex].text;
+    const price = row.querySelector('.price-val').textContent;
+
+    alert(`已將【${productName} - ${specText}】（NT$ ${price}）加入購物車！`);
+  }
+</script>
 
-    <!-- Toast Notification System -->
-    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
-
-    <!-- Top Bar -->
-    <div class="bg-coffee-950 text-coffee-200 text-xs py-2 px-4 text-center tracking-wide flex justify-between items-center max-w-7xl mx-auto rounded-b-lg">
-        <div class="hidden sm:flex items-center space-x-4">
-            <span><i class="fa-solid fa-truck-fast mr-1"></i> 全館滿 $1,200 免運費</span>
-            <span><i class="fa-solid fa-graduation-cap mr-1"></i> SCA 認證烘焙導師親授課程</span>
-        </div>
-        <div class="mx-auto sm:mx-0 font-medium">
-            🔥 商業豆批發／生豆代工烘焙 專案洽詢專線：<a href="tel:0800888999" class="hover:underline">0800-888-999</a>
-        </div>
-        <div class="hidden md:flex items-center space-x-3 text-xs">
-            <a href="#wholesale" class="hover:text-amber-gold transition">企業專區</a>
-            <span>|</span>
-            <a href="#academy" class="hover:text-amber-gold transition">開課日程</a>
-        </div>
-    </div>
-
-    <!-- Main Navigation Bar -->
-    <header class="sticky top-0 z-40 bg-[#FAF8F5]/90 backdrop-blur-md border-b border-coffee-200/60 transition-all duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                
-                <!-- Logo -->
-                <a href="#hero" class="flex items-center gap-3 group">
-                    <div class="w-10 h-10 rounded-full bg-coffee-900 flex items-center justify-center text-amber-gold font-bold text-xl shadow-md group-hover:scale-105 transition-transform">
-                        <i class="fa-solid fa-mug-hot"></i>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="text-2xl font-black tracking-wider text-coffee-950 serif-title">VIEBUCKS</span>
-                        <span class="text-[9px] tracking-widest text-coffee-600 uppercase font-semibold">Coffee Roasters & Academy</span>
-                    </div>
-                </a>
-
-                <!-- Desktop Navigation Links -->
-                <nav class="hidden md:flex items-center space-x-8 font-medium text-sm text-coffee-900">
-                    <a href="#hero" class="hover:text-coffee-600 transition">首頁</a>
-                    <a href="#products" class="hover:text-coffee-600 transition flex items-center gap-1">
-                        咖啡線上選購 <span class="bg-coffee-200 text-coffee-800 text-[10px] px-1.5 py-0.5 rounded-full font-bold">熱銷</span>
-                    </a>
-                    <a href="#academy" class="hover:text-coffee-600 transition">烘焙教學學院</a>
-                    <a href="#wholesale" class="hover:text-coffee-600 transition">批發與代工生產</a>
-                    <a href="#about" class="hover:text-coffee-600 transition">關於 VIEBUCKS</a>
-                </nav>
-
-                <!-- Header Actions -->
-                <div class="flex items-center space-x-4">
-                    <!-- Search Input -->
-                    <div class="relative hidden lg:block">
-                        <input type="text" id="searchInput" placeholder="搜尋豆款、焙度或風味..." 
-                               class="w-48 xl:w-64 pl-9 pr-4 py-1.5 text-xs rounded-full bg-coffee-100/70 border border-coffee-300/50 focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:bg-white transition-all">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-coffee-400 text-xs"></i>
-                    </div>
-
-                    <!-- Cart Trigger -->
-                    <button id="cartBtn" class="relative p-2 text-coffee-900 hover:text-coffee-600 transition rounded-full hover:bg-coffee-100">
-                        <i class="fa-solid fa-bag-shopping text-xl"></i>
-                        <span id="cartBadge" class="absolute -top-1 -right-1 bg-coffee-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">0</span>
-                    </button>
-
-                    <!-- Mobile Menu Button -->
-                    <button id="mobileMenuBtn" class="md:hidden p-2 text-coffee-900 focus:outline-none">
-                        <i class="fa-solid fa-bars text-xl"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Navigation Menu -->
-        <div id="mobileMenu" class="hidden md:hidden bg-coffee-50 border-b border-coffee-200 px-4 pt-2 pb-6 space-y-3">
-            <a href="#hero" class="mobile-link block py-2 text-coffee-900 font-medium">首頁</a>
-            <a href="#products" class="mobile-link block py-2 text-coffee-900 font-medium">咖啡線上選購</a>
-            <a href="#academy" class="mobile-link block py-2 text-coffee-900 font-medium">烘焙教學學院</a>
-            <a href="#wholesale" class="mobile-link block py-2 text-coffee-900 font-medium">批發與代工生產</a>
-            <a href="#about" class="mobile-link block py-2 text-coffee-900 font-medium">關於 VIEBUCKS</a>
-        </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section id="hero" class="relative overflow-hidden pt-12 pb-20 md:py-24 bg-gradient-to-b from-coffee-100/40 via-[#FAF8F5] to-[#FAF8F5]">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                
-                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-coffee-200/80 text-coffee-900 text-xs font-semibold tracking-wide">
-                        <span class="w-2 h-2 rounded-full bg-coffee-600 animate-pulse"></span>
-                        自烘精選生豆 × SCA認證專業烘焙學院
-                    </div>
-                    
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-coffee-950 leading-tight serif-title">
-                        探索每一顆咖啡豆的<br>
-                        <span class="text-coffee-600 underline decoration-amber-gold/50">極致風味與烘焙藝術</span>
-                    </h1>
-                    
-                    <p class="text-coffee-700 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
-                        VIEBUCKS 專注於全球精品生豆採購、精密熱風烘焙生產與商業咖啡豆批發。我們同時開設專業烘焙師認證與沖煮課程，傳承極致工藝。
-                    </p>
-
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
-                        <a href="#products" class="px-8 py-4 bg-coffee-900 hover:bg-coffee-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 text-center flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-store"></i> 選購精品咖啡豆
-                        </a>
-                        <a href="#academy" class="px-8 py-4 bg-coffee-200/80 hover:bg-coffee-300/80 text-coffee-950 font-semibold rounded-xl border border-coffee-300/60 transition-all text-center flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-graduation-cap"></i> 預約烘焙體驗課
-                        </a>
-                    </div>
-
-                    <!-- Highlights stats -->
-                    <div class="grid grid-cols-3 gap-4 pt-8 border-t border-coffee-200/80 max-w-md mx-auto lg:mx-0 text-center lg:text-left">
-                        <div>
-                            <div class="text-2xl lg:text-3xl font-black text-coffee-950">50+</div>
-                            <div class="text-xs text-coffee-600 font-medium">產區精品莊園豆</div>
-                        </div>
-                        <div>
-                            <div class="text-2xl lg:text-3xl font-black text-coffee-950">3,000+</div>
-                            <div class="text-xs text-coffee-600 font-medium">學員認證培訓</div>
-                        </div>
-                        <div>
-                            <div class="text-2xl lg:text-3xl font-black text-coffee-950">200+</div>
-                            <div class="text-xs text-coffee-600 font-medium">合作咖啡館與企業</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Hero Graphic Showcase -->
-                <div class="lg:col-span-5 relative">
-                    <div class="relative mx-auto w-full max-w-md lg:max-w-none">
-                        <div class="aspect-square rounded-3xl overflow-hidden shadow-2xl relative group border-4 border-white">
-                            <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=800&q=80" 
-                                 alt="Fresh Roasted Coffee Beans" 
-                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
-                            <div class="absolute inset-0 bg-gradient-to-t from-coffee-950/80 via-transparent to-transparent"></div>
-                            
-                            <div class="absolute bottom-6 left-6 right-6 text-white space-y-2">
-                                <span class="bg-amber-gold text-coffee-950 text-[10px] uppercase font-bold px-2 py-1 rounded">MASTER ROASTED</span>
-                                <h3 class="text-xl font-bold">德國 Probat 匠人微批次烘焙</h3>
-                                <p class="text-xs text-coffee-200">精確掌控溫升曲線，展現最純粹的花果香氣與焦糖甜感。</p>
-                            </div>
-                        </div>
-
-                        <!-- Floating Badge 1 -->
-                        <div class="absolute -top-6 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-coffee-100 flex items-center gap-3 hidden sm:flex">
-                            <div class="w-10 h-10 rounded-full bg-amber-warm flex items-center justify-center text-coffee-800">
-                                <i class="fa-solid fa-award text-lg"></i>
-                            </div>
-                            <div>
-                                <div class="text-xs text-coffee-500 font-medium">品質保證</div>
-                                <div class="text-sm font-bold text-coffee-950">CQI Q Grader 杯測鑑定</div>
-                            </div>
-                        </div>
-
-                        <!-- Floating Badge 2 -->
-                        <div class="absolute -bottom-6 -right-6 bg-coffee-900 text-white p-4 rounded-2xl shadow-xl border border-coffee-800 flex items-center gap-3 hidden sm:flex">
-                            <div class="w-10 h-10 rounded-full bg-coffee-800 flex items-center justify-center text-amber-gold">
-                                <i class="fa-solid fa-fire-flame-curved text-lg"></i>
-                            </div>
-                            <div>
-                                <div class="text-xs text-coffee-300 font-medium">接單現烘</div>
-                                <div class="text-sm font-bold text-white">48小時內新鮮出貨</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- Product E-Commerce Section -->
-    <section id="products" class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-                <div>
-                    <span class="text-coffee-600 text-xs font-bold tracking-widest uppercase">E-COMMERCE STORE</span>
-                    <h2 class="text-3xl sm:text-4xl font-bold text-coffee-950 serif-title mt-1">精品咖啡與裝備選購</h2>
-                    <p class="text-coffee-600 text-sm mt-2">從單品產區豆到義式配方，提供新鮮現烘咖啡豆與專業器具</p>
-                </div>
-
-                <!-- Category Filters -->
-                <div class="flex flex-wrap gap-2 text-sm" id="categoryFilters">
-                    <button data-cat="all" class="cat-btn px-4 py-2 rounded-xl bg-coffee-900 text-white font-medium shadow-sm transition">全部商品</button>
-                    <button data-cat="single-origin" class="cat-btn px-4 py-2 rounded-xl bg-coffee-100 text-coffee-800 hover:bg-coffee-200 font-medium transition">莊園單品豆</button>
-                    <button data-cat="espresso-blend" class="cat-btn px-4 py-2 rounded-xl bg-coffee-100 text-coffee-800 hover:bg-coffee-200 font-medium transition">義式配方豆</button>
-                    <button data-cat="drip-bag" class="cat-btn px-4 py-2 rounded-xl bg-coffee-100 text-coffee-800 hover:bg-coffee-200 font-medium transition">精品濾掛包</button>
-                    <button data-cat="equipment" class="cat-btn px-4 py-2 rounded-xl bg-coffee-100 text-coffee-800 hover:bg-coffee-200 font-medium transition">烘焙與器材</button>
-                </div>
-            </div>
-
-            <!-- Product Grid -->
-            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- JavaScript will dynamically render products here -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Roasting Academy Section -->
-    <section id="academy" class="py-20 bg-[#FAF8F5] relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16 space-y-3">
-                <span class="text-coffee-600 text-xs font-bold tracking-widest uppercase bg-coffee-200/60 px-3 py-1 rounded-full">ROASTING ACADEMY</span>
-                <h2 class="text-3xl sm:text-4xl font-bold text-coffee-950 serif-title">VIEBUCKS 咖啡烘焙學院</h2>
-                <p class="text-coffee-700 text-sm sm:text-base">系統化教學課程，帶您深入生豆評鑑、熱風與半直火烘焙理論，並實際操練專業烘豆機。</p>
-            </div>
-
-            <!-- Course Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                
-                <!-- Course 1 -->
-                <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-coffee-200/80 flex flex-col hover:shadow-2xl transition duration-300">
-                    <div class="relative h-52 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80" alt="Roasting Course" class="w-full h-full object-cover">
-                        <span class="absolute top-4 left-4 bg-coffee-900 text-white text-xs font-semibold px-3 py-1 rounded-full">入門首選</span>
-                        <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-coffee-950 text-xs font-bold px-2.5 py-1 rounded-md">
-                            <i class="fa-regular fa-clock text-coffee-600 mr-1"></i> 6 小時實作
-                        </div>
-                    </div>
-                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
-                        <div>
-                            <div class="text-xs text-coffee-600 font-semibold mb-1">適合：咖啡愛好者 / 自烘初學者</div>
-                            <h3 class="text-xl font-bold text-coffee-950 mb-2">咖啡烘焙入門：從生豆分級到風味曲線解析</h3>
-                            <p class="text-xs text-coffee-600 line-clamp-3 leading-relaxed">
-                                認識各大產區生豆特性、缺陷豆瑕疵挑選，學習溫升率 (ROR) 基本概念，並親自烘焙出一包專屬自己的咖啡豆。
-                            </p>
-                        </div>
-
-                        <div class="border-t border-coffee-100 pt-4 space-y-3">
-                            <div class="flex justify-between items-center text-xs text-coffee-700">
-                                <span><i class="fa-regular fa-calendar-check text-coffee-600 mr-1"></i> 近期梯次: 09/12 (六)</span>
-                                <span class="text-red-600 font-bold"><i class="fa-solid fa-user-group mr-1"></i> 剩餘 2 名</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <span class="text-xs text-coffee-500">學費</span>
-                                    <div class="text-2xl font-black text-coffee-900">NT$ 3,800</div>
-                                </div>
-                                <button onclick="openCourseModal('咖啡烘焙入門：從生豆分級到風味曲線解析', 3800)" class="px-5 py-2.5 bg-coffee-900 hover:bg-coffee-800 text-white font-semibold text-xs rounded-xl shadow transition">
-                                    線上預約報名
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Course 2 -->
-                <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-coffee-200/80 flex flex-col hover:shadow-2xl transition duration-300">
-                    <div class="relative h-52 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=600&q=80" alt="SCA Certification Course" class="w-full h-full object-cover">
-                        <span class="absolute top-4 left-4 bg-amber-gold text-coffee-950 text-xs font-bold px-3 py-1 rounded-full">SCA 國際認證</span>
-                        <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-coffee-950 text-xs font-bold px-2.5 py-1 rounded-md">
-                            <i class="fa-regular fa-clock text-coffee-600 mr-1"></i> 3 天進修班
-                        </div>
-                    </div>
-                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
-                        <div>
-                            <div class="text-xs text-coffee-600 font-semibold mb-1">適合：從業人員 / 店家研發 / 烘豆師</div>
-                            <h3 class="text-xl font-bold text-coffee-950 mb-2">SCA 精品咖啡協會高級烘焙師證照專班</h3>
-                            <p class="text-xs text-coffee-600 line-clamp-3 leading-relaxed">
-                                全面掌握排氣設定、梅納反應、焦糖化階段調控，包含大容量商業機台實操與系統化杯測檢驗（Cupping）。
-                            </p>
-                        </div>
-
-                        <div class="border-t border-coffee-100 pt-4 space-y-3">
-                            <div class="flex justify-between items-center text-xs text-coffee-700">
-                                <span><i class="fa-regular fa-calendar-check text-coffee-600 mr-1"></i> 近期梯次: 09/25 (五)-09/27 (日)</span>
-                                <span class="text-red-600 font-bold"><i class="fa-solid fa-user-group mr-1"></i> 剩餘 1 名</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <span class="text-xs text-coffee-500">學費 (含檢定費)</span>
-                                    <div class="text-2xl font-black text-coffee-900">NT$ 22,000</div>
-                                </div>
-                                <button onclick="openCourseModal('SCA 精品咖啡協會高級烘焙師證照專班', 22000)" class="px-5 py-2.5 bg-coffee-900 hover:bg-coffee-800 text-white font-semibold text-xs rounded-xl shadow transition">
-                                    線上預約報名
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Course 3 -->
-                <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-coffee-200/80 flex flex-col hover:shadow-2xl transition duration-300">
-                    <div class="relative h-52 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80" alt="Espresso Masterclass" class="w-full h-full object-cover">
-                        <span class="absolute top-4 left-4 bg-coffee-800 text-amber-warm text-xs font-semibold px-3 py-1 rounded-full">創業實戰</span>
-                        <div class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-coffee-950 text-xs font-bold px-2.5 py-1 rounded-md">
-                            <i class="fa-regular fa-clock text-coffee-600 mr-1"></i> 12 小時密集
-                        </div>
-                    </div>
-                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
-                        <div>
-                            <div class="text-xs text-coffee-600 font-semibold mb-1">適合：咖啡店創業者 / 吧檯長</div>
-                            <h3 class="text-xl font-bold text-coffee-950 mb-2">商業義式配方豆調配與開店萃取校正</h3>
-                            <p class="text-xs text-coffee-600 line-clamp-3 leading-relaxed">
-                                教導如何根據門市定位設計特色配方豆，精準控制水質、研磨度與萃取率，確保每一杯咖啡品質極致穩定。
-                            </p>
-                        </div>
-
-                        <div class="border-t border-coffee-100 pt-4 space-y-3">
-                            <div class="flex justify-between items-center text-xs text-coffee-700">
-                                <span><i class="fa-regular fa-calendar-check text-coffee-600 mr-1"></i> 近期梯次: 10/05 (六)</span>
-                                <span class="text-emerald-600 font-bold"><i class="fa-solid fa-user-group mr-1"></i> 開班招生中</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <span class="text-xs text-coffee-500">學費</span>
-                                    <div class="text-2xl font-black text-coffee-900">NT$ 9,500</div>
-                                </div>
-                                <button onclick="openCourseModal('商業義式配方豆調配與開店萃取校正', 9500)" class="px-5 py-2.5 bg-coffee-900 hover:bg-coffee-800 text-white font-semibold text-xs rounded-xl shadow transition">
-                                    線上預約報名
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- B2B Wholesale & Production Section -->
-    <section id="wholesale" class="py-20 bg-coffee-950 text-white relative overflow-hidden">
-        <!-- Background decorative elements -->
-        <div class="absolute -right-20 -top-20 w-96 h-96 bg-coffee-800/30 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -left-20 -bottom-20 w-96 h-96 bg-amber-gold/10 rounded-full blur-3xl pointer-events-none"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                
-                <div class="lg:col-span-6 space-y-6">
-                    <span class="text-amber-gold text-xs font-bold tracking-widest uppercase">B2B COFFEE SOLUTIONS</span>
-                    <h2 class="text-3xl sm:text-4xl font-bold serif-title text-white">
-                        咖啡買賣批發與 OEM 代工烘焙生產
-                    </h2>
-                    <p class="text-coffee-300 text-sm sm:text-base leading-relaxed">
-                        VIEBUCKS 擁有生豆直接貿易採購管道與工廠級自動化烘焙設備。我們為餐飲品牌、精品咖啡店、辦公室及企業客戶提供一站式咖啡解決方案。
-                    </p>
-
-                    <div class="space-y-4 pt-2">
-                        <div class="flex items-start gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-coffee-800/80 border border-coffee-700 flex items-center justify-center text-amber-gold shrink-0">
-                                <i class="fa-solid fa-wheat-awn text-lg"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-white text-base">全球生豆採購與批發</h4>
-                                <p class="text-xs text-coffee-300 mt-1">涵蓋非洲、中南美洲及亞洲專業產區莊園生豆，穩定供應，量大更享專屬折扣。</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-start gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-coffee-800/80 border border-coffee-700 flex items-center justify-center text-amber-gold shrink-0">
-                                <i class="fa-solid fa-gears text-lg"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-white text-base">專屬配方設計與 ODM/OEM 代工</h4>
-                                <p class="text-xs text-coffee-300 mt-1">杯測師團隊打造獨家風味識別，支援客製化烘焙度與濾掛咖啡自動化充氮包裝。</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-start gap-4">
-                            <div class="w-10 h-10 rounded-xl bg-coffee-800/80 border border-coffee-700 flex items-center justify-center text-amber-gold shrink-0">
-                                <i class="fa-solid fa-store text-lg"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-white text-base">開店設備租賃與人員培訓</h4>
-                                <p class="text-xs text-coffee-300 mt-1">提供專業義式咖啡機裝機、維護以及門市人員吧檯標準作業 SOP 輔導。</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Wholesale Inquiry Form -->
-                <div class="lg:col-span-6 bg-white text-coffee-950 p-8 rounded-3xl shadow-2xl border border-coffee-200">
-                    <h3 class="text-2xl font-bold mb-2 text-coffee-950">索取商業批發報價 / 樣豆申請</h3>
-                    <p class="text-xs text-coffee-600 mb-6">填寫您的需求，VIEBUCKS 商業顧問將於 24 小時內與您聯繫並寄送樣豆體驗。</p>
-
-                    <form id="wholesaleForm" onsubmit="handleWholesaleSubmit(event)" class="space-y-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold text-coffee-800 mb-1">公司/品牌名稱 *</label>
-                                <input type="text" required placeholder="例如：好咖啡館" class="w-full px-3 py-2 text-sm rounded-lg border border-coffee-200 focus:outline-none focus:ring-2 focus:ring-coffee-600">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-coffee-800 mb-1">聯絡人姓名 *</label>
-                                <input type="text" required placeholder="陳先生 / 小姐" class="w-full px-3 py-2 text-sm rounded-lg border border-coffee-200 focus:outline-none focus:ring-2 focus:ring-coffee-600">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold text-coffee-800 mb-1">聯絡電話 *</label>
-                                <input type="tel" required placeholder="0912-345-678" class="w-full px-3 py-2 text-sm rounded-lg border border-coffee-200 focus:outline-none focus:ring-2 focus:ring-coffee-600">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-coffee-800 mb-1">電子信箱 *</label>
-                                <input type="email" required placeholder="service@brand.com" class="w-full px-3 py-2 text-sm rounded-lg border border-coffee-200 focus:outline-none focus:ring-2 focus:ring-coffee-600">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-bold text-coffee-800 mb-1">需求項目 (可複選)</label>
-                            <div class="grid grid-cols-2 gap-2 text-xs text-coffee-800 pt-1">
-                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="req" value="商業豆批發" checked class="rounded text-coffee-700"> 商業熟豆批發</label>
-                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="req" value="生豆採購" class="rounded text-coffee-700"> 莊園生豆買賣</label>
-                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="req" value="代工烘焙" class="rounded text-coffee-700"> 代工烘焙與代包</label>
-                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="req" value="設備諮詢" class="rounded text-coffee-700"> 咖啡機設備諮詢</label>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-bold text-coffee-800 mb-1">每月預計用豆量</label>
-                            <select class="w-full px-3 py-2 text-sm rounded-lg border border-coffee-200 focus:outline-none focus:ring-2 focus:ring-coffee-600">
-                                <option>10 磅 ~ 30 磅 (小型門市 / 辦公室)</option>
-                                <option>31 磅 ~ 100 磅 (中型連鎖 / 餐廳)</option>
-                                <option>100 磅以上 (大型品牌 / 經銷商)</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-bold text-coffee-800 mb-1">其他詳細備註</label>
-                            <textarea rows="3" placeholder="請填寫偏好的風味走向或特殊的代工需求..." class="w-full px-3 py-2 text-sm rounded-lg border border-coffee-200 focus:outline-none focus:ring-2 focus:ring-coffee-600"></textarea>
-                        </div>
-
-                        <button type="submit" class="w-full py-3 bg-coffee-950 hover:bg-coffee-900 text-amber-gold font-bold text-sm rounded-xl transition shadow-lg flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-paper-plane"></i> 送出批發諮詢與申請
-                        </button>
-                    </form>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- About Us Section -->
-    <section id="about" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <div class="space-y-6">
-                    <span class="text-coffee-600 text-xs font-bold tracking-widest uppercase">ABOUT VIEBUCKS</span>
-                    <h2 class="text-3xl sm:text-4xl font-bold text-coffee-950 serif-title">
-                        以匠心烘焙，傳遞每一滴精緻風味
-                    </h2>
-                    <p class="text-coffee-700 text-sm leading-relaxed">
-                        VIEBUCKS 創立於對高品質咖啡的極致追求。我們深入全球各精品產區，與優質莊園直接合作，確保生豆來源可追溯且符合永續貿易原則。
-                    </p>
-                    <p class="text-coffee-700 text-sm leading-relaxed">
-                        我們的烘焙廠配備高精度熱風烘焙系統與光學色解儀，精準記錄每一批次烘焙曲線。同時，我們的烘焙學院致力於推廣正統咖啡文化，培育無數專業從業人員與自烘愛好者。
-                    </p>
-
-                    <div class="grid grid-cols-2 gap-4 pt-2">
-                        <div class="p-4 rounded-xl bg-coffee-50 border border-coffee-100">
-                            <i class="fa-solid fa-check-circle text-coffee-700 text-xl mb-2"></i>
-                            <div class="font-bold text-sm text-coffee-900">SCA 認證考照考場</div>
-                            <div class="text-xs text-coffee-600 mt-1">國際標準硬體設備與師資</div>
-                        </div>
-                        <div class="p-4 rounded-xl bg-coffee-50 border border-coffee-100">
-                            <i class="fa-solid fa-leaf text-coffee-700 text-xl mb-2"></i>
-                            <div class="font-bold text-sm text-coffee-900">100% 精品級生豆</div>
-                            <div class="text-xs text-coffee-600 mt-1">嚴格杯測分級 80 分以上</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="relative">
-                    <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80" alt="Coffee Cupping Session" class="rounded-3xl shadow-xl w-full object-cover">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-coffee-950 text-coffee-300 pt-16 pb-8 border-t border-coffee-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-coffee-800">
-                
-                <div class="space-y-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-amber-gold flex items-center justify-center text-coffee-950 font-bold">
-                            <i class="fa-solid fa-mug-hot"></i>
-                        </div>
-                        <span class="text-xl font-black text-white serif-title">VIEBUCKS</span>
-                    </div>
-                    <p class="text-xs text-coffee-400 leading-relaxed">
-                        專業咖啡生豆進口買賣、自家烘焙精品熟豆、商業配方豆批發，以及 SCA 國際認證咖啡烘焙教育學院。
-                    </p>
-                    <div class="flex space-x-3 text-lg text-amber-gold">
-                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="hover:text-white transition"><i class="fa-brands fa-facebook"></i></a>
-                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="hover:text-white transition"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="https://line.me" target="_blank" rel="noopener noreferrer" class="hover:text-white transition"><i class="fa-brands fa-line"></i></a>
-                        <a href="mailto:service@viebucks.com" class="hover:text-white transition"><i class="fa-solid fa-envelope"></i></a>
-                    </div>
-                </div>
-
-                <div>
-                    <h4 class="text-white font-bold text-sm mb-4">選購與服務</h4>
-                    <ul class="space-y-2 text-xs">
-                        <li><a href="#products" onclick="filterByCategory('single-origin')" class="hover:text-amber-gold transition">莊園精品豆</a></li>
-                        <li><a href="#products" onclick="filterByCategory('espresso-blend')" class="hover:text-amber-gold transition">義式商業配方</a></li>
-                        <li><a href="#products" onclick="filterByCategory('drip-bag')" class="hover:text-amber-gold transition">氮氣鮮封濾掛</a></li>
-                        <li><a href="#wholesale" class="hover:text-amber-gold transition">生豆買賣與批發</a></li>
-                        <li><a href="#wholesale" class="hover:text-amber-gold transition">OEM 代工烘焙</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-white font-bold text-sm mb-4">烘焙學院</h4>
-                    <ul class="space-y-2 text-xs">
-                        <li><a href="#academy" class="hover:text-amber-gold transition">烘焙入門興趣班</a></li>
-                        <li><a href="#academy" class="hover:text-amber-gold transition">SCA 烘焙師認證</a></li>
-                        <li><a href="#academy" class="hover:text-amber-gold transition">開店輔導與調配</a></li>
-                        <li><button onclick="openCourseModal('一對一私人指導課程諮詢', 0)" class="hover:text-amber-gold transition text-left">一對一私人指導</button></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-white font-bold text-sm mb-4">聯絡我們</h4>
-                    <ul class="space-y-2 text-xs text-coffee-400">
-                        <li><i class="fa-solid fa-location-dot text-amber-gold mr-2"></i> 台北市信義區咖啡大道 100 號</li>
-                        <li><i class="fa-solid fa-phone text-amber-gold mr-2"></i> <a href="tel:0227898888" class="hover:underline">(02) 2789-8888</a></li>
-                        <li><i class="fa-solid fa-clock text-amber-gold mr-2"></i> 週一至週六 09:00 - 18:00</li>
-                        <li><i class="fa-solid fa-envelope text-amber-gold mr-2"></i> <a href="mailto:service@viebucks.com" class="hover:underline">service@viebucks.com</a></li>
-                    </ul>
-                </div>
-
-            </div>
-
-            <div class="pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-coffee-500 gap-4">
-                <div>&copy; 2026 VIEBUCKS Coffee Roasters & Academy. All Rights Reserved.</div>
-                <div class="flex space-x-4">
-                    <button onclick="openInfoModal('privacy')" class="hover:underline">隱私權條款</button>
-                    <button onclick="openInfoModal('terms')" class="hover:underline">服務條款</button>
-                    <button onclick="openInfoModal('returns')" class="hover:underline">退換貨政策</button>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Policy / Information Modal -->
-    <div id="infoModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative max-h-[80vh] overflow-y-auto">
-            <button onclick="closeInfoModal()" class="absolute top-4 right-4 text-coffee-400 hover:text-coffee-900">
-                <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
-            <h3 id="infoModalTitle" class="text-2xl font-bold text-coffee-950 mb-4 serif-title"></h3>
-            <div id="infoModalBody" class="text-xs text-coffee-700 leading-relaxed space-y-3"></div>
-        </div>
-    </div>
-
-    <!-- Shopping Cart Drawer Side Panel -->
-    <div id="cartDrawer" class="fixed inset-0 z-50 overflow-hidden pointer-events-none transition-opacity duration-300 opacity-0">
-        <!-- Backdrop -->
-        <div id="cartBackdrop" class="absolute inset-0 bg-black/60 transition-opacity"></div>
-
-        <div class="fixed inset-y-0 right-0 max-w-full flex pl-10 pointer-events-auto">
-            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
-                
-                <!-- Drawer Header -->
-                <div class="p-6 bg-coffee-950 text-white flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-bag-shopping text-amber-gold text-lg"></i>
-                        <h2 class="text-lg font-bold">您的購物車 (<span id="drawerCartCount">0</span>)</h2>
-                    </div>
-                    <button id="closeCartBtn" class="text-coffee-300 hover:text-white transition p-1">
-                        <i class="fa-solid fa-xmark text-xl"></i>
-                    </button>
-                </div>
-
-                <!-- Drawer Body (Items List) -->
-                <div id="cartItemsContainer" class="flex-1 overflow-y-auto p-6 space-y-4">
-                    <!-- Dynamic Cart Items -->
-                </div>
-
-                <!-- Drawer Footer -->
-                <div class="p-6 border-t border-coffee-100 bg-coffee-50/50 space-y-4">
-                    <div class="space-y-2 text-sm">
-                        <div class="flex justify-between text-coffee-600">
-                            <span>商品小計</span>
-                            <span id="subtotalAmount">NT$ 0</span>
-                        </div>
-                        <div class="flex justify-between text-coffee-600">
-                            <span>運費估計</span>
-                            <span id="shippingAmount">NT$ 0</span>
-                        </div>
-                        <div class="flex justify-between text-base font-bold text-coffee-950 pt-2 border-t border-coffee-200">
-                            <span>應付總額</span>
-                            <span id="totalAmount" class="text-xl text-coffee-900">NT$ 0</span>
-                        </div>
-                    </div>
-
-                    <button id="checkoutBtn" onclick="openCheckoutModal()" class="w-full py-3.5 bg-coffee-900 hover:bg-coffee-800 text-white font-bold rounded-xl shadow-lg transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-credit-card"></i> 前往結帳
-                    </button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- Product Quick View Modal -->
-    <div id="productModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl transform transition-transform duration-300 scale-95 relative" id="productModalCard">
-            <button onclick="closeProductModal()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/20 hover:bg-black/40 text-white flex items-center justify-center transition">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div id="productModalContent">
-                <!-- Dynamically Filled -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Course Registration Modal -->
-    <div id="courseModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative">
-            <button onclick="closeCourseModal()" class="absolute top-4 right-4 text-coffee-400 hover:text-coffee-900">
-                <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
-
-            <h3 class="text-2xl font-bold text-coffee-950 mb-1 serif-title">烘焙學院報名預約</h3>
-            <p id="courseModalTitle" class="text-sm font-semibold text-coffee-700 mb-6"></p>
-
-            <form onsubmit="handleCourseSubmit(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-coffee-800 mb-1">學員姓名 *</label>
-                    <input type="text" required placeholder="請輸入姓名" class="w-full px-3 py-2 text-sm rounded-lg border border-coffee-200 focus:outline-none focus:ring-2 focus:ring-coffee-600">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-coffee-800 mb-1">聯絡電話 *</label>
-                    <input type="tel" required placeholder="例如：0912345678" class="w-full px-3 py-2 text-sm rounded-lg border border-coffee-200 focus:outline-none focus:ring-2 focus:ring-coffee-600">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-coffee-800 mb-1">電子郵件 *</label>
-                    <input type="email" required placeholder="用於寄送上課通知" class="w-full px-3 py-2 text-sm rounded-lg border border-coffee-200 focus:outline-none focus:ring-2 focus:ring-coffee-600">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-coffee-800 mb-1">選擇上課場次梯次</label>
-                    <select class="w-full px-3 py-2 text-sm rounded-lg border border-coffee-200 focus:outline-none focus:ring-2 focus:ring-coffee-600">
-                        <option>2026-09-12 (週六) 10:00 - 17:00</option>
-                        <option>2026-09-25 (週五) 10:00 - 17:00</option>
-                        <option>2026-10-05 (週六) 10:00 - 17:00</option>
-                    </select>
-                </div>
-                <div class="pt-2">
-                    <button type="submit" class="w-full py-3 bg-coffee-900 hover:bg-coffee-800 text-white font-bold text-sm rounded-xl transition shadow">
-                        確認提交預約
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Checkout Modal -->
-    <div id="checkoutModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeCheckoutModal()" class="absolute top-4 right-4 text-coffee-400 hover:text-coffee-900">
-                <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
-
-            <h3 class="text-2xl font-bold text-coffee-950 mb-1 serif-title">訂單結帳</h3>
-            <p class="text-xs text-coffee-600 mb-6">請填寫收件資訊並選擇付款方式完成購買</p>
-
-            <form onsubmit="handleCheckoutSubmit(event)" class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-coffee-800 mb-1">收件人姓名 *</label>
-                        <input type="text" required placeholder="王小明" class="w-full px-3 py-2 text-sm rounded-lg border border-coffee-200 focus:outline-none focus:ring-2 focus:ring-coffee-600">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-coffee-800 mb-1">行動電話 *</label>
-                        <input type="tel" required placeholder="0912-000-000" class="w-full px-3 py-2 text-sm rounded-lg border border-coffee-200 focus:outline-none focus:ring-2 focus:ring-coffee-600">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-coffee-800 mb-1">配送地址 *</label>
-                    <input type="text" required placeholder="請填寫完整配送地址" class="w-full px-3 py-2 text-sm rounded-lg border border-coffee-200 focus:outline-none focus:ring-2 focus:ring-coffee-600">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-coffee-800 mb-1">付款方式</label>
-                    <div class="grid grid-cols-3 gap-3 pt-1">
-                        <label class="flex flex-col items-center justify-center p-3 border border-coffee-200 rounded-xl cursor-pointer hover:border-coffee-600">
-                            <input type="radio" name="payment" value="credit" checked class="mb-1">
-                            <span class="text-xs font-semibold">信用卡</span>
-                        </label>
-                        <label class="flex flex-col items-center justify-center p-3 border border-coffee-200 rounded-xl cursor-pointer hover:border-coffee-600">
-                            <input type="radio" name="payment" value="linepay" class="mb-1">
-                            <span class="text-xs font-semibold">LINE Pay</span>
-                        </label>
-                        <label class="flex flex-col items-center justify-center p-3 border border-coffee-200 rounded-xl cursor-pointer hover:border-coffee-600">
-                            <input type="radio" name="payment" value="cod" class="mb-1">
-                            <span class="text-xs font-semibold">貨到付款</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="bg-coffee-50 p-4 rounded-xl space-y-2 text-xs">
-                    <div class="flex justify-between font-bold text-coffee-950">
-                        <span>結帳總額</span>
-                        <span id="checkoutTotalText" class="text-base text-coffee-900">NT$ 0</span>
-                    </div>
-                </div>
-
-                <button type="submit" class="w-full py-3.5 bg-coffee-900 hover:bg-coffee-800 text-white font-bold text-sm rounded-xl transition shadow-lg">
-                    確認下單付款
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- JavaScript Application Logic -->
-    <script>
-        // Sample Product Database
-        const products = [
-            {
-                id: 'p1',
-                name: '衣索比亞 耶加雪菲 契契蕾',
-                category: 'single-origin',
-                price: 480,
-                weight: '227g (半磅)',
-                roast: '淺烘焙 (Light)',
-                process: '日曬處理法',
-                notes: ['佛手柑', '水蜜桃', '茉莉花香', '柑橘酸甜'],
-                image: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=600&q=80',
-                description: '來自衣索比亞契契蕾處理廠，帶有濃郁優雅的花果香氣，口感絲滑明亮，餘韻悠長。'
-            },
-            {
-                id: 'p2',
-                name: '哥倫比亞 聖圖阿里奧莊園 紅波旁',
-                category: 'single-origin',
-                price: 520,
-                weight: '227g (半磅)',
-                roast: '中淺烘焙 (Medium-Light)',
-                process: '雙重厭氧發酵蜜處理',
-                notes: ['黑櫻桃', '焦糖', '烤榛果', '黑巧克力'],
-                image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=600&q=80',
-                description: '特殊的雙重厭氧處理賦予其深邃複雜的酒香與水果軟糖般的甜感。'
-            },
-            {
-                id: 'p3',
-                name: 'VIEBUCKS 經典黑金義式配方豆',
-                category: 'espresso-blend',
-                price: 420,
-                weight: '454g (一磅)',
-                roast: '中深烘焙 (Medium-Dark)',
-                process: '品牌特調配方',
-                notes: ['濃郁可可', '堅果奶油', '黑糖甜感'],
-                image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&w=600&q=80',
-                description: '專為義式濃縮與拿鐵調配，融合南美洲與非洲豆，Crema 濃郁厚實，搭配牛奶極致香濃。'
-            },
-            {
-                id: 'p4',
-                name: '肯亞 AA 尼耶利 恰卡處理廠',
-                category: 'single-origin',
-                price: 550,
-                weight: '227g (半磅)',
-                roast: '淺中烘焙 (Light-Medium)',
-                process: '水洗處理法',
-                notes: ['黑加侖', '葡萄柚', '烏梅', '蔗糖'],
-                image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80',
-                description: '經典肯亞風格，扎實的多層次果酸與滿溢的水果多汁感，冷卻後風味更加迷人。'
-            },
-            {
-                id: 'p5',
-                name: '精品極品氮氣鮮封濾掛包 (10包/盒)',
-                category: 'drip-bag',
-                price: 450,
-                weight: '12g x 10包',
-                roast: '綜合莊園系列',
-                process: '充氮防氧化密封',
-                notes: ['花果綜合', '堅果焦糖', '隨身沖煮'],
-                image: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=600&q=80',
-                description: '嚴選莊園級咖啡豆磨粉，充氮保護保鮮，隨時隨地享用如現磨般的精品風味。'
-            },
-            {
-                id: 'p6',
-                name: 'VIEBUCKS Artisan 微型流體床烘豆機',
-                category: 'equipment',
-                price: 38800,
-                weight: '機台淨重 12kg',
-                roast: '個人/工作室適用',
-                process: '熱風式烘焙 (單次 300g)',
-                notes: ['藍芽曲線連接', '精準控溫', '熱風均勻'],
-                image: 'https://images.unsplash.com/photo-1521302200778-33500795e128?auto=format&fit=crop&w=600&q=80',
-                description: '專為玩家與教學設計的微型烘豆機，支援電腦連線即時畫出 ROR 曲線。'
-            },
-            {
-                id: 'p7',
-                name: '巴拿馬 翡翠莊園 綠標葛莎 (Geisha)',
-                category: 'single-origin',
-                price: 1200,
-                weight: '114g (1/4磅)',
-                roast: '極淺烘焙 (Ultra-Light)',
-                process: '日曬 Geisha',
-                notes: ['佛手柑', '橙花', '荔枝', '野蜜'],
-                image: 'https://images.unsplash.com/photo-1606791422814-b32c705e3e2f?auto=format&fit=crop&w=600&q=80',
-                description: '頂級夢幻品種藝妓，充滿優雅高貴的荔枝與橘郡花香，精品咖啡界無可取代的傳奇。'
-            },
-            {
-                id: 'p8',
-                name: 'VIEBUCKS 匠人雙鍋爐義式咖啡機',
-                category: 'equipment',
-                price: 88000,
-                weight: '商業/高端家用',
-                roast: 'PID 變壓萃取',
-                process: 'PID 獨立控溫',
-                notes: ['旋轉泵浦', '預浸功能', '蒸氣強勁'],
-                image: 'https://images.unsplash.com/photo-1517668808822-9e4288246d76?auto=format&fit=crop&w=600&q=80',
-                description: '打造專業吧檯的極致選擇，PID 精準控溫與強勁連續蒸氣系統。'
-            }
-        ];
-
-        // Global State
-        let cart = [];
-        let activeCategory = 'all';
-
-        // DOM Ready Initializations
-        document.addEventListener('DOMContentLoaded', () => {
-            renderProducts();
-            setupCategoryFilters();
-            setupCartDrawer();
-            setupSearch();
-            setupMobileMenu();
-        });
-
-        // Render Products Grid
-        function renderProducts(filterText = '') {
-            const grid = document.getElementById('productGrid');
-            grid.innerHTML = '';
-
-            const filtered = products.filter(p => {
-                const matchesCat = activeCategory === 'all' || p.category === activeCategory;
-                const matchesSearch = p.name.toLowerCase().includes(filterText.toLowerCase()) || 
-                                      p.notes.some(n => n.toLowerCase().includes(filterText.toLowerCase()));
-                return matchesCat && matchesSearch;
-            });
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full text-center py-12 text-coffee-500">
-                        <i class="fa-solid fa-mug-saucer text-4xl mb-3 block"></i>
-                        沒有找到符合條件的咖啡商品
-                    </div>
-                `;
-                return;
-            }
-
-            filtered.forEach(p => {
-                const card = document.createElement('div');
-                card.className = 'bg-white rounded-2xl overflow-hidden border border-coffee-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group';
-                
-                card.innerHTML = `
-                    <div class="relative h-48 overflow-hidden bg-coffee-100 cursor-pointer" onclick="openProductModal('${p.id}')">
-                        <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                        <span class="absolute top-3 left-3 bg-coffee-950/80 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-md">
-                            ${p.roast}
-                        </span>
-                    </div>
-
-                    <div class="p-5 flex-1 flex flex-col justify-between">
-                        <div>
-                            <div class="text-[11px] text-coffee-500 font-medium mb-1">${p.weight}</div>
-                            <h3 class="font-bold text-coffee-950 text-base mb-2 group-hover:text-coffee-600 transition cursor-pointer" onclick="openProductModal('${p.id}')">
-                                ${p.name}
-                            </h3>
-                            <div class="flex flex-wrap gap-1 mb-3">
-                                ${p.notes.map(n => `<span class="text-[10px] bg-coffee-50 text-coffee-700 px-2 py-0.5 rounded border border-coffee-200">${n}</span>`).join('')}
-                            </div>
-                        </div>
-
-                        <div class="flex items-center justify-between border-t border-coffee-100 pt-3 mt-2">
-                            <div>
-                                <span class="text-[10px] text-coffee-400 block">售價</span>
-                                <span class="text-lg font-black text-coffee-900">NT$ ${p.price.toLocaleString()}</span>
-                            </div>
-                            <button onclick="addToCart('${p.id}')" class="w-9 h-9 rounded-xl bg-coffee-900 hover:bg-coffee-800 text-white flex items-center justify-center transition shadow-md hover:scale-105">
-                                <i class="fa-solid fa-cart-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        // Filter Triggered by External Action
-        function filterByCategory(cat) {
-            activeCategory = cat;
-            const btns = document.querySelectorAll('.cat-btn');
-            btns.forEach(b => {
-                if (b.dataset.cat === cat) {
-                    b.classList.remove('bg-coffee-100', 'text-coffee-800');
-                    b.classList.add('bg-coffee-900', 'text-white');
-                } else {
-                    b.classList.remove('bg-coffee-900', 'text-white');
-                    b.classList.add('bg-coffee-100', 'text-coffee-800');
-                }
-            });
-            renderProducts();
-        }
-
-        // Category Filter Setup
-        function setupCategoryFilters() {
-            const btns = document.querySelectorAll('.cat-btn');
-            btns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    filterByCategory(btn.dataset.cat);
-                });
-            });
-        }
-
-        // Cart State & Drawer Logic
-        function addToCart(productId) {
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
-
-            const existing = cart.find(item => item.id === productId);
-            if (existing) {
-                existing.qty += 1;
-            } else {
-                cart.push({ ...product, qty: 1 });
-            }
-
-            updateCartUI();
-            showToast(`已將「${product.name}」加入購物車`);
-        }
-
-        function updateQuantity(productId, change) {
-            const item = cart.find(i => i.id === productId);
-            if (!item) return;
-
-            item.qty += change;
-            if (item.qty <= 0) {
-                cart = cart.filter(i => i.id !== productId);
-            }
-            updateCartUI();
-        }
-
-        function updateCartUI() {
-            // Count badge
-            const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
-            document.getElementById('cartBadge').innerText = totalCount;
-            document.getElementById('drawerCartCount').innerText = totalCount;
-
-            // Render Drawer List
-            const container = document.getElementById('cartItemsContainer');
-            if (cart.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-12 text-coffee-400 space-y-2">
-                        <i class="fa-solid fa-basket-shopping text-4xl"></i>
-                        <p class="text-sm font-medium">購物車目前是空的</p>
-                    </div>
-                `;
-            } else {
-                container.innerHTML = cart.map(item => `
-                    <div class="flex items-center gap-3 p-3 bg-coffee-50/80 rounded-xl border border-coffee-100">
-                        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg">
-                        <div class="flex-1 min-w-0">
-                            <h4 class="font-bold text-xs text-coffee-950 truncate">${item.name}</h4>
-                            <div class="text-xs text-coffee-600 mt-1">NT$ ${item.price.toLocaleString()}</div>
-                            <div class="flex items-center gap-2 mt-2">
-                                <button onclick="updateQuantity('${item.id}', -1)" class="w-5 h-5 rounded bg-white border border-coffee-200 flex items-center justify-center text-xs text-coffee-800 font-bold">-</button>
-                                <span class="text-xs font-bold text-coffee-900">${item.qty}</span>
-                                <button onclick="updateQuantity('${item.id}', 1)" class="w-5 h-5 rounded bg-white border border-coffee-200 flex items-center justify-center text-xs text-coffee-800 font-bold">+</button>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-sm font-bold text-coffee-950">NT$ ${(item.price * item.qty).toLocaleString()}</div>
-                            <button onclick="updateQuantity('${item.id}', -${item.qty})" class="text-xs text-red-500 hover:underline mt-2 inline-block">刪除</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            // Amounts
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            const shipping = (subtotal >= 1200 || subtotal === 0) ? 0 : 80;
-            const total = subtotal + shipping;
-
-            document.getElementById('subtotalAmount').innerText = `NT$ ${subtotal.toLocaleString()}`;
-            document.getElementById('shippingAmount').innerText = shipping === 0 ? '免運費' : `NT$ ${shipping}`;
-            document.getElementById('totalAmount').innerText = `NT$ ${total.toLocaleString()}`;
-            document.getElementById('checkoutTotalText').innerText = `NT$ ${total.toLocaleString()}`;
-        }
-
-        // Cart Drawer Modal Toggle
-        function setupCartDrawer() {
-            const drawer = document.getElementById('cartDrawer');
-            const cartBtn = document.getElementById('cartBtn');
-            const closeBtn = document.getElementById('closeCartBtn');
-            const backdrop = document.getElementById('cartBackdrop');
-
-            const openDrawer = () => {
-                drawer.classList.remove('opacity-0', 'pointer-events-none');
-            };
-            const closeDrawer = () => {
-                drawer.classList.add('opacity-0', 'pointer-events-none');
-            };
-
-            cartBtn.addEventListener('click', openDrawer);
-            closeBtn.addEventListener('click', closeDrawer);
-            backdrop.addEventListener('click', closeDrawer);
-        }
-
-        // Search Input Setup
-        function setupSearch() {
-            const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('input', (e) => {
-                renderProducts(e.target.value);
-            });
-        }
-
-        // Mobile Menu Setup
-        function setupMobileMenu() {
-            const btn = document.getElementById('mobileMenuBtn');
-            const menu = document.getElementById('mobileMenu');
-            const links = document.querySelectorAll('.mobile-link');
-
-            btn.addEventListener('click', () => {
-                menu.classList.toggle('hidden');
-            });
-
-            links.forEach(link => {
-                link.addEventListener('click', () => {
-                    menu.classList.add('hidden');
-                });
-            });
-        }
-
-        // Policy Modals Setup
-        function openInfoModal(type) {
-            const modal = document.getElementById('infoModal');
-            const title = document.getElementById('infoModalTitle');
-            const body = document.getElementById('infoModalBody');
-
-            if (type === 'privacy') {
-                title.innerText = '隱私權條款';
-                body.innerHTML = `
-                    <p>VIEBUCKS 非常重視您的個人隱私。本網站所收集的個人資料（如姓名、電話、地址與 Email），僅用於商品配送、課程通知與客服聯繫。</p>
-                    <p>我們絕不會將您的個人資訊提供、出售或出租給任何第三方機構。</p>
-                `;
-            } else if (type === 'terms') {
-                title.innerText = '服務條款';
-                body.innerHTML = `
-                    <p>歡迎使用 VIEBUCKS 官方網站。當您使用本網站服務時，即代表您同意遵守本條款規章。</p>
-                    <p>本站所有咖啡商品均為接單後排單烘焙，確保最佳新鮮度。學院課程預約成功後若需取消，請於開課前 3 日聯繫客服辦理。</p>
-                `;
-            } else if (type === 'returns') {
-                title.innerText = '退換貨政策';
-                body.innerHTML = `
-                    <p>1. 咖啡豆為食品類別，基於食品安全與衛生考量，除商品包裝破損或發錯商品外，拆封後恕不接受退換貨。</p>
-                    <p>2. 如收到商品有瑕疵，請於收受商品 7 日內保留原包裝並聯繫客服，我們將儘速為您辦理免費換貨服務。</p>
-                `;
-            }
-
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-        }
-
-        function closeInfoModal() {
-            const modal = document.getElementById('infoModal');
-            modal.classList.add('opacity-0', 'pointer-events-none');
-        }
-
-        // Product Quick View Modal
-        function openProductModal(productId) {
-            const p = products.find(item => item.id === productId);
-            if (!p) return;
-
-            const modal = document.getElementById('productModal');
-            const content = document.getElementById('productModalContent');
-
-            content.innerHTML = `
-                <div class="grid grid-cols-1 md:grid-cols-2">
-                    <div class="h-64 md:h-auto overflow-hidden">
-                        <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-6 md:p-8 flex flex-col justify-between space-y-4">
-                        <div>
-                            <span class="text-xs bg-amber-warm text-coffee-950 font-bold px-2.5 py-1 rounded">${p.roast}</span>
-                            <h2 class="text-2xl font-bold text-coffee-950 mt-2">${p.name}</h2>
-                            <p class="text-xs text-coffee-600 mt-2 leading-relaxed">${p.description}</p>
-
-                            <div class="mt-4 space-y-2 text-xs">
-                                <div><span class="font-bold text-coffee-800">規格容量：</span> ${p.weight}</div>
-                                <div><span class="font-bold text-coffee-800">處理工藝：</span> ${p.process}</div>
-                                <div>
-                                    <span class="font-bold text-coffee-800">風味筆記：</span>
-                                    <div class="flex flex-wrap gap-1 mt-1">
-                                        ${p.notes.map(n => `<span class="bg-coffee-100 text-coffee-800 px-2 py-0.5 rounded font-medium">${n}</span>`).join('')}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="pt-4 border-t border-coffee-100 flex items-center justify-between">
-                            <div>
-                                <span class="text-xs text-coffee-500">售價</span>
-                                <div class="text-2xl font-black text-coffee-900">NT$ ${p.price.toLocaleString()}</div>
-                            </div>
-                            <button onclick="addToCart('${p.id}'); closeProductModal();" class="px-6 py-3 bg-coffee-900 hover:bg-coffee-800 text-white font-bold rounded-xl shadow transition">
-                                加入購物車
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            document.getElementById('productModalCard').classList.remove('scale-95');
-        }
-
-        function closeProductModal() {
-            const modal = document.getElementById('productModal');
-            modal.classList.add('opacity-0', 'pointer-events-none');
-        }
-
-        // Course Modal
-        function openCourseModal(title, price) {
-            const subtitle = price > 0 ? `${title} (NT$ ${price.toLocaleString()})` : title;
-            document.getElementById('courseModalTitle').innerText = subtitle;
-            const modal = document.getElementById('courseModal');
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-        }
-
-        function closeCourseModal() {
-            const modal = document.getElementById('courseModal');
-            modal.classList.add('opacity-0', 'pointer-events-none');
-        }
-
-        function handleCourseSubmit(e) {
-            e.preventDefault();
-            closeCourseModal();
-            showToast('預約報名資料已成功送出！學院導師將盡快與您聯繫確認細節。');
-        }
-
-        // Checkout Modal
-        function openCheckoutModal() {
-            if (cart.length === 0) {
-                showToast('購物車為空，無法進行結帳！');
-                return;
-            }
-            const drawer = document.getElementById('cartDrawer');
-            drawer.classList.add('opacity-0', 'pointer-events-none');
-
-            const modal = document.getElementById('checkoutModal');
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-        }
-
-        function closeCheckoutModal() {
-            const modal = document.getElementById('checkoutModal');
-            modal.classList.add('opacity-0', 'pointer-events-none');
-        }
-
-        function handleCheckoutSubmit(e) {
-            e.preventDefault();
-            closeCheckoutModal();
-            cart = [];
-            updateCartUI();
-            showToast('🎉 訂單完成！我們將於 48 小時內新鮮烘焙完成並為您寄出。');
-        }
-
-        function handleWholesaleSubmit(e) {
-            e.preventDefault();
-            e.target.reset();
-            showToast('商業諮詢表單已送出！我們的顧問將於 24 小時內與您聯繫。');
-        }
-
-        // Notification Toast System
-        function showToast(message) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'bg-coffee-950 text-white px-4 py-3 rounded-xl shadow-2xl border border-coffee-800 text-xs font-semibold flex items-center gap-2 transform transition-all duration-300 translate-y-4 opacity-0 pointer-events-auto max-w-sm';
-            toast.innerHTML = `<i class="fa-solid fa-circle-check text-amber-gold text-base"></i> <span>${message}</span>`;
-            
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.remove('translate-y-4', 'opacity-0');
-            }, 10);
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
-        }
-    </script>
 </body>
 </html>
