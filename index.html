@@ -1364,12 +1364,14 @@
 
         function addToCart() {
             const selectEl = document.getElementById('productSelect');
+            if (!selectEl.options.length) return;
+
             const selectedOption = selectEl.options[selectEl.selectedIndex];
-            
             const productId = selectedOption.value;
             const retailPrice = parseFloat(selectedOption.getAttribute('data-price'));
             const wholesalePrice = parseFloat(selectedOption.getAttribute('data-wholesale'));
-            const qty = parseInt(document.getElementById('qtyInput').value) || 1;
+            const qtyInput = document.getElementById('qtyInput');
+            const qty = Math.max(1, parseInt(qtyInput.value) || 1);
 
             const existingIndex = cart.findIndex(item => item.id === productId);
             if (existingIndex > -1) {
@@ -1402,6 +1404,7 @@
             if (cart.length === 0) {
                 cartContainer.style.display = 'none';
                 resultArea.style.display = 'none';
+                document.getElementById('checkoutFormContainer').style.display = 'none';
                 return;
             }
 
@@ -1422,7 +1425,7 @@
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${pInfo ? pInfo.name : ''} <br><small style="color:var(--gold-primary);">${pricingNote}</small></td>
+                    <td>${pInfo ? pInfo.name : item.id} <br><small style="color:var(--gold-primary);">${pricingNote}</small></td>
                     <td>${item.qty}</td>
                     <td>VND ${unitPrice.toLocaleString()}</td>
                     <td>VND ${subtotal.toLocaleString()}</td>
@@ -1450,14 +1453,17 @@
             submitBtn.disabled = true;
             submitBtn.innerText = '處理中 / Processing...';
 
-            const name = document.getElementById('custName').value;
-            const phone = document.getElementById('custPhone').value;
-            const address = document.getElementById('custAddress').value;
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const address = document.getElementById('custAddress').value.trim();
             const grandTotal = document.getElementById('calcTotal').innerText;
             const dict = translations[currentLang];
 
             // 生成專屬訂單編號（格式：VB + 年月日 + 4位隨機碼）
-            const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            const today = new Date();
+            const dateStr = today.getFullYear().toString() +
+                            String(today.getMonth() + 1).padStart(2, '0') +
+                            String(today.getDate()).padStart(2, '0');
             const randomCode = Math.floor(1000 + Math.random() * 9000);
             currentOrderNo = `VB-${dateStr}-${randomCode}`;
 
@@ -1504,7 +1510,7 @@
                 
                 // 填入訂單單據畫面資料
                 document.getElementById('invNumber').innerText = currentOrderNo;
-                document.getElementById('invDate').innerText = new Date().toLocaleDateString();
+                document.getElementById('invDate').innerText = today.toLocaleDateString();
                 document.getElementById('invName').innerText = name;
                 document.getElementById('invPhone').innerText = phone;
                 document.getElementById('invAddress').innerText = address;
@@ -1522,8 +1528,9 @@
                     invTbody.appendChild(tr);
                 });
 
-                // 設定 Zalo 快速分享訊息
-                const zaloText = encodeURIComponent(`【VIEBUCKS 官方訂單通知】\n訂單編號: ${currentOrderNo}\n姓名: ${name}\n電話: ${phone}\n地址: ${address}\n總金額: ${grandTotal}\n請客服協助確認出貨，謝謝！`);
+                // 設定 Zalo 快速分享訊息（包含詳細採購明細）
+                const itemsZaloText = processedCart.map(i => `• ${i.name} x${i.qty}`).join('\n');
+                const zaloText = encodeURIComponent(`【VIEBUCKS 官方訂單通知】\n訂單編號: ${currentOrderNo}\n姓名: ${name}\n電話: ${phone}\n地址: ${address}\n\n【訂購明細】\n${itemsZaloText}\n\n總金額: ${grandTotal}\n請客服協助確認出貨，謝謝！`);
                 document.getElementById('zaloShareBtn').href = `https://zalo.me/s/share?text=${zaloText}`;
 
                 // 隱藏表單，顯示成功單據區塊
