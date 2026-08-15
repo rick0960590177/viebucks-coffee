@@ -48,7 +48,6 @@
             overflow-x: hidden;
         }
 
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-deep); }
         ::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 3px; }
@@ -463,8 +462,8 @@
 </head>
 <body>
 
-    <!-- Floating Zalo Customer Support -->
-    <a href="https://zalo.me/0348246669" target="_blank" class="zalo-float" title="Contact via Zalo">
+    <!-- Floating Zalo Customer Support (已更新為 0839681380) -->
+    <a href="https://zalo.me/0839681380" target="_blank" class="zalo-float" title="Contact via Zalo">
         <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo">
     </a>
 
@@ -549,7 +548,7 @@
         </div>
 
         <div class="calculator-atelier">
-            <!-- Flavor/Product Filter -->
+            <!-- Filter Controls -->
             <div class="filter-container">
                 <button class="filter-btn active" onclick="filterProducts('all')" data-i18n="filter_all">全品項 All</button>
                 <button class="filter-btn" onclick="filterProducts('bean')" data-i18n="filter_beans">咖啡豆 Beans</button>
@@ -598,7 +597,7 @@
                 </div>
             </div>
 
-            <!-- Checkout Form & Vietnam Local Address -->
+            <!-- Checkout Form & Gmail / Address Section -->
             <div id="checkoutFormContainer" style="display:none; margin-top:40px; padding-top:40px; border-top:1px solid rgba(197,160,89,0.15);">
                 <h3 style="font-family:'Cinzel',serif; color:var(--gold-light); text-align:center; margin-bottom:20px;" data-i18n="form_title">配送與聯絡資訊 / Shipping Info</h3>
                 <form id="orderForm" onsubmit="submitOrder(event)">
@@ -611,6 +610,11 @@
                             <label data-i18n="label_phone">電話 / Phone Number *</label>
                             <input type="tel" id="custPhone" required placeholder="Phone Number">
                         </div>
+                    </div>
+
+                    <div class="input-group" style="margin-bottom:20px;">
+                        <label data-i18n="label_email">電子郵件 (收取 Gmail 訂單確認信) / Email *</label>
+                        <input type="email" id="custEmail" required placeholder="example@gmail.com">
                     </div>
 
                     <!-- 越南省/市與區域劃分選單 -->
@@ -635,7 +639,7 @@
                     </div>
 
                     <div style="text-align:center;">
-                        <button type="submit" class="btn-gold" id="btnSubmitOrder" data-i18n="btn_submit">送出訂單並生成 VietQR</button>
+                        <button type="submit" class="btn-gold" id="btnSubmitOrder" data-i18n="btn_submit">送出訂單、寄送 Gmail 並生成 VietQR</button>
                     </div>
                 </form>
 
@@ -656,6 +660,7 @@
                         <div style="font-size:8.5pt; margin-bottom:15px; color:var(--text-muted);">
                             <div><span data-i18n="inv_name">Customer:</span> <strong id="invName" style="color:#fff;">-</strong></div>
                             <div><span data-i18n="inv_phone">Phone:</span> <strong id="invPhone" style="color:#fff;">-</strong></div>
+                            <div>Email: <strong id="invEmail" style="color:#fff;">-</strong></div>
                             <div><span data-i18n="inv_addr">Address:</span> <strong id="invAddress" style="color:#fff;">-</strong></div>
                         </div>
 
@@ -678,7 +683,7 @@
                         <div class="qr-container">
                             <div style="font-size:8.5pt; color:var(--gold-primary); margin-bottom:10px;" data-i18n="qr_title">🔑 掃描 VietQR 快速轉帳付款</div>
                             <img id="vietQrImg" class="qr-image" src="" alt="VietQR Payment">
-                            <div style="font-size:7.5pt; color:var(--text-muted); margin-top:8px;">Bank: MB Bank | Account: 0348246669 (VIEBUCKS)</div>
+                            <div style="font-size:7.5pt; color:var(--text-muted); margin-top:8px;">Bank: MB Bank | Account: 0839681380 (VIEBUCKS)</div>
                         </div>
                     </div>
 
@@ -697,7 +702,7 @@
         <div style="font-size:8.5pt; color:var(--text-muted); line-height:2;">
             <p><strong>Công ty TNHH VIEBUCKS</strong></p>
             <p>地址：365 QL13, Thủ Dầu Một, Hồ Chí Minh</p>
-            <p>電話：0348246669 / 0839681380</p>
+            <p>電話/Zalo：0839681380 / 0348246669</p>
         </div>
         <div style="font-size:7.5pt; color:#555; margin-top:20px;">
             “It's never too late to drink coffee.” &copy; 2026 viebucks. All rights reserved.
@@ -706,6 +711,9 @@
 
     <!-- JavaScript Logic -->
     <script>
+        // 請將此處替換為您的 Google Apps Script 部署網址以啟用自動寄送 Gmail
+        const GAS_WEBHOOK_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEBHOOK_URL";
+
         const translations = {
             zh: {
                 nav_collections: "咖啡豆履歷", nav_atelier: "智能試算", nav_contact: "聯繫我們",
@@ -718,8 +726,8 @@
                 label_product: "選擇品項與規格", label_qty: "購買數量", btn_add_cart: "+ 加入採購清單 / Add to Cart",
                 cart_title: "您的採購清單", th_item: "品項", th_qty: "數量", th_price: "單價", th_subtotal: "小計",
                 est_total: "預估總計 Grand Total:", btn_confirm: "確認選購與填寫資料 / Confirm",
-                form_title: "填寫訂購人與配送資訊", label_name: "姓名 *", label_phone: "電話 *", label_province: "省 / 市", label_district: "郡 / 縣", label_address: "詳細送貨地址 *",
-                btn_submit: "送出訂單並生成 VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "訂單號:", inv_date: "日期:", inv_name: "訂購人:", inv_phone: "電話:", inv_addr: "地址:",
+                form_title: "填寫訂購人與配送資訊", label_name: "姓名 *", label_phone: "電話 *", label_email: "電子郵件 (用於接收 Gmail 確認信) *", label_province: "省 / 市", label_district: "郡 / 縣", label_address: "詳細送貨地址 *",
+                btn_submit: "送出訂單、寄送 Gmail 並生成 VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "訂單號:", inv_date: "日期:", inv_name: "訂購人:", inv_phone: "電話:", inv_addr: "地址:",
                 qr_title: "🔑 掃描 VietQR 快速轉帳付款", btn_download: "📥 下載訂單圖片 / Download", btn_zalo: "💬 透過 Zalo 傳送訂單"
             },
             vi: {
@@ -733,8 +741,8 @@
                 label_product: "Chọn sản phẩm", label_qty: "Số lượng", btn_add_cart: "+ Thêm vào giỏ hàng",
                 cart_title: "Giỏ hàng của bạn", th_item: "Sản phẩm", th_qty: "SL", th_price: "Đơn giá", th_subtotal: "Thành tiền",
                 est_total: "Tổng tiền Grand Total:", btn_confirm: "Xác nhận đơn hàng",
-                form_title: "Thông tin giao hàng", label_name: "Họ tên *", label_phone: "Số điện thoại *", label_province: "Tỉnh / Thành", label_district: "Quận / Huyện", label_address: "Địa chỉ chi tiết *",
-                btn_submit: "Gửi đơn hàng & Tạo VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "Mã ĐH:", inv_date: "Ngày:", inv_name: "Khách hàng:", inv_phone: "Điện thoại:", inv_addr: "Địa chỉ:",
+                form_title: "Thông tin giao hàng", label_name: "Họ tên *", label_phone: "Số điện thoại *", label_email: "Email (Nhận Gmail xác nhận) *", label_province: "Tỉnh / Thành", label_district: "Quận / Huyện", label_address: "Địa chỉ chi tiết *",
+                btn_submit: "Gửi đơn hàng, Gmail & Tạo VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "Mã ĐH:", inv_date: "Ngày:", inv_name: "Khách hàng:", inv_phone: "Điện thoại:", inv_addr: "Địa chỉ:",
                 qr_title: "🔑 Quét mã VietQR để thanh toán nhanh", btn_download: "📥 Tải ảnh đơn hàng", btn_zalo: "💬 Gửi qua Zalo"
             },
             en: {
@@ -748,8 +756,8 @@
                 label_product: "Select Product", label_qty: "Quantity", btn_add_cart: "+ Add to Cart",
                 cart_title: "Shopping Cart", th_item: "Item", th_qty: "Qty", th_price: "Unit Price", th_subtotal: "Subtotal",
                 est_total: "Estimated Total:", btn_confirm: "Confirm Order",
-                form_title: "Shipping Information", label_name: "Full Name *", label_phone: "Phone *", label_province: "Province / City", label_district: "District", label_address: "Street Address *",
-                btn_submit: "Submit Order & Generate VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "Order No:", inv_date: "Date:", inv_name: "Customer:", inv_phone: "Phone:", inv_addr: "Address:",
+                form_title: "Shipping Information", label_name: "Full Name *", label_phone: "Phone *", label_email: "Email (For Gmail Confirmation) *", label_province: "Province / City", label_district: "District", label_address: "Street Address *",
+                btn_submit: "Submit Order, Gmail & VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "Order No:", inv_date: "Date:", inv_name: "Customer:", inv_phone: "Phone:", inv_addr: "Address:",
                 qr_title: "🔑 Scan VietQR for Quick Transfer", btn_download: "📥 Download Voucher Image", btn_zalo: "💬 Send via Zalo"
             }
         };
@@ -782,7 +790,6 @@
         let cart = [];
         let currentOrderNo = '';
 
-        // Chart.js Radar Chart Initialization
         function initRadarCharts() {
             const chartOptions = {
                 scales: {
@@ -819,7 +826,6 @@
             });
         }
 
-        // Language Switcher
         function setLanguage(lang) {
             currentLang = lang;
             const dict = translations[lang];
@@ -833,7 +839,6 @@
             renderCart();
         }
 
-        // Product Filtering & Options Render
         function filterProducts(category) {
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
@@ -850,7 +855,6 @@
             });
         }
 
-        // Vietnam District Dropdown Update
         function updateDistrictOptions() {
             const prov = document.getElementById('provinceSelect').value;
             const distSelect = document.getElementById('districtSelect');
@@ -863,7 +867,6 @@
             });
         }
 
-        // LocalStorage & Cart Management
         function saveCart() {
             localStorage.setItem('viebucks_cart', JSON.stringify(cart));
         }
@@ -942,13 +945,13 @@
             document.getElementById('checkoutFormContainer').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Order Submission & VietQR Dynamic Generation
         async function submitOrder(event) {
             event.preventDefault();
             if (cart.length === 0) return;
 
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
+            const email = document.getElementById('custEmail').value;
             const prov = document.getElementById('provinceSelect').value;
             const dist = document.getElementById('districtSelect').value;
             const addr = document.getElementById('custAddress').value;
@@ -958,26 +961,49 @@
             currentOrderNo = `VB-${dateStr}-${Math.floor(1000 + Math.random() * 9000)}`;
 
             let grandTotal = 0;
+            let itemsSummaryList = [];
+
             const processedCart = cart.map(item => {
                 const p = productsData.find(x => x.id === item.id);
                 const isWholesale = item.qty >= 10;
                 const unitPrice = isWholesale ? p.wholesale : p.price;
                 const subtotal = unitPrice * item.qty;
                 grandTotal += subtotal;
+                itemsSummaryList.push(`${p.name} x ${item.qty} = VND ${subtotal.toLocaleString()}`);
                 return { name: p.name, qty: item.qty, unitPrice, subtotal };
             });
 
-            // VietQR API 連動生成 (MB Bank - Account: 0348246669)
+            // 1. VietQR API 連動生成 (MB Bank - Account: 0839681380)
             const bankId = "MB";
-            const accountNo = "0348246669";
+            const accountNo = "0839681380";
             const template = "compact2";
             const qrUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${grandTotal}&addInfo=${currentOrderNo}&accountName=VIEBUCKS`;
 
+            // 2. 透過 Webhook 觸發 Gmail 自動發送訂單通知
+            if (GAS_WEBHOOK_URL && GAS_WEBHOOK_URL !== "YOUR_GOOGLE_APPS_SCRIPT_WEBHOOK_URL") {
+                fetch(GAS_WEBHOOK_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        orderNo: currentOrderNo,
+                        customerName: name,
+                        customerPhone: phone,
+                        customerEmail: email,
+                        deliveryAddress: fullAddress,
+                        itemsSummary: itemsSummaryList.join('\n'),
+                        total: `VND ${grandTotal.toLocaleString()}`
+                    })
+                }).catch(err => console.error("Gmail Dispatch Error:", err));
+            }
+
+            // UI 渲染更新
             document.getElementById('vietQrImg').src = qrUrl;
             document.getElementById('invNumber').innerText = currentOrderNo;
             document.getElementById('invDate').innerText = new Date().toLocaleDateString();
             document.getElementById('invName').innerText = name;
             document.getElementById('invPhone').innerText = phone;
+            document.getElementById('invEmail').innerText = email;
             document.getElementById('invAddress').innerText = fullAddress;
             document.getElementById('invTotal').innerText = `總計 Grand Total: VND ${grandTotal.toLocaleString()}`;
 
@@ -989,13 +1015,13 @@
                 invTbody.appendChild(tr);
             });
 
-            const zaloText = encodeURIComponent(`【VIEBUCKS 官方訂單】\n編號: ${currentOrderNo}\n姓名: ${name}\n電話: ${phone}\n地址: ${fullAddress}\n金額: VND ${grandTotal.toLocaleString()}`);
-            document.getElementById('zaloShareBtn').href = `https://zalo.me/s/share?text=${zaloText}`;
+            // Zalo 分享按鈕綁定 0839681380
+            const zaloText = encodeURIComponent(`【VIEBUCKS 官方訂單】\n編號: ${currentOrderNo}\n姓名: ${name}\n電話: ${phone}\nEmail: ${email}\n地址: ${fullAddress}\n金額: VND ${grandTotal.toLocaleString()}`);
+            document.getElementById('zaloShareBtn').href = `https://zalo.me/0839681380?text=${zaloText}`;
 
             document.getElementById('orderForm').style.display = 'none';
             document.getElementById('successMsg').style.display = 'block';
 
-            // 清空購物車與 LocalStorage
             cart = [];
             saveCart();
             renderCart();
