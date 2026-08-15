@@ -18,6 +18,9 @@
       }
     </script>
 
+    <!-- html2canvas 支援下載訂單畫面 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -234,6 +237,30 @@
 
         .btn-outline:hover {
             background: rgba(197, 160, 89, 0.1);
+        }
+
+        .btn-zalo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 30px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 8.5pt;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: #0068FF;
+            color: #FFFFFF;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .btn-zalo:hover {
+            background: #0052cc;
+            transform: translateY(-2px);
         }
 
         /* Container & Section Layout */
@@ -607,15 +634,75 @@
             grid-template-columns: 1fr;
         }
 
+        /* Success & Invoice Generated Container */
         .success-msg {
-            background: rgba(197, 160, 89, 0.1);
+            background: rgba(197, 160, 89, 0.05);
             border: 1px solid var(--gold-primary);
-            padding: 25px;
-            text-align: center;
-            color: var(--gold-light);
-            font-size: 9pt;
-            letter-spacing: 2px;
+            padding: 30px;
             display: none;
+            margin-top: 25px;
+        }
+
+        /* Official Invoice Voucher Card Style (for saving/Zalo) */
+        .invoice-card {
+            background: #0A0A0C;
+            border: 1px solid var(--gold-primary);
+            padding: 30px;
+            margin-bottom: 25px;
+            text-align: left;
+            position: relative;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.3);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .invoice-brand {
+            font-family: 'Cinzel', serif;
+            font-size: 16pt;
+            font-weight: 700;
+            letter-spacing: 5px;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: lowercase;
+        }
+
+        .invoice-meta {
+            text-align: right;
+            font-size: 8pt;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .invoice-meta span {
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+
+        .invoice-details-grid {
+            font-size: 8.5pt;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            color: var(--text-muted);
+        }
+
+        .invoice-details-grid strong {
+            color: var(--text-main);
+        }
+
+        .invoice-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
             margin-top: 20px;
         }
 
@@ -720,7 +807,7 @@
         </div>
 
         <div class="collections-grid">
-            <!-- Arabica Card (Vietnam Origin) -->
+            <!-- Arabica Card -->
             <div class="collection-card">
                 <div>
                     <div class="collection-header">
@@ -821,7 +908,7 @@
                 <div class="input-group">
                     <label data-i18n="label_product">選擇品項與規格 / Product & Variant</label>
                     <select id="productSelect">
-                        <!-- 動態透過 JS 依據語系填入選單內容 -->
+                        <!-- 動態透過 JS 填入選單 -->
                     </select>
                 </div>
 
@@ -887,8 +974,52 @@
                     </div>
                 </form>
 
-                <div class="success-msg" id="successMsg" data-i18n="success_msg">
-                    感謝您的訂購！多筆訂單已成功送出，系統已同步發送郵件通知至 VIEBUCKS ，專員將盡快為您出貨。
+                <!-- 訂單寄出成功與自動生成訂單單據區塊 -->
+                <div class="success-msg" id="successMsg">
+                    <div class="invoice-card" id="invoiceCard">
+                        <div class="invoice-header">
+                            <div>
+                                <div class="invoice-brand">viebucks</div>
+                                <div style="font-size: 7.5pt; color: var(--gold-primary); letter-spacing: 2px; text-transform: uppercase;" data-i18n="inv_subtitle">Haute Coffee Official Voucher</div>
+                            </div>
+                            <div class="invoice-meta">
+                                <div><span data-i18n="inv_no">訂單編號:</span> <strong id="invNumber" style="color:var(--gold-light);">VB-20260000</strong></div>
+                                <div><span data-i18n="inv_date">日期:</span> <span id="invDate">2026-08-15</span></div>
+                            </div>
+                        </div>
+
+                        <div class="invoice-details-grid">
+                            <div><span data-i18n="inv_name">訂購人:</span> <strong id="invName">-</strong></div>
+                            <div><span data-i18n="inv_phone">電話:</span> <strong id="invPhone">-</strong></div>
+                            <div style="grid-column: span 2;"><span data-i18n="inv_addr">地址:</span> <strong id="invAddress">-</strong></div>
+                        </div>
+
+                        <table class="cart-table" style="margin-bottom: 15px;">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="th_item">品項</th>
+                                    <th data-i18n="th_qty">數量</th>
+                                    <th data-i18n="th_subtotal">小計</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoiceTableBody">
+                                <!-- 填入發票明細 -->
+                            </tbody>
+                        </table>
+
+                        <div style="text-align: right; font-size: 10pt; color: var(--gold-light); font-family: 'Cinzel', serif;" id="invTotal">
+                            總計: VND 0
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; color: var(--gold-light); font-size: 9pt; letter-spacing: 2px; margin-bottom: 15px;" data-i18n="success_txt">
+                        ✓ 訂單郵件已成功發送至官網信箱，您可以下載訂單單據或直接透過 Zalo 傳送給客服！
+                    </div>
+
+                    <div class="invoice-actions">
+                        <button type="button" class="btn-outline" onclick="downloadInvoice()" data-i18n="btn_download">📥 下載訂單圖片 / Download</button>
+                        <a id="zaloShareBtn" href="#" target="_blank" class="btn-zalo" data-i18n="btn_zalo">💬 透過 Zalo 傳送訂單 / Send via Zalo</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -959,7 +1090,15 @@
                 label_phone: "聯絡電話 / Phone Number *",
                 label_address: "送貨地址 / Delivery Address *",
                 btn_submit: "送出多筆訂單 / Submit Order",
-                success_msg: "感謝您的訂購！多筆訂單已成功送出，系統已同步發送郵件通知至 VIEBUCKS ，專員將盡快為您出貨。",
+                inv_subtitle: "Haute Coffee Official Voucher",
+                inv_no: "訂單編號:",
+                inv_date: "日期:",
+                inv_name: "訂購人:",
+                inv_phone: "電話:",
+                inv_addr: "地址:",
+                success_txt: "✓ 訂單郵件已成功發送至官網信箱，您可以下載訂單單據或直接透過 Zalo 傳送給客服！",
+                btn_download: "📥 下載訂單圖片 / Download",
+                btn_zalo: "💬 透過 Zalo 傳送訂單 / Send via Zalo",
                 footer_addr: "地址：365 QL13, Thủ Dầu Một, Hồ Chí Minh",
                 footer_tel: "電話：0348246669 / 0839681380",
                 opt_groups: {
@@ -1035,7 +1174,15 @@
                 label_phone: "Số điện thoại / Phone Number *",
                 label_address: "Địa chỉ giao hàng / Delivery Address *",
                 btn_submit: "Gửi Đơn Hàng / Submit Order",
-                success_msg: "Cảm ơn bạn đã đặt hàng! Đơn hàng đã được gửi thành công đến VIEBUCKS, nhân viên sẽ liên hệ với bạn sớm nhất.",
+                inv_subtitle: "Haute Coffee Official Voucher",
+                inv_no: "Mã đơn hàng:",
+                inv_date: "Ngày:",
+                inv_name: "Khách hàng:",
+                inv_phone: "Điện thoại:",
+                inv_addr: "Địa chỉ:",
+                success_txt: "✓ Đơn hàng đã được gửi email thành công, bạn có thể tải phiếu hoặc gửi nhanh qua Zalo!",
+                btn_download: "📥 Tải ảnh đơn hàng / Download",
+                btn_zalo: "💬 Gửi qua Zalo / Send via Zalo",
                 footer_addr: "Địa chỉ: 365 QL13, Thủ Dầu Một, Hồ Chí Minh",
                 footer_tel: "Điện thoại: 0348246669 / 0839681380",
                 opt_groups: {
@@ -1111,7 +1258,15 @@
                 label_phone: "Phone Number *",
                 label_address: "Delivery Address *",
                 btn_submit: "Submit Order",
-                success_msg: "Thank you for your order! Successfully submitted to VIEBUCKS, our specialist will contact you shortly.",
+                inv_subtitle: "Haute Coffee Official Voucher",
+                inv_no: "Order No:",
+                inv_date: "Date:",
+                inv_name: "Customer:",
+                inv_phone: "Phone:",
+                inv_addr: "Address:",
+                success_txt: "✓ Order email sent successfully. You can download the voucher or send it via Zalo!",
+                btn_download: "📥 Download Voucher Image",
+                btn_zalo: "💬 Send via Zalo",
                 footer_addr: "Address: 365 QL13, Thu Dau Mot, Ho Chi Minh",
                 footer_tel: "Phone: 0348246669 / 0839681380",
                 opt_groups: {
@@ -1141,6 +1296,7 @@
 
         let currentLang = 'zh';
         let cart = [];
+        let currentOrderNo = '';
 
         function setLanguage(lang) {
             currentLang = lang;
@@ -1305,9 +1461,15 @@
             const address = document.getElementById('custAddress').value;
             const grandTotal = document.getElementById('calcTotal').innerText;
 
+            // 生成專屬訂單編號（格式：VB + 年月日 + 4位隨機碼）
+            const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            const randomCode = Math.floor(1000 + Math.random() * 9000);
+            currentOrderNo = `VB-${dateStr}-${randomCode}`;
+
             const itemsSummary = cart.map(i => `${i.name} x ${i.qty} (${i.pricingNote}) - 小計: VND ${i.subtotal.toLocaleString()}`).join('\n');
 
             const orderData = {
+                orderNo: currentOrderNo,
                 recipientEmail: 'rick0960590177@gmail.com',
                 itemsSummary: itemsSummary,
                 cartDetails: cart,
@@ -1320,7 +1482,8 @@
             const webhookUrl = 'https://script.google.com/macros/s/AKfycbzsbLIZwfGG3lsPHA8iMEAbYJhfATRmo6APzc96GeRbgY3aERVNNySZ62y-_bWVd7OX/exec';
 
             try {
-                const response = await fetch(webhookUrl, {
+                // 發送至 Google Apps Script 觸發 Gmail 寄信
+                await fetch(webhookUrl, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
@@ -1328,13 +1491,51 @@
                 });
 
                 console.log('Cart Order Submitted Successfully:', orderData);
+                
+                // 填入訂單單據畫面資料
+                document.getElementById('invNumber').innerText = currentOrderNo;
+                document.getElementById('invDate').innerText = new Date().toLocaleDateString();
+                document.getElementById('invName').innerText = name;
+                document.getElementById('invPhone').innerText = phone;
+                document.getElementById('invAddress').innerText = address;
+                document.getElementById('invTotal').innerText = `總計 Grand Total: ${grandTotal}`;
+
+                const invTbody = document.getElementById('invoiceTableBody');
+                invTbody.innerHTML = '';
+                cart.forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${item.name}</td>
+                        <td>${item.qty}</td>
+                        <td>VND ${item.subtotal.toLocaleString()}</td>
+                    `;
+                    invTbody.appendChild(tr);
+                });
+
+                // 設定 Zalo 快速分享訊息
+                const zaloText = encodeURIComponent(`【VIEBUCKS 官方訂單通知】\n訂單編號: ${currentOrderNo}\n姓名: ${name}\n電話: ${phone}\n地址: ${address}\n總金額: ${grandTotal}\n請客服協助確認出貨，謝謝！`);
+                document.getElementById('zaloShareBtn').href = `https://zalo.me/s/share?text=${zaloText}`;
+
+                // 隱藏表單，顯示成功單據區塊
                 document.getElementById('orderForm').style.display = 'none';
                 document.getElementById('successMsg').style.display = 'block';
+                document.getElementById('successMsg').scrollIntoView({ behavior: 'smooth' });
 
             } catch (error) {
                 console.error('Error sending order:', error);
                 alert('訂單發送發生錯誤，請稍後再試或直接聯繫客服專線。');
             }
+        }
+
+        // 下載訂單圖片功能
+        function downloadInvoice() {
+            const card = document.getElementById('invoiceCard');
+            html2canvas(card, { backgroundColor: '#0A0A0C', scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `VIEBUCKS_Order_${currentOrderNo}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
         }
 
         window.onload = () => {
