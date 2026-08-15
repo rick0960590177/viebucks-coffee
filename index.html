@@ -956,17 +956,17 @@
                     <div class="checkout-grid">
                         <div class="input-group">
                             <label data-i18n="label_name">訂購人姓名 / Full Name *</label>
-                            <input type="text" id="custName" required placeholder="請輸入您的姓名">
+                            <input type="text" id="custName" required placeholder="請輸入您的姓名" data-i18n="ph_name">
                         </div>
                         <div class="input-group">
                             <label data-i18n="label_phone">聯絡電話 / Phone Number *</label>
-                            <input type="tel" id="custPhone" required placeholder="請輸入聯絡電話">
+                            <input type="tel" id="custPhone" required placeholder="請輸入聯絡電話" data-i18n="ph_phone">
                         </div>
                     </div>
                     <div class="checkout-grid full">
                         <div class="input-group">
                             <label data-i18n="label_address">送貨地址 / Delivery Address *</label>
-                            <input type="text" id="custAddress" required placeholder="請輸入完整的送貨地址">
+                            <input type="text" id="custAddress" required placeholder="請輸入完整的送貨地址" data-i18n="ph_address">
                         </div>
                     </div>
                     <div style="text-align: center; margin-top: 30px;">
@@ -1089,6 +1089,9 @@
                 label_name: "訂購人姓名 / Full Name *",
                 label_phone: "聯絡電話 / Phone Number *",
                 label_address: "送貨地址 / Delivery Address *",
+                ph_name: "請輸入您的姓名",
+                ph_phone: "請輸入聯絡電話",
+                ph_address: "請輸入完整的送貨地址",
                 btn_submit: "送出多筆訂單 / Submit Order",
                 inv_subtitle: "Haute Coffee Official Voucher",
                 inv_no: "訂單編號:",
@@ -1173,6 +1176,9 @@
                 label_name: "Họ và tên / Full Name *",
                 label_phone: "Số điện thoại / Phone Number *",
                 label_address: "Địa chỉ giao hàng / Delivery Address *",
+                ph_name: "Vui lòng nhập họ tên",
+                ph_phone: "Vui lòng nhập số điện thoại",
+                ph_address: "Vui lòng nhập địa chỉ giao hàng",
                 btn_submit: "Gửi Đơn Hàng / Submit Order",
                 inv_subtitle: "Haute Coffee Official Voucher",
                 inv_no: "Mã đơn hàng:",
@@ -1257,6 +1263,9 @@
                 label_name: "Full Name *",
                 label_phone: "Phone Number *",
                 label_address: "Delivery Address *",
+                ph_name: "Please enter your full name",
+                ph_phone: "Please enter your phone number",
+                ph_address: "Please enter your delivery address",
                 btn_submit: "Submit Order",
                 inv_subtitle: "Haute Coffee Official Voucher",
                 inv_no: "Order No:",
@@ -1306,7 +1315,11 @@
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (dict[key]) {
-                    el.innerText = dict[key];
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        el.placeholder = dict[key];
+                    } else {
+                        el.innerText = dict[key];
+                    }
                 }
             });
 
@@ -1366,7 +1379,14 @@
             
             const retailPrice = parseFloat(selectedOption.value);
             const wholesalePrice = parseFloat(selectedOption.getAttribute('data-wholesale'));
-            const qty = parseInt(document.getElementById('qtyInput').value) || 1;
+            
+            // 強制驗證數量最小值為 1
+            let qty = parseInt(document.getElementById('qtyInput').value) || 1;
+            if (qty < 1) {
+                qty = 1;
+                document.getElementById('qtyInput').value = 1;
+            }
+
             const productName = selectedOption.text;
 
             const threshold = 10;
@@ -1461,8 +1481,12 @@
             const address = document.getElementById('custAddress').value;
             const grandTotal = document.getElementById('calcTotal').innerText;
 
-            // 生成專屬訂單編號（格式：VB + 年月日 + 4位隨機碼）
-            const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            // 使用本地時區時間生成專屬訂單編號（格式：VB + 年月日 + 4位隨機碼）
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const dateStr = `${year}${month}${day}`;
             const randomCode = Math.floor(1000 + Math.random() * 9000);
             currentOrderNo = `VB-${dateStr}-${randomCode}`;
 
@@ -1482,11 +1506,10 @@
             const webhookUrl = 'https://script.google.com/macros/s/AKfycbzsbLIZwfGG3lsPHA8iMEAbYJhfATRmo6APzc96GeRbgY3aERVNNySZ62y-_bWVd7OX/exec';
 
             try {
-                // 發送至 Google Apps Script 觸發 Gmail 寄信
+                // 發送至 Google Apps Script 觸發 Gmail 寄信（使用 text/plain 以最佳相容 GAS JSON 解析）
                 await fetch(webhookUrl, {
                     method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(orderData)
                 });
 
@@ -1494,7 +1517,7 @@
                 
                 // 填入訂單單據畫面資料
                 document.getElementById('invNumber').innerText = currentOrderNo;
-                document.getElementById('invDate').innerText = new Date().toLocaleDateString();
+                document.getElementById('invDate').innerText = now.toLocaleDateString();
                 document.getElementById('invName').innerText = name;
                 document.getElementById('invPhone').innerText = phone;
                 document.getElementById('invAddress').innerText = address;
@@ -1527,10 +1550,14 @@
             }
         }
 
-        // 下載訂單圖片功能
+        // 下載訂單圖片功能（啟用 useCORS 避免圖片污染）
         function downloadInvoice() {
             const card = document.getElementById('invoiceCard');
-            html2canvas(card, { backgroundColor: '#0A0A0C', scale: 2 }).then(canvas => {
+            html2canvas(card, { 
+                backgroundColor: '#0A0A0C', 
+                scale: 2,
+                useCORS: true
+            }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = `VIEBUCKS_Order_${currentOrderNo}.png`;
                 link.href = canvas.toDataURL('image/png');
