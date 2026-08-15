@@ -821,7 +821,27 @@
                 <div class="input-group">
                     <label data-i18n="label_product">選擇品項與規格 / Product & Variant</label>
                     <select id="productSelect">
-                        <!-- 動態透過 JS 依據語系填入選單內容 -->
+                        <optgroup label="Arabica Series (批發門檻：10包/個起)">
+                            <option value="145000" data-wholesale="125000">越南阿拉比卡 咖啡豆 (250g)</option>
+                            <option value="280000" data-wholesale="240000">越南阿拉比卡 咖啡豆 (500g)</option>
+                            <option value="550000" data-wholesale="470000">越南阿拉比卡 咖啡豆 (1000g)</option>
+                            <option value="16000" data-wholesale="13500">越南阿拉比卡 濾掛包 (12g)</option>
+                            <option value="12500" data-wholesale="10500">越南阿拉比卡 冷萃包 (10g)</option>
+                        </optgroup>
+                        <optgroup label="Robusta Series (批發門檻：10包/個起)">
+                            <option value="91000" data-wholesale="78000">羅布斯塔 咖啡豆 (250g)</option>
+                            <option value="172000" data-wholesale="148000">羅布斯塔 咖啡豆 (500g)</option>
+                            <option value="335000" data-wholesale="285000">羅布斯塔 咖啡豆 (1000g)</option>
+                            <option value="13000" data-wholesale="11000">羅布斯塔 濾掛包 (12g)</option>
+                            <option value="7000" data-wholesale="5800">羅布斯塔 冷萃包 (10g)</option>
+                        </optgroup>
+                        <optgroup label="Brazil Cerrado Series (批發門檻：10包/個起)">
+                            <option value="200000" data-wholesale="170000">巴西喜拉朵 咖啡豆 (250g)</option>
+                            <option value="390000" data-wholesale="330000">巴西喜拉朵 咖啡豆 (500g)</option>
+                            <option value="770000" data-wholesale="650000">巴西喜拉朵 咖啡豆 (1000g)</option>
+                            <option value="19000" data-wholesale="16000">巴西喜拉朵 濾掛包 (12g)</option>
+                            <option value="15000" data-wholesale="12500">巴西喜拉朵 冷萃包 (10g)</option>
+                        </optgroup>
                     </select>
                 </div>
 
@@ -857,7 +877,7 @@
             <div class="atelier-result" id="atelierResultArea" style="display: none;">
                 <h4 data-i18n="est_total">Estimated Grand Total</h4>
                 <div class="total-display" id="calcTotal">VND 0</div>
-                <div class="total-note" id="calcNote" data-i18n="total_note_desc">多筆品項總計金額</div>
+                <div class="total-note" id="calcNote">多筆品項總計金額</div>
                 <button type="button" class="btn-gold" onclick="showCheckoutForm()" data-i18n="btn_confirm">確認選購與填寫資料 / Confirm Order</button>
             </div>
 
@@ -952,7 +972,6 @@
                 est_total: "Estimated Grand Total",
                 note_retail: "（標準零售價）",
                 note_wholesale: "（已達10包門檻 - 享批發價）",
-                total_note_desc: "多筆品項總計金額",
                 btn_confirm: "確認選購與填寫資料 / Confirm Order",
                 form_title: "填寫訂購人與配送資訊 / Shipping Information",
                 label_name: "訂購人姓名 / Full Name *",
@@ -961,29 +980,7 @@
                 btn_submit: "送出多筆訂單 / Submit Order",
                 success_msg: "感謝您的訂購！多筆訂單已成功送出，系統已同步發送郵件通知至 VIEBUCKS ，專員將盡快為您出貨。",
                 footer_addr: "地址：365 QL13, Thủ Dầu Một, Hồ Chí Minh",
-                footer_tel: "電話：0348246669 / 0839681380",
-                opt_groups: {
-                    g1: "Arabica 系列 (批發門檻：10包/個起)",
-                    g2: "Robusta 系列 (批發門檻：10包/個起)",
-                    g3: "Brazil Cerrado 系列 (批發門檻：10包/個起)"
-                },
-                products: [
-                    { name: "越南阿拉比卡 咖啡豆 (250g)", price: 145000, wholesale: 125000, group: "g1" },
-                    { name: "越南阿拉比卡 咖啡豆 (500g)", price: 280000, wholesale: 240000, group: "g1" },
-                    { name: "越南阿拉比卡 咖啡豆 (1000g)", price: 550000, wholesale: 470000, group: "g1" },
-                    { name: "越南阿拉比卡 濾掛包 (12g)", price: 16000, wholesale: 13500, group: "g1" },
-                    { name: "越南阿拉比卡 冷萃包 (10g)", price: 12500, wholesale: 10500, group: "g1" },
-                    { name: "羅布斯塔 咖啡豆 (250g)", price: 91000, wholesale: 78000, group: "g2" },
-                    { name: "羅布斯塔 咖啡豆 (500g)", price: 172000, wholesale: 148000, group: "g2" },
-                    { name: "羅布斯塔 咖啡豆 (1000g)", price: 335000, wholesale: 285000, group: "g2" },
-                    { name: "羅布斯塔 濾掛包 (12g)", price: 13000, wholesale: 11000, group: "g2" },
-                    { name: "羅布斯塔 冷萃包 (10g)", price: 7000, wholesale: 5800, group: "g2" },
-                    { name: "巴西喜拉朵 咖啡豆 (250g)", price: 200000, wholesale: 170000, group: "g3" },
-                    { name: "巴西喜拉朵 咖啡豆 (500g)", price: 390000, wholesale: 330000, group: "g3" },
-                    { name: "巴西喜拉朵 咖啡豆 (1000g)", price: 770000, wholesale: 650000, group: "g3" },
-                    { name: "巴西喜拉朵 濾掛包 (12g)", price: 19000, wholesale: 16000, group: "g3" },
-                    { name: "巴西喜拉朵 冷萃包 (10g)", price: 15000, wholesale: 12500, group: "g3" }
-                ]
+                footer_tel: "電話：0348246669 / 0839681380"
             },
             vi: {
                 nav_story: "Câu Chuyện",
@@ -1028,7 +1025,6 @@
                 est_total: "Tổng Tiền Giỏ Hàng",
                 note_retail: "（Giá bán lẻ）",
                 note_wholesale: "（Đã đạt mức sỉ 10 gói）",
-                total_note_desc: "Tổng tiền các mặt hàng trong giỏ",
                 btn_confirm: "Xác Nhận Đặt Hàng / Confirm Order",
                 form_title: "Thông Tin Đơn Hàng & Giao Nhận / Shipping Information",
                 label_name: "Họ và tên / Full Name *",
@@ -1037,29 +1033,7 @@
                 btn_submit: "Gửi Đơn Hàng / Submit Order",
                 success_msg: "Cảm ơn bạn đã đặt hàng! Đơn hàng đã được gửi thành công đến VIEBUCKS, nhân viên sẽ liên hệ với bạn sớm nhất.",
                 footer_addr: "Địa chỉ: 365 QL13, Thủ Dầu Một, Hồ Chí Minh",
-                footer_tel: "Điện thoại: 0348246669 / 0839681380",
-                opt_groups: {
-                    g1: "Dòng Arabica (Mức sỉ: từ 10 gói)",
-                    g2: "Dòng Robusta (Mức sỉ: từ 10 gói)",
-                    g3: "Dòng Brazil Cerrado (Mức sỉ: từ 10 gói)"
-                },
-                products: [
-                    { name: "Cà phê hạt Arabica Việt Nam (250g)", price: 145000, wholesale: 125000, group: "g1" },
-                    { name: "Cà phê hạt Arabica Việt Nam (500g)", price: 280000, wholesale: 240000, group: "g1" },
-                    { name: "Cà phê hạt Arabica Việt Nam (1000g)", price: 550000, wholesale: 470000, group: "g1" },
-                    { name: "Cà phê túi lọc Arabica Việt Nam (12g)", price: 16000, wholesale: 13500, group: "g1" },
-                    { name: "Cà phê ủ lạnh Arabica Việt Nam (10g)", price: 12500, wholesale: 10500, group: "g1" },
-                    { name: "Cà phê hạt Robusta (250g)", price: 91000, wholesale: 78000, group: "g2" },
-                    { name: "Cà phê hạt Robusta (500g)", price: 172000, wholesale: 148000, group: "g2" },
-                    { name: "Cà phê hạt Robusta (1000g)", price: 335000, wholesale: 285000, group: "g2" },
-                    { name: "Cà phê túi lọc Robusta (12g)", price: 13000, wholesale: 11000, group: "g2" },
-                    { name: "Cà phê ủ lạnh Robusta (10g)", price: 7000, wholesale: 5800, group: "g2" },
-                    { name: "Cà phê hạt Brazil Cerrado (250g)", price: 200000, wholesale: 170000, group: "g3" },
-                    { name: "Cà phê hạt Brazil Cerrado (500g)", price: 390000, wholesale: 330000, group: "g3" },
-                    { name: "Cà phê hạt Brazil Cerrado (1000g)", price: 770000, wholesale: 650000, group: "g3" },
-                    { name: "Cà phê túi lọc Brazil Cerrado (12g)", price: 19000, wholesale: 16000, group: "g3" },
-                    { name: "Cà phê ủ lạnh Brazil Cerrado (10g)", price: 15000, wholesale: 12500, group: "g3" }
-                ]
+                footer_tel: "Điện thoại: 0348246669 / 0839681380"
             },
             en: {
                 nav_story: "Story",
@@ -1104,7 +1078,6 @@
                 est_total: "Estimated Grand Total",
                 note_retail: "（Retail Price）",
                 note_wholesale: "（Wholesale Price Applied）",
-                total_note_desc: "Grand total for all cart items",
                 btn_confirm: "Confirm Order",
                 form_title: "Shipping & Contact Information",
                 label_name: "Full Name *",
@@ -1113,29 +1086,7 @@
                 btn_submit: "Submit Order",
                 success_msg: "Thank you for your order! Successfully submitted to VIEBUCKS, our specialist will contact you shortly.",
                 footer_addr: "Address: 365 QL13, Thu Dau Mot, Ho Chi Minh",
-                footer_tel: "Phone: 0348246669 / 0839681380",
-                opt_groups: {
-                    g1: "Arabica Series (Wholesale threshold: 10+)",
-                    g2: "Robusta Series (Wholesale threshold: 10+)",
-                    g3: "Brazil Cerrado Series (Wholesale threshold: 10+)"
-                },
-                products: [
-                    { name: "Vietnam Arabica Coffee Beans (250g)", price: 145000, wholesale: 125000, group: "g1" },
-                    { name: "Vietnam Arabica Coffee Beans (500g)", price: 280000, wholesale: 240000, group: "g1" },
-                    { name: "Vietnam Arabica Coffee Beans (1000g)", price: 550000, wholesale: 470000, group: "g1" },
-                    { name: "Vietnam Arabica Drip Bag (12g)", price: 16000, wholesale: 13500, group: "g1" },
-                    { name: "Vietnam Arabica Cold Brew Bag (10g)", price: 12500, wholesale: 10500, group: "g1" },
-                    { name: "Robusta Coffee Beans (250g)", price: 91000, wholesale: 78000, group: "g2" },
-                    { name: "Robusta Coffee Beans (500g)", price: 172000, wholesale: 148000, group: "g2" },
-                    { name: "Robusta Coffee Beans (1000g)", price: 335000, wholesale: 285000, group: "g2" },
-                    { name: "Robusta Drip Bag (12g)", price: 13000, wholesale: 11000, group: "g2" },
-                    { name: "Robusta Cold Brew Bag (10g)", price: 7000, wholesale: 5800, group: "g2" },
-                    { name: "Brazil Cerrado Coffee Beans (250g)", price: 200000, wholesale: 170000, group: "g3" },
-                    { name: "Brazil Cerrado Coffee Beans (500g)", price: 390000, wholesale: 330000, group: "g3" },
-                    { name: "Brazil Cerrado Coffee Beans (1000g)", price: 770000, wholesale: 650000, group: "g3" },
-                    { name: "Brazil Cerrado Drip Bag (12g)", price: 19000, wholesale: 16000, group: "g3" },
-                    { name: "Brazil Cerrado Cold Brew Bag (10g)", price: 15000, wholesale: 12500, group: "g3" }
-                ]
+                footer_tel: "Phone: 0348246669 / 0839681380"
             }
         };
 
@@ -1161,37 +1112,7 @@
                 }
             });
 
-            // 動態更新下拉選單商品項目與規格語系
-            renderProductSelect();
             renderCart();
-        }
-
-        function renderProductSelect() {
-            const selectEl = document.getElementById('productSelect');
-            const dict = translations[currentLang];
-            selectEl.innerHTML = '';
-
-            const groups = {
-                g1: document.createElement('optgroup'),
-                g2: document.createElement('optgroup'),
-                g3: document.createElement('optgroup')
-            };
-
-            groups.g1.label = dict.opt_groups.g1;
-            groups.g2.label = dict.opt_groups.g2;
-            groups.g3.label = dict.opt_groups.g3;
-
-            dict.products.forEach(p => {
-                const option = document.createElement('option');
-                option.value = p.price;
-                option.setAttribute('data-wholesale', p.wholesale);
-                option.text = p.name;
-                groups[p.group].appendChild(option);
-            });
-
-            selectEl.appendChild(groups.g1);
-            selectEl.appendChild(groups.g2);
-            selectEl.appendChild(groups.g3);
         }
 
         function detectUserLanguage() {
@@ -1223,6 +1144,7 @@
                 pricingNote = translations[currentLang].note_wholesale;
             }
 
+            // 檢查購物車是否已有相同品項，若有則累加數量
             const existingIndex = cart.findIndex(item => item.name === productName);
             if (existingIndex > -1) {
                 cart[existingIndex].qty += qty;
@@ -1306,6 +1228,7 @@
             const address = document.getElementById('custAddress').value;
             const grandTotal = document.getElementById('calcTotal').innerText;
 
+            // 組合多筆品項內容供後端與郵件識別
             const itemsSummary = cart.map(i => `${i.name} x ${i.qty} (VND ${i.subtotal.toLocaleString()})`).join(' | ');
 
             const orderData = {
