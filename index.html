@@ -848,10 +848,8 @@
         </div>
     </footer>
 
-    <!-- JavaScript Logic -->
-    <script>
-        // ⚠️ 請將下方的網址替換為您最新部署的 Google Apps Script Web App 網址
-const GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbziLev52erUIUJxP861YQoiLQCIBMu17qiXADAwrLKqucIG16EZEUUvY-wUluwPm0whsw/exec";
+    // ⚠️ 請替換為您最新部署的 GAS Web App 網址
+const GAS_WEBHOOK_URL = "https://script.google.com/macros/s/YOUR_GAS_DEPLOYMENT_ID/exec";
 
 async function handleFormSubmit(event) {
     event.preventDefault();
@@ -868,12 +866,11 @@ async function handleFormSubmit(event) {
     const itemsSummaryText = cart.map(item => `- ${item.name} x ${item.quantity} (${formatVND(item.price * item.quantity)})`).join('\n');
     const subtotalAmount = calculateSubtotal();
 
-    // 封裝完整的訂單 Payload 資料
+    // 封裝訂單 Payload（已移除 customerEmail）
     const payload = {
         orderNo: generateOrderNo(),
         customerName: document.getElementById('customerName').value,
         customerPhone: document.getElementById('customerPhone').value,
-        customerEmail: document.getElementById('customerEmail').value,
         deliveryAddress: document.getElementById('deliveryAddress').value,
         notes: document.getElementById('notes').value || "無",
         itemsSummary: itemsSummaryText,
@@ -883,7 +880,6 @@ async function handleFormSubmit(event) {
     };
 
     try {
-        // 使用 text/plain 帶入 JSON 避免跨域標頭預檢問題，確保 GAS 順利接收
         const response = await fetch(GAS_WEBHOOK_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -893,7 +889,7 @@ async function handleFormSubmit(event) {
         const result = await response.json();
 
         if (result.status === "success") {
-            alert(`訂單發送成功！\n您的訂單編號為：${payload.orderNo}\n確認信件已同步發送至您的 Email。`);
+            alert(`訂單發送成功！\n您的訂單編號為：${payload.orderNo}\n我們已收到您的訂單，將盡快為您準備！`);
             // 清空購物車與表單
             cart = [];
             updateCartUI();
