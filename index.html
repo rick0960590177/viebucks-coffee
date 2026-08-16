@@ -9,7 +9,7 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#C5A059">
 
-    <!-- 外部函式庫：html2canvas (圖片下載) & Chart.js (風味雷達圖) -->
+    <!-- 外部函式庫：html2canvas & Chart.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -462,7 +462,7 @@
 </head>
 <body>
 
-    <!-- Floating Zalo Customer Support (已更新為 0839681380) -->
+    <!-- Floating Zalo Customer Support (號碼: 0839681380) -->
     <a href="https://zalo.me/0839681380" target="_blank" class="zalo-float" title="Contact via Zalo">
         <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo">
     </a>
@@ -711,8 +711,8 @@
 
     <!-- JavaScript Logic -->
     <script>
-        // 請將此處替換為您的 Google Apps Script 部署網址以啟用自動寄送 Gmail
-        const GAS_WEBHOOK_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEBHOOK_URL";
+        // 已帶入您的 Google Apps Script Web App 網址
+        const GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxudz_ik8-Y1LCs7OhU-ZOtTdzer3jPAEsety1Tho0dq3XZK8VSqxkCZ5fIs_h3xhfXDw/exec";
 
         const translations = {
             zh: {
@@ -841,7 +841,7 @@
 
         function filterProducts(category) {
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            if(event) event.target.classList.add('active');
 
             const selectEl = document.getElementById('productSelect');
             selectEl.innerHTML = '';
@@ -973,29 +973,33 @@
                 return { name: p.name, qty: item.qty, unitPrice, subtotal };
             });
 
-            // 1. VietQR API 連動生成 (MB Bank - Account: 0839681380)
+            // 1. VietQR 網址生成
             const bankId = "MB";
             const accountNo = "0839681380";
             const template = "compact2";
             const qrUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${grandTotal}&addInfo=${currentOrderNo}&accountName=VIEBUCKS`;
 
-            // 2. 透過 Webhook 觸發 Gmail 自動發送訂單通知
-            if (GAS_WEBHOOK_URL && GAS_WEBHOOK_URL !== "https://script.google.com/macros/s/AKfycbxudz_ik8-Y1LCs7OhU-ZOtTdzer3jPAEsety1Tho0dq3XZK8VSqxkCZ5fIs_h3xhfXDw/exec") {
-                fetch(GAS_WEBHOOK_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        orderNo: currentOrderNo,
-                        customerName: name,
-                        customerPhone: phone,
-                        customerEmail: email,
-                        deliveryAddress: fullAddress,
-                        itemsSummary: itemsSummaryList.join('\n'),
-                        total: `VND ${grandTotal.toLocaleString()}`
-                    })
-                }).catch(err => console.error("Gmail Dispatch Error:", err));
-            }
+            // 2. 觸發 Gmail 寄信 (相容跨網域 text/plain 格式)
+            const payload = {
+                orderNo: currentOrderNo,
+                customerName: name,
+                customerPhone: phone,
+                customerEmail: email,
+                deliveryAddress: fullAddress,
+                itemsSummary: itemsSummaryList.join('\n'),
+                total: `VND ${grandTotal.toLocaleString()}`
+            };
+
+            fetch(GAS_WEBHOOK_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8'
+                },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                console.log("Order payload dispatched successfully.");
+            }).catch(err => console.error("Dispatch error:", err));
 
             // UI 渲染更新
             document.getElementById('vietQrImg').src = qrUrl;
@@ -1015,7 +1019,7 @@
                 invTbody.appendChild(tr);
             });
 
-            // Zalo 分享按鈕綁定 0839681380
+            // Zalo 訊息分享連結
             const zaloText = encodeURIComponent(`【VIEBUCKS 官方訂單】\n編號: ${currentOrderNo}\n姓名: ${name}\n電話: ${phone}\nEmail: ${email}\n地址: ${fullAddress}\n金額: VND ${grandTotal.toLocaleString()}`);
             document.getElementById('zaloShareBtn').href = `https://zalo.me/0839681380?text=${zaloText}`;
 
