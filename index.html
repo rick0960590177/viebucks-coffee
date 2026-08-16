@@ -262,7 +262,7 @@
             color: var(--text-main);
         }
 
-        /* 自動適應卡片網格 (Auto-Fit Grid) */
+        /* 🚀 自動適應卡片網格 (Auto-Fit Grid) */
         .collections-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
@@ -544,7 +544,7 @@
             margin-top: 4px;
         }
 
-        /* 手機端優化 (Mobile Responsive Fixes) */
+        /* 📱 手機端極致優化 (Mobile Responsive Fixes) */
         @media (max-width: 600px) {
             header {
                 justify-content: center;
@@ -850,7 +850,7 @@
 
     <!-- JavaScript Logic -->
     <script>
-        const GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyGBHlc6TIp07SrnB1p0vOk6SxMorfpomIjqZxKoqct4bWm1L6MHUvqbVmz6OV-hwa3Og/exec";
+        const GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxudz_ik8-Y1LCs7OhU-ZOtTdzer3jPAEsety1Tho0dq3XZK8VSqxkCZ5fIs_h3xhfXDw/exec";
 
         const translations = {
             vi: {
@@ -1240,14 +1240,12 @@
                 total: `VND ${grandTotal.toLocaleString()}`
             };
 
-            // ✅ 修正：使用 URLSearchParams (application/x-www-form-urlencoded) 發送數據，完美解決跨域阻擋問題
             fetch(GAS_WEBHOOK_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({ 'data': JSON.stringify(payload) })
-            }).then(res => {
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            }).then(() => {
                 console.log("Order payload dispatched successfully.");
             }).catch(err => console.error("Dispatch error:", err));
 
