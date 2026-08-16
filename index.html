@@ -980,7 +980,7 @@
             const qrUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${grandTotal}&addInfo=${currentOrderNo}&accountName=VIEBUCKS`;
 
             // 2. 透過 Webhook 觸發 Gmail 自動發送訂單通知
-            if (GAS_WEBHOOK_URL && GAS_WEBHOOK_URL !== "https://script.google.com/u/0/home/projects/1YXbiVE19Qf5EUh2fCvz5oQdVNmCmAesLO7lPmePNRJEHyE7ngecOPoRw/edit") {
+            if (GAS_WEBHOOK_URL && GAS_WEBHOOK_URL !== "https://script.google.com/macros/s/AKfycbxudz_ik8-Y1LCs7OhU-ZOtTdzer3jPAEsety1Tho0dq3XZK8VSqxkCZ5fIs_h3xhfXDw/exec") {
                 fetch(GAS_WEBHOOK_URL, {
                     method: 'POST',
                     mode: 'no-cors',
