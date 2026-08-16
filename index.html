@@ -689,7 +689,7 @@
 
                     <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
                         <button type="button" class="btn-outline" onclick="downloadInvoice()" data-i18n="btn_download">📥 Tải ảnh đơn hàng / Download</button>
-                        <a id="zaloShareBtn" href="#" target="_blank" class="btn-zalo" data-i18n="btn_zalo">💬 Gửi qua Zalo</a>
+                        <button type="button" id="zaloShareBtn" class="btn-zalo" onclick="shareToZalo()" data-i18n="btn_zalo">💬 Gửi qua Zalo</button>
                     </div>
                 </div>
             </div>
@@ -786,9 +786,10 @@
             "Bình Dương": ["Thủ Dầu Một", "Thuận An", "Dĩ An"]
         };
 
-        let currentLang = 'vi'; // 預設語言改為越南文
+        let currentLang = 'vi'; // 預設語言為越南文
         let cart = [];
         let currentOrderNo = '';
+        let currentZaloMessage = ''; // 儲存剪貼簿文字
 
         function initRadarCharts() {
             const chartOptions = {
@@ -969,7 +970,7 @@
                 const unitPrice = isWholesale ? p.wholesale : p.price;
                 const subtotal = unitPrice * item.qty;
                 grandTotal += subtotal;
-                itemsSummaryList.push(`${p.name} x ${item.qty} = VND ${subtotal.toLocaleString()}`);
+                itemsSummaryList.push(`• ${p.name} x ${item.qty} = VND ${subtotal.toLocaleString()}`);
                 return { name: p.name, qty: item.qty, unitPrice, subtotal };
             });
 
@@ -1019,9 +1020,18 @@
                 invTbody.appendChild(tr);
             });
 
-            // Zalo 訊息分享連結
-            const zaloText = encodeURIComponent(`【VIEBUCKS 官方訂單】\n編號: ${currentOrderNo}\n姓名: ${name}\n電話: ${phone}\nEmail: ${email}\n地址: ${fullAddress}\n金額: VND ${grandTotal.toLocaleString()}`);
-            document.getElementById('zaloShareBtn').href = `https://zalo.me/0839681380?text=${zaloText}`;
+            // 組合要自動複製到剪貼簿的文字內容
+            currentZaloMessage = `【VIEBUCKS ĐƠN HÀNG / 訂單內容】
+Mã ĐH (訂單號): ${currentOrderNo}
+Khách hàng (姓名): ${name}
+SĐT (電話): ${phone}
+Email: ${email}
+Địa chỉ (地址): ${fullAddress}
+------------------------------
+Chi tiết sản phẩm (商品明細):
+${itemsSummaryList.join('\n')}
+------------------------------
+Tổng cộng (總計): VND ${grandTotal.toLocaleString()}`;
 
             document.getElementById('orderForm').style.display = 'none';
             document.getElementById('successMsg').style.display = 'block';
@@ -1029,6 +1039,26 @@
             cart = [];
             saveCart();
             renderCart();
+        }
+
+        // 點擊 Zalo 按鈕時觸發：自動複製內容並跳轉 Zalo
+        function shareToZalo() {
+            if (!currentZaloMessage) return;
+
+            navigator.clipboard.writeText(currentZaloMessage).then(() => {
+                alert("Đã sao chép thông tin đơn hàng! Vui lòng dán (Paste) vào Zalo.\n已複製訂單內容！開啟 Zalo 後請直接貼上訊息。");
+                window.open("https://zalo.me/0839681380", "_blank");
+            }).catch(err => {
+                // 備用複製方案
+                const textarea = document.createElement("textarea");
+                textarea.value = currentZaloMessage;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textarea);
+                alert("Đã sao chép thông tin đơn hàng! Vui lòng dán (Paste) vào Zalo.\n已複製訂單內容！開啟 Zalo 後請直接貼上訊息。");
+                window.open("https://zalo.me/0839681380", "_blank");
+            });
         }
 
         function downloadInvoice() {
