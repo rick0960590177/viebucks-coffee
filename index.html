@@ -552,7 +552,7 @@
             }
             .nav-right {
                 width: 100%;
-                justify-content: space-content;
+                justify-content: space-between;
             }
             .form-grid-2 {
                 grid-template-columns: 1fr !important;
@@ -952,6 +952,7 @@
                     }
                 },
                 plugins: { legend: { display: false } },
+                responsive: true,
                 maintainAspectRatio: false
             };
 
@@ -1225,7 +1226,7 @@
             const bankId = "VCB";
             const accountNo = "0121000852742";
             const template = "compact2";
-            const qrUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${grandTotal}&addInfo=${currentOrderNo}&accountName=MIU KIM PHUONG`;
+            const qrUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${grandTotal}&addInfo=${encodeURIComponent(currentOrderNo)}&accountName=MIU%20KIM%20PHUONG`;
 
             const payload = {
                 orderNo: currentOrderNo,
