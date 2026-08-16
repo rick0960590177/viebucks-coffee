@@ -822,7 +822,7 @@
                         <div class="qr-container">
                             <div style="font-size:0.8rem; color:var(--gold-primary); margin-bottom:10px;" data-i18n="qr_title">🔑 Quét mã VietQR để thanh toán nhanh</div>
                             <img id="vietQrImg" class="qr-image" src="" alt="VietQR Payment">
-                            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:6px;">Bank: MB Bank | Account: 0839681380 (VIEBUCKS)</div>
+                            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:6px;">Bank: VCB Bank | Account: 0121000852742 (MIU KIM PHUONG)</div>
                         </div>
                     </div>
 
@@ -1222,8 +1222,8 @@
             const shippingFee = calculateShipping(subtotal, prov);
             const grandTotal = subtotal + shippingFee;
 
-            const bankId = "MB";
-            const accountNo = "0839681380";
+            const bankId = "VCB";
+            const accountNo = "0121000852742";
             const template = "compact2";
             const qrUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${grandTotal}&addInfo=${currentOrderNo}&accountName=VIEBUCKS`;
 
