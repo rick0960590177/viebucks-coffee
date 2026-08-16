@@ -571,8 +571,8 @@
             <a href="https://zalo.me/0839681380" target="_blank" class="zalo-contact-item">
                 💬 Zalo 1: 0839681380
             </a>
-            <a href="https://zalo.me/0348246669" target="_blank" class="zalo-contact-item">
-                💬 Zalo 2: 0348246669
+            <a href="https://zalo.me/0346246669" target="_blank" class="zalo-contact-item">
+                💬 Zalo 2: 0346246669
             </a>
         </div>
     </div>
@@ -580,10 +580,10 @@
     <!-- Modal for Selecting Zalo Receiver on Order Submit -->
     <div id="zaloModal" class="modal-overlay" onclick="if(event.target === this) closeZaloModal()">
         <div class="modal-box">
-            <h4 data-i18n="modal_title">Chọn Zalo để gửi đơn hàng / 選擇傳送的 Zalo 帳號</h4>
+            <h4 data-i18n="modal_title">Chọn Zalo để gửi đơn hàng</h4>
             <button class="contact-btn" onclick="sendOrderToZalo('0839681380')">💬 Zalo 1: 0839681380</button>
-            <button class="contact-btn" onclick="sendOrderToZalo('0348246669')">💬 Zalo 2: 0348246669</button>
-            <button class="btn-outline" onclick="closeZaloModal()" style="margin-top:10px; width:100%;" data-i18n="btn_close">Đóng / 關閉</button>
+            <button class="contact-btn" onclick="sendOrderToZalo('0346246669')">💬 Zalo 2: 0346246669</button>
+            <button class="btn-outline" onclick="closeZaloModal()" style="margin-top:10px; width:100%;" data-i18n="btn_close">Đóng</button>
         </div>
     </div>
 
@@ -670,39 +670,34 @@
         <div class="calculator-atelier">
             <!-- Filter Controls -->
             <div class="filter-container">
-                <button class="filter-btn active" onclick="filterProducts('all')" data-i18n="filter_all">Tất cả All</button>
-                <button class="filter-btn" onclick="filterProducts('bean')" data-i18n="filter_beans">Cà phê hạt Beans</button>
-                <button class="filter-btn" onclick="filterProducts('drip')" data-i18n="filter_drip">Cà phê túi lọc Drip</button>
-                <button class="filter-btn" onclick="filterProducts('cold')" data-i18n="filter_cold">Cà phê ủ lạnh Cold Brew</button>
+                <button class="filter-btn active" id="btnFilterAll" onclick="filterProducts('all')" data-i18n="filter_all">Tất cả</button>
+                <button class="filter-btn" id="btnFilterBeans" onclick="filterProducts('bean')" data-i18n="filter_beans">Cà phê hạt</button>
+                <button class="filter-btn" id="btnFilterDrip" onclick="filterProducts('drip')" data-i18n="filter_drip">Cà phê túi lọc</button>
+                <button class="filter-btn" id="btnFilterCold" onclick="filterProducts('cold')" data-i18n="filter_cold">Cà phê ủ lạnh</button>
             </div>
 
             <div class="atelier-grid">
                 <div class="input-group">
-                    <label data-i18n="label_product">Chọn sản phẩm / Product</label>
+                    <label data-i18n="label_product">Chọn sản phẩm</label>
                     <select id="productSelect" onchange="handleProductChange()"></select>
                 </div>
                 <div class="input-group" id="grindGroup">
-                    <label data-i18n="label_grind">Mức độ xay / Grind Size</label>
-                    <select id="grindSelect">
-                        <option value="Nguyên hạt (Whole Beans)">Nguyên hạt / 留原豆 (Whole Beans)</option>
-                        <option value="Pha Phin (Phin Filter)">Pha Phin / 越南滴漏</option>
-                        <option value="Pha Máy (Espresso)">Pha Máy / 義式濃縮 (Espresso)</option>
-                        <option value="Pha Giấy Lọc (Pour-over)">Pha Giấy Lọc / 手衝 (Pour-over)</option>
-                    </select>
+                    <label data-i18n="label_grind">Mức độ xay</label>
+                    <select id="grindSelect"></select>
                 </div>
                 <div class="input-group">
-                    <label data-i18n="label_qty">Số lượng / Quantity</label>
+                    <label data-i18n="label_qty">Số lượng</label>
                     <input type="number" id="qtyInput" value="1" min="1">
                 </div>
             </div>
 
             <div style="text-align: center; margin-bottom: 30px;">
-                <button type="button" class="btn-outline" onclick="addToCart()" data-i18n="btn_add_cart">+ Thêm vào giỏ hàng / Add to Cart</button>
+                <button type="button" class="btn-outline" onclick="addToCart()" data-i18n="btn_add_cart">+ Thêm vào giỏ hàng</button>
             </div>
 
             <!-- Cart Table -->
             <div id="cartContainer" style="display:none;">
-                <h3 style="font-family:'Cinzel',serif; color:var(--gold-light); font-size:13pt; text-align:center; margin-bottom:15px;" data-i18n="cart_title">Giỏ hàng của bạn Cart</h3>
+                <h3 style="font-family:'Cinzel',serif; color:var(--gold-light); font-size:13pt; text-align:center; margin-bottom:15px;" data-i18n="cart_title">Giỏ hàng của bạn</h3>
                 <table class="cart-table">
                     <thead>
                         <tr>
@@ -718,42 +713,42 @@
                 </table>
 
                 <div style="text-align:right; margin-top:20px; font-size:9pt; color:var(--text-muted);">
-                    <div><span data-i18n="subtotal_text">Tiền hàng Subtotal:</span> <span id="cartSubtotalText" style="color:#fff; font-weight:600;">VND 0</span></div>
-                    <div><span data-i18n="shipping_text">Phí vận chuyển Shipping Fee:</span> <span id="cartShippingText" style="color:#fff; font-weight:600;">VND 0</span></div>
+                    <div><span data-i18n="subtotal_text">Tiền hàng:</span> <span id="cartSubtotalText" style="color:#fff; font-weight:600;">VND 0</span></div>
+                    <div><span data-i18n="shipping_text">Phí vận chuyển:</span> <span id="cartShippingText" style="color:#fff; font-weight:600;">VND 0</span></div>
                     <div style="margin-top:10px;">
-                        <span data-i18n="est_total">Tổng tiền Grand Total:</span>
+                        <span data-i18n="est_total">Tổng tiền:</span>
                         <span id="calcTotal" style="font-family:'Cinzel',serif; font-size:20pt; color:var(--gold-light); font-weight:700; margin-left:15px;">VND 0</span>
                     </div>
                 </div>
 
                 <div style="text-align:center; margin-top:30px;">
-                    <button type="button" class="btn-gold" onclick="showCheckoutForm()" data-i18n="btn_confirm">Xác nhận đơn hàng / Confirm</button>
+                    <button type="button" class="btn-gold" onclick="showCheckoutForm()" data-i18n="btn_confirm">Xác nhận đơn hàng</button>
                 </div>
             </div>
 
             <!-- Checkout Form & Gmail / Address Section -->
             <div id="checkoutFormContainer" style="display:none; margin-top:40px; padding-top:40px; border-top:1px solid rgba(197,160,89,0.15);">
-                <h3 style="font-family:'Cinzel',serif; color:var(--gold-light); text-align:center; margin-bottom:20px;" data-i18n="form_title">Thông tin giao hàng / Shipping Info</h3>
+                <h3 style="font-family:'Cinzel',serif; color:var(--gold-light); text-align:center; margin-bottom:20px;" data-i18n="form_title">Thông tin giao hàng</h3>
                 <form id="orderForm" onsubmit="submitOrder(event)">
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
                         <div class="input-group">
-                            <label data-i18n="label_name">Họ tên / Full Name *</label>
+                            <label data-i18n="label_name">Họ tên *</label>
                             <input type="text" id="custName" required placeholder="Full Name">
                         </div>
                         <div class="input-group">
-                            <label data-i18n="label_phone">Số điện thoại / Phone Number *</label>
+                            <label data-i18n="label_phone">Số điện thoại *</label>
                             <input type="tel" id="custPhone" required placeholder="Phone Number">
                         </div>
                     </div>
 
                     <div class="input-group" style="margin-bottom:20px;">
-                        <label data-i18n="label_email">Email (Nhận Gmail xác nhận) / Email *</label>
+                        <label data-i18n="label_email">Email (Nhận Gmail xác nhận) *</label>
                         <input type="email" id="custEmail" required placeholder="example@gmail.com">
                     </div>
 
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
                         <div class="input-group">
-                            <label data-i18n="label_province">Tỉnh / Thành (Province / City)</label>
+                            <label data-i18n="label_province">Tỉnh / Thành</label>
                             <select id="provinceSelect" onchange="updateDistrictOptions()">
                                 <option value="Hồ Chí Minh">Hồ Chí Minh</option>
                                 <option value="Bình Dương">Bình Dương</option>
@@ -762,19 +757,19 @@
                             <span class="shipping-note" id="shippingRuleNote">Freeship từ 500,000 VND / Nội thành</span>
                         </div>
                         <div class="input-group">
-                            <label data-i18n="label_district">Quận / Huyện (District)</label>
+                            <label data-i18n="label_district">Quận / Huyện</label>
                             <select id="districtSelect"></select>
                         </div>
                     </div>
 
                     <div class="input-group" style="margin-bottom:20px;">
-                        <label data-i18n="label_address">Địa chỉ chi tiết / Street Address *</label>
+                        <label data-i18n="label_address">Địa chỉ chi tiết *</label>
                         <input type="text" id="custAddress" required placeholder="Street address, building, ward">
                     </div>
 
                     <div class="input-group" style="margin-bottom:25px;">
-                        <label data-i18n="label_notes">Ghi chú đơn hàng / Order Notes</label>
-                        <textarea id="custNotes" rows="2" placeholder="Ví dụ: Giao giờ hành chính, Xuất hóa đơn..."></textarea>
+                        <label data-i18n="label_notes">Ghi chú đơn hàng</label>
+                        <textarea id="custNotes" rows="2" placeholder="Ví dụ: Giao giờ hành chính..."></textarea>
                     </div>
 
                     <div style="text-align:center;">
@@ -817,7 +812,7 @@
                         </table>
 
                         <div style="text-align:right; font-size:8.5pt; color:var(--text-muted); margin-bottom:10px;">
-                            <div>Phí vận chuyển Shipping Fee: <span id="invShipping">VND 0</span></div>
+                            <div><span data-i18n="shipping_text">Phí vận chuyển:</span> <span id="invShipping">VND 0</span></div>
                         </div>
 
                         <div style="text-align:right; font-size:12pt; color:var(--gold-light); font-family:'Cinzel',serif;" id="invTotal">
@@ -833,7 +828,7 @@
                     </div>
 
                     <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
-                        <button type="button" class="btn-outline" onclick="downloadInvoice()" data-i18n="btn_download">📥 Tải ảnh đơn hàng / Download</button>
+                        <button type="button" class="btn-outline" onclick="downloadInvoice()" data-i18n="btn_download">📥 Tải ảnh đơn hàng</button>
                         <button type="button" id="zaloShareBtn" class="btn-zalo" onclick="openZaloModal()" data-i18n="btn_zalo">💬 Gửi qua Zalo</button>
                     </div>
                 </div>
@@ -865,14 +860,15 @@
                 col_sub: "Hồ Sơ & Biểu Đồ Hương Vị", col_title: "Hồ Sơ Cà Phê & Biểu Đồ Radar Hương Vị",
                 arabica_desc: "Dòng Arabica Việt Nam Cao Cấp", robusta_desc: "Dòng Robusta Truyền Thống", brazil_desc: "Dòng Brazil Cerrado Đặc Biệt",
                 arabica_flavor: "Hương hoa, vị chua chanh vàng, vị ngọt đường đen.", robusta_flavor: "Sô cô la đen, hạt rang, thể chất đậm đà.", brazil_flavor: "Hạt rang, bơ caramel, ca cao mượt mà.",
-                filter_all: "Tất cả All", filter_beans: "Cà phê hạt Beans", filter_drip: "Cà phê túi lọc Drip", filter_cold: "Cà phê ủ lạnh Cold Brew",
+                filter_all: "Tất cả", filter_beans: "Cà phê hạt", filter_drip: "Cà phê túi lọc", filter_cold: "Cà phê ủ lạnh",
                 calc_sub: "Xưởng Tính Giá Riêng Biệt", calc_title: "Tính Toán Thông Minh (Áp dụng giá sỉ từ 10 gói)",
-                label_product: "Chọn sản phẩm", label_grind: "Mức độ xay", label_qty: "Số lượng", btn_add_cart: "+ Thêm vào giỏ hàng / Add to Cart",
-                cart_title: "Giỏ hàng của bạn Cart", th_item: "Sản phẩm", th_grind: "Độ xay", th_qty: "SL", th_price: "Đơn giá", th_subtotal: "Thành tiền",
-                subtotal_text: "Tiền hàng Subtotal:", shipping_text: "Phí vận chuyển Shipping Fee:", est_total: "Tổng tiền Grand Total:", btn_confirm: "Xác nhận đơn hàng / Confirm",
-                form_title: "Thông tin giao hàng / Shipping Info", label_name: "Họ tên *", label_phone: "Số điện thoại *", label_email: "Email (Nhận Gmail xác nhận) *", label_province: "Tỉnh / Thành", label_district: "Quận / Huyện", label_address: "Địa chỉ chi tiết *", label_notes: "Ghi chú đơn hàng",
+                label_product: "Chọn sản phẩm", label_grind: "Mức độ xay", label_qty: "Số lượng", btn_add_cart: "+ Thêm vào giỏ hàng",
+                cart_title: "Giỏ hàng của bạn", th_item: "Sản phẩm", th_grind: "Độ xay", th_qty: "SL", th_price: "Đơn giá", th_subtotal: "Thành tiền",
+                subtotal_text: "Tiền hàng:", shipping_text: "Phí vận chuyển:", est_total: "Tổng tiền:", btn_confirm: "Xác nhận đơn hàng",
+                form_title: "Thông tin giao hàng", label_name: "Họ tên *", label_phone: "Số điện thoại *", label_email: "Email (Nhận Gmail xác nhận) *", label_province: "Tỉnh / Thành", label_district: "Quận / Huyện", label_address: "Địa chỉ chi tiết *", label_notes: "Ghi chú đơn hàng",
                 btn_submit: "Gửi đơn hàng, Gmail & Tạo VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "Mã ĐH:", inv_date: "Ngày:", inv_name: "Khách hàng:", inv_phone: "Điện thoại:", inv_addr: "Địa chỉ:", inv_notes: "Ghi chú:",
-                qr_title: "🔑 Quét mã VietQR để thanh toán nhanh", btn_download: "📥 Tải ảnh đơn hàng / Download", btn_zalo: "💬 Gửi qua Zalo", modal_title: "Chọn Zalo để gửi đơn hàng / 選擇傳送的 Zalo 帳號", btn_close: "Đóng / 關閉"
+                qr_title: "🔑 Quét mã VietQR để thanh toán nhanh", btn_download: "📥 Tải ảnh đơn hàng", btn_zalo: "💬 Gửi qua Zalo", modal_title: "Chọn Zalo để gửi đơn hàng", btn_close: "Đóng",
+                wholesale_tag: "(Giá sỉ)", freeship_text: "MIỄN PHÍ", ready_tag: "Thành phẩm"
             },
             zh: {
                 nav_collections: "咖啡豆履歷", nav_atelier: "智能試算", nav_contact: "聯繫我們",
@@ -880,14 +876,15 @@
                 col_sub: "Flavor Profiles & Radar Chart", col_title: "頂級精品咖啡豆履歷與動態風味雷達",
                 arabica_desc: "越南阿拉比卡精品系列", robusta_desc: "羅布斯塔經典系列", brazil_desc: "巴西喜拉朵特選系列",
                 arabica_flavor: "獨特花香與黃檸檬果酸，黑糖甜感。", robusta_flavor: "濃郁黑巧克力與烤核果香，油脂豐厚。", brazil_flavor: "烤堅果、焦糖奶油，溫潤滑順。",
-                filter_all: "全品項 All", filter_beans: "咖啡豆 Beans", filter_drip: "濾掛包 Drip", filter_cold: "冷萃包 Cold Brew",
+                filter_all: "全品項", filter_beans: "咖啡豆", filter_drip: "濾掛包", filter_cold: "冷萃包",
                 calc_sub: "Bespoke Calculator Atelier", calc_title: "採購金額智能試算與購物車（滿 10 包自動切換批發價）",
-                label_product: "選擇品項與規格", label_grind: "研磨度選擇", label_qty: "購買數量", btn_add_cart: "+ 加入採購清單 / Add to Cart",
-                cart_title: "您的採購清單 Cart", th_item: "品項", th_grind: "研磨度", th_qty: "數量", th_price: "單價", th_subtotal: "小計",
-                subtotal_text: "商品小計 Subtotal:", shipping_text: "運費 Shipping Fee:", est_total: "預估總計 Grand Total:", btn_confirm: "確認選購與填寫資料 / Confirm",
+                label_product: "選擇品項與規格", label_grind: "研磨度選擇", label_qty: "購買數量", btn_add_cart: "+ 加入採購清單",
+                cart_title: "您的採購清單", th_item: "品項", th_grind: "研磨度", th_qty: "數量", th_price: "單價", th_subtotal: "小計",
+                subtotal_text: "商品小計:", shipping_text: "運費:", est_total: "預估總計:", btn_confirm: "確認選購與填寫資料",
                 form_title: "填寫訂購人與配送資訊", label_name: "姓名 *", label_phone: "電話 *", label_email: "電子郵件 (用於接收 Gmail 確認信) *", label_province: "省 / 市", label_district: "郡 / 縣", label_address: "詳細送貨地址 *", label_notes: "訂單備註 (如出貨時間/統編)",
                 btn_submit: "送出訂單、寄送 Gmail 並生成 VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "訂單號:", inv_date: "日期:", inv_name: "訂購人:", inv_phone: "電話:", inv_addr: "地址:", inv_notes: "備註:",
-                qr_title: "🔑 掃描 VietQR 快速轉帳付款", btn_download: "📥 下載訂單圖片 / Download", btn_zalo: "💬 透過 Zalo 傳送訂單", modal_title: "選擇傳送的 Zalo 帳號", btn_close: "關閉 / Close"
+                qr_title: "🔑 掃描 VietQR 快速轉帳付款", btn_download: "📥 下載訂單圖片", btn_zalo: "💬 透過 Zalo 傳送訂單", modal_title: "選擇傳送的 Zalo 帳號", btn_close: "關閉",
+                wholesale_tag: "(批發價)", freeship_text: "免運費", ready_tag: "成品包裝"
             },
             en: {
                 nav_collections: "Bean Heritage", nav_atelier: "Atelier Calc", nav_contact: "Contact",
@@ -902,26 +899,34 @@
                 subtotal_text: "Subtotal:", shipping_text: "Shipping Fee:", est_total: "Estimated Total:", btn_confirm: "Confirm Order",
                 form_title: "Shipping Information", label_name: "Full Name *", label_phone: "Phone *", label_email: "Email (For Gmail Confirmation) *", label_province: "Province / City", label_district: "District", label_address: "Street Address *", label_notes: "Order Notes",
                 btn_submit: "Submit Order, Gmail & VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "Order No:", inv_date: "Date:", inv_name: "Customer:", inv_phone: "Phone:", inv_addr: "Address:", inv_notes: "Notes:",
-                qr_title: "🔑 Scan VietQR for Quick Transfer", btn_download: "📥 Download Voucher Image", btn_zalo: "💬 Send via Zalo", modal_title: "Select Zalo Receiver", btn_close: "Close"
+                qr_title: "🔑 Scan VietQR for Quick Transfer", btn_download: "📥 Download Voucher Image", btn_zalo: "💬 Send via Zalo", modal_title: "Select Zalo Receiver", btn_close: "Close",
+                wholesale_tag: "(Wholesale)", freeship_text: "FREESHIP", ready_tag: "Finished Pack"
             }
         };
 
+        const grindOptionsData = {
+            g1: { id: "g1", vi: "Nguyên hạt (Whole Beans)", zh: "留原豆 (Whole Beans)", en: "Whole Beans" },
+            g2: { id: "g2", vi: "Pha Phin (Phin Filter)", zh: "越南滴漏 (Phin Filter)", en: "Phin Filter" },
+            g3: { id: "g3", vi: "Pha Máy (Espresso)", zh: "義式濃縮 (Espresso)", en: "Espresso" },
+            g4: { id: "g4", vi: "Pha Giấy Lọc (Pour-over)", zh: "手衝 (Pour-over)", en: "Pour-over" }
+        };
+
         const productsData = [
-            { id: "p1", type: "bean", name: "Arabica 咖啡豆 (250g)", price: 145000, wholesale: 125000 },
-            { id: "p2", type: "bean", name: "Arabica 咖啡豆 (500g)", price: 280000, wholesale: 240000 },
-            { id: "p3", type: "bean", name: "Arabica 咖啡豆 (1000g)", price: 550000, wholesale: 470000 },
-            { id: "p4", type: "drip", name: "Arabica 濾掛包 (12g)", price: 16000, wholesale: 13500 },
-            { id: "p5", type: "cold", name: "Arabica 冷萃包 (10g)", price: 12500, wholesale: 10500 },
-            { id: "p6", type: "bean", name: "Robusta 咖啡豆 (250g)", price: 91000, wholesale: 78000 },
-            { id: "p7", type: "bean", name: "Robusta 咖啡豆 (500g)", price: 172000, wholesale: 148000 },
-            { id: "p8", type: "bean", name: "Robusta 咖啡豆 (1000g)", price: 335000, wholesale: 285000 },
-            { id: "p9", type: "drip", name: "Robusta 濾掛包 (12g)", price: 13000, wholesale: 11000 },
-            { id: "p10", type: "cold", name: "Robusta 冷萃包 (10g)", price: 7000, wholesale: 5800 },
-            { id: "p11", type: "bean", name: "Brazil Cerrado 咖啡豆 (250g)", price: 200000, wholesale: 170000 },
-            { id: "p12", type: "bean", name: "Brazil Cerrado 咖啡豆 (500g)", price: 390000, wholesale: 330000 },
-            { id: "p13", type: "bean", name: "Brazil Cerrado 咖啡豆 (1000g)", price: 770000, wholesale: 650000 },
-            { id: "p14", type: "drip", name: "Brazil Cerrado 濾掛包 (12g)", price: 19000, wholesale: 16000 },
-            { id: "p15", type: "cold", name: "Brazil Cerrado 冷萃包 (10g)", price: 15000, wholesale: 12500 }
+            { id: "p1", type: "bean", name: { vi: "Arabica 咖啡豆 (250g)", zh: "Arabica 咖啡豆 (250g)", en: "Arabica Beans (250g)" }, price: 145000, wholesale: 125000 },
+            { id: "p2", type: "bean", name: { vi: "Arabica 咖啡豆 (500g)", zh: "Arabica 咖啡豆 (500g)", en: "Arabica Beans (500g)" }, price: 280000, wholesale: 240000 },
+            { id: "p3", type: "bean", name: { vi: "Arabica 咖啡豆 (1000g)", zh: "Arabica 咖啡豆 (1000g)", en: "Arabica Beans (1000g)" }, price: 550000, wholesale: 470000 },
+            { id: "p4", type: "drip", name: { vi: "Arabica 濾掛包 (12g)", zh: "Arabica 濾掛包 (12g)", en: "Arabica Drip Bag (12g)" }, price: 16000, wholesale: 13500 },
+            { id: "p5", type: "cold", name: { vi: "Arabica 冷萃包 (10g)", zh: "Arabica 冷萃包 (10g)", en: "Arabica Cold Brew (10g)" }, price: 12500, wholesale: 10500 },
+            { id: "p6", type: "bean", name: { vi: "Robusta 咖啡豆 (250g)", zh: "Robusta 咖啡豆 (250g)", en: "Robusta Beans (250g)" }, price: 91000, wholesale: 78000 },
+            { id: "p7", type: "bean", name: { vi: "Robusta 咖啡豆 (500g)", zh: "Robusta 咖啡豆 (500g)", en: "Robusta Beans (500g)" }, price: 172000, wholesale: 148000 },
+            { id: "p8", type: "bean", name: { vi: "Robusta 咖啡豆 (1000g)", zh: "Robusta 咖啡豆 (1000g)", en: "Robusta Beans (1000g)" }, price: 335000, wholesale: 285000 },
+            { id: "p9", type: "drip", name: { vi: "Robusta 濾掛包 (12g)", zh: "Robusta 濾掛包 (12g)", en: "Robusta Drip Bag (12g)" }, price: 13000, wholesale: 11000 },
+            { id: "p10", type: "cold", name: { vi: "Robusta 冷萃包 (10g)", zh: "Robusta 冷萃包 (10g)", en: "Robusta Cold Brew (10g)" }, price: 7000, wholesale: 5800 },
+            { id: "p11", type: "bean", name: { vi: "Brazil Cerrado 咖啡豆 (250g)", zh: "Brazil Cerrado 咖啡豆 (250g)", en: "Brazil Cerrado Beans (250g)" }, price: 200000, wholesale: 170000 },
+            { id: "p12", type: "bean", name: { vi: "Brazil Cerrado 咖啡豆 (500g)", zh: "Brazil Cerrado 咖啡豆 (500g)", en: "Brazil Cerrado Beans (500g)" }, price: 390000, wholesale: 330000 },
+            { id: "p13", type: "bean", name: { vi: "Brazil Cerrado 咖啡豆 (1000g)", zh: "Brazil Cerrado 咖啡豆 (1000g)", en: "Brazil Cerrado Beans (1000g)" }, price: 770000, wholesale: 650000 },
+            { id: "p14", type: "drip", name: { vi: "Brazil Cerrado 濾掛包 (12g)", zh: "Brazil Cerrado 濾掛包 (12g)", en: "Brazil Cerrado Drip Bag (12g)" }, price: 19000, wholesale: 16000 },
+            { id: "p15", type: "cold", name: { vi: "Brazil Cerrado 冷萃包 (10g)", zh: "Brazil Cerrado 冷萃包 (10g)", en: "Brazil Cerrado Cold Brew (10g)" }, price: 15000, wholesale: 12500 }
         ];
 
         const districtData = {
@@ -931,6 +936,7 @@
         };
 
         let currentLang = 'vi';
+        let currentCategory = 'all';
         let cart = [];
         let currentOrderNo = '';
         let currentZaloMessage = '';
@@ -971,6 +977,20 @@
             });
         }
 
+        function populateGrindOptions() {
+            const selectEl = document.getElementById('grindSelect');
+            const currentVal = selectEl.value;
+            selectEl.innerHTML = '';
+            Object.keys(grindOptionsData).forEach(key => {
+                const item = grindOptionsData[key];
+                const opt = document.createElement('option');
+                opt.value = item.id;
+                opt.text = item[currentLang] || item.vi;
+                selectEl.appendChild(opt);
+            });
+            if(currentVal) selectEl.value = currentVal;
+        }
+
         function setLanguage(lang) {
             currentLang = lang;
             const dict = translations[lang];
@@ -981,6 +1001,10 @@
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.getAttribute('onclick').includes(lang));
             });
+
+            populateGrindOptions();
+            filterProducts(currentCategory);
+            updateDistrictOptions();
             renderCart();
         }
 
@@ -1000,19 +1024,29 @@
         }
 
         function filterProducts(category) {
+            currentCategory = category;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            if(event) event.target.classList.add('active');
+            
+            if(category === 'all') document.getElementById('btnFilterAll').classList.add('active');
+            else if(category === 'bean') document.getElementById('btnFilterBeans').classList.add('active');
+            else if(category === 'drip') document.getElementById('btnFilterDrip').classList.add('active');
+            else if(category === 'cold') document.getElementById('btnFilterCold').classList.add('active');
 
             const selectEl = document.getElementById('productSelect');
+            const selectedVal = selectEl.value;
             selectEl.innerHTML = '';
 
             const filtered = category === 'all' ? productsData : productsData.filter(p => p.type === category);
             filtered.forEach(p => {
                 const opt = document.createElement('option');
                 opt.value = p.id;
-                opt.text = `${p.name} - VND ${p.price.toLocaleString()}`;
+                const pName = p.name[currentLang] || p.name.vi;
+                opt.text = `${pName} - VND ${p.price.toLocaleString()}`;
                 selectEl.appendChild(opt);
             });
+            if (selectedVal && filtered.some(p => p.id === selectedVal)) {
+                selectEl.value = selectedVal;
+            }
             handleProductChange();
         }
 
@@ -1038,9 +1072,9 @@
             });
 
             if (prov === 'Hồ Chí Minh' || prov === 'Bình Dương') {
-                noteEl.innerText = "Nội thành: 20k (Freeship từ 500,000 VND)";
+                noteEl.innerText = currentLang === 'zh' ? "同城運費: 20k (滿 500,000 VND 免運)" : (currentLang === 'en' ? "Local: 20k (Freeship from 500k)" : "Nội thành: 20k (Freeship từ 500,000 VND)");
             } else {
-                noteEl.innerText = "Ngoại tỉnh: 35k (Freeship từ 1,000,000 VND)";
+                noteEl.innerText = currentLang === 'zh' ? "外省運費: 35k (滿 1,000,000 VND 免運)" : (currentLang === 'en' ? "Out of town: 35k (Freeship from 1M)" : "Ngoại tỉnh: 35k (Freeship từ 1,000,000 VND)");
             }
 
             renderCart();
@@ -1060,15 +1094,15 @@
         function addToCart() {
             const productId = document.getElementById('productSelect').value;
             const p = productsData.find(x => x.id === productId);
-            const grind = (p && p.type === 'bean') ? document.getElementById('grindSelect').value : "Thành phẩm (Ready)";
+            const grindKey = (p && p.type === 'bean') ? document.getElementById('grindSelect').value : "ready";
             const qty = parseInt(document.getElementById('qtyInput').value) || 1;
 
-            const existing = cart.find(item => item.id === productId && item.grind === grind);
+            const existing = cart.find(item => item.id === productId && item.grindKey === grindKey);
 
             if (existing) {
                 existing.qty += qty;
             } else {
-                cart.push({ id: productId, grind: grind, qty: qty });
+                cart.push({ id: productId, grindKey: grindKey, qty: qty });
             }
 
             saveCart();
@@ -1094,6 +1128,7 @@
 
             container.style.display = 'block';
             let subtotal = 0;
+            const dict = translations[currentLang];
 
             cart.forEach((item, index) => {
                 const p = productsData.find(x => x.id === item.id);
@@ -1104,10 +1139,17 @@
                 const itemSubtotal = unitPrice * item.qty;
                 subtotal += itemSubtotal;
 
+                let grindText = dict.ready_tag || "Thành phẩm";
+                if (item.grindKey && grindOptionsData[item.grindKey]) {
+                    grindText = grindOptionsData[item.grindKey][currentLang] || grindOptionsData[item.grindKey].vi;
+                }
+
+                const pName = p.name[currentLang] || p.name.vi;
+
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${p.name} ${isWholesale ? '<small style="color:var(--gold-primary);">(Giá sỉ)</small>' : ''}</td>
-                    <td style="font-size:7.5pt; color:var(--text-muted);">${item.grind}</td>
+                    <td>${pName} ${isWholesale ? `<small style="color:var(--gold-primary);">${dict.wholesale_tag}</small>` : ''}</td>
+                    <td style="font-size:7.5pt; color:var(--text-muted);">${grindText}</td>
                     <td>
                         <button class="qty-btn" onclick="updateCartQty(${index}, -1)">-</button>
                         ${item.qty}
@@ -1125,7 +1167,7 @@
             const grandTotal = subtotal + shippingFee;
 
             document.getElementById('cartSubtotalText').innerText = `VND ${subtotal.toLocaleString()}`;
-            document.getElementById('cartShippingText').innerText = shippingFee === 0 ? "MIỄN PHÍ / FREESHIP" : `VND ${shippingFee.toLocaleString()}`;
+            document.getElementById('cartShippingText').innerText = shippingFee === 0 ? dict.freeship_text : `VND ${shippingFee.toLocaleString()}`;
             document.getElementById('calcTotal').innerText = `VND ${grandTotal.toLocaleString()}`;
         }
 
@@ -1151,11 +1193,16 @@
             const notes = document.getElementById('custNotes').value || "Không có";
             const fullAddress = `${addr}, ${dist}, ${prov}`;
 
-            const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-            currentOrderNo = `VB-${dateStr}-${Math.floor(1000 + Math.random() * 9000)}`;
+            // 生成唯一訂單編號 (毫秒級)
+            const now = new Date();
+            const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+            const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, '');
+            const randSuffix = Math.floor(1000 + Math.random() * 9000);
+            currentOrderNo = `VB-${dateStr}-${timeStr}-${randSuffix}`;
 
             let subtotal = 0;
             let itemsSummaryList = [];
+            const dict = translations[currentLang];
 
             const processedCart = cart.map(item => {
                 const p = productsData.find(x => x.id === item.id);
@@ -1163,18 +1210,25 @@
                 const unitPrice = isWholesale ? p.wholesale : p.price;
                 const itemSubtotal = unitPrice * item.qty;
                 subtotal += itemSubtotal;
-                itemsSummaryList.push(`• ${p.name} [${item.grind}] x ${item.qty} = VND ${itemSubtotal.toLocaleString()}`);
-                return { name: p.name, grind: item.grind, qty: item.qty, unitPrice, subtotal: itemSubtotal };
+
+                let grindText = dict.ready_tag || "Thành phẩm";
+                if (item.grindKey && grindOptionsData[item.grindKey]) {
+                    grindText = grindOptionsData[item.grindKey][currentLang] || grindOptionsData[item.grindKey].vi;
+                }
+                const pName = p.name[currentLang] || p.name.vi;
+
+                itemsSummaryList.push(`• ${pName} [${grindText}] x ${item.qty} = VND ${itemSubtotal.toLocaleString()}`);
+                return { name: pName, grind: grindText, qty: item.qty, unitPrice, subtotal: itemSubtotal };
             });
 
             const shippingFee = calculateShipping(subtotal, prov);
             const grandTotal = subtotal + shippingFee;
 
             // 1. VietQR 網址生成
-            const bankId = "MB";
-            const accountNo = "0839681380";
+            const bankId = "VCB";
+            const accountNo = "0121000852742";
             const template = "compact2";
-            const qrUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${grandTotal}&addInfo=${currentOrderNo}&accountName=VIEBUCKS`;
+            const qrUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-${template}.png?amount=${grandTotal}&addInfo=${currentOrderNo}&accountName=MIU KIM PHUONG`;
 
             // 2. 觸發 Gmail 寄信
             const payload = {
@@ -1213,7 +1267,7 @@
                 document.getElementById('invNotes').innerText = notes;
             }
 
-            document.getElementById('invShipping').innerText = shippingFee === 0 ? "FREESHIP" : `VND ${shippingFee.toLocaleString()}`;
+            document.getElementById('invShipping').innerText = shippingFee === 0 ? dict.freeship_text : `VND ${shippingFee.toLocaleString()}`;
             document.getElementById('invTotal').innerText = `Grand Total: VND ${grandTotal.toLocaleString()}`;
 
             const invTbody = document.getElementById('invoiceTableBody');
@@ -1248,7 +1302,6 @@ TỔNG CỘNG (總計): VND ${grandTotal.toLocaleString()}`;
             renderCart();
         }
 
-        // 開啟 / 關閉 Modal 選擇傳送的 Zalo 號碼
         function openZaloModal() {
             document.getElementById('zaloModal').style.display = 'flex';
         }
@@ -1257,28 +1310,32 @@ TỔNG CỘNG (總計): VND ${grandTotal.toLocaleString()}`;
             document.getElementById('zaloModal').style.display = 'none';
         }
 
-        // 自動複製訂單內容並跳轉至選定的 Zalo 號碼
         function sendOrderToZalo(phoneNum) {
             closeZaloModal();
             if (!currentZaloMessage) return;
 
-            navigator.clipboard.writeText(currentZaloMessage).then(() => {
-                alert(`Đã sao chép thông tin đơn hàng! Vui lòng dán (Paste) vào Zalo (${phoneNum}).\n已複製訂單內容！開啟 Zalo 後請直接貼上訊息。`);
-                window.open(`https://zalo.me/${phoneNum}`, "_blank");
-            }).catch(err => {
-                const textarea = document.createElement("textarea");
-                textarea.value = currentZaloMessage;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand("copy");
-                document.body.removeChild(textarea);
-                alert(`Đã sao chép thông tin đơn hàng! Vui lòng dán (Paste) vào Zalo (${phoneNum}).\n已複製訂單內容！開啟 Zalo 後請直接貼上訊息。`);
-                window.open(`https://zalo.me/${phoneNum}`, "_blank");
-            });
+            const targetUrl = `https://zalo.me/${phoneNum}?text=${encodeURIComponent(currentZaloMessage)}`;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(currentZaloMessage).then(() => {
+                    alert(`Đã sao chép thông tin đơn hàng! Vui lòng dán (Paste) vào Zalo (${phoneNum}).\n已複製訂單內容！開啟 Zalo 後請直接貼上訊息。`);
+                    window.open(targetUrl, "_blank");
+                }).catch(err => {
+                    window.open(targetUrl, "_blank");
+                });
+            } else {
+                window.open(targetUrl, "_blank");
+            }
         }
 
         function downloadInvoice() {
-            html2canvas(document.getElementById('invoiceCard'), { backgroundColor: '#0A0A0C', scale: 2 }).then(canvas => {
+            html2canvas(document.getElementById('invoiceCard'), { 
+                backgroundColor: '#0A0A0C', 
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                logging: false
+            }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = `VIEBUCKS_${currentOrderNo}.png`;
                 link.href = canvas.toDataURL();
@@ -1286,8 +1343,16 @@ TỔNG CỘNG (總計): VND ${grandTotal.toLocaleString()}`;
             });
         }
 
+        // PWA Service Worker 註冊 logic
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW register fail', err));
+            });
+        }
+
         window.onload = () => {
             initRadarCharts();
+            populateGrindOptions();
             filterProducts('all');
             updateDistrictOptions();
             loadCart();
