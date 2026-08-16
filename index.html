@@ -850,7 +850,65 @@
 
     <!-- JavaScript Logic -->
     <script>
-        const GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx3PPxNWg6074UypoGUmjqBcxK-rBziCMoSuK4_6OIbg2gCcngiiCKCqr-Ach_gciTxiw/exec";
+        // ⚠️ 請將下方的網址替換為您最新部署的 Google Apps Script Web App 網址
+const GAS_WEBHOOK_URL = "https://script.google.com/macros/s/YOUR_GAS_DEPLOYMENT_ID/exec";
+
+async function handleFormSubmit(event) {
+    event.preventDefault();
+
+    if (cart.length === 0) {
+        alert('您的購物車是空的，請先選擇商品！');
+        return;
+    }
+
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerText = "訂單處理中，請稍候...";
+
+    const itemsSummaryText = cart.map(item => `- ${item.name} x ${item.quantity} (${formatVND(item.price * item.quantity)})`).join('\n');
+    const subtotalAmount = calculateSubtotal();
+
+    // 封裝完整的訂單 Payload 資料
+    const payload = {
+        orderNo: generateOrderNo(),
+        customerName: document.getElementById('customerName').value,
+        customerPhone: document.getElementById('customerPhone').value,
+        customerEmail: document.getElementById('customerEmail').value,
+        deliveryAddress: document.getElementById('deliveryAddress').value,
+        notes: document.getElementById('notes').value || "無",
+        itemsSummary: itemsSummaryText,
+        subtotal: formatVND(subtotalAmount),
+        shippingFee: "FREESHIP (免運)",
+        total: formatVND(subtotalAmount)
+    };
+
+    try {
+        // 使用 text/plain 帶入 JSON 避免跨域標頭預檢問題，確保 GAS 順利接收
+        const response = await fetch(GAS_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (result.status === "success") {
+            alert(`訂單發送成功！\n您的訂單編號為：${payload.orderNo}\n確認信件已同步發送至您的 Email。`);
+            // 清空購物車與表單
+            cart = [];
+            updateCartUI();
+            document.getElementById('orderForm').reset();
+        } else {
+            alert('訂單傳送失敗：' + (result.message || '伺服器端錯誤'));
+        }
+    } catch (error) {
+        console.error('Submission error:', error);
+        alert('網路連線失敗或系統異常，請稍後再試。');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "確認送出訂單";
+    }
+}
 
         const translations = {
             vi: {
