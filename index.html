@@ -235,7 +235,7 @@
 
         .btn-zalo:hover { background: #0052cc; transform: translateY(-2px); }
 
-        /* Container & Section Layout */
+        /* Section Layout */
         .section-container {
             max-width: 1300px;
             margin: 0 auto;
@@ -432,11 +432,19 @@
             background: #fff;
         }
 
-        /* Floating Zalo Widget */
-        .zalo-float {
+        /* Floating Zalo Container (Support 2 contacts) */
+        .zalo-float-wrapper {
             position: fixed;
             bottom: 30px;
             right: 30px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .zalo-float-main {
             width: 55px;
             height: 55px;
             background: #0068FF;
@@ -445,12 +453,91 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 10px 25px rgba(0, 104, 255, 0.4);
-            z-index: 9999;
+            cursor: pointer;
             transition: var(--transition);
         }
 
-        .zalo-float:hover { transform: scale(1.1); }
-        .zalo-float img { width: 30px; height: 30px; }
+        .zalo-float-main img { width: 30px; height: 30px; }
+
+        .zalo-contact-menu {
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-gold);
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .zalo-float-wrapper:hover .zalo-contact-menu {
+            display: flex;
+        }
+
+        .zalo-contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 8pt;
+            letter-spacing: 1px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            background: var(--bg-surface);
+            transition: var(--transition);
+        }
+
+        .zalo-contact-item:hover {
+            background: #0068FF;
+            color: #fff;
+        }
+
+        /* Modal Popup for Selecting Zalo Contact */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--gold-primary);
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.9);
+        }
+
+        .modal-box h4 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold-light);
+            margin-bottom: 20px;
+            font-size: 12pt;
+        }
+
+        .modal-box .contact-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            background: #0068FF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 8.5pt;
+            letter-spacing: 1.5px;
+            transition: var(--transition);
+        }
+
+        .modal-box .contact-btn:hover {
+            background: #0052cc;
+        }
 
         @media (max-width: 1024px) {
             .collections-grid { grid-template-columns: 1fr; }
@@ -462,10 +549,30 @@
 </head>
 <body>
 
-    <!-- Floating Zalo Customer Support (號碼: 0839681380) -->
-    <a href="https://zalo.me/0839681380" target="_blank" class="zalo-float" title="Contact via Zalo">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo">
-    </a>
+    <!-- Floating Zalo Menu Widget (支援兩個聯絡人: 0839681380 & 0346246669) -->
+    <div class="zalo-float-wrapper">
+        <div class="zalo-float-main" title="Contact via Zalo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo">
+        </div>
+        <div class="zalo-contact-menu">
+            <a href="https://zalo.me/0839681380" target="_blank" class="zalo-contact-item">
+                💬 Zalo 1: 0839681380
+            </a>
+            <a href="https://zalo.me/0346246669" target="_blank" class="zalo-contact-item">
+                💬 Zalo 2: 0346246669
+            </a>
+        </div>
+    </div>
+
+    <!-- Modal for Selecting Zalo Receiver on Order Submit -->
+    <div id="zaloModal" class="modal-overlay">
+        <div class="modal-box">
+            <h4>Chọn Zalo để gửi đơn hàng / 選擇傳送的 Zalo 帳號</h4>
+            <button class="contact-btn" onclick="sendOrderToZalo('0839681380')">💬 Zalo 1: 0839681380</button>
+            <button class="contact-btn" onclick="sendOrderToZalo('0346246669')">💬 Zalo 2: 0346246669</button>
+            <button class="btn-outline" onclick="closeZaloModal()" style="margin-top:10px; width:100%;">Đóng / 關閉</button>
+        </div>
+    </div>
 
     <!-- Header -->
     <header>
@@ -617,7 +724,6 @@
                         <input type="email" id="custEmail" required placeholder="example@gmail.com">
                     </div>
 
-                    <!-- 越南省/市與區域劃分選單 -->
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
                         <div class="input-group">
                             <label data-i18n="label_province">Tỉnh / Thành (Province / City)</label>
@@ -689,7 +795,7 @@
 
                     <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
                         <button type="button" class="btn-outline" onclick="downloadInvoice()" data-i18n="btn_download">📥 Tải ảnh đơn hàng / Download</button>
-                        <button type="button" id="zaloShareBtn" class="btn-zalo" onclick="shareToZalo()" data-i18n="btn_zalo">💬 Gửi qua Zalo</button>
+                        <button type="button" id="zaloShareBtn" class="btn-zalo" onclick="openZaloModal()" data-i18n="btn_zalo">💬 Gửi qua Zalo</button>
                     </div>
                 </div>
             </div>
@@ -702,7 +808,7 @@
         <div style="font-size:8.5pt; color:var(--text-muted); line-height:2;">
             <p><strong>Công ty TNHH VIEBUCKS</strong></p>
             <p>Địa chỉ: 365 QL13, Thủ Dầu Một, Hồ Chí Minh</p>
-            <p>Điện thoại/Zalo: 0839681380 / 0348246669</p>
+            <p>Điện thoại/Zalo: 0839681380 / 0346246669</p>
         </div>
         <div style="font-size:7.5pt; color:#555; margin-top:20px;">
             “Không bao giờ là quá muộn để thưởng thức cà phê.” &copy; 2026 viebucks. All rights reserved.
@@ -786,10 +892,10 @@
             "Bình Dương": ["Thủ Dầu Một", "Thuận An", "Dĩ An"]
         };
 
-        let currentLang = 'vi'; // 預設語言為越南文
+        let currentLang = 'vi';
         let cart = [];
         let currentOrderNo = '';
-        let currentZaloMessage = ''; // 儲存剪貼簿文字
+        let currentZaloMessage = '';
 
         function initRadarCharts() {
             const chartOptions = {
@@ -994,9 +1100,7 @@
             fetch(GAS_WEBHOOK_URL, {
                 method: 'POST',
                 mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8'
-                },
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(payload)
             }).then(() => {
                 console.log("Order payload dispatched successfully.");
@@ -1041,23 +1145,32 @@ Tổng cộng (總計): VND ${grandTotal.toLocaleString()}`;
             renderCart();
         }
 
-        // 點擊 Zalo 按鈕時觸發：自動複製內容並跳轉 Zalo
-        function shareToZalo() {
+        // 開啟 / 關閉 Modal 選擇傳送的 Zalo 號碼
+        function openZaloModal() {
+            document.getElementById('zaloModal').style.display = 'flex';
+        }
+
+        function closeZaloModal() {
+            document.getElementById('zaloModal').style.display = 'none';
+        }
+
+        // 自動複製訂單內容並跳轉至選定的 Zalo 號碼
+        function sendOrderToZalo(phoneNum) {
+            closeZaloModal();
             if (!currentZaloMessage) return;
 
             navigator.clipboard.writeText(currentZaloMessage).then(() => {
-                alert("Đã sao chép thông tin đơn hàng! Vui lòng dán (Paste) vào Zalo.\n已複製訂單內容！開啟 Zalo 後請直接貼上訊息。");
-                window.open("https://zalo.me/0839681380", "_blank");
+                alert(`Đã sao chép thông tin đơn hàng! Vui lòng dán (Paste) vào Zalo (${phoneNum}).\n已複製訂單內容！開啟 Zalo 後請直接貼上訊息。`);
+                window.open(`https://zalo.me/${phoneNum}`, "_blank");
             }).catch(err => {
-                // 備用複製方案
                 const textarea = document.createElement("textarea");
                 textarea.value = currentZaloMessage;
                 document.body.appendChild(textarea);
                 textarea.select();
                 document.execCommand("copy");
                 document.body.removeChild(textarea);
-                alert("Đã sao chép thông tin đơn hàng! Vui lòng dán (Paste) vào Zalo.\n已複製訂單內容！開啟 Zalo 後請直接貼上訊息。");
-                window.open("https://zalo.me/0839681380", "_blank");
+                alert(`Đã sao chép thông tin đơn hàng! Vui lòng dán (Paste) vào Zalo (${phoneNum}).\n已複製訂單內容！開啟 Zalo 後請直接貼上訊息。`);
+                window.open(`https://zalo.me/${phoneNum}`, "_blank");
             });
         }
 
@@ -1076,7 +1189,7 @@ Tổng cộng (總計): VND ${grandTotal.toLocaleString()}`;
             updateDistrictOptions();
             loadCart();
             renderCart();
-            setLanguage('vi'); // 預設載入越南文
+            setLanguage('vi');
         };
     </script>
 </body>
