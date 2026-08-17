@@ -947,7 +947,7 @@
                 ratio_0_100_desc: "高咖啡因、苦味強烈、高麥芽與木質味、油脂極多。",
                 ratio_0_100_use: "越南滴漏咖啡、即溶咖啡原料。",
                 arabica_desc: "越南阿拉比卡精品系列", robusta_desc: "羅布斯塔經典系列", brazil_desc: "巴西喜拉朵特選系列",
-                arabica_flavor: "獨特花香與黃檸檬果酸，黑糖甜感。", robusta_flavor: "濃郁黑巧克力與烤核果香，油脂豐厚。", brazil_flavor: "烤堅果、焦糖奶油，溫潤滑順。",
+                arabica_flavor: "獨特花香與黃檸檬果酸，黑糖甜感。", robusta_flavor: "濃鬱黑巧克力與烤核果香，油脂豐厚。", brazil_flavor: "烤堅果、焦糖奶油，溫潤滑順。",
                 filter_all: "全品項", filter_beans: "單品咖啡豆", filter_blend: "拼配配方豆", filter_drip: "濾掛包", filter_cold: "冷萃包",
                 calc_sub: "Bespoke Calculator Atelier", calc_title: "採購金額智能試算與購物車（滿 10 包自動切換批發價）",
                 label_product: "選擇品項與規格", label_grind: "研磨度選擇", label_qty: "購買數量", btn_add_cart: "+ 加入採購清單",
@@ -999,39 +999,33 @@
             // 阿拉比卡 (100% : 0%)
             { id: "p1", type: "bean", name: { vi: "Arabica 100% 咖啡豆 (250g)", zh: "Arabica 100% 單品豆 (250g)", en: "Arabica 100% Beans (250g)" }, price: 145000, wholesale: 125000 },
             { id: "p2", type: "bean", name: { vi: "Arabica 100% 咖啡豆 (500g)", zh: "Arabica 100% 單品豆 (500g)", en: "Arabica 100% Beans (500g)" }, price: 280000, wholesale: 240000 },
-            { id: "p3", type: "bean", name: { vi: "Arabica 100% 咖啡豆 (1000g)", zh: "Arabica 100% 單品豆 (1000g)", en: "Arabica 100% Beans (1000g)" }, price: 550000, wholesale: 470000 },
             { id: "p4", type: "drip", name: { vi: "Arabica 100% 濾掛包 (12g)", zh: "Arabica 100% 濾掛包 (12g)", en: "Arabica 100% Drip Bag (12g)" }, price: 16000, wholesale: 13500 },
             { id: "p5", type: "cold", name: { vi: "Arabica 100% 冷萃包 (10g)", zh: "Arabica 100% 冷萃包 (10g)", en: "Arabica 100% Cold Brew (10g)" }, price: 12500, wholesale: 10500 },
             
             // 羅布斯塔 (0% : 100%)
             { id: "p6", type: "bean", name: { vi: "Robusta 100% 咖啡豆 (250g)", zh: "Robusta 100% 單品豆 (250g)", en: "Robusta 100% Beans (250g)" }, price: 91000, wholesale: 78000 },
             { id: "p7", type: "bean", name: { vi: "Robusta 100% 咖啡豆 (500g)", zh: "Robusta 100% 單品豆 (500g)", en: "Robusta 100% Beans (500g)" }, price: 172000, wholesale: 148000 },
-            { id: "p8", type: "bean", name: { vi: "Robusta 100% 咖啡豆 (1000g)", zh: "Robusta 100% 單品豆 (1000g)", en: "Robusta 100% Beans (1000g)" }, price: 335000, wholesale: 285000 },
             { id: "p9", type: "drip", name: { vi: "Robusta 100% 濾掛包 (12g)", zh: "Robusta 100% 濾掛包 (12g)", en: "Robusta 100% Drip Bag (12g)" }, price: 13000, wholesale: 11000 },
             { id: "p10", type: "cold", name: { vi: "Robusta 100% 冷萃包 (10g)", zh: "Robusta 100% 冷萃包 (10g)", en: "Robusta 100% Cold Brew (10g)" }, price: 7000, wholesale: 5800 },
 
             // 經典精品義式 Blend (80% : 20%)
             { id: "p16", type: "blend", name: { vi: "Blend 80/20 精品義式豆 (250g)", zh: "經典精品義式拼配 80/20 (250g)", en: "Specialty Espresso Blend 80/20 (250g)" }, price: 135000, wholesale: 115000 },
             { id: "p17", type: "blend", name: { vi: "Blend 80/20 精品義式豆 (500g)", zh: "經典精品義式拼配 80/20 (500g)", en: "Specialty Espresso Blend 80/20 (500g)" }, price: 260000, wholesale: 220000 },
-            { id: "p18", type: "blend", name: { vi: "Blend 80/20 精品義式豆 (1000g)", zh: "經典精品義式拼配 80/20 (1000g)", en: "Specialty Espresso Blend 80/20 (1000g)" }, price: 500000, wholesale: 430000 },
             { id: "p19", type: "drip", name: { vi: "Blend 80/20 濾掛包 (12g)", zh: "經典精品義式 80/20 濾掛包 (12g)", en: "Specialty Blend 80/20 Drip Bag (12g)" }, price: 15500, wholesale: 13000 },
 
             // 大眾商業義式 Blend (70% : 30%)
             { id: "p20", type: "blend", name: { vi: "Blend 70/30 商業義式豆 (250g)", zh: "商業義式平衡拼配 70/30 (250g)", en: "Commercial Espresso Blend 70/30 (250g)" }, price: 128000, wholesale: 110000 },
             { id: "p21", type: "blend", name: { vi: "Blend 70/30 商業義式豆 (500g)", zh: "商業義式平衡拼配 70/30 (500g)", en: "Commercial Espresso Blend 70/30 (500g)" }, price: 245000, wholesale: 210000 },
-            { id: "p22", type: "blend", name: { vi: "Blend 70/30 商業義式豆 (1000g)", zh: "商業義式平衡拼配 70/30 (1000g)", en: "Commercial Espresso Blend 70/30 (1000g)" }, price: 475000, wholesale: 410000 },
             { id: "p23", type: "drip", name: { vi: "Blend 70/30 濾掛包 (12g)", zh: "商業義式 70/30 濾掛包 (12g)", en: "Commercial Blend 70/30 Drip Bag (12g)" }, price: 15000, wholesale: 12500 },
 
             // 南義風格濃縮 Blend (50% : 50%)
             { id: "p24", type: "blend", name: { vi: "Blend 50/50 南義風格豆 (250g)", zh: "南義風格醇厚拼配 50/50 (250g)", en: "Southern Italian Blend 50/50 (250g)" }, price: 118000, wholesale: 100000 },
             { id: "p25", type: "blend", name: { vi: "Blend 50/50 南義風格豆 (500g)", zh: "南義風格醇厚拼配 50/50 (500g)", en: "Southern Italian Blend 50/50 (500g)" }, price: 225000, wholesale: 190000 },
-            { id: "p26", type: "blend", name: { vi: "Blend 50/50 南義風格豆 (1000g)", zh: "南義風格醇厚拼配 50/50 (1000g)", en: "Southern Italian Blend 50/50 (1000g)" }, price: 435000, wholesale: 370000 },
             { id: "p27", type: "drip", name: { vi: "Blend 50/50 濾掛包 (12g)", zh: "南義風格 50/50 濾掛包 (12g)", en: "Southern Italian 50/50 Drip Bag (12g)" }, price: 14000, wholesale: 11800 },
 
             // Brazil Cerrado 系列
             { id: "p11", type: "bean", name: { vi: "Brazil Cerrado 咖啡豆 (250g)", zh: "Brazil Cerrado 咖啡豆 (250g)", en: "Brazil Cerrado Beans (250g)" }, price: 200000, wholesale: 170000 },
             { id: "p12", type: "bean", name: { vi: "Brazil Cerrado 咖啡豆 (500g)", zh: "Brazil Cerrado 咖啡豆 (500g)", en: "Brazil Cerrado Beans (500g)" }, price: 390000, wholesale: 330000 },
-            { id: "p13", type: "bean", name: { vi: "Brazil Cerrado 咖啡豆 (1000g)", zh: "Brazil Cerrado 咖啡豆 (1000g)", en: "Brazil Cerrado Beans (1000g)" }, price: 770000, wholesale: 650000 },
             { id: "p14", type: "drip", name: { vi: "Brazil Cerrado 濾掛包 (12g)", zh: "Brazil Cerrado 濾掛包 (12g)", en: "Brazil Cerrado Drip Bag (12g)" }, price: 19000, wholesale: 16000 },
             { id: "p15", type: "cold", name: { vi: "Brazil Cerrado 冷萃包 (10g)", zh: "Brazil Cerrado Cold Brew (10g)", en: "Brazil Cerrado Cold Brew (10g)" }, price: 15000, wholesale: 12500 }
         ];
