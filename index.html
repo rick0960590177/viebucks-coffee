@@ -594,6 +594,7 @@
             <nav>
                 <ul>
                     <li><a href="#collections" data-i18n="nav_collections">Hồ Sơ Cà Phê</a></li>
+                    <li><a href="#blend_ratio" data-i18n="nav_blend">Tỷ Lệ Phối Trộn</a></li>
                     <li><a href="#atelier" data-i18n="nav_atelier">Tính Giá</a></li>
                     <li><a href="#contact" data-i18n="nav_contact">Liên Hệ</a></li>
                 </ul>
@@ -657,6 +658,53 @@
         </div>
     </section>
 
+    <!-- Blend Ratios Matrix Section -->
+    <section id="blend_ratio" class="section-container" style="background: var(--bg-surface); border-top: 1px solid var(--border-gold); border-bottom: 1px solid var(--border-gold);">
+        <div class="section-header">
+            <span class="section-subtitle" data-i18n="blend_sub">Tỷ Lệ Phối Trộn Phù Hợp</span>
+            <h2 class="section-title" data-i18n="blend_title">Đặc Điểm Hương Vị Arabica : Robusta</h2>
+        </div>
+        
+        <div class="cart-table-wrapper">
+            <table class="cart-table" style="font-size: 0.85rem;">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;" data-i18n="th_blend_ratio">Arabica : Robusta</th>
+                        <th style="width: 45%;" data-i18n="th_blend_flavor">Đặc Điểm Hương Vị</th>
+                        <th style="width: 35%;" data-i18n="th_blend_usage">Khuyên Dùng / Loại Cà Phê</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="color:var(--gold-light); font-weight:600;">100% : 0%</td>
+                        <td data-i18n="ratio_100_0_desc">Độ axit cao, hương hoa quả nổi bật, sảng khoái tinh tế, thiếu độ đậm đà.</td>
+                        <td data-i18n="ratio_100_0_use">Cà phê rót/dội (Pour-over), Cà phê đơn nguồn cao cấp, Quán cà phê Wave thứ 3.</td>
+                    </tr>
+                    <tr>
+                        <td style="color:var(--gold-light); font-weight:600;">80% : 20%</td>
+                        <td data-i18n="ratio_80_20_desc">Giữ lại hương chua & tầng hương phong phú, tăng độ đậm đà & lớp crema, vị ngọt tốt hơn.</td>
+                        <td data-i18n="ratio_80_20_use">Espresso tinh tế cổ điển (Espresso, Americano, Latte).</td>
+                    </tr>
+                    <tr>
+                        <td style="color:var(--gold-light); font-weight:600;">70% : 30%</td>
+                        <td data-i18n="ratio_70_30_desc">Cân bằng chua đắng, hương vị đậm đà, vị cà phê vẫn mạnh mẽ khi pha với sữa.</td>
+                        <td data-i18n="ratio_70_30_use">Espresso thương mại phổ thông, Americano & Latte chuỗi quán cà phê.</td>
+                    </tr>
+                    <tr>
+                        <td style="color:var(--gold-light); font-weight:600;">50% : 50%</td>
+                        <td data-i18n="ratio_50_50_desc">Độ axit thấp, vị socola đắng ngọt mạnh mẽ, Crema rất dày và lâu tan.</td>
+                        <td data-i18n="ratio_50_50_use">Espresso phong cách Nam Ý, Quán ăn sáng truyền thống, Cà phê lon bình dân.</td>
+                    </tr>
+                    <tr>
+                        <td style="color:var(--gold-light); font-weight:600;">0% : 100%</td>
+                        <td data-i18n="ratio_0_100_desc">Caffeine cao, vị đắng gắt, hương mạch nha & gỗ nồng nặc, rất nhiều crema/dầu.</td>
+                        <td data-i18n="ratio_0_100_use">Cà phê phin Việt Nam, Nguyên liệu cà phê hòa tan.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
     <!-- Calculator & Cart Section -->
     <section id="atelier" class="section-container" style="background: radial-gradient(circle at center, #101013 0%, var(--bg-deep) 100%);">
         <div class="section-header">
@@ -668,6 +716,7 @@
             <div class="filter-container">
                 <button class="filter-btn active" id="btnFilterAll" onclick="filterProducts('all')" data-i18n="filter_all">Tất cả</button>
                 <button class="filter-btn" id="btnFilterBeans" onclick="filterProducts('bean')" data-i18n="filter_beans">Cà phê hạt</button>
+                <button class="filter-btn" id="btnFilterBlend" onclick="filterProducts('blend')" data-i18n="filter_blend">Cà phê phối trộn (Blend)</button>
                 <button class="filter-btn" id="btnFilterDrip" onclick="filterProducts('drip')" data-i18n="filter_drip">Cà phê túi lọc</button>
                 <button class="filter-btn" id="btnFilterCold" onclick="filterProducts('cold')" data-i18n="filter_cold">Cà phê ủ lạnh</button>
             </div>
@@ -854,12 +903,24 @@
 
         const translations = {
             vi: {
-                nav_collections: "Hồ Sơ Cà Phê", nav_atelier: "Tính Giá", nav_contact: "Liên Hệ",
+                nav_collections: "Hồ Sơ Cà Phê", nav_blend: "Tỷ Lệ Phối Trộn", nav_atelier: "Tính Giá", nav_contact: "Liên Hệ",
                 hero_badge: "Bộ Sưu Tập Cà Phê Haute", hero_quote: "“Không bao giờ là quá muộn để thưởng thức cà phê.”", hero_btn: "Khám Phá Giá Đặt Riêng",
                 col_sub: "Hồ Sơ & Biểu Đồ Hương Vị", col_title: "Hồ Sơ Cà Phê & Biểu Đồ Radar Hương Vị",
+                blend_sub: "Tỷ Lệ Phối Trộn Phù Hợp", blend_title: "Đặc Điểm Hương Vị Arabica : Robusta",
+                th_blend_ratio: "Arabica : Robusta", th_blend_flavor: "Đặc Điểm Hương Vị", th_blend_usage: "Khuyên Dùng / Loại Cà Phê",
+                ratio_100_0_desc: "Hàm lượng axit cao, hương hoa quả nổi bật, sảng khoái tinh tế, thiếu độ đậm đà.",
+                ratio_100_0_use: "Cà phê rót/dội (Pour-over), Cà phê đơn nguồn cao cấp, Quán cà phê Wave thứ 3.",
+                ratio_80_20_desc: "Giữ lại hương chua & tầng hương phong phú, tăng độ đậm đà & lớp crema, vị ngọt tốt hơn.",
+                ratio_80_20_use: "Espresso tinh tế cổ điển (Espresso, Americano, Latte).",
+                ratio_70_30_desc: "Cân bằng chua đắng, hương vị đậm đà, vị cà phê vẫn mạnh mẽ khi pha với sữa.",
+                ratio_70_30_use: "Espresso thương mại phổ thông, Americano & Latte chuỗi quán cà phê.",
+                ratio_50_50_desc: "Độ axit thấp, vị socola đắng ngọt mạnh mẽ, Crema rất dày và lâu tan.",
+                ratio_50_50_use: "Espresso phong cách Nam Ý, Quán ăn sáng truyền thống, Cà phê lon bình dân.",
+                ratio_0_100_desc: "Caffeine cao, vị đắng gắt, hương mạch nha & gỗ nồng nặc, rất nhiều crema/dầu.",
+                ratio_0_100_use: "Cà phê phin Việt Nam, Nguyên liệu cà phê hòa tan.",
                 arabica_desc: "Dòng Arabica Việt Nam Cao Cấp", robusta_desc: "Dòng Robusta Truyền Thống", brazil_desc: "Dòng Brazil Cerrado Đặc Biệt",
                 arabica_flavor: "Hương hoa, vị chua chanh vàng, vị ngọt đường đen.", robusta_flavor: "Sô cô la đen, hạt rang, thể chất đậm đà.", brazil_flavor: "Hạt rang, bơ caramel, ca cao mượt mà.",
-                filter_all: "Tất cả", filter_beans: "Cà phê hạt", filter_drip: "Cà phê túi lọc", filter_cold: "Cà phê ủ lạnh",
+                filter_all: "Tất cả", filter_beans: "Cà phê hạt", filter_blend: "Cà phê phối trộn (Blend)", filter_drip: "Cà phê túi lọc", filter_cold: "Cà phê ủ lạnh",
                 calc_sub: "Xưởng Tính Giá Riêng Biệt", calc_title: "Tính Toán Thông Minh (Áp dụng giá sỉ từ 10 gói)",
                 label_product: "Chọn sản phẩm", label_grind: "Mức độ xay", label_qty: "Số lượng", btn_add_cart: "+ Thêm vào giỏ hàng",
                 cart_title: "Giỏ hàng của bạn", th_item: "Sản phẩm", th_grind: "Độ xay", th_qty: "SL", th_price: "Đơn giá", th_subtotal: "Thành tiền",
@@ -870,12 +931,24 @@
                 wholesale_tag: "(Giá sỉ)", freeship_text: "MIỄN PHÍ", ready_tag: "Thành phẩm"
             },
             zh: {
-                nav_collections: "咖啡豆履歷", nav_atelier: "智能試算", nav_contact: "聯繫我們",
+                nav_collections: "咖啡豆履歷", nav_blend: "拼配比例指南", nav_atelier: "智能試算", nav_contact: "聯繫我們",
                 hero_badge: "Haute Coffee Collection", hero_quote: "“It's never too late to drink coffee.”", hero_btn: "探索專屬訂製定價",
                 col_sub: "Flavor Profiles & Radar Chart", col_title: "頂級精品咖啡豆履歷與動態風味雷達",
+                blend_sub: "Arabica : Robusta 拼配矩陣", blend_title: "阿拉比卡與羅布斯塔風味特點與適用情境",
+                th_blend_ratio: "阿拉比卡 : 羅布斯塔", th_blend_flavor: "風味特點", th_blend_usage: "適用情境 / 咖啡類型",
+                ratio_100_0_desc: "高酸度、花果香顯著、清爽細緻，缺乏厚實感。",
+                ratio_100_0_use: "手沖咖啡、精品單品、第三波咖啡館。",
+                ratio_80_20_desc: "保留豐富酸香與層次，提升醇厚度與油脂，甜感更佳。",
+                ratio_80_20_use: "經典精品義式（意式濃縮、美式、拿鐵）。",
+                ratio_70_30_desc: "酸苦平衡、風味扎實，搭配牛奶後咖啡味依然強烈。",
+                ratio_70_30_use: "大眾商業義式、連鎖咖啡館美式與拿鐵。",
+                ratio_50_50_desc: "低酸、強烈苦甜黑巧克力感、Crema 極為濃稠且持久。",
+                ratio_50_50_use: "南義風格濃縮、傳統早餐店、平價罐裝咖啡。",
+                ratio_0_100_desc: "高咖啡因、苦味強烈、高麥芽與木質味、油脂極多。",
+                ratio_0_100_use: "越南滴漏咖啡、即溶咖啡原料。",
                 arabica_desc: "越南阿拉比卡精品系列", robusta_desc: "羅布斯塔經典系列", brazil_desc: "巴西喜拉朵特選系列",
                 arabica_flavor: "獨特花香與黃檸檬果酸，黑糖甜感。", robusta_flavor: "濃郁黑巧克力與烤核果香，油脂豐厚。", brazil_flavor: "烤堅果、焦糖奶油，溫潤滑順。",
-                filter_all: "全品項", filter_beans: "咖啡豆", filter_drip: "濾掛包", filter_cold: "冷萃包",
+                filter_all: "全品項", filter_beans: "單品咖啡豆", filter_blend: "拼配配方豆", filter_drip: "濾掛包", filter_cold: "冷萃包",
                 calc_sub: "Bespoke Calculator Atelier", calc_title: "採購金額智能試算與購物車（滿 10 包自動切換批發價）",
                 label_product: "選擇品項與規格", label_grind: "研磨度選擇", label_qty: "購買數量", btn_add_cart: "+ 加入採購清單",
                 cart_title: "您的採購清單", th_item: "品項", th_grind: "研磨度", th_qty: "數量", th_price: "單價", th_subtotal: "小計",
@@ -886,12 +959,24 @@
                 wholesale_tag: "(批發價)", freeship_text: "免運費", ready_tag: "成品包裝"
             },
             en: {
-                nav_collections: "Bean Heritage", nav_atelier: "Atelier Calc", nav_contact: "Contact",
+                nav_collections: "Bean Heritage", nav_blend: "Blend Matrix", nav_atelier: "Atelier Calc", nav_contact: "Contact",
                 hero_badge: "Haute Coffee Collection", hero_quote: "“It's never too late to drink coffee.”", hero_btn: "Explore Bespoke Pricing",
                 col_sub: "Flavor Profiles & Radar Chart", col_title: "Fine Coffee Heritage & Dynamic Flavor Radar",
+                blend_sub: "Blend Ratio Guide", blend_title: "Arabica : Robusta Flavor Profile & Applications",
+                th_blend_ratio: "Arabica : Robusta", th_blend_flavor: "Flavor Profile", th_blend_usage: "Best Applications / Coffee Style",
+                ratio_100_0_desc: "High acidity, prominent floral & fruity notes, clean & refined, lighter body.",
+                ratio_100_0_use: "Pour-over, Specialty single-origin, 3rd Wave Coffee Shops.",
+                ratio_80_20_desc: "Rich aroma & acidity balance, enhanced body & crema, pleasant sweet finish.",
+                ratio_80_20_use: "Classic Specialty Espresso (Espresso, Americano, Latte).",
+                ratio_70_30_desc: "Balanced bitter-sweet taste, robust flavor, stands out in milk drinks.",
+                ratio_70_30_use: "Commercial Espresso, Chain Cafe Americano & Latte.",
+                ratio_50_50_desc: "Low acidity, intense dark chocolate profile, extremely thick & persistent crema.",
+                ratio_50_50_use: "Southern Italian Espresso, Traditional Breakfast Shops, Ready-to-drink cans.",
+                ratio_0_100_desc: "High caffeine, strong bitterness, intense malt & woody notes, maximum crema.",
+                ratio_0_100_use: "Vietnamese Phin Drip Coffee, Instant Coffee standard.",
                 arabica_desc: "Vietnam Arabica Fine Selection", robusta_desc: "Robusta Classic Selection", brazil_desc: "Brazil Cerrado Special Selection",
                 arabica_flavor: "Floral notes, yellow lemon acidity, brown sugar sweetness.", robusta_flavor: "Dark chocolate, roasted nuts, heavy body.", brazil_flavor: "Roasted nuts, caramel butter, smooth cocoa.",
-                filter_all: "All", filter_beans: "Beans", filter_drip: "Drip Bag", filter_cold: "Cold Brew",
+                filter_all: "All", filter_beans: "Single Origin", filter_blend: "Coffee Blends", filter_drip: "Drip Bag", filter_cold: "Cold Brew",
                 calc_sub: "Bespoke Calculator Atelier", calc_title: "Smart Amount Calculator (Wholesale rate at 10+ packs)",
                 label_product: "Select Product", label_grind: "Grind Size", label_qty: "Quantity", btn_add_cart: "+ Add to Cart",
                 cart_title: "Shopping Cart", th_item: "Item", th_grind: "Grind", th_qty: "Qty", th_price: "Unit Price", th_subtotal: "Subtotal",
@@ -911,21 +996,44 @@
         };
 
         const productsData = [
-            { id: "p1", type: "bean", name: { vi: "Arabica 咖啡豆 (250g)", zh: "Arabica 咖啡豆 (250g)", en: "Arabica Beans (250g)" }, price: 145000, wholesale: 125000 },
-            { id: "p2", type: "bean", name: { vi: "Arabica 咖啡豆 (500g)", zh: "Arabica 咖啡豆 (500g)", en: "Arabica Beans (500g)" }, price: 280000, wholesale: 240000 },
-            { id: "p3", type: "bean", name: { vi: "Arabica 咖啡豆 (1000g)", zh: "Arabica 咖啡豆 (1000g)", en: "Arabica Beans (1000g)" }, price: 550000, wholesale: 470000 },
-            { id: "p4", type: "drip", name: { vi: "Arabica 濾掛包 (12g)", zh: "Arabica 濾掛包 (12g)", en: "Arabica Drip Bag (12g)" }, price: 16000, wholesale: 13500 },
-            { id: "p5", type: "cold", name: { vi: "Arabica 冷萃包 (10g)", zh: "Arabica 冷萃包 (10g)", en: "Arabica Cold Brew (10g)" }, price: 12500, wholesale: 10500 },
-            { id: "p6", type: "bean", name: { vi: "Robusta 咖啡豆 (250g)", zh: "Robusta 咖啡豆 (250g)", en: "Robusta Beans (250g)" }, price: 91000, wholesale: 78000 },
-            { id: "p7", type: "bean", name: { vi: "Robusta 咖啡豆 (500g)", zh: "Robusta 咖啡豆 (500g)", en: "Robusta Beans (500g)" }, price: 172000, wholesale: 148000 },
-            { id: "p8", type: "bean", name: { vi: "Robusta 咖啡豆 (1000g)", zh: "Robusta 咖啡豆 (1000g)", en: "Robusta Beans (1000g)" }, price: 335000, wholesale: 285000 },
-            { id: "p9", type: "drip", name: { vi: "Robusta 濾掛包 (12g)", zh: "Robusta 濾掛包 (12g)", en: "Robusta Drip Bag (12g)" }, price: 13000, wholesale: 11000 },
-            { id: "p10", type: "cold", name: { vi: "Robusta 冷萃包 (10g)", zh: "Robusta 冷萃包 (10g)", en: "Robusta Cold Brew (10g)" }, price: 7000, wholesale: 5800 },
+            // 阿拉比卡 (100% : 0%)
+            { id: "p1", type: "bean", name: { vi: "Arabica 100% 咖啡豆 (250g)", zh: "Arabica 100% 單品豆 (250g)", en: "Arabica 100% Beans (250g)" }, price: 145000, wholesale: 125000 },
+            { id: "p2", type: "bean", name: { vi: "Arabica 100% 咖啡豆 (500g)", zh: "Arabica 100% 單品豆 (500g)", en: "Arabica 100% Beans (500g)" }, price: 280000, wholesale: 240000 },
+            { id: "p3", type: "bean", name: { vi: "Arabica 100% 咖啡豆 (1000g)", zh: "Arabica 100% 單品豆 (1000g)", en: "Arabica 100% Beans (1000g)" }, price: 550000, wholesale: 470000 },
+            { id: "p4", type: "drip", name: { vi: "Arabica 100% 濾掛包 (12g)", zh: "Arabica 100% 濾掛包 (12g)", en: "Arabica 100% Drip Bag (12g)" }, price: 16000, wholesale: 13500 },
+            { id: "p5", type: "cold", name: { vi: "Arabica 100% 冷萃包 (10g)", zh: "Arabica 100% 冷萃包 (10g)", en: "Arabica 100% Cold Brew (10g)" }, price: 12500, wholesale: 10500 },
+            
+            // 羅布斯塔 (0% : 100%)
+            { id: "p6", type: "bean", name: { vi: "Robusta 100% 咖啡豆 (250g)", zh: "Robusta 100% 單品豆 (250g)", en: "Robusta 100% Beans (250g)" }, price: 91000, wholesale: 78000 },
+            { id: "p7", type: "bean", name: { vi: "Robusta 100% 咖啡豆 (500g)", zh: "Robusta 100% 單品豆 (500g)", en: "Robusta 100% Beans (500g)" }, price: 172000, wholesale: 148000 },
+            { id: "p8", type: "bean", name: { vi: "Robusta 100% 咖啡豆 (1000g)", zh: "Robusta 100% 單品豆 (1000g)", en: "Robusta 100% Beans (1000g)" }, price: 335000, wholesale: 285000 },
+            { id: "p9", type: "drip", name: { vi: "Robusta 100% 濾掛包 (12g)", zh: "Robusta 100% 濾掛包 (12g)", en: "Robusta 100% Drip Bag (12g)" }, price: 13000, wholesale: 11000 },
+            { id: "p10", type: "cold", name: { vi: "Robusta 100% 冷萃包 (10g)", zh: "Robusta 100% 冷萃包 (10g)", en: "Robusta 100% Cold Brew (10g)" }, price: 7000, wholesale: 5800 },
+
+            // 經典精品義式 Blend (80% : 20%)
+            { id: "p16", type: "blend", name: { vi: "Blend 80/20 精品義式豆 (250g)", zh: "經典精品義式拼配 80/20 (250g)", en: "Specialty Espresso Blend 80/20 (250g)" }, price: 135000, wholesale: 115000 },
+            { id: "p17", type: "blend", name: { vi: "Blend 80/20 精品義式豆 (500g)", zh: "經典精品義式拼配 80/20 (500g)", en: "Specialty Espresso Blend 80/20 (500g)" }, price: 260000, wholesale: 220000 },
+            { id: "p18", type: "blend", name: { vi: "Blend 80/20 精品義式豆 (1000g)", zh: "經典精品義式拼配 80/20 (1000g)", en: "Specialty Espresso Blend 80/20 (1000g)" }, price: 500000, wholesale: 430000 },
+            { id: "p19", type: "drip", name: { vi: "Blend 80/20 濾掛包 (12g)", zh: "經典精品義式 80/20 濾掛包 (12g)", en: "Specialty Blend 80/20 Drip Bag (12g)" }, price: 15500, wholesale: 13000 },
+
+            // 大眾商業義式 Blend (70% : 30%)
+            { id: "p20", type: "blend", name: { vi: "Blend 70/30 商業義式豆 (250g)", zh: "商業義式平衡拼配 70/30 (250g)", en: "Commercial Espresso Blend 70/30 (250g)" }, price: 128000, wholesale: 110000 },
+            { id: "p21", type: "blend", name: { vi: "Blend 70/30 商業義式豆 (500g)", zh: "商業義式平衡拼配 70/30 (500g)", en: "Commercial Espresso Blend 70/30 (500g)" }, price: 245000, wholesale: 210000 },
+            { id: "p22", type: "blend", name: { vi: "Blend 70/30 商業義式豆 (1000g)", zh: "商業義式平衡拼配 70/30 (1000g)", en: "Commercial Espresso Blend 70/30 (1000g)" }, price: 475000, wholesale: 410000 },
+            { id: "p23", type: "drip", name: { vi: "Blend 70/30 濾掛包 (12g)", zh: "商業義式 70/30 濾掛包 (12g)", en: "Commercial Blend 70/30 Drip Bag (12g)" }, price: 15000, wholesale: 12500 },
+
+            // 南義風格濃縮 Blend (50% : 50%)
+            { id: "p24", type: "blend", name: { vi: "Blend 50/50 南義風格豆 (250g)", zh: "南義風格醇厚拼配 50/50 (250g)", en: "Southern Italian Blend 50/50 (250g)" }, price: 118000, wholesale: 100000 },
+            { id: "p25", type: "blend", name: { vi: "Blend 50/50 南義風格豆 (500g)", zh: "南義風格醇厚拼配 50/50 (500g)", en: "Southern Italian Blend 50/50 (500g)" }, price: 225000, wholesale: 190000 },
+            { id: "p26", type: "blend", name: { vi: "Blend 50/50 南義風格豆 (1000g)", zh: "南義風格醇厚拼配 50/50 (1000g)", en: "Southern Italian Blend 50/50 (1000g)" }, price: 435000, wholesale: 370000 },
+            { id: "p27", type: "drip", name: { vi: "Blend 50/50 濾掛包 (12g)", zh: "南義風格 50/50 濾掛包 (12g)", en: "Southern Italian 50/50 Drip Bag (12g)" }, price: 14000, wholesale: 11800 },
+
+            // Brazil Cerrado 系列
             { id: "p11", type: "bean", name: { vi: "Brazil Cerrado 咖啡豆 (250g)", zh: "Brazil Cerrado 咖啡豆 (250g)", en: "Brazil Cerrado Beans (250g)" }, price: 200000, wholesale: 170000 },
             { id: "p12", type: "bean", name: { vi: "Brazil Cerrado 咖啡豆 (500g)", zh: "Brazil Cerrado 咖啡豆 (500g)", en: "Brazil Cerrado Beans (500g)" }, price: 390000, wholesale: 330000 },
             { id: "p13", type: "bean", name: { vi: "Brazil Cerrado 咖啡豆 (1000g)", zh: "Brazil Cerrado 咖啡豆 (1000g)", en: "Brazil Cerrado Beans (1000g)" }, price: 770000, wholesale: 650000 },
             { id: "p14", type: "drip", name: { vi: "Brazil Cerrado 濾掛包 (12g)", zh: "Brazil Cerrado 濾掛包 (12g)", en: "Brazil Cerrado Drip Bag (12g)" }, price: 19000, wholesale: 16000 },
-            { id: "p15", type: "cold", name: { vi: "Brazil Cerrado 冷萃包 (10g)", zh: "Brazil Cerrado 冷萃包 (10g)", en: "Brazil Cerrado Cold Brew (10g)" }, price: 15000, wholesale: 12500 }
+            { id: "p15", type: "cold", name: { vi: "Brazil Cerrado 冷萃包 (10g)", zh: "Brazil Cerrado Cold Brew (10g)", en: "Brazil Cerrado Cold Brew (10g)" }, price: 15000, wholesale: 12500 }
         ];
 
         const districtData = {
@@ -1016,7 +1124,7 @@
             const productId = document.getElementById('productSelect').value;
             const p = productsData.find(x => x.id === productId);
             const grindGroup = document.getElementById('grindGroup');
-            if (p && p.type === 'bean') {
+            if (p && (p.type === 'bean' || p.type === 'blend')) {
                 grindGroup.style.display = 'flex';
             } else {
                 grindGroup.style.display = 'none';
@@ -1029,6 +1137,7 @@
             
             if(category === 'all') document.getElementById('btnFilterAll').classList.add('active');
             else if(category === 'bean') document.getElementById('btnFilterBeans').classList.add('active');
+            else if(category === 'blend') document.getElementById('btnFilterBlend').classList.add('active');
             else if(category === 'drip') document.getElementById('btnFilterDrip').classList.add('active');
             else if(category === 'cold') document.getElementById('btnFilterCold').classList.add('active');
 
@@ -1094,7 +1203,7 @@
         function addToCart() {
             const productId = document.getElementById('productSelect').value;
             const p = productsData.find(x => x.id === productId);
-            const grindKey = (p && p.type === 'bean') ? document.getElementById('grindSelect').value : "ready";
+            const grindKey = (p && (p.type === 'bean' || p.type === 'blend')) ? document.getElementById('grindSelect').value : "ready";
             const qty = parseInt(document.getElementById('qtyInput').value) || 1;
 
             const existing = cart.find(item => item.id === productId && item.grindKey === grindKey);
