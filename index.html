@@ -776,11 +776,6 @@
                         </div>
                     </div>
 
-                    <div class="input-group" style="margin-bottom:15px;">
-                        <label data-i18n="label_email">Email (Nhận Gmail xác nhận) *</label>
-                        <input type="email" id="custEmail" required placeholder="example@gmail.com">
-                    </div>
-
                     <div class="form-grid-2" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-bottom:15px;">
                         <div class="input-group">
                             <label data-i18n="label_province">Tỉnh / Thành</label>
@@ -808,7 +803,7 @@
                     </div>
 
                     <div style="text-align:center;">
-                        <button type="submit" class="btn-gold" id="btnSubmitOrder" data-i18n="btn_submit">Gửi đơn hàng, Gmail & Tạo VietQR</button>
+                        <button type="submit" class="btn-gold" id="btnSubmitOrder" data-i18n="btn_submit">Gửi đơn hàng & Tạo VietQR</button>
                     </div>
                 </form>
 
@@ -829,7 +824,6 @@
                         <div style="font-size:0.8rem; margin-bottom:15px; color:var(--text-muted);">
                             <div><span data-i18n="inv_name">Khách hàng:</span> <strong id="invName" style="color:#fff;">-</strong></div>
                             <div><span data-i18n="inv_phone">Điện thoại:</span> <strong id="invPhone" style="color:#fff;">-</strong></div>
-                            <div>Email: <strong id="invEmail" style="color:#fff;">-</strong></div>
                             <div><span data-i18n="inv_addr">Địa chỉ:</span> <strong id="invAddress" style="color:#fff;">-</strong></div>
                             <div id="invNotesRow" style="display:none;"><span data-i18n="inv_notes">Ghi chú:</span> <strong id="invNotes" style="color:#fff;">-</strong></div>
                         </div>
@@ -913,8 +907,8 @@
                 label_product: "Chọn sản phẩm", label_grind: "Mức độ xay", label_qty: "Số lượng", btn_add_cart: "+ Thêm vào giỏ hàng",
                 cart_title: "Giỏ hàng của bạn", th_item: "Sản phẩm", th_grind: "Độ xay", th_qty: "SL", th_price: "Đơn giá", th_subtotal: "Thành tiền",
                 subtotal_text: "Tiền hàng:", shipping_text: "Phí vận chuyển:", est_total: "Tổng tiền:", btn_confirm: "Xác nhận đơn hàng",
-                form_title: "Thông tin giao hàng", label_name: "Họ tên *", label_phone: "Số điện thoại *", label_email: "Email (Nhận Gmail xác nhận) *", label_province: "Tỉnh / Thành", label_district: "Quận / Huyện", label_address: "Địa chỉ chi tiết *", label_notes: "Ghi chú đơn hàng",
-                btn_submit: "Gửi đơn hàng, Gmail & Tạo VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "Mã ĐH:", inv_date: "Ngày:", inv_name: "Khách hàng:", inv_phone: "Điện thoại:", inv_addr: "Địa chỉ:", inv_notes: "Ghi chú:",
+                form_title: "Thông tin giao hàng", label_name: "Họ tên *", label_phone: "Số điện thoại *", label_province: "Tỉnh / Thành", label_district: "Quận / Huyện", label_address: "Địa chỉ chi tiết *", label_notes: "Ghi chú đơn hàng",
+                btn_submit: "Gửi đơn hàng & Tạo VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "Mã ĐH:", inv_date: "Ngày:", inv_name: "Khách hàng:", inv_phone: "Điện thoại:", inv_addr: "Địa chỉ:", inv_notes: "Ghi chú:",
                 qr_title: "🔑 Quét mã VietQR để thanh toán nhanh", btn_download: "📥 Tải ảnh đơn hàng", btn_zalo: "💬 Gửi qua Zalo", modal_title: "Chọn Zalo để gửi đơn hàng", btn_close: "Đóng",
                 wholesale_tag: "(Giá sỉ)", freeship_text: "MIỄN PHÍ", ready_tag: "Thành phẩm"
             },
@@ -941,8 +935,8 @@
                 label_product: "選擇品項與規格", label_grind: "研磨度選擇", label_qty: "購買數量", btn_add_cart: "+ 加入採購清單",
                 cart_title: "您的採購清單", th_item: "品項", th_grind: "研磨度", th_qty: "數量", th_price: "單價", th_subtotal: "小計",
                 subtotal_text: "商品小計:", shipping_text: "運費:", est_total: "預估總計:", btn_confirm: "確認選購與填寫資料",
-                form_title: "填寫訂購人與配送資訊", label_name: "姓名 *", label_phone: "電話 *", label_email: "電子郵件 (用於接收 Gmail 確認信) *", label_province: "省 / 市", label_district: "郡 / 縣", label_address: "詳細送貨地址 *", label_notes: "訂單備註 (如出貨時間/統編)",
-                btn_submit: "送出訂單、寄送 Gmail 並生成 VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "訂單號:", inv_date: "日期:", inv_name: "訂購人:", inv_phone: "電話:", inv_addr: "地址:", inv_notes: "備註:",
+                form_title: "填寫訂購人與配送資訊", label_name: "姓名 *", label_phone: "電話 *", label_province: "省 / 市", label_district: "郡 / 縣", label_address: "詳細送貨地址 *", label_notes: "訂單備註 (如出貨時間/統編)",
+                btn_submit: "送出訂單並生成 VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "訂單號:", inv_date: "日期:", inv_name: "訂購人:", inv_phone: "電話:", inv_addr: "地址:", inv_notes: "備註:",
                 qr_title: "🔑 掃描 VietQR 快速轉帳付款", btn_download: "📥 下載訂單圖片", btn_zalo: "💬 透過 Zalo 傳送訂購資訊", modal_title: "選擇傳送的 Zalo 帳號", btn_close: "關閉",
                 wholesale_tag: "(批發價)", freeship_text: "免運費", ready_tag: "成品包裝"
             },
@@ -969,8 +963,8 @@
                 label_product: "Select Product", label_grind: "Grind Size", label_qty: "Quantity", btn_add_cart: "+ Add to Cart",
                 cart_title: "Shopping Cart", th_item: "Item", th_grind: "Grind", th_qty: "Qty", th_price: "Unit Price", th_subtotal: "Subtotal",
                 subtotal_text: "Subtotal:", shipping_text: "Shipping Fee:", est_total: "Estimated Total:", btn_confirm: "Confirm Order",
-                form_title: "Shipping Information", label_name: "Full Name *", label_phone: "Phone *", label_email: "Email (For Gmail Confirmation) *", label_province: "Province / City", label_district: "District", label_address: "Street Address *", label_notes: "Order Notes",
-                btn_submit: "Submit Order, Gmail & VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "Order No:", inv_date: "Date:", inv_name: "Customer:", inv_phone: "Phone:", inv_addr: "Address:", inv_notes: "Notes:",
+                form_title: "Shipping Information", label_name: "Full Name *", label_phone: "Phone *", label_province: "Province / City", label_district: "District", label_address: "Street Address *", label_notes: "Order Notes",
+                btn_submit: "Submit Order & VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "Order No:", inv_date: "Date:", inv_name: "Customer:", inv_phone: "Phone:", inv_addr: "Address:", inv_notes: "Notes:",
                 qr_title: "🔑 Scan VietQR for Quick Transfer", btn_download: "📥 Download Voucher Image", btn_zalo: "💬 Send via Zalo", modal_title: "Select Zalo Receiver", btn_close: "Close",
                 wholesale_tag: "(Wholesale)", freeship_text: "FREESHIP", ready_tag: "Finished Pack"
             }
@@ -1275,7 +1269,6 @@
 
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
-            const email = document.getElementById('custEmail').value;
             const prov = document.getElementById('provinceSelect').value;
             const dist = document.getElementById('districtSelect').value;
             const addr = document.getElementById('custAddress').value;
@@ -1321,7 +1314,7 @@
                 orderNo: currentOrderNo,
                 customerName: name,
                 customerPhone: phone,
-                customerEmail: email,
+                customerEmail: "",
                 deliveryAddress: fullAddress,
                 notes: notes,
                 itemsSummary: itemsSummaryList.join('\n'),
@@ -1344,7 +1337,6 @@
             document.getElementById('invDate').innerText = new Date().toLocaleDateString();
             document.getElementById('invName').innerText = name;
             document.getElementById('invPhone').innerText = phone;
-            document.getElementById('invEmail').innerText = email;
             document.getElementById('invAddress').innerText = fullAddress;
             
             if (notes !== "Không có") {
@@ -1367,7 +1359,6 @@
 Mã ĐH (訂單號): ${currentOrderNo}
 Khách hàng (姓名): ${name}
 SĐT (電話): ${phone}
-Email: ${email}
 Địa chỉ (地址): ${fullAddress}
 Ghi chú (備註): ${notes}
 ------------------------------
