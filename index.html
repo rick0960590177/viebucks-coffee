@@ -698,25 +698,10 @@
                         </div>
                     </div>
 
-                    <div class="form-grid-2" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-bottom:15px;">
-                        <div class="input-group">
-                            <label data-i18n="label_province">Tỉnh / Thành</label>
-                            <select id="provinceSelect" onchange="updateDistrictOptions()">
-                                <option value="Hồ Chí Minh">Hồ Chí Minh</option>
-                                <option value="Bình Dương">Bình Dương</option>
-                                <option value="Hà Nội">Hà Nội</option>
-                            </select>
-                            <span class="shipping-note" id="shippingRuleNote">Freeship từ 500,000 VND / Nội thành</span>
-                        </div>
-                        <div class="input-group">
-                            <label data-i18n="label_district">Quận / Huyện</label>
-                            <select id="districtSelect"></select>
-                        </div>
-                    </div>
-
                     <div class="input-group" style="margin-bottom:15px;">
                         <label data-i18n="label_address">Địa chỉ chi tiết *</label>
-                        <input type="text" id="custAddress" required placeholder="Tên đường, số nhà, phường/xã">
+                        <input type="text" id="custAddress" required placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành">
+                        <span class="shipping-note" id="shippingRuleNote">Freeship từ 500,000 VND</span>
                     </div>
 
                     <div class="input-group" style="margin-bottom:20px;">
@@ -826,7 +811,7 @@
                 label_product: "Chọn sản phẩm", label_grind: "Mức độ xay", label_qty: "Số lượng", btn_add_cart: "+ Thêm vào giỏ hàng",
                 cart_title: "Giỏ hàng của bạn", th_item: "Sản phẩm", th_grind: "Độ xay", th_qty: "SL", th_price: "Đơn giá", th_subtotal: "Thành tiền",
                 subtotal_text: "Tiền hàng:", shipping_text: "Phí vận chuyển:", est_total: "Tổng tiền:", btn_confirm: "Xác nhận đơn hàng",
-                form_title: "Thông tin giao hàng", label_name: "Họ tên *", label_phone: "Số điện thoại *", label_province: "Tỉnh / Thành", label_district: "Quận / Huyện", label_address: "Địa chỉ chi tiết *", label_notes: "Ghi chú đơn hàng",
+                form_title: "Thông tin giao hàng", label_name: "Họ tên *", label_phone: "Số điện thoại *", label_address: "Địa chỉ chi tiết *", label_notes: "Ghi chú đơn hàng",
                 btn_submit: "Gửi đơn hàng & Tạo VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "Mã ĐH:", inv_date: "Ngày:", inv_name: "Khách hàng:", inv_phone: "Điện thoại:", inv_addr: "Địa chỉ:", inv_notes: "Ghi chú:",
                 qr_title: "🔑 Quét mã VietQR để thanh toán nhanh", btn_download: "📥 Tải ảnh đơn hàng", btn_zalo: "💬 Gửi qua Zalo", modal_title: "Chọn Zalo để gửi đơn hàng", btn_close: "Đóng",
                 wholesale_tag: "(Giá sỉ)", freeship_text: "MIỄN PHÍ", ready_tag: "Thành phẩm"
@@ -851,7 +836,7 @@
                 label_product: "選擇品項與規格", label_grind: "研磨度選擇", label_qty: "購買數量", btn_add_cart: "+ 加入採購清單",
                 cart_title: "您的採購清單", th_item: "品項", th_grind: "研磨度", th_qty: "數量", th_price: "單價", th_subtotal: "小計",
                 subtotal_text: "商品小計:", shipping_text: "運費:", est_total: "預估總計:", btn_confirm: "確認選購與填寫資料",
-                form_title: "填寫訂購人與配送資訊", label_name: "姓名 *", label_phone: "電話 *", label_province: "省 / 市", label_district: "郡 / 縣", label_address: "詳細送貨地址 *", label_notes: "訂單備註 (如出貨時間/統編)",
+                form_title: "填寫訂購人與配送資訊", label_name: "姓名 *", label_phone: "電話 *", label_address: "詳細送貨地址 *", label_notes: "訂單備註 (如出貨時間/統編)",
                 btn_submit: "送出訂單並生成 VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "訂單號:", inv_date: "日期:", inv_name: "訂購人:", inv_phone: "電話:", inv_addr: "地址:", inv_notes: "備註:",
                 qr_title: "🔑 掃描 VietQR 快速轉帳付款", btn_download: "📥 下載訂單圖片", btn_zalo: "💬 透過 Zalo 傳送訂購資訊", modal_title: "選擇傳送的 Zalo 帳號", btn_close: "關閉",
                 wholesale_tag: "(批發價)", freeship_text: "免運費", ready_tag: "成品包裝"
@@ -876,7 +861,7 @@
                 label_product: "Select Product", label_grind: "Grind Size", label_qty: "Quantity", btn_add_cart: "+ Add to Cart",
                 cart_title: "Shopping Cart", th_item: "Item", th_grind: "Grind", th_qty: "Qty", th_price: "Unit Price", th_subtotal: "Subtotal",
                 subtotal_text: "Subtotal:", shipping_text: "Shipping Fee:", est_total: "Estimated Total:", btn_confirm: "Confirm Order",
-                form_title: "Shipping Information", label_name: "Full Name *", label_phone: "Phone *", label_province: "Province / City", label_district: "District", label_address: "Street Address *", label_notes: "Order Notes",
+                form_title: "Shipping Information", label_name: "Full Name *", label_phone: "Phone *", label_address: "Street Address *", label_notes: "Order Notes",
                 btn_submit: "Submit Order & VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "Order No:", inv_date: "Date:", inv_name: "Customer:", inv_phone: "Phone:", inv_addr: "Address:", inv_notes: "Notes:",
                 qr_title: "🔑 Scan VietQR for Quick Transfer", btn_download: "📥 Download Voucher Image", btn_zalo: "💬 Send via Zalo", modal_title: "Select Zalo Receiver", btn_close: "Close",
                 wholesale_tag: "(Wholesale)", freeship_text: "FREESHIP", ready_tag: "Finished Pack"
@@ -931,12 +916,6 @@
             { id: "p25", type: "blend", name: { vi: "Cà phê phối trộn Blend 50/50 Phong cách Nam Ý (500g)", zh: "南義風格醇厚拼配 50/50 (500g)", en: "Southern Italian Blend 50/50 (500g)" }, price: 225000, wholesale: 190000 }
         ];
 
-        const districtData = {
-            "Hồ Chí Minh": ["Quận 1", "Quận 3", "Quận 7", "TP. Thủ Đức", "Bình Thạnh"],
-            "Bình Dương": ["Thủ Dầu Một", "Thuận An", "Dĩ An"],
-            "Hà Nội": ["Hoàn Kiếm", "Ba Đình", "Cầu Giấy", "Tây Hồ"]
-        };
-
         // 預設語言設置為越南文 ('vi')
         let currentLang = 'vi';
         let currentCategory = 'all';
@@ -971,7 +950,6 @@
 
             populateGrindOptions();
             filterProducts(currentCategory);
-            updateDistrictOptions();
             renderCart();
         }
 
@@ -1017,34 +995,8 @@
             handleProductChange();
         }
 
-        function calculateShipping(subtotal, province) {
-            if (province === 'Hồ Chí Minh' || province === 'Bình Dương') {
-                return subtotal >= 500000 ? 0 : 20000;
-            } else {
-                return subtotal >= 1000000 ? 0 : 35000;
-            }
-        }
-
-        function updateDistrictOptions() {
-            const prov = document.getElementById('provinceSelect').value;
-            const distSelect = document.getElementById('districtSelect');
-            const noteEl = document.getElementById('shippingRuleNote');
-            
-            distSelect.innerHTML = '';
-            (districtData[prov] || ["Khác / Other"]).forEach(d => {
-                const opt = document.createElement('option');
-                opt.value = d;
-                opt.text = d;
-                distSelect.appendChild(opt);
-            });
-
-            if (prov === 'Hồ Chí Minh' || prov === 'Bình Dương') {
-                noteEl.innerText = currentLang === 'zh' ? "同城運費: 20k (滿 500,000 VND 免運)" : (currentLang === 'en' ? "Local: 20k (Freeship from 500k)" : "Nội thành: 20k (Freeship từ 500,000 VND)");
-            } else {
-                noteEl.innerText = currentLang === 'zh' ? "外省運費: 35k (滿 1,000,000 VND 免運)" : (currentLang === 'en' ? "Out of town: 35k (Freeship from 1M)" : "Ngoại tỉnh: 35k (Freeship từ 1,000,000 VND)");
-            }
-
-            renderCart();
+        function calculateShipping(subtotal) {
+            return subtotal >= 500000 ? 0 : 25000;
         }
 
         function saveCart() {
@@ -1129,8 +1081,7 @@
                 tbody.appendChild(tr);
             });
 
-            const prov = document.getElementById('provinceSelect').value;
-            const shippingFee = calculateShipping(subtotal, prov);
+            const shippingFee = calculateShipping(subtotal);
             const grandTotal = subtotal + shippingFee;
 
             document.getElementById('cartSubtotalText').innerText = `VND ${subtotal.toLocaleString()}`;
@@ -1153,11 +1104,8 @@
 
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
-            const prov = document.getElementById('provinceSelect').value;
-            const dist = document.getElementById('districtSelect').value;
-            const addr = document.getElementById('custAddress').value;
+            const fullAddress = document.getElementById('custAddress').value;
             const notes = document.getElementById('custNotes').value || "Không có";
-            const fullAddress = `${addr}, ${dist}, ${prov}`;
 
             const now = new Date();
             const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
@@ -1186,7 +1134,7 @@
                 return { name: pName, grind: grindText, qty: item.qty, unitPrice, subtotal: itemSubtotal };
             });
 
-            const shippingFee = calculateShipping(subtotal, prov);
+            const shippingFee = calculateShipping(subtotal);
             const grandTotal = subtotal + shippingFee;
 
             const bankId = "VCB";
@@ -1313,7 +1261,6 @@ TỔNG CỘNG (Tổng tiền): VND ${grandTotal.toLocaleString()}`;
             setLanguage('vi');
             populateGrindOptions();
             filterProducts('all');
-            updateDistrictOptions();
             loadCart();
             renderCart();
         };
