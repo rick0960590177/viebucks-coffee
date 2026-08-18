@@ -1,141 +1,3 @@
-
-Gemini
-將聊天轉換為 PDF
-將聊天轉換為 PDF
-在 Acrobat 中開啟此聊天
-Cuộc trò chuyện mới
-Tìm kiếm trong các cuộc trò chuyện
-Thư viện
-Gem
-Sổ ghi chú mới
-HK Reserve: The Fermented Arabica Specification Sheet
-The Robusta Secondary Fermentation Manual
-Tất cả sổ ghi chú
-網站多語言切換檢查報告
-移除 HTML 濾掛包產品
-咖啡進軍寶雅銷售計劃
-牛皮紙咖啡包裝盒設計展開圖
-HTML Boilerplate and Next Steps
-移除 Brazil Cerrado 產品項目
-Update Product Specifications and Code
-咖啡業務專員招聘啟事
-新增咖啡豆拼配產品項目
-阿拉比卡羅布斯塔拼配比例
-羅布斯塔豆的香精香料搭配
-HTML Code Review & Deployment
-修正訂單Email傳送錯誤
-AI 影片生成工作站小程式
-分支 • VIEBUCKS 咖啡網站代碼分析
-環遊世界咖啡包設計
-VIEBUCKS 咖啡網站代碼分析
-浸泡式咖啡包沖泡指南
-咖啡電商網站設計與結帳流程
-Viebucks 網站與電商平台建置
-分支 • VIEBUCKS 咖啡電商網站規劃
-咖啡茶葉創意沖泡指南
-PHOENIX COFFEE 包裝設計規格
-Trò chuyện với Gemini
-仔細檢查文檔,符合三語言(越南語,中文,英文)切換.如果不符合切換,檢查無誤告訴我
-
-經仔細檢查您上傳的 index (1).html 檔案，發現部分語系切換功能存在不完整（遺漏）的情況，無法達到全站 100% 的三語（越南語 vi、中文 zh、英文 en）順暢切換。
-
-以下為具體檢查出來的問題與詳細原因：
-
-1. 產品名稱未定義 zh 與 en 翻譯（嚴重問題）
-在 productsData 陣列中，茉莉花風味冷萃包 的產品名稱漏掉了 zh 與 en 鍵值，且越南文說明未填寫完整（有留白）：
-
-p10_jas 產品：
-
-現有程式碼：name: { vi: "Robusta ủ lạnh -  (10包/袋)", zh: "Robusta 冷萃包 - 茉莉花風味 (10包/袋)", en: "Robusta Cold Brew - Jasmine Flavor (10 pkts/bag)" }
-
-缺點：雖然寫了 zh 和 en，但越南文 vi 的字串中缺乏「茉莉花風味」字樣（顯示為 Robusta ủ lạnh -  (10包/袋)）。
-
-2. 靜態 HTML 標籤缺乏 data-i18n 屬性（切換語言時無法更新）
-當使用者點擊語言切換按鈕 (VI / ZH / EN) 時，JavaScript 的 setLanguage() 函式只會尋找帶有 data-i18n 屬性的 HTML 元素進行替換。以下區塊在原始碼中沒有設置 data-i18n，導致切換語言時永遠固定顯示為原本寫死的文字：
-
-頁尾 (Footer) 資訊：
-
-365 QL13, Thủ Dầu Một, Hồ Chí Minh（地址）
-
-Công ty TNHH VIEBUCKS（公司名稱）
-
-頁尾的版權與標語。
-
-VietQR 轉帳資訊與說明：
-
-Bank: VCB Bank | Account: 0121000852742 (MIU KIM PHUONG)（銀行帳號資訊文字無多國語言對應）。
-
-表單輸入框的預設提示文字 (Placeholder)：
-
-如 custName 的 placeholder="Full Name"、custNotes 的 placeholder="Ví dụ: Giao giờ hành chính..." 等，未隨語言切換更新。
-
-3. JavaScript 彈出視窗與剪貼簿提示文字（Hardcoded 文字）
-在 sendOrderToZalo() 函式中，跳出的提示視窗訊息 (alert) 同時混雜了越南語和中文，但這是直接寫死在代碼裡的：
-
-JavaScript
-alert(`Đã sao chép thông tin đơn hàng! Vui lòng dán (Paste) vào Zalo (${phoneNum}).\n已複製訂單內容！開啟 Zalo 後請直接貼上訊息。`);
-如果切換到英文版 (EN) 時，系統依然會跳出這段越/中混雜的提示，影響英文使用者的體驗。
-
-4. 發送到 Zalo 的訂單訊息範本（currentZaloMessage）
-在 submitOrder() 中，複製到剪貼簿並準備傳送到 Zalo 的訊息格式是越/中文雙語混搭寫死的：
-
-Plaintext
-【VIEBUCKS ĐƠN HÀNG / 訂單內容】
-Mã ĐH (訂單號): ...
-Khách hàng (姓名): ...
-這雖然能讓越中使用者看懂，但並未根據目前選擇的語系（如英文或純中文）生成相對應語言的單一簡訊格式。
-
-💡 結論與建議
-目前的檔案「不完全符合」標準的三語言動態切換。
-主要問題在於頁尾 (Footer)、VietQR 備註說明、表單 Placeholder 以及系統 Alert 提示語未完全納入 translations 字典與 data-i18n 機制中。
-
-若您需要，我可以為您提供完整修正後的 HTML 全套程式碼，將上述遺漏的語系切換補齊，確保切換 VI / ZH / EN 時全站文字 100% 正確變更。
-
-以上列出的問題,全部按照網站三語言(越南語,中文,英文)通用代碼,給我做全文檔,檢查無誤給我下載
-
-已為您將 index (1).html 全檔進行徹底檢查與修正，全面補齊越南語 (vi)、中文 (zh)、英文 (en) 三種語言動態切換的完整邏輯與語料庫。
-
-🛠️ 本次全文檔修復與改進重點：
-產品資料庫 (productsData) 語言完全對齊：
-
-修正了 Robusta 冷萃包 - 茉莉花風味 (p10_jas) 越南語漏填品名問題（更新為 Robusta ủ lạnh - Hương hoa nhài），並為所有產品補充精確的中、英、越三語名稱。
-
-靜態 HTML 與 頁尾 (Footer) 全動態切換：
-
-頁尾公司名稱、地址（365 QL13, Thủ Dầu Một...）、版權宣告標語，均已加入 data-i18n 標籤，點擊 ZH 或 EN 時會同步翻譯為中文與英文。
-
-VietQR 轉帳資訊與說明文字多國語言化：
-
-銀行帳號說明、預估運費提示（如：同城滿 500,000 免運）、Voucher 訂單明細抬頭均可隨語系變更。
-
-表單提示文字 (Placeholder) 自動變更：
-
-為姓名、電話、詳細地址、備註等輸入框加入 data-i18n-placeholder 屬性，切換語言時輸入框內的提示文字會即時更新。
-
-Zalo 彈出提示 (Alert) 與動態訂單簡訊：
-
-sendOrderToZalo() 彈出視窗提示改為動態帶入目前所選語系（不再是硬編碼的越/中混雜文字）。
-
-自動生成的 Zalo 訂單訊息標題與欄位會根據當前切換的語言動態生成對應格式。
-
-Your HTML file is ready
-
-Biểu tượng HTML
-index
- HTML 
-Đang mở
-您可以點擊上方連結直接下載修復完畢且經檢查無誤的完整 index.html 檔案！
-
-
-
-
-1-click prompts
-
-Web access
-
-Gemini là AI và có thể mắc sai sót.
-
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -906,11 +768,11 @@ Gemini là AI và có thể mắc sai sót.
                     <div class="form-grid-2" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-bottom:15px;">
                         <div class="input-group">
                             <label data-i18n="label_name">Họ tên *</label>
-                            <input type="text" id="custName" required placeholder="Full Name" data-i18n-placeholder="ph_name">
+                            <input type="text" id="custName" required placeholder="Họ và tên">
                         </div>
                         <div class="input-group">
                             <label data-i18n="label_phone">Số điện thoại *</label>
-                            <input type="tel" id="custPhone" required placeholder="Phone Number" data-i18n-placeholder="ph_phone">
+                            <input type="tel" id="custPhone" required placeholder="Số điện thoại">
                         </div>
                     </div>
 
@@ -932,12 +794,12 @@ Gemini là AI và có thể mắc sai sót.
 
                     <div class="input-group" style="margin-bottom:15px;">
                         <label data-i18n="label_address">Địa chỉ chi tiết *</label>
-                        <input type="text" id="custAddress" required placeholder="Street address, building, ward" data-i18n-placeholder="ph_address">
+                        <input type="text" id="custAddress" required placeholder="Tên đường, số nhà, phường/xã">
                     </div>
 
                     <div class="input-group" style="margin-bottom:20px;">
                         <label data-i18n="label_notes">Ghi chú đơn hàng</label>
-                        <textarea id="custNotes" rows="2" placeholder="Ví dụ: Giao giờ hành chính..." data-i18n-placeholder="ph_notes"></textarea>
+                        <textarea id="custNotes" rows="2" placeholder="Ví dụ: Giao giờ hành chính..."></textarea>
                     </div>
 
                     <div style="text-align:center;">
@@ -955,7 +817,7 @@ Gemini là AI và có thể mắc sai sót.
                             </div>
                             <div style="text-align:right; font-size:0.75rem; color:var(--text-muted);">
                                 <div><span data-i18n="inv_no">Mã ĐH:</span> <strong id="invNumber" style="color:var(--gold-light);">VB-000</strong></div>
-                                <div><span data-i18n="inv_date">Ngày:</span> <span id="invDate">2026-08-16</span></div>
+                                <div><span data-i18n="inv_date">Ngày:</span> <span id="invDate">2026-08-18</span></div>
                             </div>
                         </div>
 
@@ -991,7 +853,7 @@ Gemini là AI và có thể mắc sai sót.
                         <div class="qr-container">
                             <div style="font-size:0.8rem; color:var(--gold-primary); margin-bottom:10px;" data-i18n="qr_title">🔑 Quét mã VietQR để thanh toán nhanh</div>
                             <img id="vietQrImg" class="qr-image" src="" alt="VietQR Payment">
-                            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:6px;" data-i18n="qr_bank_info">Bank: VCB Bank | Account: 0121000852742 (MIU KIM PHUONG)</div>
+                            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:6px;">Bank: VCB Bank | Account: 0121000852742 (MIU KIM PHUONG)</div>
                         </div>
                     </div>
 
@@ -1008,12 +870,12 @@ Gemini là AI và có thể mắc sai sót.
     <footer id="contact" style="background:#030304; border-top:1px solid rgba(197,160,89,0.1); padding:40px 20px; text-align:center;">
         <div class="brand-logo" style="margin-bottom:15px;">viebucks</div>
         <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.8;">
-            <p><strong data-i18n="footer_company">Công ty TNHH VIEBUCKS</strong></p>
-            <p><span data-i18n="footer_address_label">Địa chỉ:</span> <span data-i18n="footer_address">365 QL13, Thủ Dầu Một, Hồ Chí Minh</span></p>
-            <p><span data-i18n="footer_phone_label">Điện thoại/Zalo:</span> 0839681380 / 0348246669</p>
+            <p><strong>Công ty TNHH VIEBUCKS</strong></p>
+            <p>Địa chỉ: 365 QL13, Thủ Dầu Một, Hồ Chí Minh</p>
+            <p>Điện thoại/Zalo: 0839681380 / 0348246669</p>
         </div>
         <div style="font-size:0.7rem; color:#555; margin-top:20px;">
-            <span data-i18n="footer_quote">“Không bao giờ là quá muộn để thưởng thức cà phê.”</span> &copy; 2026 viebucks. <span data-i18n="footer_rights">All rights reserved.</span>
+            “Không bao giờ là quá muộn để thưởng thức cà phê.” &copy; 2026 viebucks. All rights reserved.
         </div>
     </footer>
 
@@ -1046,20 +908,14 @@ Gemini là AI và có thể mắc sai sót.
                 cart_title: "Giỏ hàng của bạn", th_item: "Sản phẩm", th_grind: "Độ xay", th_qty: "SL", th_price: "Đơn giá", th_subtotal: "Thành tiền",
                 subtotal_text: "Tiền hàng:", shipping_text: "Phí vận chuyển:", est_total: "Tổng tiền:", btn_confirm: "Xác nhận đơn hàng",
                 form_title: "Thông tin giao hàng", label_name: "Họ tên *", label_phone: "Số điện thoại *", label_province: "Tỉnh / Thành", label_district: "Quận / Huyện", label_address: "Địa chỉ chi tiết *", label_notes: "Ghi chú đơn hàng",
-                ph_name: "Họ và tên", ph_phone: "Số điện thoại", ph_address: "Số nhà, tên đường, phường/xã", ph_notes: "Ví dụ: Giao giờ hành chính...",
                 btn_submit: "Gửi đơn hàng & Tạo VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "Mã ĐH:", inv_date: "Ngày:", inv_name: "Khách hàng:", inv_phone: "Điện thoại:", inv_addr: "Địa chỉ:", inv_notes: "Ghi chú:",
-                qr_title: "🔑 Quét mã VietQR để thanh toán nhanh", qr_bank_info: "Ngân hàng: VCB | STK: 0121000852742 (MIU KIM PHUONG)",
-                btn_download: "📥 Tải ảnh đơn hàng", btn_zalo: "💬 Gửi qua Zalo", modal_title: "Chọn Zalo để gửi đơn hàng", btn_close: "Đóng",
-                wholesale_tag: "(Giá sỉ)", freeship_text: "MIỄN PHÍ", ready_tag: "Thành phẩm",
-                footer_company: "Công ty TNHH VIEBUCKS", footer_address_label: "Địa chỉ:", footer_address: "365 QL13, Thủ Dầu Một, Hồ Chí Minh", footer_phone_label: "Điện thoại/Zalo:",
-                footer_quote: "“Không bao giờ là quá muộn để thưởng thức cà phê.”", footer_rights: "Bảo lưu mọi quyền.",
-                alert_copy_zalo: "Đã sao chép thông tin đơn hàng! Vui lòng dán (Paste) vào Zalo ({phone}).",
-                btn_processing: "Đang xử lý...", none_text: "Không có", grand_total_label: "Tổng cộng:"
+                qr_title: "🔑 Quét mã VietQR để thanh toán nhanh", btn_download: "📥 Tải ảnh đơn hàng", btn_zalo: "💬 Gửi qua Zalo", modal_title: "Chọn Zalo để gửi đơn hàng", btn_close: "Đóng",
+                wholesale_tag: "(Giá sỉ)", freeship_text: "MIỄN PHÍ", ready_tag: "Thành phẩm"
             },
             zh: {
                 nav_collections: "咖啡豆履歷", nav_blend: "拼配比例指南", nav_atelier: "智能試算", nav_contact: "聯繫我們",
-                hero_badge: "Haute Coffee Collection", hero_quote: "“品嚐咖啡，永遠不嫌晚。”", hero_btn: "探索專屬訂製定價",
-                col_sub: "風味履歷與雷達圖", col_title: "頂級精品咖啡豆履歷與動態風味雷達",
+                hero_badge: "Haute Coffee Collection", hero_quote: "“It's never too late to drink coffee.”", hero_btn: "探索專屬訂製定價",
+                col_sub: "Flavor Profiles & Radar Chart", col_title: "頂級精品咖啡豆履歷與動態風味雷達",
                 blend_sub: "Arabica : Robusta 拼配矩陣", blend_title: "阿拉比卡與羅布斯塔風味特點與適用情境",
                 th_blend_ratio: "阿拉比卡 : 羅布斯塔", th_blend_flavor: "風味特點", th_blend_usage: "適用情境 / 咖啡類型",
                 ratio_100_0_desc: "高酸度、花果香顯著、清爽細緻，缺乏厚實感。",
@@ -1080,15 +936,9 @@ Gemini là AI và có thể mắc sai sót.
                 cart_title: "您的採購清單", th_item: "品項", th_grind: "研磨度", th_qty: "數量", th_price: "單價", th_subtotal: "小計",
                 subtotal_text: "商品小計:", shipping_text: "運費:", est_total: "預估總計:", btn_confirm: "確認選購與填寫資料",
                 form_title: "填寫訂購人與配送資訊", label_name: "姓名 *", label_phone: "電話 *", label_province: "省 / 市", label_district: "郡 / 縣", label_address: "詳細送貨地址 *", label_notes: "訂單備註 (如出貨時間/統編)",
-                ph_name: "姓名全名", ph_phone: "聯絡電話", ph_address: "街道門牌、門牌號碼、路段", ph_notes: "例如：請於上班時間配送...",
                 btn_submit: "送出訂單並生成 VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "訂單號:", inv_date: "日期:", inv_name: "訂購人:", inv_phone: "電話:", inv_addr: "地址:", inv_notes: "備註:",
-                qr_title: "🔑 掃描 VietQR 快速轉帳付款", qr_bank_info: "銀行: VCB 銀行 | 戶名: MIU KIM PHUONG | 帳號: 0121000852742",
-                btn_download: "📥 下載訂單圖片", btn_zalo: "💬 透過 Zalo 傳送訂購資訊", modal_title: "選擇傳送的 Zalo 帳號", btn_close: "關閉",
-                wholesale_tag: "(批發價)", freeship_text: "免運費", ready_tag: "成品包裝",
-                footer_company: "VIEBUCKS 有限責任公司", footer_address_label: "地址:", footer_address: "胡志明市土龍木市 13號國道365號", footer_phone_label: "電話/Zalo:",
-                footer_quote: "“品嚐咖啡，永遠不嫌晚。”", footer_rights: "版權所有，保留一切權利。",
-                alert_copy_zalo: "已複製訂單內容！開啟 Zalo 後請直接貼上訊息。({phone})",
-                btn_processing: "處理中...", none_text: "無", grand_total_label: "總計金額:"
+                qr_title: "🔑 掃描 VietQR 快速轉帳付款", btn_download: "📥 下載訂單圖片", btn_zalo: "💬 透過 Zalo 傳送訂購資訊", modal_title: "選擇傳送的 Zalo 帳號", btn_close: "關閉",
+                wholesale_tag: "(批發價)", freeship_text: "免運費", ready_tag: "成品包裝"
             },
             en: {
                 nav_collections: "Bean Heritage", nav_blend: "Blend Matrix", nav_atelier: "Atelier Calc", nav_contact: "Contact",
@@ -1114,15 +964,9 @@ Gemini là AI và có thể mắc sai sót.
                 cart_title: "Shopping Cart", th_item: "Item", th_grind: "Grind", th_qty: "Qty", th_price: "Unit Price", th_subtotal: "Subtotal",
                 subtotal_text: "Subtotal:", shipping_text: "Shipping Fee:", est_total: "Estimated Total:", btn_confirm: "Confirm Order",
                 form_title: "Shipping Information", label_name: "Full Name *", label_phone: "Phone *", label_province: "Province / City", label_district: "District", label_address: "Street Address *", label_notes: "Order Notes",
-                ph_name: "Full Name", ph_phone: "Phone Number", ph_address: "Street address, building, ward", ph_notes: "E.g.: Deliver during office hours...",
                 btn_submit: "Submit Order & VietQR", inv_subtitle: "Haute Coffee Official Voucher", inv_no: "Order No:", inv_date: "Date:", inv_name: "Customer:", inv_phone: "Phone:", inv_addr: "Address:", inv_notes: "Notes:",
-                qr_title: "🔑 Scan VietQR for Quick Transfer", qr_bank_info: "Bank: VCB Bank | Account: 0121000852742 (MIU KIM PHUONG)",
-                btn_download: "📥 Download Voucher Image", btn_zalo: "💬 Send via Zalo", modal_title: "Select Zalo Receiver", btn_close: "Close",
-                wholesale_tag: "(Wholesale)", freeship_text: "FREESHIP", ready_tag: "Finished Pack",
-                footer_company: "VIEBUCKS Co., Ltd.", footer_address_label: "Address:", footer_address: "365 QL13, Thu Dau Mot, Ho Chi Minh", footer_phone_label: "Phone/Zalo:",
-                footer_quote: "“It's never too late to drink coffee.”", footer_rights: "All rights reserved.",
-                alert_copy_zalo: "Order information copied! Please paste into Zalo ({phone}).",
-                btn_processing: "Processing...", none_text: "None", grand_total_label: "Grand Total:"
+                qr_title: "🔑 Scan VietQR for Quick Transfer", btn_download: "📥 Download Voucher Image", btn_zalo: "💬 Send via Zalo", modal_title: "Select Zalo Receiver", btn_close: "Close",
+                wholesale_tag: "(Wholesale)", freeship_text: "FREESHIP", ready_tag: "Finished Pack"
             }
         };
 
@@ -1133,44 +977,45 @@ Gemini là AI và có thể mắc sai sót.
             g4: { id: "g4", vi: "Pha Giấy Lọc (Pour-over)", zh: "手衝 (Pour-over)", en: "Pour-over" }
         };
 
+        /* 產品資料集：已更新並校對標準越南文品名 */
         const productsData = [
-            // 阿拉比卡 (100% : 0%) - 水洗 / 標準
-            { id: "p1", type: "bean", name: { vi: "Arabica 100% 咖啡豆 (250g)", zh: "Arabica 100% 單品豆 (250g)", en: "Arabica 100% Beans (250g)" }, price: 145000, wholesale: 125000 },
-            { id: "p2", type: "bean", name: { vi: "Arabica 100% 咖啡豆 (500g)", zh: "Arabica 100% 單品豆 (500g)", en: "Arabica 100% Beans (500g)" }, price: 280000, wholesale: 240000 },
-            { id: "p5", type: "cold", name: { vi: "Arabica 100% ủ lạnh (10包/袋)", zh: "Arabica 100% 冷萃包 (10包/袋)", en: "Arabica 100% Cold Brew (10 pkts/bag)" }, price: 125000, wholesale: 105000 },
-            { id: "p5_30", type: "cold", name: { vi: "Arabica 100% ủ lạnh (30包/袋)", zh: "Arabica 100% 冷萃包 (30包/袋)", en: "Arabica 100% Cold Brew (30 pkts/bag)" }, price: 350000, wholesale: 295000 },
+            // Arabica (100% : 0%) - Standard
+            { id: "p1", type: "bean", name: { vi: "Cà phê hạt Arabica 100% (250g)", zh: "Arabica 100% 單品豆 (250g)", en: "Arabica 100% Beans (250g)" }, price: 145000, wholesale: 125000 },
+            { id: "p2", type: "bean", name: { vi: "Cà phê hạt Arabica 100% (500g)", zh: "Arabica 100% 單品豆 (500g)", en: "Arabica 100% Beans (500g)" }, price: 280000, wholesale: 240000 },
+            { id: "p5", type: "cold", name: { vi: "Cà phê ủ lạnh Arabica 100% (10 túi/túi)", zh: "Arabica 100% 冷萃包 (10包/袋)", en: "Arabica 100% Cold Brew (10 pkts/bag)" }, price: 125000, wholesale: 105000 },
+            { id: "p5_30", type: "cold", name: { vi: "Cà phê ủ lạnh Arabica 100% (30 túi/túi)", zh: "Arabica 100% 冷萃包 (30包/袋)", en: "Arabica 100% Cold Brew (30 pkts/bag)" }, price: 350000, wholesale: 295000 },
 
-            // 阿拉比卡 Honey (蜜處理) - 全品項
-            { id: "p_ah_250", type: "bean", name: { vi: "Arabica Honey 蜜處理咖啡豆 (250g)", zh: "Arabica Honey 蜜處理單品豆 (250g)", en: "Arabica Honey Process Beans (250g)" }, price: 160000, wholesale: 138000 },
-            { id: "p_ah_500", type: "bean", name: { vi: "Arabica Honey 蜜處理咖啡豆 (500g)", zh: "Arabica Honey 蜜處理單品豆 (500g)", en: "Arabica Honey Process Beans (500g)" }, price: 310000, wholesale: 265000 },
-            { id: "p_ah_cb10", type: "cold", name: { vi: "Arabica Honey ủ lạnh (10包/袋)", zh: "Arabica Honey 蜜處理冷萃包 (10包/袋)", en: "Arabica Honey Cold Brew (10 pkts/bag)" }, price: 140000, wholesale: 118000 },
-            { id: "p_ah_cb30", type: "cold", name: { vi: "Arabica Honey ủ lạnh (30包/袋)", zh: "Arabica Honey 蜜處理冷萃包 (30包/袋)", en: "Arabica Honey Cold Brew (30 pkts/bag)" }, price: 390000, wholesale: 330000 },
+            // Arabica Honey Process
+            { id: "p_ah_250", type: "bean", name: { vi: "Cà phê hạt Arabica Honey chế biến mật (250g)", zh: "Arabica Honey 蜜處理單品豆 (250g)", en: "Arabica Honey Process Beans (250g)" }, price: 160000, wholesale: 138000 },
+            { id: "p_ah_500", type: "bean", name: { vi: "Cà phê hạt Arabica Honey chế biến mật (500g)", zh: "Arabica Honey 蜜處理單品豆 (500g)", en: "Arabica Honey Process Beans (500g)" }, price: 310000, wholesale: 265000 },
+            { id: "p_ah_cb10", type: "cold", name: { vi: "Cà phê ủ lạnh Arabica Honey (10 túi/túi)", zh: "Arabica Honey 蜜處理冷萃包 (10包/袋)", en: "Arabica Honey Cold Brew (10 pkts/bag)" }, price: 140000, wholesale: 118000 },
+            { id: "p_ah_cb30", type: "cold", name: { vi: "Cà phê ủ lạnh Arabica Honey (30 túi/túi)", zh: "Arabica Honey 蜜處理冷萃包 (30包/袋)", en: "Arabica Honey Cold Brew (30 pkts/bag)" }, price: 390000, wholesale: 330000 },
             
-            // 羅布斯塔 (0% : 100%) - 水洗 / 標準
-            { id: "p6", type: "bean", name: { vi: "Robusta 100% 咖啡豆 (250g)", zh: "Robusta 100% 單品豆 (250g)", en: "Robusta 100% Beans (250g)" }, price: 91000, wholesale: 78000 },
-            { id: "p7", type: "bean", name: { vi: "Robusta 100% 咖啡豆 (500g)", zh: "Robusta 100% 單品豆 (500g)", en: "Robusta 100% Beans (500g)" }, price: 172000, wholesale: 148000 },
-            { id: "p10", type: "cold", name: { vi: "Robusta 100% ủ lạnh (10包/袋)", zh: "Robusta 100% 冷萃包 (10包/袋)", en: "Robusta 100% Cold Brew (10 pkts/bag)" }, price: 80000, wholesale: 70000 },
-            { id: "p10_30", type: "cold", name: { vi: "Robusta 100% ủ lạnh (30包/袋)", zh: "Robusta 100% 冷萃包 (30包/袋)", en: "Robusta 100% Cold Brew (30 pkts/bag)" }, price: 230000, wholesale: 200000 },
-            { id: "p10_jas", type: "cold", name: { vi: "Robusta ủ lạnh - Hương hoa nhài (10包/袋)", zh: "Robusta 冷萃包 - 茉莉花風味 (10包/袋)", en: "Robusta Cold Brew - Jasmine Flavor (10 pkts/bag)" }, price: 100000, wholesale: 88000 },
-            { id: "p10_jas_30", type: "cold", name: { vi: "Robusta ủ lạnh - Hương hoa nhài (30包/袋)", zh: "Robusta 冷萃包 - 茉莉花風味 (30包/袋)", en: "Robusta Cold Brew - Jasmine Flavor (30 pkts/bag)" }, price: 250000, wholesale: 220000 },
+            // Robusta (0% : 100%) - Standard
+            { id: "p6", type: "bean", name: { vi: "Cà phê hạt Robusta 100% (250g)", zh: "Robusta 100% 單品豆 (250g)", en: "Robusta 100% Beans (250g)" }, price: 91000, wholesale: 78000 },
+            { id: "p7", type: "bean", name: { vi: "Cà phê hạt Robusta 100% (500g)", zh: "Robusta 100% 單品豆 (500g)", en: "Robusta 100% Beans (500g)" }, price: 172000, wholesale: 148000 },
+            { id: "p10", type: "cold", name: { vi: "Cà phê ủ lạnh Robusta 100% (10 túi/túi)", zh: "Robusta 100% 冷萃包 (10包/袋)", en: "Robusta 100% Cold Brew (10 pkts/bag)" }, price: 80000, wholesale: 70000 },
+            { id: "p10_30", type: "cold", name: { vi: "Cà phê ủ lạnh Robusta 100% (30 túi/túi)", zh: "Robusta 100% 冷萃包 (30包/袋)", en: "Robusta 100% Cold Brew (30 pkts/bag)" }, price: 230000, wholesale: 200000 },
+            { id: "p10_jas", type: "cold", name: { vi: "Cà phê ủ lạnh Robusta - Hương hoa nhài (10 túi/túi)", zh: "Robusta 冷萃包 - 茉莉花風味 (10包/袋)", en: "Robusta Cold Brew - Jasmine Flavor (10 pkts/bag)" }, price: 100000, wholesale: 88000 },
+            { id: "p10_jas_30", type: "cold", name: { vi: "Cà phê ủ lạnh Robusta - Hương hoa nhài (30 túi/túi)", zh: "Robusta 冷萃包 - 茉莉花風味 (30包/袋)", en: "Robusta Cold Brew - Jasmine Flavor (30 pkts/bag)" }, price: 250000, wholesale: 220000 },
 
-            // 羅布斯塔 Honey (蜜處理) - 全品項
-            { id: "p_rh_250", type: "bean", name: { vi: "Robusta Honey 蜜處理咖啡豆 (250g)", zh: "Robusta Honey 蜜處理單品豆 (250g)", en: "Robusta Honey Process Beans (250g)" }, price: 105000, wholesale: 90000 },
-            { id: "p_rh_500", type: "bean", name: { vi: "Robusta Honey 蜜處理咖啡豆 (500g)", zh: "Robusta Honey 蜜處理單品豆 (500g)", en: "Robusta Honey Process Beans (500g)" }, price: 200000, wholesale: 170000 },
-            { id: "p_rh_cb10", type: "cold", name: { vi: "Robusta Honey ủ lạnh (10包/袋)", zh: "Robusta Honey 蜜處理冷萃包 (10包/袋)", en: "Robusta Honey Cold Brew (10 pkts/bag)" }, price: 95000, wholesale: 82000 },
-            { id: "p_rh_cb30", type: "cold", name: { vi: "Robusta Honey ủ lạnh (30包/袋)", zh: "Robusta Honey 蜜處理冷萃包 (30包/袋)", en: "Robusta Honey Cold Brew (30 pkts/bag)" }, price: 270000, wholesale: 230000 },
+            // Robusta Honey Process
+            { id: "p_rh_250", type: "bean", name: { vi: "Cà phê hạt Robusta Honey chế biến mật (250g)", zh: "Robusta Honey 蜜處理單品豆 (250g)", en: "Robusta Honey Process Beans (250g)" }, price: 105000, wholesale: 90000 },
+            { id: "p_rh_500", type: "bean", name: { vi: "Cà phê hạt Robusta Honey chế biến mật (500g)", zh: "Robusta Honey 蜜處理單品豆 (500g)", en: "Robusta Honey Process Beans (500g)" }, price: 200000, wholesale: 170000 },
+            { id: "p_rh_cb10", type: "cold", name: { vi: "Cà phê ủ lạnh Robusta Honey (10 túi/túi)", zh: "Robusta Honey 蜜處理冷萃包 (10包/袋)", en: "Robusta Honey Cold Brew (10 pkts/bag)" }, price: 95000, wholesale: 82000 },
+            { id: "p_rh_cb30", type: "cold", name: { vi: "Cà phê ủ lạnh Robusta Honey (30 túi/túi)", zh: "Robusta Honey 蜜處理冷萃包 (30包/袋)", en: "Robusta Honey Cold Brew (30 pkts/bag)" }, price: 270000, wholesale: 230000 },
 
-            // 經典精品義式 Blend (80% : 20%)
-            { id: "p16", type: "blend", name: { vi: "Blend 80/20 精品義式豆 (250g)", zh: "經典精品義式拼配 80/20 (250g)", en: "Specialty Espresso Blend 80/20 (250g)" }, price: 135000, wholesale: 115000 },
-            { id: "p17", type: "blend", name: { vi: "Blend 80/20 精品義式豆 (500g)", zh: "經典精品義式拼配 80/20 (500g)", en: "Specialty Espresso Blend 80/20 (500g)" }, price: 260000, wholesale: 220000 },
+            // Espresso Blend (80% : 20%)
+            { id: "p16", type: "blend", name: { vi: "Cà phê phối trộn Blend 80/20 Espresso (250g)", zh: "經典精品義式拼配 80/20 (250g)", en: "Specialty Espresso Blend 80/20 (250g)" }, price: 135000, wholesale: 115000 },
+            { id: "p17", type: "blend", name: { vi: "Cà phê phối trộn Blend 80/20 Espresso (500g)", zh: "經典精品義式拼配 80/20 (500g)", en: "Specialty Espresso Blend 80/20 (500g)" }, price: 260000, wholesale: 220000 },
 
-            // 大眾商業義式 Blend (70% : 30%)
-            { id: "p20", type: "blend", name: { vi: "Blend 70/30 商業義式豆 (250g)", zh: "商業義式平衡拼配 70/30 (250g)", en: "Commercial Espresso Blend 70/30 (250g)" }, price: 128000, wholesale: 110000 },
-            { id: "p21", type: "blend", name: { vi: "Blend 70/30 商業義式豆 (500g)", zh: "商業義式平衡拼配 70/30 (500g)", en: "Commercial Espresso Blend 70/30 (500g)" }, price: 245000, wholesale: 210000 },
+            // Commercial Blend (70% : 30%)
+            { id: "p20", type: "blend", name: { vi: "Cà phê phối trộn Blend 70/30 Thương mại (250g)", zh: "商業義式平衡拼配 70/30 (250g)", en: "Commercial Espresso Blend 70/30 (250g)" }, price: 128000, wholesale: 110000 },
+            { id: "p21", type: "blend", name: { vi: "Cà phê phối trộn Blend 70/30 Thương mại (500g)", zh: "商業義式平衡拼配 70/30 (500g)", en: "Commercial Espresso Blend 70/30 (500g)" }, price: 245000, wholesale: 210000 },
 
-            // 南義風格濃縮 Blend (50% : 50%)
-            { id: "p24", type: "blend", name: { vi: "Blend 50/50 南義風格豆 (250g)", zh: "南義風格醇厚拼配 50/50 (250g)", en: "Southern Italian Blend 50/50 (250g)" }, price: 118000, wholesale: 100000 },
-            { id: "p25", type: "blend", name: { vi: "Blend 50/50 南義風格豆 (500g)", zh: "南義風格醇厚拼配 50/50 (500g)", en: "Southern Italian Blend 50/50 (500g)" }, price: 225000, wholesale: 190000 }
+            // Southern Italian Blend (50% : 50%)
+            { id: "p24", type: "blend", name: { vi: "Cà phê phối trộn Blend 50/50 Phong cách Nam Ý (250g)", zh: "南義風格醇厚拼配 50/50 (250g)", en: "Southern Italian Blend 50/50 (250g)" }, price: 118000, wholesale: 100000 },
+            { id: "p25", type: "blend", name: { vi: "Cà phê phối trộn Blend 50/50 Phong cách Nam Ý (500g)", zh: "南義風格醇厚拼配 50/50 (500g)", en: "Southern Italian Blend 50/50 (500g)" }, price: 225000, wholesale: 190000 }
         ];
 
         const districtData = {
@@ -1179,6 +1024,7 @@ Gemini là AI và có thể mắc sai sót.
             "Hà Nội": ["Hoàn Kiếm", "Ba Đình", "Cầu Giấy", "Tây Hồ"]
         };
 
+        // 預設語言設置為越南文 ('vi')
         let currentLang = 'vi';
         let currentCategory = 'all';
         let cart = [];
@@ -1201,7 +1047,7 @@ Gemini là AI và có thể mắc sai sót.
                 maintainAspectRatio: false
             };
 
-            const labels = ['酸質 Acidity', '甜感 Sweetness', '醇厚 Body', '香氣 Aroma', '回甘 Aftertaste'];
+            const labels = ['Độ axit Acidity', 'Vị ngọt Sweetness', 'Thể chất Body', 'Hương thơm Aroma', 'Dư vị Aftertaste'];
 
             new Chart(document.getElementById('radarArabica'), {
                 type: 'radar',
@@ -1233,19 +1079,10 @@ Gemini là AI và có thể mắc sai sót.
         function setLanguage(lang) {
             currentLang = lang;
             const dict = translations[lang];
-            
-            // 替換所有 data-i18n 的文字
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (dict[key]) el.innerText = dict[key];
             });
-
-            // 替換 input/textarea 的 placeholder
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-                const key = el.getAttribute('data-i18n-placeholder');
-                if (dict[key]) el.placeholder = dict[key];
-            });
-
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.getAttribute('onclick').includes(lang));
             });
@@ -1428,17 +1265,16 @@ Gemini là AI và có thể mắc sai sót.
             event.preventDefault();
             if (cart.length === 0) return;
 
-            const dict = translations[currentLang];
             const btnSubmit = document.getElementById('btnSubmitOrder');
             btnSubmit.disabled = true;
-            btnSubmit.innerText = dict.btn_processing || "Đang xử lý...";
+            btnSubmit.innerText = "Đang xử lý / Processing...";
 
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
             const prov = document.getElementById('provinceSelect').value;
             const dist = document.getElementById('districtSelect').value;
             const addr = document.getElementById('custAddress').value;
-            const notes = document.getElementById('custNotes').value || dict.none_text;
+            const notes = document.getElementById('custNotes').value || "Không có";
             const fullAddress = `${addr}, ${dist}, ${prov}`;
 
             const now = new Date();
@@ -1449,6 +1285,7 @@ Gemini là AI và có thể mắc sai sót.
 
             let subtotal = 0;
             let itemsSummaryList = [];
+            const dict = translations[currentLang];
 
             const processedCart = cart.map(item => {
                 const p = productsData.find(x => x.id === item.id);
@@ -1499,20 +1336,18 @@ Gemini là AI và có thể mắc sai sót.
 
             document.getElementById('vietQrImg').src = qrUrl;
             document.getElementById('invNumber').innerText = currentOrderNo;
-            document.getElementById('invDate').innerText = new Date().toLocaleDateString();
+            document.getElementById('invDate').innerText = new Date().toLocaleDateString('vi-VN');
             document.getElementById('invName').innerText = name;
             document.getElementById('invPhone').innerText = phone;
             document.getElementById('invAddress').innerText = fullAddress;
             
-            if (notes !== dict.none_text) {
+            if (notes !== "Không có") {
                 document.getElementById('invNotesRow').style.display = 'block';
                 document.getElementById('invNotes').innerText = notes;
-            } else {
-                document.getElementById('invNotesRow').style.display = 'none';
             }
 
             document.getElementById('invShipping').innerText = shippingFee === 0 ? dict.freeship_text : `VND ${shippingFee.toLocaleString()}`;
-            document.getElementById('invTotal').innerText = `${dict.grand_total_label || 'Total:'} VND ${grandTotal.toLocaleString()}`;
+            document.getElementById('invTotal').innerText = `Grand Total: VND ${grandTotal.toLocaleString()}`;
 
             const invTbody = document.getElementById('invoiceTableBody');
             invTbody.innerHTML = '';
@@ -1522,19 +1357,19 @@ Gemini là AI và có thể mắc sai sót.
                 invTbody.appendChild(tr);
             });
 
-            currentZaloMessage = `【VIEBUCKS ĐƠN HÀNG / 訂單內容 / ORDER】
-${dict.inv_no} ${currentOrderNo}
-${dict.inv_name} ${name}
-${dict.inv_phone} ${phone}
-${dict.inv_addr} ${fullAddress}
-${dict.inv_notes} ${notes}
+            currentZaloMessage = `【VIEBUCKS ĐƠN HÀNG / ĐƠN HÀNG MỚI】
+Mã ĐH (Mã đơn hàng): ${currentOrderNo}
+Khách hàng (Tên): ${name}
+SĐT (Số điện thoại): ${phone}
+Địa chỉ (Địa chỉ): ${fullAddress}
+Ghi chú (Ghi chú): ${notes}
 ------------------------------
-${dict.cart_title}:
+Chi tiết sản phẩm (Chi tiết):
 ${itemsSummaryList.join('\n')}
 ------------------------------
-${dict.subtotal_text} VND ${subtotal.toLocaleString()}
-${dict.shipping_text} ${shippingFee === 0 ? dict.freeship_text : 'VND ' + shippingFee.toLocaleString()}
-${dict.est_total} VND ${grandTotal.toLocaleString()}`;
+Tạm tính (Tiền hàng): VND ${subtotal.toLocaleString()}
+Phí vận chuyển (Phí ship): ${shippingFee === 0 ? "FREESHIP" : 'VND ' + shippingFee.toLocaleString()}
+TỔNG CỘNG (Tổng tiền): VND ${grandTotal.toLocaleString()}`;
 
             document.getElementById('orderForm').style.display = 'none';
             document.getElementById('successMsg').style.display = 'block';
@@ -1556,14 +1391,11 @@ ${dict.est_total} VND ${grandTotal.toLocaleString()}`;
             closeZaloModal();
             if (!currentZaloMessage) return;
 
-            const dict = translations[currentLang];
             const targetUrl = `https://zalo.me/${phoneNum}?text=${encodeURIComponent(currentZaloMessage)}`;
-
-            const alertMsg = dict.alert_copy_zalo.replace('{phone}', phoneNum);
 
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(currentZaloMessage).then(() => {
-                    alert(alertMsg);
+                    alert(`Đã sao chép thông tin đơn hàng! Vui lòng dán (Paste) vào Zalo (${phoneNum}).`);
                     window.open(targetUrl, "_blank");
                 }).catch(err => {
                     window.open(targetUrl, "_blank");
@@ -1594,17 +1426,16 @@ ${dict.est_total} VND ${grandTotal.toLocaleString()}`;
             });
         }
 
+        /* 初始加載：強制以越南文 initialize */
         window.onload = () => {
+            setLanguage('vi');
             initRadarCharts();
             populateGrindOptions();
             filterProducts('all');
             updateDistrictOptions();
             loadCart();
             renderCart();
-            setLanguage('vi');
         };
     </script>
 </body>
 </html>
-index.html
-Đang hiển thị index.html.
