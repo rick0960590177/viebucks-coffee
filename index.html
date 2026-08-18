@@ -9,9 +9,8 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#C5A059">
 
-    <!-- 外部函式庫：html2canvas & Chart.js -->
+    <!-- 外部函式庫：html2canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     
@@ -260,50 +259,6 @@
             font-weight: 400;
             letter-spacing: 4px;
             color: var(--text-main);
-        }
-
-        /* 自動適應卡片網格 (Auto-Fit Grid) */
-        .collections-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-            gap: clamp(20px, 3vw, 30px);
-        }
-
-        .collection-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-gold);
-            padding: clamp(20px, 3vw, 35px);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: var(--transition);
-        }
-
-        .collection-card:hover {
-            border-color: var(--gold-primary);
-            transform: translateY(-5px);
-            background: var(--bg-card);
-        }
-
-        .collection-name {
-            font-family: 'Cinzel', serif;
-            font-size: 1.2rem;
-            color: var(--gold-light);
-            letter-spacing: 2px;
-        }
-
-        .collection-name-vn {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-        }
-
-        .chart-wrapper {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 4 / 3;
-            max-height: 240px;
-            margin-top: 15px;
         }
 
         /* Filter Controls Auto Flex */
@@ -593,7 +548,6 @@
         <div class="nav-right">
             <nav>
                 <ul>
-                    <li><a href="#collections" data-i18n="nav_collections">Hồ Sơ Cà Phê</a></li>
                     <li><a href="#blend_ratio" data-i18n="nav_blend">Tỷ Lệ Phối Trộn</a></li>
                     <li><a href="#atelier" data-i18n="nav_atelier">Tính Giá</a></li>
                     <li><a href="#contact" data-i18n="nav_contact">Liên Hệ</a></li>
@@ -613,38 +567,6 @@
         <h1 class="hero-title">viebucks</h1>
         <p class="hero-quote" data-i18n="hero_quote">“Không bao giờ là quá muộn để thưởng thức cà phê.”</p>
         <a href="#atelier" class="btn-gold" data-i18n="hero_btn">Khám Phá Giá Đặt Riêng</a>
-    </section>
-
-    <!-- Collections & Interactive Radar Charts -->
-    <section id="collections" class="section-container">
-        <div class="section-header">
-            <span class="section-subtitle" data-i18n="col_sub">Hồ Sơ & Biểu Đồ Hương Vị</span>
-            <h2 class="section-title" data-i18n="col_title">Hồ Sơ Cà Phê & Biểu Đồ Radar Hương Vị</h2>
-        </div>
-
-        <div class="collections-grid">
-            <div class="collection-card">
-                <div>
-                    <h3 class="collection-name">Arabica</h3>
-                    <div class="collection-name-vn" data-i18n="arabica_desc">Dòng Arabica Việt Nam Cao Cấp</div>
-                    <p style="font-size:0.75rem; color:var(--text-muted);" data-i18n="arabica_flavor">Hương hoa, vị chua chanh vàng, vị ngọt đường đen.</p>
-                </div>
-                <div class="chart-wrapper">
-                    <canvas id="radarArabica"></canvas>
-                </div>
-            </div>
-
-            <div class="collection-card">
-                <div>
-                    <h3 class="collection-name">Robusta</h3>
-                    <div class="collection-name-vn" data-i18n="robusta_desc">Dòng Robusta Truyền Thống</div>
-                    <p style="font-size:0.75rem; color:var(--text-muted);" data-i18n="robusta_flavor">Sô cô la đen, hạt rang, thể chất đậm đà.</p>
-                </div>
-                <div class="chart-wrapper">
-                    <canvas id="radarRobusta"></canvas>
-                </div>
-            </div>
-        </div>
     </section>
 
     <!-- Blend Ratios Matrix Section -->
@@ -885,9 +807,8 @@
 
         const translations = {
             vi: {
-                nav_collections: "Hồ Sơ Cà Phê", nav_blend: "Tỷ Lệ Phối Trộn", nav_atelier: "Tính Giá", nav_contact: "Liên Hệ",
+                nav_blend: "Tỷ Lệ Phối Trộn", nav_atelier: "Tính Giá", nav_contact: "Liên Hệ",
                 hero_badge: "Bộ Sưu Tập Cà Phê Haute", hero_quote: "“Không bao giờ là quá muộn để thưởng thức cà phê.”", hero_btn: "Khám Phá Giá Đặt Riêng",
-                col_sub: "Hồ Sơ & Biểu Đồ Hương Vị", col_title: "Hồ Sơ Cà Phê & Biểu Đồ Radar Hương Vị",
                 blend_sub: "Tỷ Lệ Phối Trộn Phù Hợp", blend_title: "Đặc Điểm Hương Vị Arabica : Robusta",
                 th_blend_ratio: "Arabica : Robusta", th_blend_flavor: "Đặc Điểm Hương Vị", th_blend_usage: "Khuyên Dùng / Loại Cà Phê",
                 ratio_100_0_desc: "Hàm lượng axit cao, hương hoa quả nổi bật, sảng khoái tinh tế, thiếu độ đậm đà.",
@@ -900,8 +821,6 @@
                 ratio_50_50_use: "Espresso phong cách Nam Ý, Quán ăn sáng truyền thống, Cà phê lon bình dân.",
                 ratio_0_100_desc: "Caffeine cao, vị đắng gắt, hương mạch nha & gỗ nồng nặc, rất nhiều crema/dầu.",
                 ratio_0_100_use: "Cà phê phin Việt Nam, Nguyên liệu cà phê hòa tan.",
-                arabica_desc: "Dòng Arabica Việt Nam Cao Cấp", robusta_desc: "Dòng Robusta Truyền Thống",
-                arabica_flavor: "Hương hoa, vị chua chanh vàng, vị ngọt đường đen.", robusta_flavor: "Sô cô la đen, hạt rang, thể chất đậm đà.",
                 filter_all: "Tất cả", filter_beans: "Cà phê hạt", filter_blend: "Cà phê phối trộn (Blend)", filter_cold: "Cà phê ủ lạnh",
                 calc_sub: "Xưởng Tính Giá Riêng Biệt", calc_title: "Tính Toán Thông Minh (Áp dụng giá sỉ từ 10 gói)",
                 label_product: "Chọn sản phẩm", label_grind: "Mức độ xay", label_qty: "Số lượng", btn_add_cart: "+ Thêm vào giỏ hàng",
@@ -913,9 +832,8 @@
                 wholesale_tag: "(Giá sỉ)", freeship_text: "MIỄN PHÍ", ready_tag: "Thành phẩm"
             },
             zh: {
-                nav_collections: "咖啡豆履歷", nav_blend: "拼配比例指南", nav_atelier: "智能試算", nav_contact: "聯繫我們",
+                nav_blend: "拼配比例指南", nav_atelier: "智能試算", nav_contact: "聯繫我們",
                 hero_badge: "Haute Coffee Collection", hero_quote: "“It's never too late to drink coffee.”", hero_btn: "探索專屬訂製定價",
-                col_sub: "Flavor Profiles & Radar Chart", col_title: "頂級精品咖啡豆履歷與動態風味雷達",
                 blend_sub: "Arabica : Robusta 拼配矩陣", blend_title: "阿拉比卡與羅布斯塔風味特點與適用情境",
                 th_blend_ratio: "阿拉比卡 : 羅布斯塔", th_blend_flavor: "風味特點", th_blend_usage: "適用情境 / 咖啡類型",
                 ratio_100_0_desc: "高酸度、花果香顯著、清爽細緻，缺乏厚實感。",
@@ -928,8 +846,6 @@
                 ratio_50_50_use: "南義風格濃縮、傳統早餐店、平價罐裝咖啡。",
                 ratio_0_100_desc: "高咖啡因、苦味強烈、高麥芽與木質味、油脂極多。",
                 ratio_0_100_use: "越南滴漏咖啡、即溶咖啡原料。",
-                arabica_desc: "越南阿拉比卡精品系列", robusta_desc: "羅布斯塔經典系列",
-                arabica_flavor: "獨特花香與黃檸檬果酸，黑糖甜感。", robusta_flavor: "濃鬱黑巧克力與烤核果香，油脂豐厚。",
                 filter_all: "全品項", filter_beans: "單品咖啡豆", filter_blend: "拼配配方豆", filter_cold: "冷萃包",
                 calc_sub: "Bespoke Calculator Atelier", calc_title: "採購金額智能試算與購物車（滿 10 包自動切換批發價）",
                 label_product: "選擇品項與規格", label_grind: "研磨度選擇", label_qty: "購買數量", btn_add_cart: "+ 加入採購清單",
@@ -941,9 +857,8 @@
                 wholesale_tag: "(批發價)", freeship_text: "免運費", ready_tag: "成品包裝"
             },
             en: {
-                nav_collections: "Bean Heritage", nav_blend: "Blend Matrix", nav_atelier: "Atelier Calc", nav_contact: "Contact",
+                nav_blend: "Blend Matrix", nav_atelier: "Atelier Calc", nav_contact: "Contact",
                 hero_badge: "Haute Coffee Collection", hero_quote: "“It's never too late to drink coffee.”", hero_btn: "Explore Bespoke Pricing",
-                col_sub: "Flavor Profiles & Radar Chart", col_title: "Fine Coffee Heritage & Dynamic Flavor Radar",
                 blend_sub: "Blend Ratio Guide", blend_title: "Arabica : Robusta Flavor Profile & Applications",
                 th_blend_ratio: "Arabica : Robusta", th_blend_flavor: "Flavor Profile", th_blend_usage: "Best Applications / Coffee Style",
                 ratio_100_0_desc: "High acidity, prominent floral & fruity notes, clean & refined, lighter body.",
@@ -956,8 +871,6 @@
                 ratio_50_50_use: "Southern Italian Espresso, Traditional Breakfast Shops, Ready-to-drink cans.",
                 ratio_0_100_desc: "High caffeine, strong bitterness, intense malt & woody notes, maximum crema.",
                 ratio_0_100_use: "Vietnamese Phin Drip Coffee, Instant Coffee standard.",
-                arabica_desc: "Vietnam Arabica Fine Selection", robusta_desc: "Robusta Classic Selection",
-                arabica_flavor: "Floral notes, yellow lemon acidity, brown sugar sweetness.", robusta_flavor: "Dark chocolate, roasted nuts, heavy body.",
                 filter_all: "All", filter_beans: "Single Origin", filter_blend: "Coffee Blends", filter_cold: "Cold Brew",
                 calc_sub: "Bespoke Calculator Atelier", calc_title: "Smart Amount Calculator (Wholesale rate at 10+ packs)",
                 label_product: "Select Product", label_grind: "Grind Size", label_qty: "Quantity", btn_add_cart: "+ Add to Cart",
@@ -1030,37 +943,6 @@
         let cart = [];
         let currentOrderNo = '';
         let currentZaloMessage = '';
-
-        function initRadarCharts() {
-            const chartOptions = {
-                scales: {
-                    r: {
-                        angleLines: { color: 'rgba(197,160,89,0.2)' },
-                        grid: { color: 'rgba(197,160,89,0.15)' },
-                        pointLabels: { color: '#E6CA8D', font: { size: 9 } },
-                        ticks: { display: false },
-                        suggestedMin: 0, suggestedMax: 5
-                    }
-                },
-                plugins: { legend: { display: false } },
-                responsive: true,
-                maintainAspectRatio: false
-            };
-
-            const labels = ['Độ axit Acidity', 'Vị ngọt Sweetness', 'Thể chất Body', 'Hương thơm Aroma', 'Dư vị Aftertaste'];
-
-            new Chart(document.getElementById('radarArabica'), {
-                type: 'radar',
-                data: { labels, datasets: [{ data: [4.2, 4.2, 3.2, 4.5, 4.2], backgroundColor: 'rgba(197,160,89,0.25)', borderColor: '#C5A059', pointBackgroundColor: '#E6CA8D' }] },
-                options: chartOptions
-            });
-
-            new Chart(document.getElementById('radarRobusta'), {
-                type: 'radar',
-                data: { labels, datasets: [{ data: [1.0, 3.0, 5.0, 3.8, 3.5], backgroundColor: 'rgba(197,160,89,0.25)', borderColor: '#C5A059', pointBackgroundColor: '#E6CA8D' }] },
-                options: chartOptions
-            });
-        }
 
         function populateGrindOptions() {
             const selectEl = document.getElementById('grindSelect');
@@ -1429,7 +1311,6 @@ TỔNG CỘNG (Tổng tiền): VND ${grandTotal.toLocaleString()}`;
         /* 初始加載：強制以越南文 initialize */
         window.onload = () => {
             setLanguage('vi');
-            initRadarCharts();
             populateGrindOptions();
             filterProducts('all');
             updateDistrictOptions();
