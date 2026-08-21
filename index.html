@@ -164,6 +164,8 @@
         passwordPlaceholder: '請輸入密碼',
         passwordSubmit: '確認登入',
         passwordError: '密碼錯誤，請重新輸入',
+        historyPasswordTitle: '歷史訂單驗證',
+        historyPasswordDesc: '此功能僅限管理者使用，請輸入密碼',
         grindOptions: {
           beans: { label: '保留原豆', detail: 'Whole Beans' },
           phin: { label: '越南滴漏', detail: 'Phin Filter' },
@@ -236,6 +238,8 @@
         passwordPlaceholder: 'Nhập mật khẩu',
         passwordSubmit: 'Xác nhận',
         passwordError: 'Sai mật khẩu, vui lòng thử lại',
+        historyPasswordTitle: 'Xác thực lịch sử đơn hàng',
+        historyPasswordDesc: 'Tính năng này chỉ dành cho quản trị viên',
         grindOptions: {
           beans: { label: 'Nguyên hạt', detail: 'Whole Beans' },
           phin: { label: 'Pha Phin', detail: 'Phin Filter' },
@@ -288,6 +292,7 @@
       const [isHistoryOpen, setIsHistoryOpen] = useState(false);
       const [isAdminOpen, setIsAdminOpen] = useState(false);
       const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+      const [isHistoryPasswordModalOpen, setIsHistoryPasswordModalOpen] = useState(false);
       const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
       const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
@@ -398,7 +403,7 @@
                   <Icons.Settings className="h-6 w-6" />
                 </button>
 
-                <button onClick={() => setIsHistoryOpen(true)} className="hidden sm:flex p-2 hover:bg-coffee-800 rounded-full text-coffee-200 hover:text-white" title={t.history}>
+                <button onClick={() => setIsHistoryPasswordModalOpen(true)} className="hidden sm:flex p-2 hover:bg-coffee-800 rounded-full text-coffee-200 hover:text-white" title={t.history}>
                   <Icons.Clock className="h-6 w-6" />
                 </button>
 
@@ -540,7 +545,7 @@
                       <Icons.Settings className="h-5 w-5" /> {t.adminPanel}
                     </button>
 
-                    <button onClick={() => { setIsMobileMenuOpen(false); setIsHistoryOpen(true); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-coffee-800 text-coffee-200 hover:text-white font-medium text-sm">
+                    <button onClick={() => { setIsMobileMenuOpen(false); setIsHistoryPasswordModalOpen(true); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-coffee-800 text-coffee-200 hover:text-white font-medium text-sm">
                       <Icons.Clock className="h-5 w-5" /> {t.history}
                     </button>
 
@@ -612,11 +617,27 @@
           {isPasswordModalOpen && (
             <PasswordPromptModal
               isOpen={isPasswordModalOpen}
+              title={t.passwordPromptTitle}
+              desc={t.passwordPromptDesc}
               t={t}
               onClose={() => setIsPasswordModalOpen(false)}
               onSuccess={() => {
                 setIsPasswordModalOpen(false);
                 setIsAdminOpen(true);
+              }}
+            />
+          )}
+
+          {isHistoryPasswordModalOpen && (
+            <PasswordPromptModal
+              isOpen={isHistoryPasswordModalOpen}
+              title={t.historyPasswordTitle}
+              desc={t.historyPasswordDesc}
+              t={t}
+              onClose={() => setIsHistoryPasswordModalOpen(false)}
+              onSuccess={() => {
+                setIsHistoryPasswordModalOpen(false);
+                setIsHistoryOpen(true);
               }}
             />
           )}
@@ -635,7 +656,7 @@
       );
     }
 
-    function PasswordPromptModal({ isOpen, t, onClose, onSuccess }) {
+    function PasswordPromptModal({ isOpen, title, desc, t, onClose, onSuccess }) {
       const [password, setPassword] = useState('');
       const [error, setError] = useState(false);
 
@@ -661,8 +682,8 @@
                 <div className="w-12 h-12 bg-coffee-100 text-coffee-800 rounded-full flex items-center justify-center mx-auto mb-2">
                   <Icons.Lock className="h-6 w-6" />
                 </div>
-                <h3 className="text-lg font-bold font-serif text-coffee-900">{t.passwordPromptTitle}</h3>
-                <p className="text-xs text-coffee-600">{t.passwordPromptDesc}</p>
+                <h3 className="text-lg font-bold font-serif text-coffee-900">{title}</h3>
+                <p className="text-xs text-coffee-600">{desc}</p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-3">
