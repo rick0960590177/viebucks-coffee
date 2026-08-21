@@ -112,7 +112,7 @@
     };
 
     const CART_STORAGE_KEY = 'VIEBUCKS_cafe_cart_v1';
-    const PRODUCTS_STORAGE_KEY = 'VIEBUCKS_cafe_products_v1';
+    const PRODUCTS_STORAGE_KEY = 'VIEBUCKS_cafe_products_v2';
     const ORDER_HISTORY_STORAGE_KEY = 'VIEBUCKS_cafe_order_history_v1';
     const ADMIN_PASSWORD = '0348246669';
     const SHIPPING_CONFIG = { FREE_THRESHOLD: 500000, FLAT_RATE: 25000 };
@@ -269,14 +269,43 @@
     };
 
     const INITIAL_PRODUCTS = [
-      { id: 'arabica-100-250g', nameZh: '100% 阿拉比卡咖啡豆', nameVi: 'Cà phê Arabica 100%', category: 'arabica', specZh: '250公克', specVi: '250g', price: 145000, wholesalePrice: 125000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=600' },
-      { id: 'arabica-100-500g', nameZh: '100% 阿拉比卡咖啡豆', nameVi: 'Cà phê Arabica 100%', category: 'arabica', specZh: '500公克', specVi: '500g', price: 280000, wholesalePrice: 240000, type: 'beans', stock: 3, threshold: 5, image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=600' },
-      { id: 'arabica-coldbrew-10', nameZh: '100% 阿拉比卡冷萃咖啡包', nameVi: 'Cà phê Cold Brew Arabica 100%', category: 'coldbrew', specZh: '10包/袋', specVi: '10 túi/gói', price: 125000, wholesalePrice: 105000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
-      { id: 'arabica-coldbrew-30', nameZh: '100% 阿拉比卡冷萃咖啡包', nameVi: 'Cà phê Cold Brew Arabica 100%', category: 'coldbrew', specZh: '30包/袋', specVi: '30 túi/gói', price: 350000, wholesalePrice: 295000, type: 'coldbrew', stock: 0, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
-      { id: 'arabica-honey-250g', nameZh: '蜜處理阿拉比卡咖啡豆', nameVi: 'Cà phê Arabica Honey Process', category: 'arabica_honey', specZh: '250公克', specVi: '250g', price: 160000, wholesalePrice: 138000, type: 'beans', stock: 8, threshold: 5, image: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&q=80&w=600' },
-      { id: 'arabica-honey-500g', nameZh: '蜜處理阿拉比卡咖啡豆', nameVi: 'Cà phê Arabica Honey Process', category: 'arabica_honey', specZh: '500公克', specVi: '500g', price: 310000, wholesalePrice: 265000, type: 'beans', stock: 2, threshold: 5, image: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&q=80&w=600' },
-      { id: 'robusta-100-250g', nameZh: '100% 羅布斯塔咖啡豆', nameVi: 'Cà phê Robusta 100%', category: 'robusta', specZh: '250公克', specVi: '250g', price: 91000, wholesalePrice: 78000, type: 'beans', stock: 25, threshold: 5, image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
-      { id: 'blend-8020-250g', nameZh: '80/20 濃縮混合咖啡豆', nameVi: 'Cà phê Espresso Blend 80/20', category: 'blend', specZh: '250公克', specVi: '250g', price: 135000, wholesalePrice: 115000, type: 'beans', stock: 12, threshold: 5, image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' }
+      // 1. Arabica
+      { id: 'arabica-100-250g', nameZh: '100% 阿拉比卡咖啡豆', nameVi: 'Cà phê hạt Arabica 100%', category: 'arabica', specZh: '250公克', specVi: '250g', price: 145000, wholesalePrice: 125000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-100-500g', nameZh: '100% 阿拉比卡咖啡豆', nameVi: 'Cà phê hạt Arabica 100%', category: 'arabica', specZh: '500公克', specVi: '500g', price: 280000, wholesalePrice: 240000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-coldbrew-10', nameZh: '100% 阿拉比卡冷萃咖啡包', nameVi: 'Cà phê ủ lạnh Arabica 100%', category: 'coldbrew', specZh: '10包/袋', specVi: '10 túi/túi', price: 125000, wholesalePrice: 105000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-coldbrew-30', nameZh: '100% 阿拉比卡冷萃咖啡包', nameVi: 'Cà phê ủ lạnh Arabica 100%', category: 'coldbrew', specZh: '30包/袋', specVi: '30 túi/túi', price: 350000, wholesalePrice: 295000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+
+      // 2. Arabica Honey Process
+      { id: 'arabica-honey-250g', nameZh: '蜜處理阿拉比卡咖啡豆', nameVi: 'Cà phê hạt Arabica Honey chế biến mật', category: 'arabica_honey', specZh: '250公克', specVi: '250g', price: 160000, wholesalePrice: 138000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-honey-500g', nameZh: '蜜處理阿拉比卡咖啡豆', nameVi: 'Cà phê hạt Arabica Honey chế biến mật', category: 'arabica_honey', specZh: '500公克', specVi: '500g', price: 310000, wholesalePrice: 265000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-honey-coldbrew-10', nameZh: '蜜處理阿拉比卡冷萃咖啡包', nameVi: 'Cà phê ủ lạnh Arabica Honey', category: 'coldbrew', specZh: '10包/袋', specVi: '10 túi/túi', price: 140000, wholesalePrice: 118000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-honey-coldbrew-30', nameZh: '蜜處理阿拉比卡冷萃咖啡包', nameVi: 'Cà phê ủ lạnh Arabica Honey', category: 'coldbrew', specZh: '30包/袋', specVi: '30 túi/túi', price: 390000, wholesalePrice: 330000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+
+      // 3. Robusta
+      { id: 'robusta-100-250g', nameZh: '100% 羅布斯塔咖啡豆', nameVi: 'Cà phê hạt Robusta 100%', category: 'robusta', specZh: '250公克', specVi: '250g', price: 91000, wholesalePrice: 78000, type: 'beans', stock: 25, threshold: 5, image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-100-500g', nameZh: '100% 羅布斯塔咖啡豆', nameVi: 'Cà phê hạt Robusta 100%', category: 'robusta', specZh: '500公克', specVi: '500g', price: 172000, wholesalePrice: 148000, type: 'beans', stock: 25, threshold: 5, image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-coldbrew-10', nameZh: '100% 羅布斯塔冷萃咖啡包', nameVi: 'Cà phê ủ lạnh Robusta 100%', category: 'coldbrew', specZh: '10包/袋', specVi: '10 túi/túi', price: 80000, wholesalePrice: 70000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-coldbrew-30', nameZh: '100% 羅布斯塔冷萃咖啡包', nameVi: 'Cà phê ủ lạnh Robusta 100%', category: 'coldbrew', specZh: '30包/袋', specVi: '30 túi/túi', price: 230000, wholesalePrice: 200000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-jasmine-10', nameZh: '茉莉花風味羅布斯塔冷萃包', nameVi: 'Cà phê ủ lạnh Robusta - Hương hoa nhài', category: 'coldbrew', specZh: '10包/袋', specVi: '10 túi/túi', price: 100000, wholesalePrice: 88000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-jasmine-30', nameZh: '茉莉花風味羅布斯塔冷萃包', nameVi: 'Cà phê ủ lạnh Robusta - Hương hoa nhài', category: 'coldbrew', specZh: '30包/袋', specVi: '30 túi/túi', price: 250000, wholesalePrice: 220000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+
+      // 4. Robusta Honey Process
+      { id: 'robusta-honey-250g', nameZh: '蜜處理羅布斯塔咖啡豆', nameVi: 'Cà phê hạt Robusta Honey chế biến mật', category: 'robusta_honey', specZh: '250公克', specVi: '250g', price: 105000, wholesalePrice: 90000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-honey-500g', nameZh: '蜜處理羅布斯塔咖啡豆', nameVi: 'Cà phê hạt Robusta Honey chế biến mật', category: 'robusta_honey', specZh: '500公克', specVi: '500g', price: 200000, wholesalePrice: 170000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-honey-coldbrew-10', nameZh: '蜜處理羅布斯塔冷萃包', nameVi: 'Cà phê ủ lạnh Robusta Honey', category: 'coldbrew', specZh: '10包/袋', specVi: '10 túi/túi', price: 95000, wholesalePrice: 82000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-honey-coldbrew-30', nameZh: '蜜處理羅布斯塔冷萃包', nameVi: 'Cà phê ủ lạnh Robusta Honey', category: 'coldbrew', specZh: '30包/袋', specVi: '30 túi/túi', price: 270000, wholesalePrice: 230000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+
+      // 5. Espresso Blend (80/20)
+      { id: 'blend-8020-250g', nameZh: '80/20 義式特調咖啡豆', nameVi: 'Cà phê phối trộn Blend 80/20 Espresso', category: 'blend', specZh: '250公克', specVi: '250g', price: 135000, wholesalePrice: 115000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
+      { id: 'blend-8020-500g', nameZh: '80/20 義式特調咖啡豆', nameVi: 'Cà phê phối trộn Blend 80/20 Espresso', category: 'blend', specZh: '500公克', specVi: '500g', price: 260000, wholesalePrice: 220000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
+
+      // 6. Commercial Blend (70/30)
+      { id: 'blend-7030-250g', nameZh: '70/30 商業特調咖啡豆', nameVi: 'Cà phê phối trộn Blend 70/30 Thương mại', category: 'blend', specZh: '250公克', specVi: '250g', price: 128000, wholesalePrice: 110000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
+      { id: 'blend-7030-500g', nameZh: '70/30 商業特調咖啡豆', nameVi: 'Cà phê phối trộn Blend 70/30 Thương mại', category: 'blend', specZh: '500公克', specVi: '500g', price: 245000, wholesalePrice: 210000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
+
+      // 7. Southern Italian Blend (50/50)
+      { id: 'blend-5050-250g', nameZh: '50/50 南義風格特調咖啡豆', nameVi: 'Cà phê phối trộn Blend 50/50 Phong cách Nam Ý', category: 'blend', specZh: '250公克', specVi: '250g', price: 118000, wholesalePrice: 100000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
+      { id: 'blend-5050-500g', nameZh: '50/50 南義風格特調咖啡豆', nameVi: 'Cà phê phối trộn Blend 50/50 Phong cách Nam Ý', category: 'blend', specZh: '500公克', specVi: '500g', price: 225000, wholesalePrice: 190000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' }
     ];
 
     function App() {
@@ -464,7 +493,7 @@
               </div>
             </div>
 
-            {/* Product Cards Grid (Fully Responsive: 1 col on mobile, 2 on tablet, 3-4 on desktop) */}
+            {/* Product Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {filteredProducts.map(product => {
                 const productName = lang === 'zh-TW' ? product.nameZh : product.nameVi;
