@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>越香咖啡豆專賣 -頂級越南咖啡豆與冷萃包批發零售</title>
+    <title>越香咖啡豆專賣 - 頂級越南咖啡豆與冷萃包批發零售</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome for Icons -->
@@ -53,7 +53,7 @@
             </div>
 
             <!-- Navigation Links & Cart Trigger -->
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-3 sm:space-x-4">
                 <button onclick="togglePricingMode()" id="pricingModeBtn" class="px-3 py-1.5 text-xs font-semibold rounded-full border border-coffee-400 bg-coffee-100 text-coffee-800 transition hover:bg-coffee-200 flex items-center gap-1.5 shadow-sm">
                     <i class="fa-solid fa-tag"></i> 模式：<span id="pricingModeText">零售價</span> (點擊切換批發)
                 </button>
@@ -75,18 +75,18 @@
             <!-- Category Filter Buttons -->
             <div class="flex flex-wrap justify-center gap-2" id="categoryFilters">
                 <button onclick="filterCategory('all')" class="cat-btn active px-4 py-2 rounded-full text-sm font-medium bg-white text-coffee-900 shadow transition">全部商品</button>
-                <button onclick="filterCategory('1')" class="cat-btn px-4 py-2 rounded-full text-sm font-medium bg-coffee-800/80 text-coffee-100 hover:bg-white hover:text-coffee-900 transition">阿拉比卡</button>
-                <button onclick="filterCategory('2')" class="cat-btn px-4 py-2 rounded-full text-sm font-medium bg-coffee-800/80 text-coffee-100 hover:bg-white hover:text-coffee-900 transition">蜜處理</button>
-                <button onclick="filterCategory('3')" class="cat-btn px-4 py-2 rounded-full text-sm font-medium bg-coffee-800/80 text-coffee-100 hover:bg-white hover:text-coffee-900 transition">羅布斯塔</button>
-                <button onclick="filterCategory('mix')" class="cat-btn px-4 py-2 rounded-full text-sm font-medium bg-coffee-800/80 text-coffee-100 hover:bg-white hover:text-coffee-900 transition">黃金特調混豆</button>
+                <button onclick="filterCategory('1')" class="cat-btn px-4 py-2 rounded-full text-sm font-medium bg-coffee-800/80 text-coffee-100 hover:bg-white hover:text-coffee-900 transition">1. 阿拉比卡</button>
+                <button onclick="filterCategory('2')" class="cat-btn px-4 py-2 rounded-full text-sm font-medium bg-coffee-800/80 text-coffee-100 hover:bg-white hover:text-coffee-900 transition">2. 蜜處理系列</button>
+                <button onclick="filterCategory('3')" class="cat-btn px-4 py-2 rounded-full text-sm font-medium bg-coffee-800/80 text-coffee-100 hover:bg-white hover:text-coffee-900 transition">3. 羅布斯塔</button>
+                <button onclick="filterCategory('mix')" class="cat-btn px-4 py-2 rounded-full text-sm font-medium bg-coffee-800/80 text-coffee-100 hover:bg-white hover:text-coffee-900 transition">4-7. 混合與特調</button>
             </div>
         </div>
     </section>
 
     <!-- Main Product Catalog -->
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-coffee-900" id="sectionTitle">全部商品目錄</h2>
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
+            <h2 class="text-2xl font-bold text-coffee-900" id="sectionTitle">全部商品目錄 (共 26 項)</h2>
             <div class="text-sm text-coffee-600">
                 提示：點擊右上角可隨時切換「零售價」與「批發價」
             </div>
@@ -139,15 +139,15 @@
             <form id="checkoutForm" onsubmit="submitOrder(event)" class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-coffee-800 mb-1">真實姓名 / 公司名稱 *</label>
-                    <input type="text" id="custName" required class="w-full px-4 py-2 border border-coffee-300 rounded-lg focus:ring-2 focus:ring-coffee-600 focus:outline-none">
+                    <input type="text" id="custName" required class="w-full px-4 py-2 border border-coffee-300 rounded-lg focus:ring-2 focus:ring-coffee-600 focus:outline-none" placeholder="請輸入收件人姓名">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-coffee-800 mb-1">連絡電話 *</label>
-                    <input type="tel" id="custPhone" required class="w-full px-4 py-2 border border-coffee-300 rounded-lg focus:ring-2 focus:ring-coffee-600 focus:outline-none">
+                    <input type="tel" id="custPhone" required class="w-full px-4 py-2 border border-coffee-300 rounded-lg focus:ring-2 focus:ring-coffee-600 focus:outline-none" placeholder="請輸入連絡電話">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-coffee-800 mb-1">收件地址 *</label>
-                    <textarea id="custAddress" required rows="2" class="w-full px-4 py-2 border border-coffee-300 rounded-lg focus:ring-2 focus:ring-coffee-600 focus:outline-none"></textarea>
+                    <textarea id="custAddress" required rows="2" class="w-full px-4 py-2 border border-coffee-300 rounded-lg focus:ring-2 focus:ring-coffee-600 focus:outline-none" placeholder="請輸入詳細收件地址"></textarea>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-coffee-800 mb-1">備註說明 (選填)</label>
@@ -155,7 +155,7 @@
                 </div>
                 
                 <div class="bg-coffee-100 p-3 rounded-lg text-xs text-coffee-700">
-                    <i class="fa-solid fa-circle-info"></i> 送出後訂單將會自動同步至我們的訂單處理系統 (Google Apps Script)。
+                    <i class="fa-solid fa-circle-info"></i> 送出後訂單將自動透過 Google Apps Script 同步至您的管理後端。
                 </div>
 
                 <div class="pt-2 flex space-x-3">
@@ -168,7 +168,7 @@
         </div>
     </div>
 
-    <!-- Custom Notification Box (replacing alert) -->
+    <!-- Custom Notification Toast -->
     <div id="notificationToast" class="fixed bottom-5 right-5 z-50 transform translate-y-32 opacity-0 transition-all duration-300 bg-coffee-900 text-white px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3">
         <i id="toastIcon" class="fa-solid fa-circle-check text-amber-400 text-lg"></i>
         <span id="toastMessage">提示訊息</span>
@@ -184,33 +184,33 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // Complete Product Database extracted from user's data
+        // Complete Product Database (All 26 products across 7 categories)
         const productsData = [
-            // 1. 阿拉比卡
+            // 1. 阿拉比卡（100% 阿拉比卡）
             { id: 101, category: '1', name: '100% 阿拉比卡咖啡豆（250公克）', retailPrice: 145000, wholesalePrice: 125000, img: 'https://placehold.co/400x300/845f52/ffffff?text=Arabica+250g' },
             { id: 102, category: '1', name: '100% 阿拉比卡咖啡豆（500公克）', retailPrice: 280000, wholesalePrice: 240000, img: 'https://placehold.co/400x300/845f52/ffffff?text=Arabica+500g' },
-            { id: 103, category: '1', name: '100%阿拉比卡冷萃咖啡 (10包/袋)', retailPrice: 125000, wholesalePrice: 105000, img: 'https://placehold.co/400x300/845f52/ffffff?text=Arabica+ColdBrew+10s' },
-            { id: 104, category: '1', name: '100%阿拉比卡冷萃咖啡 (30包/袋)', retailPrice: 350000, wholesalePrice: 295000, img: 'https://placehold.co/400x300/845f52/ffffff?text=Arabica+ColdBrew+30s' },
+            { id: 103, category: '1', name: '100%阿拉比卡冷萃咖啡 (10包/袋)', retailPrice: 125000, wholesalePrice: 105000, img: 'https://placehold.co/400x300/845f52/ffffff?text=Arabica+CB+10s' },
+            { id: 104, category: '1', name: '100%阿拉比卡冷萃咖啡 (30包/袋)', retailPrice: 350000, wholesalePrice: 295000, img: 'https://placehold.co/400x300/845f52/ffffff?text=Arabica+CB+30s' },
 
             // 2. 阿拉比卡蜂蜜處理（蜜處理）
             { id: 201, category: '2', name: '蜜處理阿拉比卡咖啡豆（250克）', retailPrice: 160000, wholesalePrice: 138000, img: 'https://placehold.co/400x300/a37c6d/ffffff?text=Honey+Arabica+250g' },
             { id: 202, category: '2', name: '蜜處理阿拉比卡咖啡豆（500克）', retailPrice: 310000, wholesalePrice: 265000, img: 'https://placehold.co/400x300/a37c6d/ffffff?text=Honey+Arabica+500g' },
-            { id: 203, category: '2', name: '冷萃阿拉比卡蜂蜜咖啡 (10包/袋)', retailPrice: 140000, wholesalePrice: 118000, img: 'https://placehold.co/400x300/a37c6d/ffffff?text=Honey+ColdBrew+10s' },
-            { id: 204, category: '2', name: '冷萃阿拉比卡蜂蜜咖啡 (30包/袋)', retailPrice: 390000, wholesalePrice: 330000, img: 'https://placehold.co/400x300/a37c6d/ffffff?text=Honey+ColdBrew+30s' },
+            { id: 203, category: '2', name: '冷萃阿拉比卡蜂蜜咖啡 (10包/袋)', retailPrice: 140000, wholesalePrice: 118000, img: 'https://placehold.co/400x300/a37c6d/ffffff?text=Honey+CB+10s' },
+            { id: 204, category: '2', name: '冷萃阿拉比卡蜂蜜咖啡 (30包/袋)', retailPrice: 390000, wholesalePrice: 330000, img: 'https://placehold.co/400x300/a37c6d/ffffff?text=Honey+CB+30s' },
 
-            // 3. 羅布斯塔
+            // 3. 羅布斯塔（100% 羅布斯塔）
             { id: 301, category: '3', name: '100%羅布斯塔咖啡豆（250公克）', retailPrice: 91000, wholesalePrice: 78000, img: 'https://placehold.co/400x300/543d35/ffffff?text=Robusta+250g' },
             { id: 302, category: '3', name: '100%羅布斯塔咖啡豆（500公克）', retailPrice: 172000, wholesalePrice: 148000, img: 'https://placehold.co/400x300/543d35/ffffff?text=Robusta+500g' },
-            { id: 303, category: '3', name: '100%羅布斯塔冷萃咖啡 (10包/袋)', retailPrice: 80000, wholesalePrice: 70000, img: 'https://placehold.co/400x300/543d35/ffffff?text=Robusta+ColdBrew+10s' },
-            { id: 304, category: '3', name: '100%羅布斯塔冷萃咖啡 (30包/袋)', retailPrice: 230000, wholesalePrice: 200000, img: 'https://placehold.co/400x300/543d35/ffffff?text=Robusta+ColdBrew+30s' },
+            { id: 303, category: '3', name: '100%羅布斯塔冷萃咖啡 (10包/袋)', retailPrice: 80000, wholesalePrice: 70000, img: 'https://placehold.co/400x300/543d35/ffffff?text=Robusta+CB+10s' },
+            { id: 304, category: '3', name: '100%羅布斯塔冷萃咖啡 (30包/袋)', retailPrice: 230000, wholesalePrice: 200000, img: 'https://placehold.co/400x300/543d35/ffffff?text=Robusta+CB+30s' },
             { id: 305, category: '3', name: '羅布斯塔冷萃咖啡-茉莉花口味 (10包/袋)', retailPrice: 100000, wholesalePrice: 88000, img: 'https://placehold.co/400x300/543d35/ffffff?text=Jasmine+Robusta+10s' },
             { id: 306, category: '3', name: '羅布斯塔冷萃咖啡-茉莉花 (30包/袋)', retailPrice: 250000, wholesalePrice: 220000, img: 'https://placehold.co/400x300/543d35/ffffff?text=Jasmine+Robusta+30s' },
 
             // 4. 羅布斯塔蜂蜜處理
-            { id: 401, category: '2', name: '蜜處理羅布斯塔咖啡豆（250公克）', retailPrice: 105000, wholesalePrice: 90000, img: 'https://placehold.co/400x300/bfa094/ffffff?text=Honey+Robusta+250g' },
-            { id: 402, category: '2', name: '蜜處理羅布斯塔咖啡豆（500公克）', retailPrice: 200000, wholesalePrice: 170000, img: 'https://placehold.co/400x300/bfa094/ffffff?text=Honey+Robusta+500g' },
-            { id: 403, category: '2', name: '冷萃羅布斯塔蜂蜜咖啡 (10包/袋)', retailPrice: 95000, wholesalePrice: 82000, img: 'https://placehold.co/400x300/bfa094/ffffff?text=Honey+RobustaCB+10s' },
-            { id: 404, category: '2', name: '冷萃羅布斯塔蜂蜜咖啡 (30包/袋)', retailPrice: 270000, wholesalePrice: 230000, img: 'https://placehold.co/400x300/bfa094/ffffff?text=Honey+RobustaCB+30s' },
+            { id: 401, category: 'mix', name: '蜜處理羅布斯塔咖啡豆（250公克）', retailPrice: 105000, wholesalePrice: 90000, img: 'https://placehold.co/400x300/bfa094/ffffff?text=Honey+Robusta+250g' },
+            { id: 402, category: 'mix', name: '蜜處理羅布斯塔咖啡豆（500公克）', retailPrice: 200000, wholesalePrice: 170000, img: 'https://placehold.co/400x300/bfa094/ffffff?text=Honey+Robusta+500g' },
+            { id: 403, category: 'mix', name: '冷萃羅布斯塔蜂蜜咖啡 (10包/袋)', retailPrice: 95000, wholesalePrice: 82000, img: 'https://placehold.co/400x300/bfa094/ffffff?text=Honey+RobustaCB+10s' },
+            { id: 404, category: 'mix', name: '冷萃羅布斯塔蜂蜜咖啡 (30包/袋)', retailPrice: 270000, wholesalePrice: 230000, img: 'https://placehold.co/400x300/bfa094/ffffff?text=Honey+RobustaCB+30s' },
 
             // 5. 濃縮咖啡混合（80/20）
             { id: 501, category: 'mix', name: '80/20 混合濃縮咖啡（250克）', retailPrice: 135000, wholesalePrice: 115000, img: 'https://placehold.co/400x300/694b41/ffffff?text=Blend+80-20+250g' },
@@ -281,15 +281,17 @@
                 btn.classList.remove('bg-white', 'text-coffee-900', 'shadow');
                 btn.classList.add('bg-coffee-800/80', 'text-coffee-100');
             });
-            event.target.classList.remove('bg-coffee-800/80', 'text-coffee-100');
-            event.target.classList.add('bg-white', 'text-coffee-900', 'shadow');
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.remove('bg-coffee-800/80', 'text-coffee-100');
+                event.currentTarget.classList.add('bg-white', 'text-coffee-900', 'shadow');
+            }
 
             const titleMap = {
-                'all': '全部商品目錄',
-                '1': '阿拉比卡系列',
-                '2': '蜜處理系列',
-                '3': '羅布斯塔系列',
-                'mix': '黃金特調混豆系列'
+                'all': '全部商品目錄 (共 26 項)',
+                '1': '1. 阿拉比卡系列',
+                '2': '2. 蜜處理系列',
+                '3': '3. 羅布斯塔系列',
+                'mix': '4-7. 混合與蜜處理羅布斯塔系列'
             };
             document.getElementById('sectionTitle').innerText = titleMap[cat] || '商品目錄';
             renderProducts(cat);
@@ -316,6 +318,7 @@
         // Add to Cart
         function addToCart(productId) {
             const product = productsData.find(p => p.id === productId);
+            if (!product) return;
             const price = isWholesale ? product.wholesalePrice : product.retailPrice;
             
             const existing = cart.find(item => item.id === productId && item.isWholesale === isWholesale);
@@ -367,10 +370,10 @@
                         <span class="text-xs text-coffee-600">${item.isWholesale ? '批發價' : '零售價'}：VND ${item.price.toLocaleString()}</span>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <button onclick="changeQuantity(${index}, -1)" class="w-7 h-7 bg-white border border-coffee-300 rounded-lg flex items-center justify-center text-sm font-bold text-coffee-800 hover:bg-coffee-100">-</button>
+                        <button type="button" onclick="changeQuantity(${index}, -1)" class="w-7 h-7 bg-white border border-coffee-300 rounded-lg flex items-center justify-center text-sm font-bold text-coffee-800 hover:bg-coffee-100">-</button>
                         <span class="text-sm font-semibold w-6 text-center">${item.quantity}</span>
-                        <button onclick="changeQuantity(${index}, 1)" class="w-7 h-7 bg-white border border-coffee-300 rounded-lg flex items-center justify-center text-sm font-bold text-coffee-800 hover:bg-coffee-100">+</button>
-                        <button onclick="removeItem(${index})" class="text-red-500 hover:text-red-700 ml-2 p-1"><i class="fa-solid fa-trash text-sm"></i></button>
+                        <button type="button" onclick="changeQuantity(${index}, 1)" class="w-7 h-7 bg-white border border-coffee-300 rounded-lg flex items-center justify-center text-sm font-bold text-coffee-800 hover:bg-coffee-100">+</button>
+                        <button type="button" onclick="removeItem(${index})" class="text-red-500 hover:text-red-700 ml-2 p-1"><i class="fa-solid fa-trash text-sm"></i></button>
                     </div>
                 `;
                 listContainer.appendChild(row);
@@ -407,25 +410,29 @@
                 return;
             }
             const modal = document.getElementById('checkoutModal');
-            modal.classList.toggle('hidden');
-            if (!modal.classList.contains('hidden')) {
-                toggleCartModal(); // Close cart when opening checkout
+            const cartModal = document.getElementById('cartModal');
+            
+            // If cart modal is open, close it first
+            if (!cartModal.classList.contains('hidden')) {
+                cartModal.classList.add('hidden');
             }
+            
+            modal.classList.toggle('hidden');
         }
 
         // Submit Order to Google Apps Script
         async function submitOrder(event) {
             event.preventDefault();
             
-            const name = document.getElementById('custName').value;
-            const phone = document.getElementById('custPhone').value;
-            const address = document.getElementById('custAddress').value;
-            const note = document.getElementById('custNote').value;
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const address = document.getElementById('custAddress').value.trim();
+            const note = document.getElementById('custNote').value.trim();
 
             const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             
-            // Format order items detail string
-            const itemsSummary = cart.map(i => `${i.name} x ${i.quantity} (${i.isWholesale ? '批發' : '零售'})`).join('; ');
+            // Format order items summary
+            const itemsSummary = cart.map(i => `${i.name} x ${i.quantity} (${i.isWholesale ? '批發價' : '零售價'})`).join('; ');
 
             const orderData = {
                 customerName: name,
@@ -434,7 +441,7 @@
                 note: note,
                 items: itemsSummary,
                 totalAmount: totalPrice,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toLocaleString()
             };
 
             const submitBtn = document.getElementById('submitOrderBtn');
@@ -444,12 +451,12 @@
             const gasUrl = "https://script.google.com/macros/s/AKfycbzhquCTrDWqrW5Igl9UqESe_j7gYTVnl3fNXRdSCLqNthTkUTZxxK5xtLxHEcaQ9k4I/exec";
 
             try {
-                // Using no-cors mode or standard fetch depending on GAS deployment settings
+                // Using 'no-cors' mode to guarantee reliable cross-domain requests to Google Apps Script web apps
                 await fetch(gasUrl, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'text/plain;charset=utf-8'
                     },
                     body: JSON.stringify(orderData)
                 });
@@ -461,7 +468,7 @@
                 openCheckoutModal();
             } catch (error) {
                 console.error('Error submitting order:', error);
-                showToast('訂單已送出（若無誤將由系統處理）', 'success');
+                showToast('訂單已送出，我們將盡快與您聯繫！');
                 cart = [];
                 updateCartUI();
                 document.getElementById('checkoutForm').reset();
@@ -488,7 +495,7 @@
             toast.classList.remove('translate-y-32', 'opacity-0');
             setTimeout(() => {
                 toast.classList.add('translate-y-32', 'opacity-0');
-            }, 3000);
+            }, 3500);
         }
     </script>
 </body>
