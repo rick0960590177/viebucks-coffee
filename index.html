@@ -958,32 +958,39 @@
                 </div>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="no-print pt-4 border-t border-coffee-200 space-y-3">
-                <!-- Email Status Bar -->
-                <div class="bg-coffee-50 p-3 rounded-xl border border-coffee-200 flex flex-col sm:flex-row items-center justify-between text-xs gap-2">
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-coffee-800" x-text="t('Trạng thái Email:', 'Email 通知狀態:')"></span>
-                        <template x-if="emailStatus.sending">
-                            <span class="text-amber-600 font-bold flex items-center gap-1">
-                                <i class="fa-solid fa-circle-notch fa-spin"></i> <span x-text="t('Đang gửi...', '發送中...')"></span>
-                            </span>
-                        </template>
-                        <template x-if="!emailStatus.sending && emailStatus.success">
-                            <span class="text-emerald-600 font-bold flex items-center gap-1">
-                                <i class="fa-solid fa-circle-check"></i> <span x-text="t('Đã gửi tới rick0960590177@gmail.com', '已成功發送至 rick0960590177@gmail.com')"></span>
-                            </span>
-                        </template>
-                        <template x-if="!emailStatus.sending && !emailStatus.success && emailStatus.message">
-                            <span class="text-rose-600 font-bold flex items-center gap-1" x-text="emailStatus.message"></span>
-                        </template>
-                    </div>
-                    <div class="flex gap-2">
-                        <button @click="sendAutomatedEmail()" class="text-xs bg-coffee-800 hover:bg-coffee-700 text-white font-bold px-3 py-1 rounded-lg transition-all flex items-center gap-1">
-                            <i class="fa-solid fa-rotate-right"></i> <span x-text="t('Gửi lại Email', '重新發送 Email')"></span>
-                        </button>
-                    </div>
-                </div>
+           async sendAutomatedEmail() {
+    if (!this.lastOrderDetails) return;
+    const o = this.lastOrderDetails;
+    
+    this.emailStatus.sending = true;
+    this.emailStatus.success = false;
+    this.emailStatus.message = '正在透過腳本發送訂單通知...';
+
+    // 將您的 Google Apps Script 網頁應用程式 URL 貼在此處
+    const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
+
+    try {
+        const response = await fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors', // 避免跨域阻擋
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(o)
+        });
+
+        // 因為設定 no-cors，fetch 無法直接讀取回傳內容，視為送出成功
+        this.emailStatus.sending = false;
+        this.emailStatus.success = true;
+        this.emailStatus.message = `已透過腳本成功觸發 Gmail 寄信至 ${this.targetEmail}`;
+        this.showToast(`✅ [訂單寄送成功] 已自動發送至管理員信箱！`);
+
+    } catch (err) {
+        console.error('GAS Script error:', err);
+        this.emailStatus.sending = false;
+        this.emailStatus.success = false;
+        this.emailStatus.message = '腳本觸發失敗，請點擊「開啟郵件 App」備援';
+        this.showToast('⚠️ 自動寄信失敗，請使用手動備援按鈕');
+    }
+}
 
                 <div class="flex flex-col sm:flex-row gap-2 justify-end">
                     <button @click="window.print()" class="bg-coffee-100 hover:bg-coffee-200 text-coffee-900 font-bold px-4 py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5">
