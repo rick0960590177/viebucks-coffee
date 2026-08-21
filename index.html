@@ -142,14 +142,14 @@
         submitOrder: '確認發送訂單',
         submitting: '正在傳送訂單...',
         orderSuccess: '訂單已成功送出！',
-        orderSuccessDesc: '訂單已自動寄送至管理者電子郵件。',
+        orderSuccessDesc: '訂單已記錄至歷史訂單。',
         orderHistoryTitle: '歷史訂單紀錄',
         noHistory: '尚無歷史訂單紀錄',
         clearHistory: '清除歷史',
         orderId: '訂單編號',
         confirmClear: '確定要清除所有歷史訂單紀錄？',
         restockAlertTitle: '自動補貨提醒',
-        restockAlertNotice: '部分選購商品庫存過低，系統已同步通知管理員備貨。',
+        restockAlertNotice: '部分選購商品庫存過低，系統已記錄備貨需求。',
         adminTitle: '庫存與價格管理面板',
         saveChanges: '儲存所有變更',
         resetDefault: '恢復預設商品資料',
@@ -209,14 +209,14 @@
         submitOrder: 'Xác nhận đặt hàng',
         submitting: 'Đang gửi đơn hàng...',
         orderSuccess: 'Đặt hàng thành công!',
-        orderSuccessDesc: 'Đơn hàng đã được gửi đến email quản lý.',
+        orderSuccessDesc: 'Đơn hàng đã được ghi lại vào lịch sử.',
         orderHistoryTitle: 'Lịch sử đơn hàng',
         noHistory: 'Chưa có lịch sử đơn hàng',
         clearHistory: 'Xóa lịch sử',
         orderId: 'Mã đơn hàng',
         confirmClear: 'Bạn có chắc muốn xóa lịch sử đơn hàng?',
         restockAlertTitle: 'Cảnh báo nhập hàng',
-        restockAlertNotice: 'Một số sản phẩm gần hết hàng, hệ thống đã gửi thông báo đến quản lý.',
+        restockAlertNotice: 'Một số sản phẩm gần hết hàng, hệ thống đã ghi nhận nhu cầu nhập thêm.',
         adminTitle: 'Quản lý kho & Giá cả',
         saveChanges: 'Lưu thay đổi',
         resetDefault: 'Khôi phục mặc định',
@@ -939,9 +939,15 @@
         setIsSubmitting(true);
 
         const orderId = Date.now().toString().slice(-6);
+        const orderDate = new Date().toLocaleString();
+
+        const itemsSummary = cart.map(item => 
+          `- ${item.name} (${item.spec}) [${item.grindLabel}] x ${item.quantity} ＝ ${(getUnitPrice(item) * item.quantity).toLocaleString()} VND`
+        ).join('\n');
+
         const orderRecord = {
           id: orderId,
-          date: new Date().toLocaleString(),
+          date: orderDate,
           customerName: formData.fullName,
           phone: formData.phone,
           address: formData.address,
@@ -959,33 +965,39 @@
         };
 
         try {
-          await fetch('https://formspree.io/f/xbjnqpyw', {
+          const scriptURL = 'https://script.google.com/macros/s/AKfycbxZ0lung4gdqyrYsCMJCprWCLhuGK6VDA-0qyCuLMlpmruVzfaXbuTpvtDmixRhx-cD6g/exec';
+          
+          await fetch(scriptURL, {
             method: 'POST',
+            mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              email: 'rick0960590177@gmail.com',
-              name: formData.fullName,
+              orderId,
+              orderDate,
+              fullName: formData.fullName,
               phone: formData.phone,
               address: formData.address,
               notes: formData.notes || '無',
-              language: lang,
-              orderId,
-              grandTotal: `${grandTotal.toLocaleString()} VND`,
-              restockNotice: lowStockAlerts.length > 0 ? `[補貨提醒] 以下商品庫存低於預警門檻：\n${lowStockAlerts.join('\n')}` : '庫存狀況正常'
+              orderItems: itemsSummary,
+              subtotal,
+              shippingFee,
+              grandTotal,
+              restockNotice: lowStockAlerts.length > 0 ? lowStockAlerts.join('\n') : '庫存狀況正常'
             })
           });
 
           deductStock(cart);
-
           const history = JSON.parse(localStorage.getItem(ORDER_HISTORY_STORAGE_KEY) || '[]');
           localStorage.setItem(ORDER_HISTORY_STORAGE_KEY, JSON.stringify([orderRecord, ...history]));
 
+          setIsSubmitting(false);
           setIsSuccess(true);
           clearCart();
           setTimeout(() => { setIsSuccess(false); onClose(); }, 3000);
+
         } catch (error) {
-          alert('訂單傳送失敗');
-        } finally {
+          console.error('送出訂單失敗:', error);
+          alert('發送失敗，請稍後再試。');
           setIsSubmitting(false);
         }
       };
