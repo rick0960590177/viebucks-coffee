@@ -1,894 +1,744 @@
 <!DOCTYPE html>
-<html lang="zh-TW" class="scroll-smooth">
+<html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AromaCraft 匠心精品咖啡 | 探索極致風味</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        espresso: {
-                            50: '#FDFBF7',
-                            100: '#F6F0E6',
-                            200: '#E8D8C3',
-                            300: '#D5BBA1',
-                            600: '#8C5A3C',
-                            800: '#4A2E1F',
-                            900: '#2A180E',
-                            950: '#1A0E08'
-                        },
-                        amber: {
-                            gold: '#C87D55',
-                            warm: '#D97706'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-                        serif: ['Georgia', 'Cambria', "Times New Roman", 'Times', 'serif']
-                    }
-                }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aroma Cafe - 越南精品手作咖啡館</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            coffee: {
+              50: '#fdfbf7',
+              100: '#f7f0e6',
+              200: '#ebdcc8',
+              300: '#d5bd9d',
+              600: '#8c5a3c',
+              800: '#4a2c1d',
+              900: '#2d190e',
             }
+          }
         }
-    </script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #F6F0E6;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #D5BBA1;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #8C5A3C;
-        }
-        .glass-nav {
-            background: rgba(253, 251, 247, 0.92);
-            backdrop-filter: blur(12px);
-        }
-        .hero-bg {
-            background: linear-gradient(135deg, rgba(26,14,8,0.88) 0%, rgba(74,46,31,0.75) 100%), url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
-        }
-    </style>
+      }
+    }
+  </script>
+  <!-- React & Babel CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.min.js"></script>
 </head>
-<body class="bg-espresso-50 text-espresso-900 font-sans antialiased min-h-screen flex flex-col selection:bg-amber-gold selection:text-white">
+<body class="bg-coffee-50 text-coffee-900 font-sans selection:bg-coffee-200">
+  <div id="root"></div>
 
-    <!-- Notification Toast Container -->
-    <div id="toast-container" class="fixed top-20 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+    const { 
+      ShoppingBag, Search, X, Plus, Minus, Coffee, Send, Truck, 
+      Settings2, User, Phone, MapPin, FileText, CheckCircle2, Package, Clock, Trash2, Heart 
+    } = lucideReact;
 
-    <header class="sticky top-0 z-40 glass-nav border-b border-espresso-200/60 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                
-                <!-- Logo -->
-                <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                    <div class="w-10 h-10 rounded-full bg-espresso-900 flex items-center justify-center text-amber-gold shadow-md">
-                        <i class="fa-solid fa-mug-hot text-xl"></i>
-                    </div>
-                    <div>
-                        <span class="font-serif text-2xl font-bold tracking-wider text-espresso-950 block leading-tight">AromaCraft</span>
-                        <span class="text-[10px] tracking-widest text-espresso-600 uppercase block font-semibold">Specialty Coffee</span>
-                    </div>
-                </div>
+    // 常數設定
+    const CART_STORAGE_KEY = 'aroma_cafe_cart_v1';
+    const ORDER_HISTORY_STORAGE_KEY = 'aroma_cafe_order_history_v1';
+    const SHIPPING_CONFIG = {
+      FREE_THRESHOLD: 500000, // 500,000 VND 免運
+      FLAT_RATE: 25000       // 運費 25,000 VND
+    };
 
-                <!-- Desktop Navigation Links -->
-                <nav class="hidden md:flex items-center space-x-8 font-medium text-sm text-espresso-800">
-                    <a href="#catalog" onclick="filterCategory('all')" class="hover:text-amber-gold transition">所有商品</a>
-                    <a href="#catalog" onclick="filterCategory('arabica')" class="hover:text-amber-gold transition">阿拉比卡</a>
-                    <a href="#catalog" onclick="filterCategory('robusta')" class="hover:text-amber-gold transition">羅布斯塔</a>
-                    <a href="#catalog" onclick="filterCategory('blend')" class="hover:text-amber-gold transition">特調配方</a>
-                    <a href="#catalog" onclick="filterCategory('coldbrew')" class="hover:text-amber-gold transition">冷萃系列</a>
-                </nav>
+    // 研磨度選項
+    const GRIND_OPTIONS = [
+      { id: 'beans', label: '保留原豆', detail: 'Whole Beans' },
+      { id: 'phin', label: '越南滴漏', detail: 'Phin Filter' },
+      { id: 'espresso', label: '義式濃縮', detail: 'Espresso' },
+      { id: 'pour_over', label: '手沖', detail: 'Pour-over' }
+    ];
 
-                <!-- Right Action Icons -->
-                <div class="flex items-center space-x-4">
-                    <div class="relative hidden sm:block">
-                        <input type="text" id="search-input" onkeyup="applyFilters()" placeholder="搜尋風味或產品..." class="w-44 focus:w-60 transition-all duration-300 bg-espresso-100/70 border border-espresso-200 text-xs rounded-full py-2 pl-9 pr-4 focus:outline-none focus:ring-2 focus:ring-amber-gold/50">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-espresso-600"></i>
-                    </div>
+    // 商品資料庫
+    const PRODUCTS = [
+      // 阿拉比卡系列
+      { id: 'arabica-100-250g', name: '阿拉比卡 100% 咖啡豆', nameVi: 'Cà phê Arabica 100%', category: 'arabica', spec: '250克', price: 145000, wholesalePrice: 125000, type: 'beans', image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-100-500g', name: '阿拉比卡 100% 咖啡豆', nameVi: 'Cà phê Arabica 100%', category: 'arabica', spec: '500克', price: 280000, wholesalePrice: 240000, type: 'beans', image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-coldbrew-10', name: '阿拉比卡 100% 冷萃包', nameVi: 'Cà phê Cold Brew Arabica 100%', category: 'arabica', spec: '10包/袋', price: 125000, wholesalePrice: 105000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-coldbrew-30', name: '阿拉比卡 100% 冷萃包', nameVi: 'Cà phê Cold Brew Arabica 100%', category: 'arabica', spec: '30包/袋', price: 350000, wholesalePrice: 295000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-honey-250g', name: '阿拉比卡蜜處理咖啡豆', nameVi: 'Cà phê Arabica Honey Process', category: 'arabica', spec: '250克', price: 160000, wholesalePrice: 138000, type: 'beans', image: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-honey-500g', name: '阿拉比卡蜜處理咖啡豆', nameVi: 'Cà phê Arabica Honey Process', category: 'arabica', spec: '500克', price: 310000, wholesalePrice: 265000, type: 'beans', image: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-honey-cb-10', name: '阿拉比卡蜜處理冷萃包', nameVi: 'Cà phê Cold Brew Arabica Honey', category: 'arabica', spec: '10包/袋', price: 140000, wholesalePrice: 118000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-honey-cb-30', name: '阿拉比卡蜜處理冷萃包', nameVi: 'Cà phê Cold Brew Arabica Honey', category: 'arabica', spec: '30包/袋', price: 390000, wholesalePrice: 330000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
 
-                    <button onclick="toggleWishlistModal()" class="relative p-2 text-espresso-800 hover:text-amber-gold transition rounded-full hover:bg-espresso-100">
-                        <i class="fa-regular fa-heart text-lg"></i>
-                        <span id="wishlist-badge" class="hidden absolute -top-1 -right-1 bg-amber-gold text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
-                    </button>
+      // 羅布斯塔系列
+      { id: 'robusta-100-250g', name: '羅布斯塔 100% 咖啡豆', nameVi: 'Cà phê Robusta 100%', category: 'robusta', spec: '250克', price: 91000, wholesalePrice: 78000, type: 'beans', image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-100-500g', name: '羅布斯塔 100% 咖啡豆', nameVi: 'Cà phê Robusta 100%', category: 'robusta', spec: '500克', price: 172000, wholesalePrice: 148000, type: 'beans', image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-cb-10', name: '羅布斯塔 100% 冷萃包', nameVi: 'Cà phê Cold Brew Robusta 100%', category: 'robusta', spec: '10包/袋', price: 80000, wholesalePrice: 70000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-cb-30', name: '羅布斯塔 100% 冷萃包', nameVi: 'Cà phê Cold Brew Robusta 100%', category: 'robusta', spec: '30包/袋', price: 230000, wholesalePrice: 200000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-jasmine-cb-10', name: 'Robusta 冷萃包 - 茉莉花風味', nameVi: 'Cà phê Cold Brew Robusta - Hương Hoa Nhài', category: 'robusta', spec: '10包/袋', price: 100000, wholesalePrice: 88000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-jasmine-cb-30', name: 'Robusta 冷萃包 - 茉莉花風味', nameVi: 'Cà phê Cold Brew Robusta - Hương Hoa Nhài', category: 'robusta', spec: '30包/袋', price: 250000, wholesalePrice: 220000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-honey-250g', name: '羅布斯塔蜂蜜蜜處理咖啡豆', nameVi: 'Cà phê Robusta Honey Process', category: 'robusta', spec: '250克', price: 105000, wholesalePrice: 90000, type: 'beans', image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-honey-500g', name: '羅布斯塔蜂蜜蜜處理咖啡豆', nameVi: 'Cà phê Robusta Honey Process', category: 'robusta', spec: '500克', price: 200000, wholesalePrice: 170000, type: 'beans', image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-honey-cb-10', name: '羅布斯塔蜂蜜蜜處理冷萃包', nameVi: 'Cà phê Cold Brew Robusta Honey', category: 'robusta', spec: '10包/袋', price: 95000, wholesalePrice: 82000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-honey-cb-30', name: '羅布斯塔蜂蜜蜜處理冷萃包', nameVi: 'Cà phê Cold Brew Robusta Honey', category: 'robusta', spec: '30包/袋', price: 270000, wholesalePrice: 230000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
 
-                    <button onclick="toggleCartDrawer()" class="relative p-2.5 bg-espresso-900 text-espresso-50 rounded-full hover:bg-espresso-800 transition shadow-sm flex items-center gap-2 px-4">
-                        <i class="fa-solid fa-bag-shopping text-sm text-amber-gold"></i>
-                        <span class="text-xs font-semibold hidden sm:inline">購物車</span>
-                        <span id="cart-count-badge" class="bg-amber-gold text-white text-[11px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">0</span>
-                    </button>
+      // 拼配系列
+      { id: 'blend-8020-250g', name: '經典精品義式拼配 80/20', nameVi: 'Cà phê Espresso Blend 80/20', category: 'blend', spec: '250克', price: 135000, wholesalePrice: 115000, type: 'beans', image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
+      { id: 'blend-8020-500g', name: '經典精品義式拼配 80/20', nameVi: 'Cà phê Espresso Blend 80/20', category: 'blend', spec: '500克', price: 260000, wholesalePrice: 220000, type: 'beans', image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
+      { id: 'blend-7030-250g', name: '商業義式平衡拼配 70/30', nameVi: 'Cà phê Commercial Blend 70/30', category: 'blend', spec: '250克', price: 128000, wholesalePrice: 110000, type: 'beans', image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
+      { id: 'blend-7030-500g', name: '商業義式平衡拼配 70/30', nameVi: 'Cà phê Commercial Blend 70/30', category: 'blend', spec: '500克', price: 245000, wholesalePrice: 210000, type: 'beans', image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
+      { id: 'blend-5050-250g', name: '南義風格醇厚拼配 50/50', nameVi: 'Cà phê Blend Phong Cách Nam Ý 50/50', category: 'blend', spec: '250克', price: 118000, wholesalePrice: 100000, type: 'beans', image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
+      { id: 'blend-5050-500g', name: '南義風格醇厚拼配 50/50', nameVi: 'Cà phê Blend Phong Cách Nam Ý 50/50', category: 'blend', spec: '500克', price: 225000, wholesalePrice: 190000, type: 'beans', image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' }
+    ];
 
-                    <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-espresso-800 focus:outline-none">
-                        <i class="fa-solid fa-bars text-xl"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div id="mobile-menu" class="hidden md:hidden border-t border-espresso-200 bg-espresso-50 px-4 pt-3 pb-6 space-y-3">
-            <a href="#catalog" onclick="filterCategory('all'); toggleMobileMenu()" class="block py-2 text-espresso-800 font-medium">所有商品</a>
-            <a href="#catalog" onclick="filterCategory('arabica'); toggleMobileMenu()" class="block py-2 text-espresso-800 font-medium">Arabica 阿拉比卡</a>
-            <a href="#catalog" onclick="filterCategory('robusta'); toggleMobileMenu()" class="block py-2 text-espresso-800 font-medium">Robusta 羅布斯塔</a>
-            <a href="#catalog" onclick="filterCategory('blend'); toggleMobileMenu()" class="block py-2 text-espresso-800 font-medium">Espresso Blend 配方豆</a>
-            <a href="#catalog" onclick="filterCategory('coldbrew'); toggleMobileMenu()" class="block py-2 text-espresso-800 font-medium">Cold Brew 冷萃包</a>
-        </div>
-    </header>
-
-    <main class="flex-grow">
-        <!-- Hero Section -->
-        <section class="relative hero-bg text-white py-24 md:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
-            <div class="max-w-7xl mx-auto relative z-10 grid md:grid-cols-12 gap-8 items-center">
-                <div class="md:col-span-7 space-y-6">
-                    <div class="inline-flex items-center gap-2 bg-amber-gold/20 border border-amber-gold/40 text-amber-300 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase backdrop-blur-md">
-                        <i class="fa-solid fa-award"></i> 頂級莊園豆 & 專業冷萃
-                    </div>
-                    <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
-                        喚醒感官的<br><span class="text-amber-gold">極致咖啡風味</span>
-                    </h1>
-                    <p class="text-espresso-200 text-base sm:text-lg max-w-xl leading-relaxed">
-                        嚴選 100% 阿拉比卡、羅布斯塔及獨家比例拼配豆，提供零售與批發優惠，新鮮封存每一道原香。
-                    </p>
-                    <div class="flex flex-wrap gap-4 pt-2">
-                        <a href="#catalog" class="bg-amber-gold hover:bg-amber-600 text-white px-8 py-3.5 rounded-full font-medium transition duration-300 shadow-lg flex items-center gap-2">
-                            <span>立即選購</span>
-                            <i class="fa-solid fa-arrow-right text-sm"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Product Catalog -->
-        <section id="catalog" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-4 border-b border-espresso-200">
-                <div>
-                    <span class="text-amber-gold text-xs font-bold tracking-widest uppercase">Our Selection</span>
-                    <h2 class="font-serif text-3xl font-bold text-espresso-950 mt-1">產品目錄 Catalog</h2>
-                </div>
-
-                <!-- Price Mode Switcher & Sort Controls -->
-                <div class="mt-4 md:mt-0 flex flex-wrap items-center gap-4">
-                    <div class="bg-espresso-100 p-1 rounded-xl border border-espresso-200 flex items-center gap-1 text-xs font-semibold">
-                        <span class="px-2 text-espresso-600 font-normal">價格切換：</span>
-                        <button id="price-mode-retail" onclick="setPriceMode('retail')" class="px-3 py-1.5 rounded-lg bg-espresso-900 text-white shadow-sm transition">零售價</button>
-                        <button id="price-mode-wholesale" onclick="setPriceMode('wholesale')" class="px-3 py-1.5 rounded-lg bg-transparent text-espresso-800 hover:text-amber-gold transition">批發價</button>
-                    </div>
-
-                    <div class="flex items-center gap-2">
-                        <select id="sort-select" onchange="applyFilters()" class="bg-white border border-espresso-200 rounded-lg text-xs py-2 px-3 focus:outline-none focus:ring-1 focus:ring-amber-gold text-espresso-800">
-                            <option value="featured">推薦主打</option>
-                            <option value="price-low">價格：由低至高</option>
-                            <option value="price-high">價格：由高至低</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Category Filter Tabs -->
-            <div class="flex flex-wrap gap-2 mb-8">
-                <button onclick="filterCategory('all')" id="cat-btn-all" class="cat-filter-btn active-tab px-4 py-2 rounded-full text-xs font-semibold transition border border-amber-gold bg-amber-gold text-white">
-                    全部商品 (<span id="count-all">0</span>)
-                </button>
-                <button onclick="filterCategory('arabica')" id="cat-btn-arabica" class="cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold transition border border-espresso-200 bg-white text-espresso-800 hover:border-amber-gold">
-                    Arabica (<span id="count-arabica">0</span>)
-                </button>
-                <button onclick="filterCategory('arabica-honey')" id="cat-btn-arabica-honey" class="cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold transition border border-espresso-200 bg-white text-espresso-800 hover:border-amber-gold">
-                    Arabica Honey (<span id="count-arabica-honey">0</span>)
-                </button>
-                <button onclick="filterCategory('robusta')" id="cat-btn-robusta" class="cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold transition border border-espresso-200 bg-white text-espresso-800 hover:border-amber-gold">
-                    Robusta (<span id="count-robusta">0</span>)
-                </button>
-                <button onclick="filterCategory('robusta-honey')" id="cat-btn-robusta-honey" class="cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold transition border border-espresso-200 bg-white text-espresso-800 hover:border-amber-gold">
-                    Robusta Honey (<span id="count-robusta-honey">0</span>)
-                </button>
-                <button onclick="filterCategory('blend')" id="cat-btn-blend" class="cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold transition border border-espresso-200 bg-white text-espresso-800 hover:border-amber-gold">
-                    Blend 配方豆 (<span id="count-blend">0</span>)
-                </button>
-                <button onclick="filterCategory('coldbrew')" id="cat-btn-coldbrew" class="cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold transition border border-espresso-200 bg-white text-espresso-800 hover:border-amber-gold">
-                    Cold Brew 冷萃包 (<span id="count-coldbrew">0</span>)
-                </button>
-            </div>
-
-            <!-- Product Grid -->
-            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 min-h-[400px]"></div>
-
-            <!-- Empty State -->
-            <div id="empty-state" class="hidden py-16 text-center">
-                <i class="fa-solid fa-mug-hot text-4xl text-espresso-400 mb-3"></i>
-                <h3 class="font-serif text-lg font-bold text-espresso-950">查無符合條件的商品</h3>
-                <button onclick="resetFilters()" class="mt-4 bg-espresso-900 text-white text-xs font-medium px-4 py-2 rounded-lg">重置條件</button>
-            </div>
-        </section>
-    </main>
-
-    <footer class="bg-espresso-950 text-espresso-300 text-xs py-12 px-4 sm:px-6 lg:px-8 border-t border-espresso-900">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p>© 2026 AromaCraft Coffee Roasters. All rights reserved.</p>
-            <div class="flex space-x-4">
-                <i class="fa-brands fa-instagram text-lg cursor-pointer hover:text-white transition"></i>
-                <i class="fa-brands fa-facebook text-lg cursor-pointer hover:text-white transition"></i>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Product Detail Modal -->
-    <div id="product-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl relative max-h-[90vh] flex flex-col md:flex-row">
-            <button onclick="closeProductModal()" class="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-black/20 text-white hover:bg-black/40 flex items-center justify-center transition">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <div class="md:w-1/2 h-64 md:h-auto bg-espresso-100 relative">
-                <img id="modal-img" src="" class="w-full h-full object-cover">
-            </div>
-            <div class="md:w-1/2 p-6 flex flex-col justify-between overflow-y-auto space-y-4">
-                <div>
-                    <span id="modal-category" class="bg-espresso-100 text-espresso-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase"></span>
-                    <h2 id="modal-title" class="font-serif text-xl font-bold text-espresso-950 mt-1"></h2>
-                    <p id="modal-desc" class="text-xs text-espresso-600 mt-2 leading-relaxed"></p>
-                </div>
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold text-espresso-900">數量：</span>
-                        <div class="flex items-center border border-espresso-200 rounded-lg overflow-hidden">
-                            <button onclick="adjustModalQty(-1)" class="px-3 py-1 bg-espresso-100 text-xs font-bold">-</button>
-                            <span id="modal-qty" class="px-4 text-xs font-bold">1</span>
-                            <button onclick="adjustModalQty(1)" class="px-3 py-1 bg-espresso-100 text-xs font-bold">+</button>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between border-t border-espresso-200 pt-3">
-                        <div>
-                            <span class="text-[10px] text-espresso-600 block">價格</span>
-                            <span id="modal-price" class="font-serif text-2xl font-bold text-espresso-950"></span>
-                        </div>
-                        <button onclick="addModalItemToCart()" class="bg-amber-gold hover:bg-amber-600 text-white text-xs font-bold py-3 px-5 rounded-xl shadow-md">
-                            加入購物車
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Cart Slide Drawer -->
-    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
-        <div onclick="toggleCartDrawer()" class="absolute inset-0 bg-black/50"></div>
-        <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
-            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between">
-                <div class="p-6 border-b border-espresso-200 flex items-center justify-between bg-espresso-50">
-                    <h2 class="font-serif text-lg font-bold text-espresso-950">購物車清單</h2>
-                    <button onclick="toggleCartDrawer()" class="text-espresso-600 hover:text-espresso-900">
-                        <i class="fa-solid fa-xmark text-lg"></i>
-                    </button>
-                </div>
-                <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
-                <div class="p-6 border-t border-espresso-200 bg-espresso-50 space-y-4 text-xs">
-                    <div class="flex justify-between text-base font-bold text-espresso-950">
-                        <span>總計</span>
-                        <span id="cart-total" class="font-serif text-amber-gold">VND 0</span>
-                    </div>
-                    <button onclick="alert('感謝您的訂購！')" class="w-full bg-espresso-900 hover:bg-espresso-800 text-white font-bold py-3.5 rounded-xl shadow-md">
-                        前往結帳
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Wishlist Modal -->
-    <div id="wishlist-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
-            <div class="flex justify-between items-center pb-3 border-b border-espresso-200">
-                <h3 class="font-serif text-lg font-bold text-espresso-950">收藏夾</h3>
-                <button onclick="toggleWishlistModal()" class="text-espresso-600"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div id="wishlist-items-container" class="py-4 space-y-3 max-h-[60vh] overflow-y-auto"></div>
-        </div>
-    </div>
-
-    <script>
-        // Updated Complete Products Repository[cite: 4]
-        const products = [
-            // 1. Arabica（阿拉比卡 100%）
-            {
-                id: 'p1',
-                name: 'Cà phê hạt Arabica 100% (250g)',
-                category: 'arabica',
-                price: 145000,
-                wholesalePrice: 125000,
-                rating: 4.9,
-                notes: '100% Arabica - 清爽花果酸甜',
-                desc: 'Cà phê hạt Arabica 100% (250g)',
-                img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=800&q=80',
-                featured: true
-            },
-            {
-                id: 'p2',
-                name: 'Cà phê hạt Arabica 100% (500g)',
-                category: 'arabica',
-                price: 280000,
-                wholesalePrice: 240000,
-                rating: 4.9,
-                notes: '100% Arabica - 大容量分享包',
-                desc: 'Cà phê hạt Arabica 100% (500g)',
-                img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=800&q=80',
-                featured: false
-            },
-            {
-                id: 'p3',
-                name: 'Cà phê ủ lạnh Arabica 100% (10 túi/túi)',
-                category: 'coldbrew',
-                price: 125000,
-                wholesalePrice: 105000,
-                rating: 4.8,
-                notes: '冷萃包 10包/袋 - 阿拉比卡 100%',
-                desc: 'Cà phê ủ lạnh Arabica 100% (10 túi/túi)',
-                img: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80',
-                featured: true
-            },
-            {
-                id: 'p4',
-                name: 'Cà phê ủ lạnh Arabica 100% (30 túi/túi)',
-                category: 'coldbrew',
-                price: 350000,
-                wholesalePrice: 295000,
-                rating: 4.9,
-                notes: '冷萃包 30包/袋 - 阿拉比卡 100%',
-                desc: 'Cà phê ủ lạnh Arabica 100% (30 túi/túi)',
-                img: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80',
-                featured: false
-            },
-
-            // 2. Arabica Honey Process（阿拉比卡 蜜處理）
-            {
-                id: 'p5',
-                name: 'Cà phê hạt Arabica Honey chế biến mật (250g)',
-                category: 'arabica-honey',
-                price: 160000,
-                wholesalePrice: 138000,
-                rating: 5.0,
-                notes: 'Arabica 蜜處理 - 蜂蜜甘甜韻',
-                desc: 'Cà phê hạt Arabica Honey chế biến mật (250g)',
-                img: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=800&q=80',
-                featured: true
-            },
-            {
-                id: 'p6',
-                name: 'Cà phê hạt Arabica Honey chế biến mật (500g)',
-                category: 'arabica-honey',
-                price: 310000,
-                wholesalePrice: 265000,
-                rating: 4.9,
-                notes: 'Arabica 蜜處理 - 500g 包裝',
-                desc: 'Cà phê hạt Arabica Honey chế biến mật (500g)',
-                img: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=800&q=80',
-                featured: false
-            },
-            {
-                id: 'p7',
-                name: 'Cà phê ủ lạnh Arabica Honey (10 túi/túi)',
-                category: 'coldbrew',
-                price: 140000,
-                wholesalePrice: 118000,
-                rating: 4.8,
-                notes: '冷萃包 10包/袋 - 阿拉比卡蜜處理',
-                desc: 'Cà phê ủ lạnh Arabica Honey (10 túi/túi)',
-                img: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80',
-                featured: false
-            },
-            {
-                id: 'p8',
-                name: 'Cà phê ủ lạnh Arabica Honey (30 túi/túi)',
-                category: 'coldbrew',
-                price: 390000,
-                wholesalePrice: 330000,
-                rating: 4.9,
-                notes: '冷萃包 30包/袋 - 阿拉比卡蜜處理',
-                desc: 'Cà phê ủ lạnh Arabica Honey (30 túi/túi)',
-                img: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80',
-                featured: false
-            },
-
-            // 3. Robusta（羅布斯塔 100%）
-            {
-                id: 'p9',
-                name: 'Cà phê hạt Robusta 100% (250g)',
-                category: 'robusta',
-                price: 91000,
-                wholesalePrice: 78000,
-                rating: 4.7,
-                notes: '100% Robusta - 濃醇黑巧克力感',
-                desc: 'Cà phê hạt Robusta 100% (250g)',
-                img: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&w=800&q=80',
-                featured: true
-            },
-            {
-                id: 'p10',
-                name: 'Cà phê hạt Robusta 100% (500g)',
-                category: 'robusta',
-                price: 172000,
-                wholesalePrice: 148000,
-                rating: 4.8,
-                notes: '100% Robusta - 500g 包裝',
-                desc: 'Cà phê hạt Robusta 100% (500g)',
-                img: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&w=800&q=80',
-                featured: false
-            },
-            {
-                id: 'p11',
-                name: 'Cà phê ủ lạnh Robusta 100% (10 túi/túi)',
-                category: 'coldbrew',
-                price: 80000,
-                wholesalePrice: 70000,
-                rating: 4.6,
-                notes: '冷萃包 10包/袋 - 羅布斯塔 100%',
-                desc: 'Cà phê ủ lạnh Robusta 100% (10 túi/túi)',
-                img: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80',
-                featured: false
-            },
-            {
-                id: 'p12',
-                name: 'Cà phê ủ lạnh Robusta 100% (30 túi/túi)',
-                category: 'coldbrew',
-                price: 230000,
-                wholesalePrice: 200000,
-                rating: 4.7,
-                notes: '冷萃包 30包/袋 - 羅布斯塔 100%',
-                desc: 'Cà phê ủ lạnh Robusta 100% (30 túi/túi)',
-                img: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80',
-                featured: false
-            },
-            {
-                id: 'p13',
-                name: 'Cà phê ủ lạnh Robusta - Hương hoa nhài (10 túi/túi)',
-                category: 'coldbrew',
-                price: 100000,
-                wholesalePrice: 88000,
-                rating: 4.9,
-                notes: '茉莉花風味冷萃包 10包/袋',
-                desc: 'Cà phê ủ lạnh Robusta - Hương hoa nhài (10 túi/túi)',
-                img: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80',
-                featured: true
-            },
-            {
-                id: 'p14',
-                name: 'Cà phê ủ lạnh Robusta - Hương hoa nhài (30 túi/túi)',
-                category: 'coldbrew',
-                price: 250000,
-                wholesalePrice: 220000,
-                rating: 4.9,
-                notes: '茉莉花風味冷萃包 30包/袋',
-                desc: 'Cà phê ủ lạnh Robusta - Hương hoa nhài (30 túi/túi)',
-                img: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80',
-                featured: false
-            },
-
-            // 4. Robusta Honey Process（羅布斯塔 蜜處理）
-            {
-                id: 'p15',
-                name: 'Cà phê hạt Robusta Honey chế biến mật (250g)',
-                category: 'robusta-honey',
-                price: 105000,
-                wholesalePrice: 90000,
-                rating: 4.8,
-                notes: 'Robusta 蜜處理 - 烤麥芽焦糖香',
-                desc: 'Cà phê hạt Robusta Honey chế biến mật (250g)',
-                img: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=800&q=80',
-                featured: false
-            },
-            {
-                id: 'p16',
-                name: 'Cà phê hạt Robusta Honey chế biến mật (500g)',
-                category: 'robusta-honey',
-                price: 200000,
-                wholesalePrice: 170000,
-                rating: 4.8,
-                notes: 'Robusta 蜜處理 - 500g 包裝',
-                desc: 'Cà phê hạt Robusta Honey chế biến mật (500g)',
-                img: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=800&q=80',
-                featured: false
-            },
-            {
-                id: 'p17',
-                name: 'Cà phê ủ lạnh Robusta Honey (10 túi/túi)',
-                category: 'coldbrew',
-                price: 95000,
-                wholesalePrice: 82000,
-                rating: 4.7,
-                notes: '冷萃包 10包/袋 - 羅布斯塔蜜處理',
-                desc: 'Cà phê ủ lạnh Robusta Honey (10 túi/túi)',
-                img: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80',
-                featured: false
-            },
-            {
-                id: 'p18',
-                name: 'Cà phê ủ lạnh Robusta Honey (30 túi/túi)',
-                category: 'coldbrew',
-                price: 270000,
-                wholesalePrice: 230000,
-                rating: 4.8,
-                notes: '冷萃包 30包/袋 - 羅布斯塔蜜處理',
-                desc: 'Cà phê ủ lạnh Robusta Honey (30 túi/túi)',
-                img: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=800&q=80',
-                featured: false
-            },
-
-            // 5. Espresso Blend（80% Arabica : 20% Robusta）
-            {
-                id: 'p19',
-                name: 'Cà phê phối trộn Blend 80/20 Espresso (250g)',
-                category: 'blend',
-                price: 135000,
-                wholesalePrice: 115000,
-                rating: 4.9,
-                notes: '80% Arabica : 20% Robusta - 義式特調',
-                desc: 'Cà phê phối trộn Blend 80/20 Espresso (250g)',
-                img: 'https://images.unsplash.com/photo-1580933073521-dc49ac0d4e6a?auto=format&fit=crop&w=800&q=80',
-                featured: true
-            },
-            {
-                id: 'p20',
-                name: 'Cà phê phối trộn Blend 80/20 Espresso (500g)',
-                category: 'blend',
-                price: 260000,
-                wholesalePrice: 220000,
-                rating: 4.9,
-                notes: '80% Arabica : 20% Robusta - 500g',
-                desc: 'Cà phê phối trộn Blend 80/20 Espresso (500g)',
-                img: 'https://images.unsplash.com/photo-1580933073521-dc49ac0d4e6a?auto=format&fit=crop&w=800&q=80',
-                featured: false
-            },
-
-            // 6. Commercial Blend（70% Arabica : 30% Robusta）
-            {
-                id: 'p21',
-                name: 'Cà phê phối trộn Blend 70/30 Thương mại (250g)',
-                category: 'blend',
-                price: 128000,
-                wholesalePrice: 110000,
-                rating: 4.8,
-                notes: '70% Arabica : 30% Robusta - 商業拼配',
-                desc: 'Cà phê phối trộn Blend 70/30 Thương mại (250g)',
-                img: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80',
-                featured: false
-            },
-            {
-                id: 'p22',
-                name: 'Cà phê phối trộn Blend 70/30 Thương mại (500g)',
-                category: 'blend',
-                price: 245000,
-                wholesalePrice: 210000,
-                rating: 4.8,
-                notes: '70% Arabica : 30% Robusta - 500g',
-                desc: 'Cà phê phối trộn Blend 70/30 Thương mại (500g)',
-                img: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80',
-                featured: false
-            },
-
-            // 7. Southern Italian Blend（50% Arabica : 50% Robusta）
-            {
-                id: 'p23',
-                name: 'Cà phê phối trộn Blend 50/50 Phong cách Nam Ý (250g)',
-                category: 'blend',
-                price: 118000,
-                wholesalePrice: 100000,
-                rating: 4.7,
-                notes: '50% Arabica : 50% Robusta - 南義風味',
-                desc: 'Cà phê phối trộn Blend 50/50 Phong cách Nam Ý (250g)',
-                img: 'https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=800&q=80',
-                featured: true
-            },
-            {
-                id: 'p24',
-                name: 'Cà phê phối trộn Blend 50/50 Phong cách Nam Ý (500g)',
-                category: 'blend',
-                price: 225000,
-                wholesalePrice: 190000,
-                rating: 4.7,
-                notes: '50% Arabica : 50% Robusta - 500g',
-                desc: 'Cà phê phối trộn Blend 50/50 Phong cách Nam Ý (500g)',
-                img: 'https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=800&q=80',
-                featured: false
-            }
-        ];
-
-        // Global State
-        let currentCategory = 'all';
-        let priceMode = 'retail';
-        let cart = [];
-        let wishlist = [];
-        let currentModalProduct = null;
-        let modalQty = 1;
-
-        function formatPrice(val) {
-            return 'VND ' + val.toLocaleString('vi-VN');
+    function App() {
+      // 狀態管理
+      const [cart, setCart] = useState(() => {
+        try {
+          const savedCart = localStorage.getItem(CART_STORAGE_KEY);
+          return savedCart ? JSON.parse(savedCart) : [];
+        } catch (e) {
+          return [];
         }
+      });
+      const [searchQuery, setSearchQuery] = useState('');
+      const [selectedCategory, setSelectedCategory] = useState('all');
+      const [selectedProduct, setSelectedProduct] = useState(null);
+      const [isCartOpen, setIsCartOpen] = useState(false);
+      const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+      const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
-        function setPriceMode(mode) {
-            priceMode = mode;
-            document.getElementById('price-mode-retail').className = mode === 'retail' ? 
-                'px-3 py-1.5 rounded-lg bg-espresso-900 text-white shadow-sm transition' : 
-                'px-3 py-1.5 rounded-lg bg-transparent text-espresso-800 hover:text-amber-gold transition';
-            
-            document.getElementById('price-mode-wholesale').className = mode === 'wholesale' ? 
-                'px-3 py-1.5 rounded-lg bg-amber-gold text-white shadow-sm transition' : 
-                'px-3 py-1.5 rounded-lg bg-transparent text-espresso-800 hover:text-amber-gold transition';
+      // 持久化購物車至 localStorage
+      useEffect(() => {
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+      }, [cart]);
 
-            showToast(`已切換至【${mode === 'retail' ? '零售價' : '批發價'}】模式`);
-            applyFilters();
-        }
-
-        function getCurrentPrice(p) {
-            return priceMode === 'wholesale' ? p.wholesalePrice : p.price;
-        }
-
-        function updateCategoryCounts() {
-            document.getElementById('count-all').innerText = products.length;
-            document.getElementById('count-arabica').innerText = products.filter(p => p.category === 'arabica').length;
-            document.getElementById('count-arabica-honey').innerText = products.filter(p => p.category === 'arabica-honey').length;
-            document.getElementById('count-robusta').innerText = products.filter(p => p.category === 'robusta').length;
-            document.getElementById('count-robusta-honey').innerText = products.filter(p => p.category === 'robusta-honey').length;
-            document.getElementById('count-blend').innerText = products.filter(p => p.category === 'blend').length;
-            document.getElementById('count-coldbrew').innerText = products.filter(p => p.category === 'coldbrew').length;
-        }
-
-        function filterCategory(cat) {
-            currentCategory = cat;
-            document.querySelectorAll('.cat-filter-btn').forEach(btn => {
-                btn.className = 'cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold transition border border-espresso-200 bg-white text-espresso-800 hover:border-amber-gold';
-            });
-            const activeBtn = document.getElementById(`cat-btn-${cat}`);
-            if (activeBtn) {
-                activeBtn.className = 'cat-filter-btn active-tab px-4 py-2 rounded-full text-xs font-semibold transition border border-amber-gold bg-amber-gold text-white';
-            }
-            applyFilters();
-        }
-
-        function resetFilters() {
-            document.getElementById('search-input').value = '';
-            filterCategory('all');
-        }
-
-        function applyFilters() {
-            const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
-            const sortVal = document.getElementById('sort-select').value;
-
-            let filtered = products.filter(p => {
-                const matchCat = (currentCategory === 'all') || (p.category === currentCategory);
-                const matchSearch = p.name.toLowerCase().includes(searchTerm) || p.notes.toLowerCase().includes(searchTerm);
-                return matchCat && matchSearch;
-            });
-
-            if (sortVal === 'price-low') {
-                filtered.sort((a, b) => getCurrentPrice(a) - getCurrentPrice(b));
-            } else if (sortVal === 'price-high') {
-                filtered.sort((a, b) => getCurrentPrice(b) - getCurrentPrice(a));
-            } else if (sortVal === 'featured') {
-                filtered.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
-            }
-
-            renderProducts(filtered);
-        }
-
-        function renderProducts(items = products) {
-            const grid = document.getElementById('product-grid');
-            const emptyState = document.getElementById('empty-state');
-
-            if (items.length === 0) {
-                grid.innerHTML = '';
-                emptyState.classList.remove('hidden');
-                return;
-            } else {
-                emptyState.classList.add('hidden');
-            }
-
-            grid.innerHTML = items.map(p => {
-                const isWish = wishlist.includes(p.id);
-                const activePrice = getCurrentPrice(p);
-                return `
-                <div class="bg-white rounded-2xl border border-espresso-200/80 overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between group">
-                    <div>
-                        <div class="relative h-48 bg-espresso-100 overflow-hidden cursor-pointer" onclick="openProductModal('${p.id}')">
-                            <img src="${p.img}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                            ${p.featured ? `<span class="absolute top-3 left-3 bg-amber-gold text-white text-[10px] font-bold px-2 py-0.5 rounded">熱銷推薦</span>` : ''}
-                            <button onclick="event.stopPropagation(); toggleWishlist('${p.id}')" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-espresso-800 flex items-center justify-center transition shadow-sm">
-                                <i class="${isWish ? 'fa-solid text-red-500' : 'fa-regular'} fa-heart"></i>
-                            </button>
-                        </div>
-                        <div class="p-4 space-y-2">
-                            <h3 onclick="openProductModal('${p.id}')" class="font-serif font-bold text-espresso-950 text-sm leading-snug cursor-pointer hover:text-amber-gold transition line-clamp-2">
-                                ${p.name}
-                            </h3>
-                            <p class="text-xs text-amber-gold font-medium">${p.notes}</p>
-                        </div>
-                    </div>
-                    <div class="p-4 pt-0 flex items-center justify-between">
-                        <div>
-                            <span class="text-[10px] text-espresso-600 block">${priceMode === 'wholesale' ? '批發價' : '零售價'}</span>
-                            <span class="font-serif font-bold text-sm text-espresso-950">${formatPrice(activePrice)}</span>
-                        </div>
-                        <button onclick="quickAddToCart('${p.id}')" class="bg-espresso-900 hover:bg-amber-gold text-white text-xs font-bold px-3 py-2 rounded-xl transition">
-                            <i class="fa-solid fa-cart-plus mr-1"></i>加入
-                        </button>
-                    </div>
-                </div>
-                `;
-            }).join('');
-        }
-
-        function quickAddToCart(productId) {
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
-
-            const unitPrice = getCurrentPrice(product);
-            const existingIndex = cart.findIndex(item => item.id === productId && item.price === unitPrice);
-
-            if (existingIndex > -1) {
-                cart[existingIndex].qty += 1;
-            } else {
-                cart.push({
-                    id: product.id,
-                    name: product.name,
-                    price: unitPrice,
-                    img: product.img,
-                    qty: 1
-                });
-            }
-
-            updateCartUI();
-            showToast(`已加入購物車：${product.name}`);
-        }
-
-        function updateCartUI() {
-            const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
-            document.getElementById('cart-count-badge').innerText = totalCount;
-
-            const container = document.getElementById('cart-items-container');
-            if (cart.length === 0) {
-                container.innerHTML = `<p class="text-center text-xs text-espresso-400 py-10">購物車目前是空的</p>`;
-                document.getElementById('cart-total').innerText = formatPrice(0);
-                return;
-            }
-
-            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            document.getElementById('cart-total').innerText = formatPrice(total);
-
-            container.innerHTML = cart.map((item, index) => `
-                <div class="flex gap-3 bg-espresso-50 p-3 rounded-2xl border border-espresso-200/60 relative">
-                    <img src="${item.img}" class="w-14 h-14 object-cover rounded-xl">
-                    <div class="flex-1 space-y-1">
-                        <h4 class="font-bold text-xs text-espresso-950 pr-4">${item.name}</h4>
-                        <div class="flex items-center justify-between pt-1">
-                            <span class="font-serif font-bold text-xs text-espresso-950">${formatPrice(item.price)}</span>
-                            <div class="flex items-center border border-espresso-200 rounded bg-white">
-                                <button onclick="updateCartItemQty(${index}, -1)" class="px-2 py-0.5 text-xs font-bold">-</button>
-                                <span class="px-2 text-xs font-bold">${item.qty}</span>
-                                <button onclick="updateCartItemQty(${index}, 1)" class="px-2 py-0.5 text-xs font-bold">+</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function updateCartItemQty(index, delta) {
-            cart[index].qty += delta;
-            if (cart[index].qty <= 0) cart.splice(index, 1);
-            updateCartUI();
-        }
-
-        function toggleCartDrawer() {
-            document.getElementById('cart-drawer').classList.toggle('hidden');
-        }
-
-        function openProductModal(productId) {
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
-            currentModalProduct = product;
-            modalQty = 1;
-
-            document.getElementById('modal-img').src = product.img;
-            document.getElementById('modal-title').innerText = product.name;
-            document.getElementById('modal-category').innerText = product.category;
-            document.getElementById('modal-desc').innerText = product.desc;
-            document.getElementById('modal-price').innerText = formatPrice(getCurrentPrice(product));
-            document.getElementById('modal-qty').innerText = modalQty;
-
-            document.getElementById('product-modal').classList.remove('hidden');
-        }
-
-        function closeProductModal() {
-            document.getElementById('product-modal').classList.add('hidden');
-        }
-
-        function adjustModalQty(delta) {
-            modalQty = Math.max(1, modalQty + delta);
-            document.getElementById('modal-qty').innerText = modalQty;
-        }
-
-        function addModalItemToCart() {
-            if (!currentModalProduct) return;
-            const unitPrice = getCurrentPrice(currentModalProduct);
-            const existingIndex = cart.findIndex(item => item.id === currentModalProduct.id && item.price === unitPrice);
-
-            if (existingIndex > -1) {
-                cart[existingIndex].qty += modalQty;
-            } else {
-                cart.push({
-                    id: currentModalProduct.id,
-                    name: currentModalProduct.name,
-                    price: unitPrice,
-                    img: currentModalProduct.img,
-                    qty: modalQty
-                });
-            }
-
-            updateCartUI();
-            closeProductModal();
-            showToast('已新增至購物車');
-            toggleCartDrawer();
-        }
-
-        function toggleWishlist(id) {
-            const idx = wishlist.indexOf(id);
-            if (idx > -1) {
-                wishlist.splice(idx, 1);
-            } else {
-                wishlist.push(id);
-            }
-            const badge = document.getElementById('wishlist-badge');
-            badge.innerText = wishlist.length;
-            badge.classList.toggle('hidden', wishlist.length === 0);
-            applyFilters();
-        }
-
-        function toggleWishlistModal() {
-            const modal = document.getElementById('wishlist-modal');
-            modal.classList.toggle('hidden');
-            if (!modal.classList.contains('hidden')) {
-                const container = document.getElementById('wishlist-items-container');
-                const items = products.filter(p => wishlist.includes(p.id));
-                if (items.length === 0) {
-                    container.innerHTML = `<p class="text-xs text-center text-espresso-400">收藏夾目前沒有商品</p>`;
-                } else {
-                    container.innerHTML = items.map(p => `
-                        <div class="flex items-center justify-between p-2 bg-espresso-50 rounded-xl">
-                            <span class="text-xs font-bold text-espresso-900">${p.name}</span>
-                            <button onclick="quickAddToCart('${p.id}')" class="text-xs bg-espresso-900 text-white px-2 py-1 rounded">加購物車</button>
-                        </div>
-                    `).join('');
-                }
-            }
-        }
-
-        function toggleMobileMenu() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        }
-
-        function showToast(msg) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'bg-espresso-900 text-white text-xs px-4 py-2.5 rounded-xl shadow-lg border border-amber-gold/30 transition-all transform duration-300 pointer-events-auto';
-            toast.innerText = msg;
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 300);
-            }, 2500);
-        }
-
-        // Initialize Application
-        window.addEventListener('DOMContentLoaded', () => {
-            updateCategoryCounts();
-            applyFilters();
+      // 搜尋與分類過濾
+      const filteredProducts = useMemo(() => {
+        return PRODUCTS.filter(product => {
+          const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+          const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                (product.nameVi && product.nameVi.toLowerCase().includes(searchQuery.toLowerCase()));
+          return matchesCategory && matchesSearch;
         });
-    </script>
+      }, [selectedCategory, searchQuery]);
+
+      // 購物車操作邏輯
+      const handleAddToCart = (productToAdd) => {
+        setCart(prev => {
+          const cartKey = `${productToAdd.id}-${productToAdd.grind || 'default'}`;
+          const existing = prev.find(item => item.cartKey === cartKey);
+          if (existing) {
+            return prev.map(item =>
+              item.cartKey === cartKey
+                ? { ...item, quantity: item.quantity + productToAdd.quantity }
+                : item
+            );
+          }
+          return [...prev, { ...productToAdd, cartKey }];
+        });
+      };
+
+      const updateQuantity = (cartKey, delta) => {
+        setCart(prev => prev.map(item => {
+          if (item.cartKey === cartKey) {
+            const newQty = item.quantity + delta;
+            return newQty > 0 ? { ...item, quantity: newQty } : null;
+          }
+          return item;
+        }).filter(Boolean));
+      };
+
+      const clearCart = () => {
+        setCart([]);
+        localStorage.removeItem(CART_STORAGE_KEY);
+      };
+
+      const totalCartItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+      return (
+        <div className="min-h-screen flex flex-col">
+          {/* 導覽列 */}
+          <nav className="sticky top-0 z-30 bg-coffee-900 text-coffee-100 shadow-md">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <Coffee className="h-8 w-8 text-coffee-200" />
+                <span className="text-2xl font-bold tracking-wider font-serif">AROMA CAFE</span>
+              </div>
+
+              {/* 搜尋列 */}
+              <div className="relative flex-1 max-w-md hidden md:block">
+                <input
+                  type="text"
+                  placeholder="搜尋產品中文或越南文名稱..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-coffee-800 text-coffee-100 placeholder-coffee-200/60 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-coffee-200 border border-coffee-800 text-sm"
+                />
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-coffee-200/60" />
+              </div>
+
+              {/* 操作按鈕 */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setIsHistoryOpen(true)}
+                  className="p-2 hover:bg-coffee-800 rounded-full transition-colors text-coffee-200 hover:text-white"
+                  title="歷史訂單"
+                >
+                  <Clock className="h-6 w-6" />
+                </button>
+                <button
+                  onClick={() => setIsCartOpen(true)}
+                  className="relative p-2 hover:bg-coffee-800 rounded-full transition-colors"
+                >
+                  <ShoppingBag className="h-7 w-7 text-coffee-100" />
+                  {totalCartItems > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                      {totalCartItems}
+                    </span>
+                  )}
+                </button>
+              </div>
+            </div>
+          </nav>
+
+          {/* 英雄橫幅 */}
+          <header className="relative bg-coffee-900 text-coffee-100 py-20 px-4 text-center overflow-hidden">
+            <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&q=80&w=1600')] bg-cover bg-center"></div>
+            <div className="relative max-w-3xl mx-auto space-y-3">
+              <h1 className="text-3xl sm:text-5xl font-extrabold font-serif tracking-wide">越南原產精品咖啡</h1>
+              <p className="text-coffee-200 text-base sm:text-lg font-light">
+                批發與零售服務 • 滿 10 包自動升級批發價 • 滿 500,000 VND 免運費
+              </p>
+            </div>
+          </header>
+
+          {/* 主要內容區 */}
+          <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+            {/* 分類切換 */}
+            <div className="flex flex-wrap gap-3 justify-center mb-8">
+              {[
+                { id: 'all', label: '全部分類' },
+                { id: 'arabica', label: '1. 阿拉比卡 (Arabica)' },
+                { id: 'robusta', label: '2. 羅布斯塔 (Robusta)' },
+                { id: 'blend', label: '3. 拼配咖啡 (Blend)' }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setSelectedCategory(tab.id)}
+                  className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                    selectedCategory === tab.id
+                      ? 'bg-coffee-800 text-coffee-50 shadow-md'
+                      : 'bg-coffee-100 text-coffee-800 hover:bg-coffee-200'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* 商品卡片區 */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProducts.map(product => (
+                <div key={product.id} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 border border-coffee-100 flex flex-col">
+                  <div className="h-52 overflow-hidden relative bg-coffee-100">
+                    <img src={product.image} alt={product.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                    <span className="absolute top-3 right-3 text-xs bg-coffee-900/80 text-white px-2.5 py-1 rounded-full backdrop-blur-md">
+                      {product.spec}
+                    </span>
+                  </div>
+                  <div className="p-5 flex flex-col flex-grow justify-between">
+                    <div>
+                      <h3 className="text-lg font-bold text-coffee-900 font-serif">{product.name}</h3>
+                      <p className="text-xs text-coffee-600 italic mb-3">{product.nameVi}</p>
+                    </div>
+
+                    <div className="pt-4 border-t border-coffee-100 space-y-3">
+                      <div className="flex items-baseline justify-between">
+                        <div>
+                          <div className="text-xs text-coffee-500">零售價</div>
+                          <div className="text-lg font-bold text-coffee-900">{product.price.toLocaleString()} VND</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-xs text-amber-700 font-bold">批發價 (10包+)</div>
+                          <div className="text-sm font-bold text-amber-800">{product.wholesalePrice.toLocaleString()} VND</div>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => setSelectedProduct(product)}
+                        className="w-full bg-coffee-800 hover:bg-coffee-900 text-white py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                      >
+                        <Plus className="h-4 w-4" /> 選擇與購買
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </main>
+
+          {/* 1. 商品細節彈窗 (含研磨度選擇) */}
+          {selectedProduct && (
+            <ProductDetailModal
+              product={selectedProduct}
+              onClose={() => setSelectedProduct(null)}
+              onAddToCart={handleAddToCart}
+            />
+          )}
+
+          {/* 2. 購物車側邊抽屜 */}
+          {isCartOpen && (
+            <CartDrawer
+              isOpen={isCartOpen}
+              onClose={() => setIsCartOpen(false)}
+              cart={cart}
+              updateQuantity={updateQuantity}
+              onOpenCheckout={() => {
+                setIsCartOpen(false);
+                setIsCheckoutOpen(true);
+              }}
+            />
+          )}
+
+          {/* 3. 結帳與收件地址彈窗 */}
+          {isCheckoutOpen && (
+            <CheckoutModal
+              isOpen={isCheckoutOpen}
+              onClose={() => setIsCheckoutOpen(false)}
+              cart={cart}
+              clearCart={clearCart}
+            />
+          )}
+
+          {/* 4. 歷史訂單紀錄彈窗 */}
+          {isHistoryOpen && (
+            <OrderHistoryModal
+              isOpen={isHistoryOpen}
+              onClose={() => setIsHistoryOpen(false)}
+            />
+          )}
+
+        </div>
+      );
+    }
+
+    // --- 子元件 1: 商品細節與研磨選擇 Modal ---
+    function ProductDetailModal({ product, onClose, onAddToCart }) {
+      const [quantity, setQuantity] = useState(1);
+      const [selectedGrind, setSelectedGrind] = useState('beans');
+
+      const isBeanProduct = product.type === 'beans';
+      const currentUnitPrice = quantity >= 10 ? product.wholesalePrice : product.price;
+
+      const handleAdd = () => {
+        const grindObj = GRIND_OPTIONS.find(g => g.id === selectedGrind);
+        onAddToCart({
+          ...product,
+          quantity,
+          grind: isBeanProduct ? selectedGrind : 'coldbrew',
+          grindLabel: isBeanProduct ? grindObj.label : '冷萃包'
+        });
+        onClose();
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+          <div className="flex min-h-full items-center justify-center p-4">
+            <div className="relative w-full max-w-xl bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 overflow-hidden text-left">
+              <button onClick={onClose} className="absolute right-4 top-4 z-10 p-2 bg-white/80 rounded-full hover:bg-white text-coffee-900">
+                <X className="h-5 w-5" />
+              </button>
+
+              <div className="p-6 space-y-6">
+                <div>
+                  <span className="text-xs font-bold text-coffee-600 uppercase">{product.spec}</span>
+                  <h2 className="text-2xl font-bold font-serif text-coffee-900">{product.name}</h2>
+                  <p className="text-xs text-coffee-600 italic">{product.nameVi}</p>
+                </div>
+
+                <div className="flex items-baseline gap-3 bg-white p-4 rounded-xl border border-coffee-100">
+                  <span className="text-2xl font-extrabold text-coffee-800">
+                    {currentUnitPrice.toLocaleString()} VND
+                  </span>
+                  {quantity >= 10 ? (
+                    <span className="text-xs bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded">
+                      已享批發優惠價
+                    </span>
+                  ) : (
+                    <span className="text-xs text-coffee-500">
+                      (再加 {10 - quantity} 包升級批發價)
+                    </span>
+                  )}
+                </div>
+
+                {/* 研磨度選擇 */}
+                {isBeanProduct ? (
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase text-coffee-800 flex items-center gap-1">
+                      <Settings2 className="h-3.5 w-3.5" /> 選擇研磨度 (Grind Size)
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {GRIND_OPTIONS.map(g => (
+                        <button
+                          key={g.id}
+                          onClick={() => setSelectedGrind(g.id)}
+                          className={`p-3 rounded-lg text-left border transition-all ${
+                            selectedGrind === g.id
+                              ? 'bg-coffee-800 text-white border-coffee-800'
+                              : 'bg-white text-coffee-800 border-coffee-200 hover:border-coffee-400'
+                          }`}
+                        >
+                          <div className="text-xs font-bold">{g.label}</div>
+                          <div className="text-[10px] opacity-75">{g.detail}</div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-3 bg-coffee-100 rounded-lg text-xs text-coffee-700">
+                    本商品為獨立冷萃浸泡包，免選擇研磨度。
+                  </div>
+                )}
+
+                {/* 數量選擇 */}
+                <div className="flex items-center justify-between pt-2">
+                  <span className="text-sm font-bold text-coffee-900">數量</span>
+                  <div className="flex items-center rounded-lg border border-coffee-300 bg-white p-1">
+                    <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="p-1.5 hover:bg-coffee-100 rounded">
+                      <Minus className="h-4 w-4" />
+                    </button>
+                    <span className="w-8 text-center text-sm font-bold">{quantity}</span>
+                    <button onClick={() => setQuantity(q => q + 1)} className="p-1.5 hover:bg-coffee-100 rounded">
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleAdd}
+                  className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
+                >
+                  <ShoppingBag className="h-4 w-4" /> 加入購物車 • {(currentUnitPrice * quantity).toLocaleString()} VND
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // --- 子元件 2: 購物車 Drawer ---
+    function CartDrawer({ isOpen, onClose, cart, updateQuantity, onOpenCheckout }) {
+      const getUnitPrice = (item) => item.quantity >= 10 ? item.wholesalePrice : item.price;
+      const subtotal = cart.reduce((sum, item) => sum + getUnitPrice(item) * item.quantity, 0);
+      const isFreeShipping = subtotal >= SHIPPING_CONFIG.FREE_THRESHOLD || subtotal === 0;
+      const shippingFee = isFreeShipping ? 0 : SHIPPING_CONFIG.FLAT_RATE;
+      const grandTotal = subtotal + shippingFee;
+      const amountNeeded = Math.max(0, SHIPPING_CONFIG.FREE_THRESHOLD - subtotal);
+      const progress = Math.min(100, (subtotal / SHIPPING_CONFIG.FREE_THRESHOLD) * 100);
+
+      return (
+        <div className="fixed inset-0 z-50 overflow-hidden">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+          <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+            <div className="w-screen max-w-md bg-coffee-50 text-coffee-900 shadow-2xl flex flex-col">
+              
+              <div className="p-6 bg-coffee-900 text-coffee-100 flex items-center justify-between">
+                <h2 className="text-xl font-bold flex items-center gap-2 font-serif">
+                  <ShoppingBag className="h-5 w-5" /> 您的購物車
+                </h2>
+                <button onClick={onClose} className="p-1 hover:bg-coffee-800 rounded-full">
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              {/* 免運進度條 */}
+              <div className="bg-coffee-100 p-4 border-b border-coffee-200">
+                <div className="flex items-center justify-between text-xs font-semibold text-coffee-800 mb-1.5">
+                  <span className="flex items-center gap-1"><Truck className="h-4 w-4" /> 滿 500,000 VND 免運</span>
+                  <span>{isFreeShipping ? '已達免運門檻！' : `還差 ${amountNeeded.toLocaleString()} VND`}</span>
+                </div>
+                <div className="w-full bg-coffee-200 rounded-full h-2 overflow-hidden">
+                  <div className="bg-amber-700 h-full transition-all duration-300" style={{ width: `${progress}%` }} />
+                </div>
+              </div>
+
+              {/* 商品列表 */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                {cart.length === 0 ? (
+                  <div className="h-full flex flex-col items-center justify-center text-coffee-600">
+                    <p>購物車目前是空的</p>
+                  </div>
+                ) : (
+                  cart.map(item => {
+                    const unitPrice = getUnitPrice(item);
+                    return (
+                      <div key={item.cartKey} className="p-3 bg-white rounded-xl shadow-sm border border-coffee-100 space-y-2">
+                        <div className="flex items-start gap-3">
+                          <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-lg flex-shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-bold text-coffee-900 text-sm truncate">{item.name}</h4>
+                            <p className="text-xs text-coffee-600">規格: {item.spec} | 研磨: {item.grindLabel}</p>
+                            <div className="mt-1 flex items-center gap-2">
+                              <span className="text-xs font-bold text-coffee-800">{unitPrice.toLocaleString()} VND</span>
+                              {item.quantity >= 10 && <span className="text-[10px] bg-amber-100 text-amber-800 px-1 rounded font-bold">批發價</span>}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-2 border-t border-coffee-50">
+                          <div className="flex items-center gap-2 bg-coffee-100 rounded-lg p-1">
+                            <button onClick={() => updateQuantity(item.cartKey, -1)} className="p-1 hover:bg-coffee-200 rounded"><Minus className="h-3 w-3" /></button>
+                            <span className="text-xs font-bold w-6 text-center">{item.quantity}</span>
+                            <button onClick={() => updateQuantity(item.cartKey, 1)} className="p-1 hover:bg-coffee-200 rounded"><Plus className="h-3 w-3" /></button>
+                          </div>
+                          <div className="text-right font-bold text-xs">
+                            {(unitPrice * item.quantity).toLocaleString()} VND
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+
+              {/* 結帳按鈕頁尾 */}
+              {cart.length > 0 && (
+                <div className="p-6 bg-white border-t border-coffee-100 space-y-3">
+                  <div className="space-y-1 text-sm text-coffee-700">
+                    <div className="flex justify-between"><span>商品小計</span><span>{subtotal.toLocaleString()} VND</span></div>
+                    <div className="flex justify-between"><span>運費</span><span>{isFreeShipping ? '免費' : `${shippingFee.toLocaleString()} VND`}</span></div>
+                    <div className="flex justify-between font-bold text-base text-coffee-900 pt-2 border-t border-coffee-100">
+                      <span>總計金額</span><span className="text-xl text-coffee-800">{grandTotal.toLocaleString()} VND</span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={onOpenCheckout}
+                    className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
+                  >
+                    <Send className="h-4 w-4" /> 前往填寫收件資訊結帳
+                  </button>
+                </div>
+              )}
+
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // --- 子元件 3: 收件人地址與發送 Modal ---
+    function CheckoutModal({ isOpen, onClose, cart, clearCart }) {
+      const [formData, setFormData] = useState({ fullName: '', phone: '', address: '', notes: '' });
+      const [isSubmitting, setIsSubmitting] = useState(false);
+      const [isSuccess, setIsSuccess] = useState(false);
+
+      const getUnitPrice = (item) => item.quantity >= 10 ? item.wholesalePrice : item.price;
+      const subtotal = cart.reduce((sum, item) => sum + getUnitPrice(item) * item.quantity, 0);
+      const isFreeShipping = subtotal >= SHIPPING_CONFIG.FREE_THRESHOLD || subtotal === 0;
+      const shippingFee = isFreeShipping ? 0 : SHIPPING_CONFIG.FLAT_RATE;
+      const grandTotal = subtotal + shippingFee;
+
+      const handleInputChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+      };
+
+      const handleSubmitOrder = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        const orderSummaryText = cart.map((item, idx) => {
+          const unitPrice = getUnitPrice(item);
+          return `${idx + 1}. ${item.name} (${item.spec}) - 研磨: ${item.grindLabel} x ${item.quantity}包 = ${(unitPrice * item.quantity).toLocaleString()} VND`;
+        }).join('\n');
+
+        const orderId = Date.now().toString().slice(-6);
+        const orderRecord = {
+          id: orderId,
+          date: new Date().toLocaleString('zh-TW'),
+          customerName: formData.fullName,
+          phone: formData.phone,
+          address: formData.address,
+          notes: formData.notes,
+          items: cart.map(item => ({
+            name: item.name,
+            spec: item.spec,
+            grindLabel: item.grindLabel,
+            quantity: item.quantity,
+            unitPrice: getUnitPrice(item)
+          })),
+          subtotal,
+          shippingFee,
+          grandTotal
+        };
+
+        try {
+          // 透過 Formspree/Email 發送訂單至目標 Email
+          await fetch('https://formspree.io/f/xbjnqpyw', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              target_email: 'rick0960590177@gmail.com',
+              order_id: orderId,
+              customer_name: formData.fullName,
+              customer_phone: formData.phone,
+              shipping_address: formData.address,
+              order_notes: formData.notes || '無',
+              order_summary: orderSummaryText,
+              total_amount: `${grandTotal.toLocaleString()} VND`,
+              order_date: orderRecord.date
+            })
+          });
+
+          // 寫入本地歷史紀錄
+          const history = JSON.parse(localStorage.getItem(ORDER_HISTORY_STORAGE_KEY) || '[]');
+          localStorage.setItem(ORDER_HISTORY_STORAGE_KEY, JSON.stringify([orderRecord, ...history]));
+
+          setIsSuccess(true);
+          clearCart();
+          setTimeout(() => {
+            setIsSuccess(false);
+            onClose();
+          }, 3000);
+        } catch (error) {
+          alert('訂單傳送失敗，請再試一次');
+        } finally {
+          setIsSubmitting(false);
+        }
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+          <div className="flex min-h-full items-center justify-center p-4">
+            <div className="relative w-full max-w-lg bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 overflow-hidden text-left p-6 md:p-8">
+              <button onClick={onClose} className="absolute right-4 top-4 p-2 bg-white/80 rounded-full hover:bg-white text-coffee-900">
+                <X className="h-5 w-5" />
+              </button>
+
+              {isSuccess ? (
+                <div className="py-10 text-center space-y-4">
+                  <CheckCircle2 className="h-16 w-16 text-green-600 mx-auto animate-bounce" />
+                  <h3 className="text-2xl font-bold font-serif text-coffee-900">訂單已成功送出！</h3>
+                  <p className="text-sm text-coffee-600">
+                    訂單已自動寄送至 <span className="font-bold text-coffee-800">rick0960590177@gmail.com</span>。
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmitOrder} className="space-y-4">
+                  <h2 className="text-2xl font-bold font-serif text-coffee-900">收件人資訊</h2>
+
+                  <div>
+                    <label className="block text-xs font-bold text-coffee-800 mb-1">姓名 *</label>
+                    <input type="text" name="fullName" required value={formData.fullName} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-800" />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-coffee-800 mb-1">聯絡電話 *</label>
+                    <input type="tel" name="phone" required value={formData.phone} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-800" />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-coffee-800 mb-1">收件地址 *</label>
+                    <input type="text" name="address" required value={formData.address} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-800" />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-coffee-800 mb-1">備註 (可選)</label>
+                    <textarea name="notes" rows={2} value={formData.notes} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-800" />
+                  </div>
+
+                  <div className="bg-coffee-100 p-4 rounded-xl space-y-1 text-sm font-bold text-coffee-900">
+                    <div className="flex justify-between"><span>應付金額:</span><span className="text-lg text-coffee-800">{grandTotal.toLocaleString()} VND</span></div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    <Send className="h-4 w-4" /> {isSubmitting ? '正在傳送訂單...' : '確認發送訂單'}
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // --- 子元件 4: 歷史訂單 Modal ---
+    function OrderHistoryModal({ isOpen, onClose }) {
+      const [history, setHistory] = useState([]);
+
+      useEffect(() => {
+        const saved = localStorage.getItem(ORDER_HISTORY_STORAGE_KEY);
+        setHistory(saved ? JSON.parse(saved) : []);
+      }, [isOpen]);
+
+      const clearHistory = () => {
+        if (confirm('確定要清除所有歷史訂單紀錄？')) {
+          localStorage.removeItem(ORDER_HISTORY_STORAGE_KEY);
+          setHistory([]);
+        }
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+          <div className="flex min-h-full items-center justify-center p-4">
+            <div className="relative w-full max-w-xl bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 overflow-hidden text-left p-6">
+              <div className="flex justify-between items-center mb-4 border-b border-coffee-200 pb-3">
+                <h2 className="text-xl font-bold font-serif text-coffee-900 flex items-center gap-2">
+                  <Package className="h-5 w-5" /> 歷史訂單紀錄
+                </h2>
+                <div className="flex items-center gap-2">
+                  {history.length > 0 && (
+                    <button onClick={clearHistory} className="text-xs text-red-600 hover:underline flex items-center gap-1">
+                      <Trash2 className="h-3.5 w-3.5" /> 清除歷史
+                    </button>
+                  )}
+                  <button onClick={onClose} className="p-1 rounded-full hover:bg-coffee-200"><X className="h-5 w-5" /></button>
+                </div>
+              </div>
+
+              <div className="max-h-[60vh] overflow-y-auto space-y-3">
+                {history.length === 0 ? (
+                  <p className="text-center py-8 text-sm text-coffee-600">尚無歷史訂單紀錄</p>
+                ) : (
+                  history.map(item => (
+                    <div key={item.id} className="bg-white p-4 rounded-xl border border-coffee-100 space-y-2 text-xs">
+                      <div className="flex justify-between font-bold text-coffee-900">
+                        <span>訂單編號: #{item.id}</span>
+                        <span className="text-coffee-600">{item.date}</span>
+                      </div>
+                      <div className="text-coffee-700">收件人: {item.customerName} ({item.phone})</div>
+                      <div className="bg-coffee-50 p-2 rounded space-y-1">
+                        {item.items.map((prod, idx) => (
+                          <div key={idx} className="flex justify-between text-coffee-800">
+                            <span>{prod.name} ({prod.spec}) - {prod.grindLabel}</span>
+                            <span>x{prod.quantity}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="text-right font-bold text-sm text-coffee-900">
+                        總額: {item.grandTotal.toLocaleString()} VND
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
 </body>
 </html>
