@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aroma Cafe - 越南精品手作咖啡館</title>
+  <title>Aroma Cafe - 精品手作咖啡館</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -26,80 +26,245 @@
     }
   </script>
   <!-- React & Babel CDN -->
-  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <!-- Lucide Icons CDN -->
-  <script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.min.js"></script>
+  <style>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
 </head>
 <body class="bg-coffee-50 text-coffee-900 font-sans selection:bg-coffee-200">
   <div id="root"></div>
 
   <script type="text/babel">
     const { useState, useEffect, useMemo } = React;
-    const { 
-      ShoppingBag, Search, X, Plus, Minus, Coffee, Send, Truck, 
-      Settings2, User, Phone, MapPin, FileText, CheckCircle2, Package, Clock, Trash2, Heart 
-    } = lucideReact;
 
-    // 常數設定
-    const CART_STORAGE_KEY = 'aroma_cafe_cart_v1';
-    const ORDER_HISTORY_STORAGE_KEY = 'aroma_cafe_order_history_v1';
-    const SHIPPING_CONFIG = {
-      FREE_THRESHOLD: 500000, // 500,000 VND 免運
-      FLAT_RATE: 25000       // 運費 25,000 VND
+    const Icons = {
+      Coffee: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+      ),
+      Search: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      ),
+      ShoppingBag: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      ),
+      Clock: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+      ),
+      Plus: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      ),
+      Minus: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      ),
+      X: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      ),
+      Menu: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      ),
+      Globe: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+      ),
+      Truck: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+      ),
+      Send: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      ),
+      Settings: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      ),
+      CheckCircle: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      ),
+      Package: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+      ),
+      Trash: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+      ),
+      AlertTriangle: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+      ),
+      Save: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+      )
     };
 
-    // 研磨度選項
-    const GRIND_OPTIONS = [
-      { id: 'beans', label: '保留原豆', detail: 'Whole Beans' },
-      { id: 'phin', label: '越南滴漏', detail: 'Phin Filter' },
-      { id: 'espresso', label: '義式濃縮', detail: 'Espresso' },
-      { id: 'pour_over', label: '手沖', detail: 'Pour-over' }
-    ];
+    const CART_STORAGE_KEY = 'aroma_cafe_cart_v1';
+    const PRODUCTS_STORAGE_KEY = 'aroma_cafe_products_v1';
+    const ORDER_HISTORY_STORAGE_KEY = 'aroma_cafe_order_history_v1';
+    const SHIPPING_CONFIG = { FREE_THRESHOLD: 500000, FLAT_RATE: 25000 };
 
-    // 商品資料庫
-    const PRODUCTS = [
-      // 阿拉比卡系列
-      { id: 'arabica-100-250g', name: '阿拉比卡 100% 咖啡豆', nameVi: 'Cà phê Arabica 100%', category: 'arabica', spec: '250克', price: 145000, wholesalePrice: 125000, type: 'beans', image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=600' },
-      { id: 'arabica-100-500g', name: '阿拉比卡 100% 咖啡豆', nameVi: 'Cà phê Arabica 100%', category: 'arabica', spec: '500克', price: 280000, wholesalePrice: 240000, type: 'beans', image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=600' },
-      { id: 'arabica-coldbrew-10', name: '阿拉比卡 100% 冷萃包', nameVi: 'Cà phê Cold Brew Arabica 100%', category: 'arabica', spec: '10包/袋', price: 125000, wholesalePrice: 105000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
-      { id: 'arabica-coldbrew-30', name: '阿拉比卡 100% 冷萃包', nameVi: 'Cà phê Cold Brew Arabica 100%', category: 'arabica', spec: '30包/袋', price: 350000, wholesalePrice: 295000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
-      { id: 'arabica-honey-250g', name: '阿拉比卡蜜處理咖啡豆', nameVi: 'Cà phê Arabica Honey Process', category: 'arabica', spec: '250克', price: 160000, wholesalePrice: 138000, type: 'beans', image: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&q=80&w=600' },
-      { id: 'arabica-honey-500g', name: '阿拉比卡蜜處理咖啡豆', nameVi: 'Cà phê Arabica Honey Process', category: 'arabica', spec: '500克', price: 310000, wholesalePrice: 265000, type: 'beans', image: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&q=80&w=600' },
-      { id: 'arabica-honey-cb-10', name: '阿拉比卡蜜處理冷萃包', nameVi: 'Cà phê Cold Brew Arabica Honey', category: 'arabica', spec: '10包/袋', price: 140000, wholesalePrice: 118000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
-      { id: 'arabica-honey-cb-30', name: '阿拉比卡蜜處理冷萃包', nameVi: 'Cà phê Cold Brew Arabica Honey', category: 'arabica', spec: '30包/袋', price: 390000, wholesalePrice: 330000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+    const TRANSLATIONS = {
+      'zh-TW': {
+        searchPlaceholder: '搜尋產品名稱...',
+        history: '歷史訂單',
+        cart: '購物車',
+        adminPanel: '商品後台管理',
+        categories: '產品分類',
+        retailPrice: '零售價',
+        wholesalePrice: '批發價 (10包+)',
+        selectAndBuy: '選擇與購買',
+        soldOut: '已售完',
+        inStock: '庫存充裕',
+        lowStock: '庫存緊張（僅剩 ',
+        units: ' 包）',
+        grindSize: '選擇研磨度 (Grind Size)',
+        coldbrewNotice: '本商品為獨立冷萃浸泡包，免選擇研磨度。',
+        quantity: '數量',
+        addToCart: '加入購物車',
+        wholesaleApplied: '已享批發優惠價',
+        wholesaleUpgrade: '(滿 10 包升級批發價)',
+        freeShippingGoal: '滿 500,000 VND 免運',
+        freeShippingReached: '已達免運門檻！',
+        freeShippingShort: '還差 ',
+        emptyCart: '購物車目前是空的',
+        subtotal: '商品小計',
+        shippingFee: '運費',
+        free: '免費',
+        total: '總計金額',
+        checkout: '前往填寫收件資訊結帳',
+        customerInfo: '收件人資訊',
+        fullName: '姓名 *',
+        phone: '聯絡電話 *',
+        address: '收件地址 *',
+        notes: '備註 (可選)',
+        payable: '應付金額:',
+        submitOrder: '確認發送訂單',
+        submitting: '正在傳送訂單...',
+        orderSuccess: '訂單已成功送出！',
+        orderSuccessDesc: '訂單已自動寄送至管理者電子郵件。',
+        orderHistoryTitle: '歷史訂單紀錄',
+        noHistory: '尚無歷史訂單紀錄',
+        clearHistory: '清除歷史',
+        orderId: '訂單編號',
+        confirmClear: '確定要清除所有歷史訂單紀錄？',
+        restockAlertTitle: '自動補貨提醒',
+        restockAlertNotice: '部分選購商品庫存過低，系統已同步通知管理員備貨。',
+        adminTitle: '庫存與價格管理面板',
+        saveChanges: '儲存所有變更',
+        resetDefault: '恢復預設商品資料',
+        stockQty: '目前庫存',
+        alertThreshold: '預警門檻',
+        grindOptions: {
+          beans: { label: '保留原豆', detail: 'Whole Beans' },
+          phin: { label: '越南滴漏', detail: 'Phin Filter' },
+          espresso: { label: '義式濃縮', detail: 'Espresso' },
+          pour_over: { label: '手沖', detail: 'Pour-over' },
+          coldbrew: { label: '冷萃包', detail: 'Cold Brew' }
+        },
+        cats: {
+          all: '全部分類',
+          arabica: '阿拉比卡',
+          arabica_honey: '阿拉比卡蜜處理',
+          robusta: '羅布斯塔',
+          robusta_honey: '羅布斯塔蜜處理',
+          blend: '拼配咖啡',
+          coldbrew: '冷萃包 (Cold Brew)'
+        }
+      },
+      'vi': {
+        searchPlaceholder: 'Tìm kiếm sản phẩm...',
+        history: 'Lịch sử đơn hàng',
+        cart: 'Giỏ hàng',
+        adminPanel: 'Quản lý sản phẩm',
+        categories: 'Danh mục sản phẩm',
+        retailPrice: 'Giá lẻ',
+        wholesalePrice: 'Giá sỉ (10 gói+)',
+        selectAndBuy: 'Chọn mua',
+        soldOut: 'Hết hàng',
+        inStock: 'Còn hàng',
+        lowStock: 'Sắp hết hàng (Còn ',
+        units: ' gói)',
+        grindSize: 'Chọn mức độ xay (Grind Size)',
+        coldbrewNotice: 'Sản phẩm dạng túi lọc Cold Brew, không cần chọn mức xay.',
+        quantity: 'Số lượng',
+        addToCart: 'Thêm vào giỏ hàng',
+        wholesaleApplied: 'Đã áp dụng giá sỉ',
+        wholesaleUpgrade: '(Mua 10 gói+ nâng giá sỉ)',
+        freeShippingGoal: 'Freeship từ 500,000 VND',
+        freeShippingReached: 'Đã đạt mức Freeship!',
+        freeShippingShort: 'Còn thiếu ',
+        emptyCart: 'Giỏ hàng đang trống',
+        subtotal: 'Tạm tính',
+        shippingFee: 'Phí vận chuyển',
+        free: 'Miễn phí',
+        total: 'Tổng cộng',
+        checkout: 'Thanh toán',
+        customerInfo: 'Thông tin người nhận',
+        fullName: 'Họ và tên *',
+        phone: 'Số điện thoại *',
+        address: 'Địa chỉ nhận hàng *',
+        notes: 'Ghi chú (Không bắt buộc)',
+        payable: 'Thành tiền:',
+        submitOrder: 'Xác nhận đặt hàng',
+        submitting: 'Đang gửi đơn hàng...',
+        orderSuccess: 'Đặt hàng thành công!',
+        orderSuccessDesc: 'Đơn hàng đã được gửi đến email quản lý.',
+        orderHistoryTitle: 'Lịch sử đơn hàng',
+        noHistory: 'Chưa có lịch sử đơn hàng',
+        clearHistory: 'Xóa lịch sử',
+        orderId: 'Mã đơn hàng',
+        confirmClear: 'Bạn có chắc muốn xóa lịch sử đơn hàng?',
+        restockAlertTitle: 'Cảnh báo nhập hàng',
+        restockAlertNotice: 'Một số sản phẩm gần hết hàng, hệ thống đã gửi thông báo đến quản lý.',
+        adminTitle: 'Quản lý kho & Giá cả',
+        saveChanges: 'Lưu thay đổi',
+        resetDefault: 'Khôi phục mặc định',
+        stockQty: 'Tồn kho',
+        alertThreshold: 'Ngưỡng báo',
+        grindOptions: {
+          beans: { label: 'Nguyên hạt', detail: 'Whole Beans' },
+          phin: { label: 'Pha Phin', detail: 'Phin Filter' },
+          espresso: { label: 'Pha Máy', detail: 'Espresso' },
+          pour_over: { label: 'Pha Giấy Lọc', detail: 'Pour-over' },
+          coldbrew: { label: 'Cold Brew', detail: 'Cold Brew' }
+        },
+        cats: {
+          all: 'Tất cả danh mục',
+          arabica: 'Arabica',
+          arabica_honey: 'Arabica Honey Process',
+          robusta: 'Robusta',
+          robusta_honey: 'Robusta Honey Process',
+          blend: 'Cà phê Phối Trộn',
+          coldbrew: 'Túi Lọc Cold Brew'
+        }
+      }
+    };
 
-      // 羅布斯塔系列
-      { id: 'robusta-100-250g', name: '羅布斯塔 100% 咖啡豆', nameVi: 'Cà phê Robusta 100%', category: 'robusta', spec: '250克', price: 91000, wholesalePrice: 78000, type: 'beans', image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
-      { id: 'robusta-100-500g', name: '羅布斯塔 100% 咖啡豆', nameVi: 'Cà phê Robusta 100%', category: 'robusta', spec: '500克', price: 172000, wholesalePrice: 148000, type: 'beans', image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
-      { id: 'robusta-cb-10', name: '羅布斯塔 100% 冷萃包', nameVi: 'Cà phê Cold Brew Robusta 100%', category: 'robusta', spec: '10包/袋', price: 80000, wholesalePrice: 70000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
-      { id: 'robusta-cb-30', name: '羅布斯塔 100% 冷萃包', nameVi: 'Cà phê Cold Brew Robusta 100%', category: 'robusta', spec: '30包/袋', price: 230000, wholesalePrice: 200000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
-      { id: 'robusta-jasmine-cb-10', name: 'Robusta 冷萃包 - 茉莉花風味', nameVi: 'Cà phê Cold Brew Robusta - Hương Hoa Nhài', category: 'robusta', spec: '10包/袋', price: 100000, wholesalePrice: 88000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
-      { id: 'robusta-jasmine-cb-30', name: 'Robusta 冷萃包 - 茉莉花風味', nameVi: 'Cà phê Cold Brew Robusta - Hương Hoa Nhài', category: 'robusta', spec: '30包/袋', price: 250000, wholesalePrice: 220000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
-      { id: 'robusta-honey-250g', name: '羅布斯塔蜂蜜蜜處理咖啡豆', nameVi: 'Cà phê Robusta Honey Process', category: 'robusta', spec: '250克', price: 105000, wholesalePrice: 90000, type: 'beans', image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
-      { id: 'robusta-honey-500g', name: '羅布斯塔蜂蜜蜜處理咖啡豆', nameVi: 'Cà phê Robusta Honey Process', category: 'robusta', spec: '500克', price: 200000, wholesalePrice: 170000, type: 'beans', image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
-      { id: 'robusta-honey-cb-10', name: '羅布斯塔蜂蜜蜜處理冷萃包', nameVi: 'Cà phê Cold Brew Robusta Honey', category: 'robusta', spec: '10包/袋', price: 95000, wholesalePrice: 82000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
-      { id: 'robusta-honey-cb-30', name: '羅布斯塔蜂蜜蜜處理冷萃包', nameVi: 'Cà phê Cold Brew Robusta Honey', category: 'robusta', spec: '30包/袋', price: 270000, wholesalePrice: 230000, type: 'coldbrew', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
-
-      // 拼配系列
-      { id: 'blend-8020-250g', name: '經典精品義式拼配 80/20', nameVi: 'Cà phê Espresso Blend 80/20', category: 'blend', spec: '250克', price: 135000, wholesalePrice: 115000, type: 'beans', image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
-      { id: 'blend-8020-500g', name: '經典精品義式拼配 80/20', nameVi: 'Cà phê Espresso Blend 80/20', category: 'blend', spec: '500克', price: 260000, wholesalePrice: 220000, type: 'beans', image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
-      { id: 'blend-7030-250g', name: '商業義式平衡拼配 70/30', nameVi: 'Cà phê Commercial Blend 70/30', category: 'blend', spec: '250克', price: 128000, wholesalePrice: 110000, type: 'beans', image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
-      { id: 'blend-7030-500g', name: '商業義式平衡拼配 70/30', nameVi: 'Cà phê Commercial Blend 70/30', category: 'blend', spec: '500克', price: 245000, wholesalePrice: 210000, type: 'beans', image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
-      { id: 'blend-5050-250g', name: '南義風格醇厚拼配 50/50', nameVi: 'Cà phê Blend Phong Cách Nam Ý 50/50', category: 'blend', spec: '250克', price: 118000, wholesalePrice: 100000, type: 'beans', image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
-      { id: 'blend-5050-500g', name: '南義風格醇厚拼配 50/50', nameVi: 'Cà phê Blend Phong Cách Nam Ý 50/50', category: 'blend', spec: '500克', price: 225000, wholesalePrice: 190000, type: 'beans', image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' }
+    const INITIAL_PRODUCTS = [
+      { id: 'arabica-100-250g', nameZh: '100% 阿拉比卡咖啡豆', nameVi: 'Cà phê Arabica 100%', category: 'arabica', specZh: '250公克', specVi: '250g', price: 145000, wholesalePrice: 125000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-100-500g', nameZh: '100% 阿拉比卡咖啡豆', nameVi: 'Cà phê Arabica 100%', category: 'arabica', specZh: '500公克', specVi: '500g', price: 280000, wholesalePrice: 240000, type: 'beans', stock: 3, threshold: 5, image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-coldbrew-10', nameZh: '100% 阿拉比卡冷萃咖啡包', nameVi: 'Cà phê Cold Brew Arabica 100%', category: 'coldbrew', specZh: '10包/袋', specVi: '10 túi/gói', price: 125000, wholesalePrice: 105000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-coldbrew-30', nameZh: '100% 阿拉比卡冷萃咖啡包', nameVi: 'Cà phê Cold Brew Arabica 100%', category: 'coldbrew', specZh: '30包/袋', specVi: '30 túi/gói', price: 350000, wholesalePrice: 295000, type: 'coldbrew', stock: 0, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-honey-250g', nameZh: '蜜處理阿拉比卡咖啡豆', nameVi: 'Cà phê Arabica Honey Process', category: 'arabica_honey', specZh: '250公克', specVi: '250g', price: 160000, wholesalePrice: 138000, type: 'beans', stock: 8, threshold: 5, image: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&q=80&w=600' },
+      { id: 'arabica-honey-500g', nameZh: '蜜處理阿拉比卡咖啡豆', nameVi: 'Cà phê Arabica Honey Process', category: 'arabica_honey', specZh: '500公克', specVi: '500g', price: 310000, wholesalePrice: 265000, type: 'beans', stock: 2, threshold: 5, image: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&q=80&w=600' },
+      { id: 'robusta-100-250g', nameZh: '100% 羅布斯塔咖啡豆', nameVi: 'Cà phê Robusta 100%', category: 'robusta', specZh: '250公克', specVi: '250g', price: 91000, wholesalePrice: 78000, type: 'beans', stock: 25, threshold: 5, image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
+      { id: 'blend-8020-250g', nameZh: '80/20 濃縮混合咖啡豆', nameVi: 'Cà phê Espresso Blend 80/20', category: 'blend', specZh: '250公克', specVi: '250g', price: 135000, wholesalePrice: 115000, type: 'beans', stock: 12, threshold: 5, image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' }
     ];
 
     function App() {
-      // 狀態管理
+      const [lang, setLang] = useState('zh-TW');
+      const [products, setProducts] = useState(() => {
+        try {
+          const saved = localStorage.getItem(PRODUCTS_STORAGE_KEY);
+          return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
+        } catch (e) { return INITIAL_PRODUCTS; }
+      });
       const [cart, setCart] = useState(() => {
         try {
           const savedCart = localStorage.getItem(CART_STORAGE_KEY);
           return savedCart ? JSON.parse(savedCart) : [];
-        } catch (e) {
-          return [];
-        }
+        } catch (e) { return []; }
       });
       const [searchQuery, setSearchQuery] = useState('');
       const [selectedCategory, setSelectedCategory] = useState('all');
@@ -107,33 +272,39 @@
       const [isCartOpen, setIsCartOpen] = useState(false);
       const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
       const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+      const [isAdminOpen, setIsAdminOpen] = useState(false);
+      const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+      const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
 
-      // 持久化購物車至 localStorage
+      const t = TRANSLATIONS[lang];
+
       useEffect(() => {
         localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
       }, [cart]);
 
-      // 搜尋與分類過濾
+      useEffect(() => {
+        localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(products));
+      }, [products]);
+
+      const toggleLanguage = () => {
+        setLang(prev => prev === 'zh-TW' ? 'vi' : 'zh-TW');
+      };
+
       const filteredProducts = useMemo(() => {
-        return PRODUCTS.filter(product => {
+        return products.filter(product => {
           const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-          const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                (product.nameVi && product.nameVi.toLowerCase().includes(searchQuery.toLowerCase()));
+          const name = lang === 'zh-TW' ? product.nameZh : product.nameVi;
+          const matchesSearch = name.toLowerCase().includes(searchQuery.toLowerCase());
           return matchesCategory && matchesSearch;
         });
-      }, [selectedCategory, searchQuery]);
+      }, [products, selectedCategory, searchQuery, lang]);
 
-      // 購物車操作邏輯
       const handleAddToCart = (productToAdd) => {
         setCart(prev => {
           const cartKey = `${productToAdd.id}-${productToAdd.grind || 'default'}`;
           const existing = prev.find(item => item.cartKey === cartKey);
           if (existing) {
-            return prev.map(item =>
-              item.cartKey === cartKey
-                ? { ...item, quantity: item.quantity + productToAdd.quantity }
-                : item
-            );
+            return prev.map(item => item.cartKey === cartKey ? { ...item, quantity: item.quantity + productToAdd.quantity } : item);
           }
           return [...prev, { ...productToAdd, cartKey }];
         });
@@ -142,11 +313,22 @@
       const updateQuantity = (cartKey, delta) => {
         setCart(prev => prev.map(item => {
           if (item.cartKey === cartKey) {
+            const product = products.find(p => p.id === item.id);
+            const maxStock = product ? product.stock : 99;
             const newQty = item.quantity + delta;
+            if (newQty > maxStock) return item;
             return newQty > 0 ? { ...item, quantity: newQty } : null;
           }
           return item;
         }).filter(Boolean));
+      };
+
+      const deductStock = (cartItems) => {
+        setProducts(prevProducts => prevProducts.map(prod => {
+          const itemsPurchased = cartItems.filter(item => item.id === prod.id);
+          const totalDeduction = itemsPurchased.reduce((sum, item) => sum + item.quantity, 0);
+          return totalDeduction > 0 ? { ...prod, stock: Math.max(0, prod.stock - totalDeduction) } : prod;
+        }));
       };
 
       const clearCart = () => {
@@ -158,40 +340,55 @@
 
       return (
         <div className="min-h-screen flex flex-col">
-          {/* 導覽列 */}
+          {/* Header Nav */}
           <nav className="sticky top-0 z-30 bg-coffee-900 text-coffee-100 shadow-md">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <Coffee className="h-8 w-8 text-coffee-200" />
-                <span className="text-2xl font-bold tracking-wider font-serif">AROMA CAFE</span>
+                <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 sm:hidden rounded-lg text-coffee-200 hover:bg-coffee-800">
+                  <Icons.Menu className="h-6 w-6" />
+                </button>
+                <div className="flex items-center gap-2">
+                  <Icons.Coffee className="h-7 w-7 sm:h-8 sm:w-8 text-coffee-200" />
+                  <span className="text-xl sm:text-2xl font-bold tracking-wider font-serif">AROMA CAFE</span>
+                </div>
               </div>
 
-              {/* 搜尋列 */}
+              {/* Desktop Search Bar */}
               <div className="relative flex-1 max-w-md hidden md:block">
                 <input
                   type="text"
-                  placeholder="搜尋產品中文或越南文名稱..."
+                  placeholder={t.searchPlaceholder}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full bg-coffee-800 text-coffee-100 placeholder-coffee-200/60 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-coffee-200 border border-coffee-800 text-sm"
                 />
-                <Search className="absolute left-3 top-2.5 h-4 w-4 text-coffee-200/60" />
+                <Icons.Search className="absolute left-3 top-2.5 h-4 w-4 text-coffee-200/60" />
               </div>
 
-              {/* 操作按鈕 */}
-              <div className="flex items-center gap-3">
+              {/* Language Switcher & Controls */}
+              <div className="flex items-center gap-1 sm:gap-2">
                 <button
-                  onClick={() => setIsHistoryOpen(true)}
-                  className="p-2 hover:bg-coffee-800 rounded-full transition-colors text-coffee-200 hover:text-white"
-                  title="歷史訂單"
+                  onClick={toggleLanguage}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-coffee-800 hover:bg-coffee-700 text-xs font-medium text-amber-300 border border-coffee-700 transition-colors mr-1"
                 >
-                  <Clock className="h-6 w-6" />
+                  <Icons.Globe className="h-4 w-4" />
+                  <span>{lang === 'zh-TW' ? '繁中' : 'VN'}</span>
                 </button>
-                <button
-                  onClick={() => setIsCartOpen(true)}
-                  className="relative p-2 hover:bg-coffee-800 rounded-full transition-colors"
-                >
-                  <ShoppingBag className="h-7 w-7 text-coffee-100" />
+
+                <button onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)} className="p-2 md:hidden rounded-full text-coffee-200 hover:bg-coffee-800">
+                  <Icons.Search className="h-6 w-6" />
+                </button>
+
+                <button onClick={() => setIsAdminOpen(true)} className="p-2 hover:bg-coffee-800 rounded-full text-coffee-200 hover:text-white" title={t.adminPanel}>
+                  <Icons.Settings className="h-6 w-6" />
+                </button>
+
+                <button onClick={() => setIsHistoryOpen(true)} className="hidden sm:flex p-2 hover:bg-coffee-800 rounded-full text-coffee-200 hover:text-white" title={t.history}>
+                  <Icons.Clock className="h-6 w-6" />
+                </button>
+
+                <button onClick={() => setIsCartOpen(true)} className="relative p-2 hover:bg-coffee-800 rounded-full">
+                  <Icons.ShoppingBag className="h-6 w-6 sm:h-7 sm:w-7 text-coffee-100" />
                   {totalCartItems > 0 && (
                     <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
                       {totalCartItems}
@@ -200,227 +397,337 @@
                 </button>
               </div>
             </div>
+
+            {/* Mobile Search */}
+            {isMobileSearchOpen && (
+              <div className="md:hidden px-4 pb-3 pt-1 border-t border-coffee-800 bg-coffee-900">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder={t.searchPlaceholder}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    autoFocus
+                    className="w-full bg-coffee-800 text-coffee-100 placeholder-coffee-200/60 rounded-full py-2 pl-10 pr-10 focus:outline-none focus:ring-2 focus:ring-coffee-200 border border-coffee-700 text-sm"
+                  />
+                  <Icons.Search className="absolute left-3 top-2.5 h-4 w-4 text-coffee-200/60" />
+                </div>
+              </div>
+            )}
           </nav>
 
-          {/* 英雄橫幅 */}
-          <header className="relative bg-coffee-900 text-coffee-100 py-20 px-4 text-center overflow-hidden">
-            <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&q=80&w=1600')] bg-cover bg-center"></div>
-            <div className="relative max-w-3xl mx-auto space-y-3">
-              <h1 className="text-3xl sm:text-5xl font-extrabold font-serif tracking-wide">越南原產精品咖啡</h1>
-              <p className="text-coffee-200 text-base sm:text-lg font-light">
-                批發與零售服務 • 滿 10 包自動升級批發價 • 滿 500,000 VND 免運費
-              </p>
-            </div>
-          </header>
-
-          {/* 主要內容區 */}
-          <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
-            {/* 分類切換 */}
-            <div className="flex flex-wrap gap-3 justify-center mb-8">
-              {[
-                { id: 'all', label: '全部分類' },
-                { id: 'arabica', label: '1. 阿拉比卡 (Arabica)' },
-                { id: 'robusta', label: '2. 羅布斯塔 (Robusta)' },
-                { id: 'blend', label: '3. 拼配咖啡 (Blend)' }
-              ].map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => setSelectedCategory(tab.id)}
-                  className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                    selectedCategory === tab.id
-                      ? 'bg-coffee-800 text-coffee-50 shadow-md'
-                      : 'bg-coffee-100 text-coffee-800 hover:bg-coffee-200'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
+          {/* Content Area */}
+          <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 w-full">
+            {/* Category Tabs */}
+            <div className="overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 mb-6 sm:mb-8">
+              <div className="flex gap-2 sm:gap-3 min-w-max pb-2 sm:pb-0">
+                {Object.keys(t.cats).map(catKey => (
+                  <button
+                    key={catKey}
+                    onClick={() => setSelectedCategory(catKey)}
+                    className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
+                      selectedCategory === catKey ? 'bg-coffee-800 text-coffee-50 shadow-md' : 'bg-coffee-100 text-coffee-800 hover:bg-coffee-200'
+                    }`}
+                  >
+                    {t.cats[catKey]}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {/* 商品卡片區 */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map(product => (
-                <div key={product.id} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 border border-coffee-100 flex flex-col">
-                  <div className="h-52 overflow-hidden relative bg-coffee-100">
-                    <img src={product.image} alt={product.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-                    <span className="absolute top-3 right-3 text-xs bg-coffee-900/80 text-white px-2.5 py-1 rounded-full backdrop-blur-md">
-                      {product.spec}
-                    </span>
-                  </div>
-                  <div className="p-5 flex flex-col flex-grow justify-between">
-                    <div>
-                      <h3 className="text-lg font-bold text-coffee-900 font-serif">{product.name}</h3>
-                      <p className="text-xs text-coffee-600 italic mb-3">{product.nameVi}</p>
+            {/* Product Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {filteredProducts.map(product => {
+                const productName = lang === 'zh-TW' ? product.nameZh : product.nameVi;
+                const productSubName = lang === 'zh-TW' ? product.nameVi : product.nameZh;
+                const specText = lang === 'zh-TW' ? product.specZh : product.specVi;
+                const isOut = product.stock <= 0;
+                const isLow = product.stock > 0 && product.stock <= product.threshold;
+
+                return (
+                  <div key={product.id} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow border border-coffee-100 flex flex-col">
+                    <div className="h-48 sm:h-52 overflow-hidden relative bg-coffee-100">
+                      <img src={product.image} alt={productName} className={`w-full h-full object-cover transition-transform duration-500 ${isOut ? 'grayscale opacity-60' : 'hover:scale-105'}`} />
+                      <span className="absolute top-3 right-3 text-xs bg-coffee-900/80 text-white px-2.5 py-1 rounded-full backdrop-blur-md font-medium">
+                        {specText}
+                      </span>
+
+                      {/* Stock Status Tag */}
+                      <div className="absolute top-3 left-3">
+                        {isOut ? (
+                          <span className="bg-red-600 text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow">{t.soldOut}</span>
+                        ) : isLow ? (
+                          <span className="bg-amber-600 text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow flex items-center gap-1">
+                            <Icons.AlertTriangle className="h-3 w-3" /> {t.lowStock}{product.stock}{t.units}
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
 
-                    <div className="pt-4 border-t border-coffee-100 space-y-3">
-                      <div className="flex items-baseline justify-between">
-                        <div>
-                          <div className="text-xs text-coffee-500">零售價</div>
-                          <div className="text-lg font-bold text-coffee-900">{product.price.toLocaleString()} VND</div>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-xs text-amber-700 font-bold">批發價 (10包+)</div>
-                          <div className="text-sm font-bold text-amber-800">{product.wholesalePrice.toLocaleString()} VND</div>
-                        </div>
+                    <div className="p-4 sm:p-5 flex flex-col flex-grow justify-between">
+                      <div>
+                        <h3 className="text-base sm:text-lg font-bold text-coffee-900 font-serif">{productName}</h3>
+                        <p className="text-xs text-coffee-600 italic mb-3">{productSubName}</p>
                       </div>
 
-                      <button
-                        onClick={() => setSelectedProduct(product)}
-                        className="w-full bg-coffee-800 hover:bg-coffee-900 text-white py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2"
-                      >
-                        <Plus className="h-4 w-4" /> 選擇與購買
-                      </button>
+                      <div className="pt-3 border-t border-coffee-100 space-y-3">
+                        <div className="flex items-baseline justify-between">
+                          <div>
+                            <div className="text-[10px] sm:text-xs text-coffee-500">{t.retailPrice}</div>
+                            <div className="text-base sm:text-lg font-bold text-coffee-900">{product.price.toLocaleString()} VND</div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-[10px] sm:text-xs text-amber-700 font-bold">{t.wholesalePrice}</div>
+                            <div className="text-xs sm:text-sm font-bold text-amber-800">{product.wholesalePrice.toLocaleString()} VND</div>
+                          </div>
+                        </div>
+
+                        <button
+                          disabled={isOut}
+                          onClick={() => setSelectedProduct(product)}
+                          className={`w-full py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+                            isOut ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-coffee-800 hover:bg-coffee-900 text-white'
+                          }`}
+                        >
+                          <Icons.Plus className="h-4 w-4" /> {isOut ? t.soldOut : t.selectAndBuy}
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </main>
 
-          {/* 1. 商品細節彈窗 (含研磨度選擇) */}
+          {/* Mobile Drawer Navigation */}
+          {isMobileMenuOpen && (
+            <div className="fixed inset-0 z-50 sm:hidden">
+              <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
+              <div className="fixed inset-y-0 left-0 w-4/5 max-w-xs bg-coffee-900 text-coffee-100 shadow-xl flex flex-col justify-between p-6 z-10">
+                <div>
+                  <div className="flex items-center justify-between pb-6 border-b border-coffee-800">
+                    <div className="flex items-center gap-2">
+                      <Icons.Coffee className="h-7 w-7 text-coffee-200" />
+                      <span className="text-lg font-bold tracking-wider font-serif">AROMA CAFE</span>
+                    </div>
+                    <button onClick={() => setIsMobileMenuOpen(false)} className="p-1 rounded-full text-coffee-200 hover:bg-coffee-800">
+                      <Icons.X className="h-6 w-6" />
+                    </button>
+                  </div>
+
+                  <div className="mt-6 space-y-4">
+                    <button onClick={toggleLanguage} className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-coffee-800 text-amber-300 font-medium text-sm">
+                      <span className="flex items-center gap-2"><Icons.Globe className="h-5 w-5" /> 語言 / Ngôn ngữ</span>
+                      <span>{lang === 'zh-TW' ? '繁體中文' : 'Tiếng Việt'}</span>
+                    </button>
+
+                    <button onClick={() => { setIsMobileMenuOpen(false); setIsAdminOpen(true); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-coffee-800 text-coffee-200 hover:text-white font-medium text-sm">
+                      <Icons.Settings className="h-5 w-5" /> {t.adminPanel}
+                    </button>
+
+                    <button onClick={() => { setIsMobileMenuOpen(false); setIsHistoryOpen(true); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-coffee-800 text-coffee-200 hover:text-white font-medium text-sm">
+                      <Icons.Clock className="h-5 w-5" /> {t.history}
+                    </button>
+
+                    <div className="pt-4 border-t border-coffee-800">
+                      <p className="text-xs font-bold text-coffee-300 uppercase tracking-wider mb-2 px-3">{t.categories}</p>
+                      <div className="space-y-1">
+                        {Object.keys(t.cats).map(catKey => (
+                          <button
+                            key={catKey}
+                            onClick={() => { setSelectedCategory(catKey); setIsMobileMenuOpen(false); }}
+                            className={`w-full text-left px-3 py-2 rounded-lg text-sm ${selectedCategory === catKey ? 'bg-coffee-800 text-amber-400 font-bold' : 'text-coffee-200'}`}
+                          >
+                            {t.cats[catKey]}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Modals & Cart Drawer */}
           {selectedProduct && (
             <ProductDetailModal
               product={selectedProduct}
+              lang={lang}
+              t={t}
               onClose={() => setSelectedProduct(null)}
               onAddToCart={handleAddToCart}
             />
           )}
 
-          {/* 2. 購物車側邊抽屜 */}
           {isCartOpen && (
             <CartDrawer
               isOpen={isCartOpen}
+              lang={lang}
+              t={t}
               onClose={() => setIsCartOpen(false)}
               cart={cart}
               updateQuantity={updateQuantity}
-              onOpenCheckout={() => {
-                setIsCartOpen(false);
-                setIsCheckoutOpen(true);
-              }}
+              onOpenCheckout={() => { setIsCartOpen(false); setIsCheckoutOpen(true); }}
             />
           )}
 
-          {/* 3. 結帳與收件地址彈窗 */}
           {isCheckoutOpen && (
             <CheckoutModal
               isOpen={isCheckoutOpen}
+              lang={lang}
+              t={t}
+              products={products}
+              deductStock={deductStock}
               onClose={() => setIsCheckoutOpen(false)}
               cart={cart}
               clearCart={clearCart}
             />
           )}
 
-          {/* 4. 歷史訂單紀錄彈窗 */}
           {isHistoryOpen && (
             <OrderHistoryModal
               isOpen={isHistoryOpen}
+              lang={lang}
+              t={t}
               onClose={() => setIsHistoryOpen(false)}
             />
           )}
 
+          {isAdminOpen && (
+            <AdminModal
+              isOpen={isAdminOpen}
+              lang={lang}
+              t={t}
+              products={products}
+              setProducts={setProducts}
+              onClose={() => setIsAdminOpen(false)}
+            />
+          )}
         </div>
       );
     }
 
-    // --- 子元件 1: 商品細節與研磨選擇 Modal ---
-    function ProductDetailModal({ product, onClose, onAddToCart }) {
-      const [quantity, setQuantity] = useState(1);
-      const [selectedGrind, setSelectedGrind] = useState('beans');
+    function AdminModal({ isOpen, onClose, products, setProducts, t, lang }) {
+      const [editedProducts, setEditedProducts] = useState(products);
 
-      const isBeanProduct = product.type === 'beans';
-      const currentUnitPrice = quantity >= 10 ? product.wholesalePrice : product.price;
+      useEffect(() => {
+        setEditedProducts(products);
+      }, [products]);
 
-      const handleAdd = () => {
-        const grindObj = GRIND_OPTIONS.find(g => g.id === selectedGrind);
-        onAddToCart({
-          ...product,
-          quantity,
-          grind: isBeanProduct ? selectedGrind : 'coldbrew',
-          grindLabel: isBeanProduct ? grindObj.label : '冷萃包'
-        });
+      const handleFieldChange = (id, field, value) => {
+        setEditedProducts(prev => prev.map(p => {
+          if (p.id === id) {
+            return { ...p, [field]: Number(value) };
+          }
+          return p;
+        }));
+      };
+
+      const handleSave = () => {
+        setProducts(editedProducts);
+        alert('商品庫存與價格變更已儲存！');
         onClose();
+      };
+
+      const handleReset = () => {
+        if (confirm('確定要將所有商品重設為預設庫存與價格嗎？')) {
+          setProducts(INITIAL_PRODUCTS);
+          setEditedProducts(INITIAL_PRODUCTS);
+          localStorage.removeItem(PRODUCTS_STORAGE_KEY);
+          alert('已恢復預設設定。');
+          onClose();
+        }
       };
 
       return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
           <div className="flex min-h-full items-center justify-center p-4">
-            <div className="relative w-full max-w-xl bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 overflow-hidden text-left">
-              <button onClick={onClose} className="absolute right-4 top-4 z-10 p-2 bg-white/80 rounded-full hover:bg-white text-coffee-900">
-                <X className="h-5 w-5" />
-              </button>
+            <div className="relative w-full max-w-4xl bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-5 sm:p-6 flex flex-col max-h-[85vh]">
+              <div className="flex justify-between items-center mb-4 border-b border-coffee-200 pb-3">
+                <h2 className="text-lg sm:text-xl font-bold font-serif text-coffee-900 flex items-center gap-2">
+                  <Icons.Settings className="h-5 w-5 text-coffee-800" /> {t.adminTitle}
+                </h2>
+                <button onClick={onClose} className="p-1 rounded-full hover:bg-coffee-200"><Icons.X className="h-5 w-5" /></button>
+              </div>
 
-              <div className="p-6 space-y-6">
-                <div>
-                  <span className="text-xs font-bold text-coffee-600 uppercase">{product.spec}</span>
-                  <h2 className="text-2xl font-bold font-serif text-coffee-900">{product.name}</h2>
-                  <p className="text-xs text-coffee-600 italic">{product.nameVi}</p>
-                </div>
+              <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+                {editedProducts.map(product => {
+                  const name = lang === 'zh-TW' ? product.nameZh : product.nameVi;
+                  const spec = lang === 'zh-TW' ? product.specZh : product.specVi;
+                  return (
+                    <div key={product.id} className="bg-white p-3.5 rounded-xl border border-coffee-100 grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+                      <div className="md:col-span-4 flex items-center gap-3">
+                        <img src={product.image} alt={name} className="w-12 h-12 object-cover rounded-lg flex-shrink-0" />
+                        <div>
+                          <h4 className="font-bold text-xs sm:text-sm text-coffee-900">{name}</h4>
+                          <span className="text-[10px] text-coffee-500 bg-coffee-100 px-2 py-0.5 rounded">{spec}</span>
+                        </div>
+                      </div>
 
-                <div className="flex items-baseline gap-3 bg-white p-4 rounded-xl border border-coffee-100">
-                  <span className="text-2xl font-extrabold text-coffee-800">
-                    {currentUnitPrice.toLocaleString()} VND
-                  </span>
-                  {quantity >= 10 ? (
-                    <span className="text-xs bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded">
-                      已享批發優惠價
-                    </span>
-                  ) : (
-                    <span className="text-xs text-coffee-500">
-                      (再加 {10 - quantity} 包升級批發價)
-                    </span>
-                  )}
-                </div>
+                      <div className="md:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                        <div>
+                          <label className="block text-[10px] text-coffee-600 mb-0.5">{t.stockQty}</label>
+                          <input
+                            type="number"
+                            min="0"
+                            value={product.stock}
+                            onChange={(e) => handleFieldChange(product.id, 'stock', e.target.value)}
+                            className="w-full border border-coffee-200 rounded p-1.5 font-bold text-coffee-900"
+                          />
+                        </div>
 
-                {/* 研磨度選擇 */}
-                {isBeanProduct ? (
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase text-coffee-800 flex items-center gap-1">
-                      <Settings2 className="h-3.5 w-3.5" /> 選擇研磨度 (Grind Size)
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {GRIND_OPTIONS.map(g => (
-                        <button
-                          key={g.id}
-                          onClick={() => setSelectedGrind(g.id)}
-                          className={`p-3 rounded-lg text-left border transition-all ${
-                            selectedGrind === g.id
-                              ? 'bg-coffee-800 text-white border-coffee-800'
-                              : 'bg-white text-coffee-800 border-coffee-200 hover:border-coffee-400'
-                          }`}
-                        >
-                          <div className="text-xs font-bold">{g.label}</div>
-                          <div className="text-[10px] opacity-75">{g.detail}</div>
-                        </button>
-                      ))}
+                        <div>
+                          <label className="block text-[10px] text-coffee-600 mb-0.5">{t.alertThreshold}</label>
+                          <input
+                            type="number"
+                            min="0"
+                            value={product.threshold}
+                            onChange={(e) => handleFieldChange(product.id, 'threshold', e.target.value)}
+                            className="w-full border border-coffee-200 rounded p-1.5 text-coffee-800"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] text-coffee-600 mb-0.5">{t.retailPrice} (VND)</label>
+                          <input
+                            type="number"
+                            step="1000"
+                            value={product.price}
+                            onChange={(e) => handleFieldChange(product.id, 'price', e.target.value)}
+                            className="w-full border border-coffee-200 rounded p-1.5 text-coffee-900 font-bold"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] text-coffee-600 mb-0.5">{t.wholesalePrice} (VND)</label>
+                          <input
+                            type="number"
+                            step="1000"
+                            value={product.wholesalePrice}
+                            onChange={(e) => handleFieldChange(product.id, 'wholesalePrice', e.target.value)}
+                            className="w-full border border-coffee-200 rounded p-1.5 text-amber-800 font-bold"
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <div className="p-3 bg-coffee-100 rounded-lg text-xs text-coffee-700">
-                    本商品為獨立冷萃浸泡包，免選擇研磨度。
-                  </div>
-                )}
+                  );
+                })}
+              </div>
 
-                {/* 數量選擇 */}
-                <div className="flex items-center justify-between pt-2">
-                  <span className="text-sm font-bold text-coffee-900">數量</span>
-                  <div className="flex items-center rounded-lg border border-coffee-300 bg-white p-1">
-                    <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="p-1.5 hover:bg-coffee-100 rounded">
-                      <Minus className="h-4 w-4" />
-                    </button>
-                    <span className="w-8 text-center text-sm font-bold">{quantity}</span>
-                    <button onClick={() => setQuantity(q => q + 1)} className="p-1.5 hover:bg-coffee-100 rounded">
-                      <Plus className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-
+              <div className="pt-4 border-t border-coffee-200 mt-4 flex flex-col sm:flex-row justify-between gap-2">
                 <button
-                  onClick={handleAdd}
-                  className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
+                  onClick={handleReset}
+                  className="px-4 py-2 border border-red-300 text-red-600 hover:bg-red-50 rounded-xl text-xs font-bold transition-colors"
                 >
-                  <ShoppingBag className="h-4 w-4" /> 加入購物車 • {(currentUnitPrice * quantity).toLocaleString()} VND
+                  {t.resetDefault}
+                </button>
+                <button
+                  onClick={handleSave}
+                  className="px-6 py-2.5 bg-coffee-800 hover:bg-coffee-900 text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-md transition-colors"
+                >
+                  <Icons.Save className="h-4 w-4" /> {t.saveChanges}
                 </button>
               </div>
             </div>
@@ -429,8 +736,98 @@
       );
     }
 
-    // --- 子元件 2: 購物車 Drawer ---
-    function CartDrawer({ isOpen, onClose, cart, updateQuantity, onOpenCheckout }) {
+    function ProductDetailModal({ product, lang, t, onClose, onAddToCart }) {
+      const [quantity, setQuantity] = useState(1);
+      const [selectedGrind, setSelectedGrind] = useState('beans');
+
+      const isBeanProduct = product.type === 'beans';
+      const maxStock = product.stock;
+      const currentUnitPrice = quantity >= 10 ? product.wholesalePrice : product.price;
+      const productName = lang === 'zh-TW' ? product.nameZh : product.nameVi;
+      const productSubName = lang === 'zh-TW' ? product.nameVi : product.nameZh;
+      const specText = lang === 'zh-TW' ? product.specZh : product.specVi;
+
+      const handleAdd = () => {
+        const grindObj = t.grindOptions[selectedGrind];
+        onAddToCart({
+          ...product,
+          quantity,
+          name: productName,
+          spec: specText,
+          grind: isBeanProduct ? selectedGrind : 'coldbrew',
+          grindLabel: isBeanProduct ? grindObj.label : t.grindOptions.coldbrew.label
+        });
+        onClose();
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+          <div className="flex min-h-full items-center justify-center p-4">
+            <div className="relative w-full max-w-xl bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-5 sm:p-6 space-y-5">
+              <button onClick={onClose} className="absolute right-4 top-4 p-2 bg-white/80 rounded-full hover:bg-white"><Icons.X className="h-5 w-5" /></button>
+
+              <div>
+                <span className="text-xs font-bold text-coffee-600 uppercase">{specText}</span>
+                <h2 className="text-xl sm:text-2xl font-bold font-serif text-coffee-900">{productName}</h2>
+                <p className="text-xs text-coffee-600 italic">{productSubName}</p>
+              </div>
+
+              <div className="flex items-baseline justify-between bg-white p-3.5 sm:p-4 rounded-xl border border-coffee-100">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-xl sm:text-2xl font-extrabold text-coffee-800">{currentUnitPrice.toLocaleString()} VND</span>
+                  {quantity >= 10 ? (
+                    <span className="text-[10px] sm:text-xs bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded">{t.wholesaleApplied}</span>
+                  ) : (
+                    <span className="text-[10px] sm:text-xs text-coffee-500">{t.wholesaleUpgrade}</span>
+                  )}
+                </div>
+                <div className="text-xs font-semibold text-coffee-600">
+                  可購數量: <span className="text-coffee-900 font-bold">{maxStock}</span>
+                </div>
+              </div>
+
+              {isBeanProduct ? (
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase text-coffee-800 flex items-center gap-1"><Icons.Settings className="h-3.5 w-3.5" /> {t.grindSize}</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {Object.keys(t.grindOptions).filter(k => k !== 'coldbrew').map(key => (
+                      <button
+                        key={key}
+                        onClick={() => setSelectedGrind(key)}
+                        className={`p-2.5 sm:p-3 rounded-lg text-left border transition-all ${
+                          selectedGrind === key ? 'bg-coffee-800 text-white border-coffee-800' : 'bg-white text-coffee-800 border-coffee-200'
+                        }`}
+                      >
+                        <div className="text-xs font-bold">{t.grindOptions[key].label}</div>
+                        <div className="text-[10px] opacity-75">{t.grindOptions[key].detail}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="p-3 bg-coffee-100 rounded-lg text-xs text-coffee-700">{t.coldbrewNotice}</div>
+              )}
+
+              <div className="flex items-center justify-between pt-2">
+                <span className="text-xs sm:text-sm font-bold text-coffee-900">{t.quantity}</span>
+                <div className="flex items-center rounded-lg border border-coffee-300 bg-white p-1">
+                  <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="p-1.5 hover:bg-coffee-100 rounded"><Icons.Minus className="h-4 w-4" /></button>
+                  <span className="w-8 text-center text-sm font-bold">{quantity}</span>
+                  <button onClick={() => setQuantity(q => Math.min(maxStock, q + 1))} className="p-1.5 hover:bg-coffee-100 rounded"><Icons.Plus className="h-4 w-4" /></button>
+                </div>
+              </div>
+
+              <button onClick={handleAdd} className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 sm:py-3.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-xs sm:text-sm">
+                <Icons.ShoppingBag className="h-4 w-4" /> {t.addToCart} • {(currentUnitPrice * quantity).toLocaleString()} VND
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function CartDrawer({ isOpen, onClose, cart, updateQuantity, onOpenCheckout, t }) {
       const getUnitPrice = (item) => item.quantity >= 10 ? item.wholesalePrice : item.price;
       const subtotal = cart.reduce((sum, item) => sum + getUnitPrice(item) * item.quantity, 0);
       const isFreeShipping = subtotal >= SHIPPING_CONFIG.FREE_THRESHOLD || subtotal === 0;
@@ -442,34 +839,27 @@
       return (
         <div className="fixed inset-0 z-50 overflow-hidden">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-          <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+          <div className="fixed inset-y-0 right-0 max-w-full flex">
             <div className="w-screen max-w-md bg-coffee-50 text-coffee-900 shadow-2xl flex flex-col">
-              
-              <div className="p-6 bg-coffee-900 text-coffee-100 flex items-center justify-between">
-                <h2 className="text-xl font-bold flex items-center gap-2 font-serif">
-                  <ShoppingBag className="h-5 w-5" /> 您的購物車
-                </h2>
-                <button onClick={onClose} className="p-1 hover:bg-coffee-800 rounded-full">
-                  <X className="h-6 w-6" />
-                </button>
+              <div className="p-4 sm:p-6 bg-coffee-900 text-coffee-100 flex items-center justify-between">
+                <h2 className="text-lg sm:text-xl font-bold flex items-center gap-2 font-serif"><Icons.ShoppingBag className="h-5 w-5" /> {t.cart}</h2>
+                <button onClick={onClose} className="p-1 hover:bg-coffee-800 rounded-full"><Icons.X className="h-6 w-6" /></button>
               </div>
 
-              {/* 免運進度條 */}
-              <div className="bg-coffee-100 p-4 border-b border-coffee-200">
+              <div className="bg-coffee-100 p-3.5 sm:p-4 border-b border-coffee-200">
                 <div className="flex items-center justify-between text-xs font-semibold text-coffee-800 mb-1.5">
-                  <span className="flex items-center gap-1"><Truck className="h-4 w-4" /> 滿 500,000 VND 免運</span>
-                  <span>{isFreeShipping ? '已達免運門檻！' : `還差 ${amountNeeded.toLocaleString()} VND`}</span>
+                  <span className="flex items-center gap-1"><Icons.Truck className="h-4 w-4" /> {t.freeShippingGoal}</span>
+                  <span>{isFreeShipping ? t.freeShippingReached : `${t.freeShippingShort}${amountNeeded.toLocaleString()} VND`}</span>
                 </div>
                 <div className="w-full bg-coffee-200 rounded-full h-2 overflow-hidden">
                   <div className="bg-amber-700 h-full transition-all duration-300" style={{ width: `${progress}%` }} />
                 </div>
               </div>
 
-              {/* 商品列表 */}
-              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4">
                 {cart.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-coffee-600">
-                    <p>購物車目前是空的</p>
+                    <p className="text-sm">{t.emptyCart}</p>
                   </div>
                 ) : (
                   cart.map(item => {
@@ -477,26 +867,23 @@
                     return (
                       <div key={item.cartKey} className="p-3 bg-white rounded-xl shadow-sm border border-coffee-100 space-y-2">
                         <div className="flex items-start gap-3">
-                          <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-lg flex-shrink-0" />
+                          <img src={item.image} alt={item.name} className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-lg flex-shrink-0" />
                           <div className="flex-1 min-w-0">
-                            <h4 className="font-bold text-coffee-900 text-sm truncate">{item.name}</h4>
-                            <p className="text-xs text-coffee-600">規格: {item.spec} | 研磨: {item.grindLabel}</p>
+                            <h4 className="font-bold text-coffee-900 text-xs sm:text-sm truncate">{item.name}</h4>
+                            <p className="text-[10px] sm:text-xs text-coffee-600">{item.spec} | {item.grindLabel}</p>
                             <div className="mt-1 flex items-center gap-2">
                               <span className="text-xs font-bold text-coffee-800">{unitPrice.toLocaleString()} VND</span>
-                              {item.quantity >= 10 && <span className="text-[10px] bg-amber-100 text-amber-800 px-1 rounded font-bold">批發價</span>}
                             </div>
                           </div>
                         </div>
 
                         <div className="flex items-center justify-between pt-2 border-t border-coffee-50">
                           <div className="flex items-center gap-2 bg-coffee-100 rounded-lg p-1">
-                            <button onClick={() => updateQuantity(item.cartKey, -1)} className="p-1 hover:bg-coffee-200 rounded"><Minus className="h-3 w-3" /></button>
+                            <button onClick={() => updateQuantity(item.cartKey, -1)} className="p-1 hover:bg-coffee-200 rounded"><Icons.Minus className="h-3 w-3" /></button>
                             <span className="text-xs font-bold w-6 text-center">{item.quantity}</span>
-                            <button onClick={() => updateQuantity(item.cartKey, 1)} className="p-1 hover:bg-coffee-200 rounded"><Plus className="h-3 w-3" /></button>
+                            <button onClick={() => updateQuantity(item.cartKey, 1)} className="p-1 hover:bg-coffee-200 rounded"><Icons.Plus className="h-3 w-3" /></button>
                           </div>
-                          <div className="text-right font-bold text-xs">
-                            {(unitPrice * item.quantity).toLocaleString()} VND
-                          </div>
+                          <div className="text-right font-bold text-xs">{(unitPrice * item.quantity).toLocaleString()} VND</div>
                         </div>
                       </div>
                     );
@@ -504,34 +891,28 @@
                 )}
               </div>
 
-              {/* 結帳按鈕頁尾 */}
               {cart.length > 0 && (
-                <div className="p-6 bg-white border-t border-coffee-100 space-y-3">
-                  <div className="space-y-1 text-sm text-coffee-700">
-                    <div className="flex justify-between"><span>商品小計</span><span>{subtotal.toLocaleString()} VND</span></div>
-                    <div className="flex justify-between"><span>運費</span><span>{isFreeShipping ? '免費' : `${shippingFee.toLocaleString()} VND`}</span></div>
-                    <div className="flex justify-between font-bold text-base text-coffee-900 pt-2 border-t border-coffee-100">
-                      <span>總計金額</span><span className="text-xl text-coffee-800">{grandTotal.toLocaleString()} VND</span>
+                <div className="p-4 sm:p-6 bg-white border-t border-coffee-100 space-y-3">
+                  <div className="space-y-1 text-xs sm:text-sm text-coffee-700">
+                    <div className="flex justify-between"><span>{t.subtotal}</span><span>{subtotal.toLocaleString()} VND</span></div>
+                    <div className="flex justify-between"><span>{t.shippingFee}</span><span>{isFreeShipping ? t.free : `${shippingFee.toLocaleString()} VND`}</span></div>
+                    <div className="flex justify-between font-bold text-sm sm:text-base text-coffee-900 pt-2 border-t border-coffee-100">
+                      <span>{t.total}</span><span className="text-lg sm:text-xl text-coffee-800">{grandTotal.toLocaleString()} VND</span>
                     </div>
                   </div>
 
-                  <button
-                    onClick={onOpenCheckout}
-                    className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
-                  >
-                    <Send className="h-4 w-4" /> 前往填寫收件資訊結帳
+                  <button onClick={onOpenCheckout} className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 sm:py-3.5 rounded-xl shadow-md flex items-center justify-center gap-2 text-xs sm:text-sm">
+                    <Icons.Send className="h-4 w-4" /> {t.checkout}
                   </button>
                 </div>
               )}
-
             </div>
           </div>
         </div>
       );
     }
 
-    // --- 子元件 3: 收件人地址與發送 Modal ---
-    function CheckoutModal({ isOpen, onClose, cart, clearCart }) {
+    function CheckoutModal({ isOpen, onClose, cart, clearCart, products, deductStock, t, lang }) {
       const [formData, setFormData] = useState({ fullName: '', phone: '', address: '', notes: '' });
       const [isSubmitting, setIsSubmitting] = useState(false);
       const [isSuccess, setIsSuccess] = useState(false);
@@ -542,23 +923,25 @@
       const shippingFee = isFreeShipping ? 0 : SHIPPING_CONFIG.FLAT_RATE;
       const grandTotal = subtotal + shippingFee;
 
-      const handleInputChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-      };
+      const lowStockAlerts = cart.map(item => {
+        const prod = products.find(p => p.id === item.id);
+        const remaining = prod ? prod.stock - item.quantity : 0;
+        if (prod && remaining <= prod.threshold) {
+          return `${prod.nameZh} (${prod.specZh}) 剩餘: ${remaining} 包`;
+        }
+        return null;
+      }).filter(Boolean);
+
+      const handleInputChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
       const handleSubmitOrder = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
 
-        const orderSummaryText = cart.map((item, idx) => {
-          const unitPrice = getUnitPrice(item);
-          return `${idx + 1}. ${item.name} (${item.spec}) - 研磨: ${item.grindLabel} x ${item.quantity}包 = ${(unitPrice * item.quantity).toLocaleString()} VND`;
-        }).join('\n');
-
         const orderId = Date.now().toString().slice(-6);
         const orderRecord = {
           id: orderId,
-          date: new Date().toLocaleString('zh-TW'),
+          date: new Date().toLocaleString(),
           customerName: formData.fullName,
           phone: formData.phone,
           address: formData.address,
@@ -576,35 +959,32 @@
         };
 
         try {
-          // 透過 Formspree/Email 發送訂單至目標 Email
           await fetch('https://formspree.io/f/xbjnqpyw', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              target_email: 'rick0960590177@gmail.com',
-              order_id: orderId,
-              customer_name: formData.fullName,
-              customer_phone: formData.phone,
-              shipping_address: formData.address,
-              order_notes: formData.notes || '無',
-              order_summary: orderSummaryText,
-              total_amount: `${grandTotal.toLocaleString()} VND`,
-              order_date: orderRecord.date
+              email: 'rick0960590177@gmail.com',
+              name: formData.fullName,
+              phone: formData.phone,
+              address: formData.address,
+              notes: formData.notes || '無',
+              language: lang,
+              orderId,
+              grandTotal: `${grandTotal.toLocaleString()} VND`,
+              restockNotice: lowStockAlerts.length > 0 ? `[補貨提醒] 以下商品庫存低於預警門檻：\n${lowStockAlerts.join('\n')}` : '庫存狀況正常'
             })
           });
 
-          // 寫入本地歷史紀錄
+          deductStock(cart);
+
           const history = JSON.parse(localStorage.getItem(ORDER_HISTORY_STORAGE_KEY) || '[]');
           localStorage.setItem(ORDER_HISTORY_STORAGE_KEY, JSON.stringify([orderRecord, ...history]));
 
           setIsSuccess(true);
           clearCart();
-          setTimeout(() => {
-            setIsSuccess(false);
-            onClose();
-          }, 3000);
+          setTimeout(() => { setIsSuccess(false); onClose(); }, 3000);
         } catch (error) {
-          alert('訂單傳送失敗，請再試一次');
+          alert('訂單傳送失敗');
         } finally {
           setIsSubmitting(false);
         }
@@ -614,53 +994,55 @@
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
           <div className="flex min-h-full items-center justify-center p-4">
-            <div className="relative w-full max-w-lg bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 overflow-hidden text-left p-6 md:p-8">
-              <button onClick={onClose} className="absolute right-4 top-4 p-2 bg-white/80 rounded-full hover:bg-white text-coffee-900">
-                <X className="h-5 w-5" />
-              </button>
+            <div className="relative w-full max-w-lg bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-5 sm:p-8">
+              <button onClick={onClose} className="absolute right-4 top-4 p-2 bg-white/80 rounded-full hover:bg-white"><Icons.X className="h-5 w-5" /></button>
 
               {isSuccess ? (
                 <div className="py-10 text-center space-y-4">
-                  <CheckCircle2 className="h-16 w-16 text-green-600 mx-auto animate-bounce" />
-                  <h3 className="text-2xl font-bold font-serif text-coffee-900">訂單已成功送出！</h3>
-                  <p className="text-sm text-coffee-600">
-                    訂單已自動寄送至 <span className="font-bold text-coffee-800">rick0960590177@gmail.com</span>。
-                  </p>
+                  <Icons.CheckCircle className="h-16 w-16 text-green-600 mx-auto animate-bounce" />
+                  <h3 className="text-xl sm:text-2xl font-bold font-serif text-coffee-900">{t.orderSuccess}</h3>
+                  <p className="text-xs sm:text-sm text-coffee-600">{t.orderSuccessDesc}</p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmitOrder} className="space-y-4">
-                  <h2 className="text-2xl font-bold font-serif text-coffee-900">收件人資訊</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold font-serif text-coffee-900">{t.customerInfo}</h2>
+
+                  {lowStockAlerts.length > 0 && (
+                    <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-2 text-xs text-amber-800">
+                      <Icons.AlertTriangle className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <span className="font-bold">{t.restockAlertTitle}: </span>
+                        {t.restockAlertNotice}
+                      </div>
+                    </div>
+                  )}
 
                   <div>
-                    <label className="block text-xs font-bold text-coffee-800 mb-1">姓名 *</label>
-                    <input type="text" name="fullName" required value={formData.fullName} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-800" />
+                    <label className="block text-xs font-bold text-coffee-800 mb-1">{t.fullName}</label>
+                    <input type="text" name="fullName" required value={formData.fullName} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm" />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-coffee-800 mb-1">聯絡電話 *</label>
-                    <input type="tel" name="phone" required value={formData.phone} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-800" />
+                    <label className="block text-xs font-bold text-coffee-800 mb-1">{t.phone}</label>
+                    <input type="tel" name="phone" required value={formData.phone} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm" />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-coffee-800 mb-1">收件地址 *</label>
-                    <input type="text" name="address" required value={formData.address} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-800" />
+                    <label className="block text-xs font-bold text-coffee-800 mb-1">{t.address}</label>
+                    <input type="text" name="address" required value={formData.address} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm" />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-coffee-800 mb-1">備註 (可選)</label>
-                    <textarea name="notes" rows={2} value={formData.notes} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-800" />
+                    <label className="block text-xs font-bold text-coffee-800 mb-1">{t.notes}</label>
+                    <textarea name="notes" rows={2} value={formData.notes} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm" />
                   </div>
 
                   <div className="bg-coffee-100 p-4 rounded-xl space-y-1 text-sm font-bold text-coffee-900">
-                    <div className="flex justify-between"><span>應付金額:</span><span className="text-lg text-coffee-800">{grandTotal.toLocaleString()} VND</span></div>
+                    <div className="flex justify-between"><span>{t.payable}</span><span className="text-base sm:text-lg text-coffee-800">{grandTotal.toLocaleString()} VND</span></div>
                   </div>
 
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                  >
-                    <Send className="h-4 w-4" /> {isSubmitting ? '正在傳送訂單...' : '確認發送訂單'}
+                  <button type="submit" disabled={isSubmitting} className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 sm:py-3.5 rounded-xl shadow-md flex items-center justify-center gap-2 text-xs sm:text-sm disabled:opacity-50">
+                    <Icons.Send className="h-4 w-4" /> {isSubmitting ? t.submitting : t.submitOrder}
                   </button>
                 </form>
               )}
@@ -670,8 +1052,7 @@
       );
     }
 
-    // --- 子元件 4: 歷史訂單 Modal ---
-    function OrderHistoryModal({ isOpen, onClose }) {
+    function OrderHistoryModal({ isOpen, onClose, t }) {
       const [history, setHistory] = useState([]);
 
       useEffect(() => {
@@ -680,7 +1061,7 @@
       }, [isOpen]);
 
       const clearHistory = () => {
-        if (confirm('確定要清除所有歷史訂單紀錄？')) {
+        if (confirm(t.confirmClear)) {
           localStorage.removeItem(ORDER_HISTORY_STORAGE_KEY);
           setHistory([]);
         }
@@ -690,32 +1071,28 @@
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
           <div className="flex min-h-full items-center justify-center p-4">
-            <div className="relative w-full max-w-xl bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 overflow-hidden text-left p-6">
+            <div className="relative w-full max-w-xl bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-5 sm:p-6">
               <div className="flex justify-between items-center mb-4 border-b border-coffee-200 pb-3">
-                <h2 className="text-xl font-bold font-serif text-coffee-900 flex items-center gap-2">
-                  <Package className="h-5 w-5" /> 歷史訂單紀錄
-                </h2>
+                <h2 className="text-lg sm:text-xl font-bold font-serif text-coffee-900 flex items-center gap-2"><Icons.Package className="h-5 w-5" /> {t.orderHistoryTitle}</h2>
                 <div className="flex items-center gap-2">
                   {history.length > 0 && (
-                    <button onClick={clearHistory} className="text-xs text-red-600 hover:underline flex items-center gap-1">
-                      <Trash2 className="h-3.5 w-3.5" /> 清除歷史
-                    </button>
+                    <button onClick={clearHistory} className="text-xs text-red-600 hover:underline flex items-center gap-1"><Icons.Trash className="h-3.5 w-3.5" /> {t.clearHistory}</button>
                   )}
-                  <button onClick={onClose} className="p-1 rounded-full hover:bg-coffee-200"><X className="h-5 w-5" /></button>
+                  <button onClick={onClose} className="p-1 rounded-full hover:bg-coffee-200"><Icons.X className="h-5 w-5" /></button>
                 </div>
               </div>
 
               <div className="max-h-[60vh] overflow-y-auto space-y-3">
                 {history.length === 0 ? (
-                  <p className="text-center py-8 text-sm text-coffee-600">尚無歷史訂單紀錄</p>
+                  <p className="text-center py-8 text-xs sm:text-sm text-coffee-600">{t.noHistory}</p>
                 ) : (
                   history.map(item => (
-                    <div key={item.id} className="bg-white p-4 rounded-xl border border-coffee-100 space-y-2 text-xs">
+                    <div key={item.id} className="bg-white p-3.5 sm:p-4 rounded-xl border border-coffee-100 space-y-2 text-xs">
                       <div className="flex justify-between font-bold text-coffee-900">
-                        <span>訂單編號: #{item.id}</span>
+                        <span>{t.orderId}: #{item.id}</span>
                         <span className="text-coffee-600">{item.date}</span>
                       </div>
-                      <div className="text-coffee-700">收件人: {item.customerName} ({item.phone})</div>
+                      <div className="text-coffee-700">{item.customerName} ({item.phone})</div>
                       <div className="bg-coffee-50 p-2 rounded space-y-1">
                         {item.items.map((prod, idx) => (
                           <div key={idx} className="flex justify-between text-coffee-800">
@@ -724,9 +1101,7 @@
                           </div>
                         ))}
                       </div>
-                      <div className="text-right font-bold text-sm text-coffee-900">
-                        總額: {item.grandTotal.toLocaleString()} VND
-                      </div>
+                      <div className="text-right font-bold text-xs sm:text-sm text-coffee-900">{item.grandTotal.toLocaleString()} VND</div>
                     </div>
                   ))
                 )}
@@ -737,8 +1112,11 @@
       );
     }
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+    const container = document.getElementById('root');
+    if (container) {
+      const root = ReactDOM.createRoot(container);
+      root.render(<App />);
+    }
   </script>
 </body>
 </html>
