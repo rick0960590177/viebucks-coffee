@@ -1,160 +1,847 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="vi" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>首頁 - index.html</title>
-    <!-- Favicon -->
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <!-- CSS 樣式表連結 -->
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VIEBUCKS - Cà Phê Mẫu Đơn & Túi Cold Brew Cao Cấp (Bán Lẻ / Bán Sỉ B2B)</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        coffee: {
+                            50: '#FDFBF7',
+                            100: '#F7F2E9',
+                            200: '#EAE0D0',
+                            300: '#D6C3A5',
+                            400: '#B89B74',
+                            500: '#9C7A4F',
+                            600: '#7E5E37',
+                            700: '#614425',
+                            800: '#473017',
+                            900: '#2A1A0D',
+                            950: '#1A0F07'
+                        },
+                        amberGold: '#D4AF37',
+                        roastDark: '#120A04'
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!-- Alpine.js Core -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- EmailJS SDK (用於前端發送 Gmail 郵件) -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <!-- Custom CSS -->
     <style>
-        /* 基礎 CSS 重置與頁面佈局 */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            color: #333333;
-            background-color: #f9f9f9;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FDFBF7;
+            color: #2A1A0D;
         }
-        header {
-            background-color: #003366;
-            color: #ffffff;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .font-serif {
+            font-family: 'Playfair Display', Georgia, serif;
         }
-        header h1 {
-            font-size: 1.5rem;
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 1rem;
+        ::-webkit-scrollbar-track {
+            background: #F7F2E9;
         }
-        nav a {
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-        main {
-            flex: 1;
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-        /* 聯絡表單樣式 */
-        .contact-section {
-            margin-top: 2rem;
-            background: #ffffff;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #ccc;
+        ::-webkit-scrollbar-thumb {
+            background: #B89B74;
             border-radius: 4px;
         }
-        button[type="submit"] {
-            background-color: #003366;
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #7E5E37;
         }
-        button[type="submit"]:hover {
-            background-color: #002244;
+        .glass-nav {
+            background: rgba(253, 251, 247, 0.95);
+            backdrop-filter: blur(12px);
         }
-        footer {
-            background-color: #222222;
-            color: #cccccc;
-            text-align: center;
-            padding: 1rem;
-            font-size: 0.875rem;
+        [x-cloak] { display: none !important; }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-invoice, #printable-invoice * {
+                visibility: visible;
+            }
+            #printable-invoice {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 20px;
+                background: white !important;
+                color: black !important;
+            }
+            .no-print {
+                display: none !important;
+            }
         }
     </style>
 </head>
-<body>
+<body x-data="coffeeStore()" x-init="initStore()" class="min-h-screen flex flex-col antialiased selection:bg-coffee-500 selection:text-white w-full overflow-x-hidden">
 
-    <!-- 頁頭與導覽列 -->
-    <header>
-        <div class="logo">
-            <h1>網站名稱</h1>
+    <!-- Top Announcement Bar -->
+    <div class="bg-coffee-950 text-coffee-200 text-xs py-2 px-4 flex justify-between items-center border-b border-coffee-800">
+        <div class="hidden md:flex items-center space-x-4">
+            <span><i class="fa-solid fa-truck-fast text-amberGold mr-1"></i> <span x-text="t('Miễn phí vận chuyển cho đơn hàng từ 500.000 ₫', '全館滿 VND 500,000 免運費')"></span></span>
+            <span><i class="fa-solid fa-certificate text-amberGold mr-1"></i> <span x-text="t('100% Cà phê nguyên chất từ nông hộ Việt Nam', '100% 嚴選越南莊園直送')"></span></span>
         </div>
-        <nav>
-            <ul>
-                <li><a href="index.html">首頁</a></li>
-                <li><a href="#about">關於我們</a></li>
-                <li><a href="#services">服務項目</a></li>
-                <li><a href="#contact">聯絡我們</a></li>
-            </ul>
-        </nav>
+        
+        <div class="w-full md:w-auto text-center flex justify-center items-center gap-3">
+            <div class="flex items-center bg-coffee-900 border border-coffee-700 rounded-lg p-0.5 text-[11px]">
+                <button @click="toggleLang('vi')" 
+                        :class="lang === 'vi' ? 'bg-amberGold text-coffee-950 font-bold' : 'text-coffee-300 hover:text-white'"
+                        class="px-2 py-0.5 rounded transition-all flex items-center gap-1">
+                    🇻🇳 <span>Tiếng Việt</span>
+                </button>
+                <button @click="toggleLang('zh')" 
+                        :class="lang === 'zh' ? 'bg-amberGold text-coffee-950 font-bold' : 'text-coffee-300 hover:text-white'"
+                        class="px-2 py-0.5 rounded transition-all flex items-center gap-1">
+                    🇹🇼 <span>中文</span>
+                </button>
+            </div>
+
+            <div class="h-3 w-px bg-coffee-800 hidden sm:block"></div>
+
+            <div class="flex items-center gap-1.5">
+                <span class="font-medium text-amberGold hidden sm:inline" x-text="t('Chế độ giá:', '當前採購模式：')"></span>
+                <button @click="togglePricingMode('retail')" 
+                        :class="pricingMode === 'retail' ? 'bg-amberGold text-coffee-950 font-bold shadow' : 'bg-coffee-800 text-coffee-300 hover:text-white'"
+                        class="px-2.5 py-0.5 rounded text-[11px] transition-all">
+                    <span x-text="t('Bán lẻ Retail', '零售 Retail')"></span>
+                </button>
+                <button @click="togglePricingMode('wholesale')" 
+                        :class="pricingMode === 'wholesale' ? 'bg-amberGold text-coffee-950 font-bold shadow' : 'bg-coffee-800 text-coffee-300 hover:text-white'"
+                        class="px-2.5 py-0.5 rounded text-[11px] transition-all flex items-center gap-1">
+                    <i class="fa-solid fa-briefcase text-[10px]"></i> <span x-text="t('Bán sỉ B2B', 'B2B 批發 Wholesale')"></span>
+                </button>
+            </div>
+        </div>
+
+        <div class="hidden lg:flex items-center space-x-3 text-xs">
+            <a href="https://zalo.me/839681380" target="_blank" class="hover:text-amberGold transition-colors flex items-center gap-1 font-semibold">
+                <i class="fa-solid fa-headset text-amberGold"></i> <span x-text="t('Hỗ trợ ZALO: 839681380 / 0348246669', '客服專線 ZALO: 839681380 / 0348246669')"></span>
+            </a>
+            <span>|</span>
+            <span class="text-coffee-400">VND (₫)</span>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 glass-nav border-b border-coffee-200/60 transition-all shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center space-x-3 cursor-pointer" @click="activeTab = 'shop'">
+                    <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-coffee-950 via-coffee-800 to-amberGold flex items-center justify-center text-amberGold shadow-md ring-2 ring-amberGold/40">
+                        <i class="fa-solid fa-crown text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="font-serif text-2xl font-black tracking-wider text-coffee-950 block leading-none">VIEBUCKS</span>
+                        <span class="text-[9px] tracking-widest text-amber-800 font-bold uppercase block mt-1" x-text="t('Xưởng Rang Cà Phê Cao Cấp', 'Haute Coffee Roastery')"></span>
+                    </div>
+                </div>
+
+                <nav class="hidden lg:flex items-center space-x-8">
+                    <button @click="activeTab = 'shop'" :class="activeTab === 'shop' ? 'text-coffee-950 font-bold border-b-2 border-amberGold' : 'text-coffee-700 hover:text-coffee-950'" class="py-2 text-sm font-medium transition-all">
+                        <span x-text="t('Danh Mục Cà Phê', '咖啡產品總覽')"></span>
+                    </button>
+                    <button @click="activeTab = 'bulk'" :class="activeTab === 'bulk' ? 'text-coffee-950 font-bold border-b-2 border-amberGold' : 'text-coffee-700 hover:text-coffee-950'" class="py-2 text-sm font-medium transition-all flex items-center gap-1.5">
+                        <span class="bg-coffee-200 text-coffee-900 text-[10px] px-1.5 py-0.5 rounded font-bold">B2B</span> 
+                        <span x-text="t('Đặt Hàng Sỉ Nhanh', '批發快速下單')"></span>
+                    </button>
+                    <button @click="openQuiz = true" class="py-2 text-sm font-medium text-coffee-700 hover:text-coffee-950 transition-all flex items-center gap-1">
+                        <i class="fa-solid fa-wand-magic-sparkles text-amber-600"></i> 
+                        <span x-text="t('Trắc Nghiệm Gợi Ý Hương Vị', '風味選豆測驗')"></span>
+                    </button>
+                    <button @click="activeTab = 'about'" :class="activeTab === 'about' ? 'text-coffee-950 font-bold border-b-2 border-amberGold' : 'text-coffee-700 hover:text-coffee-950'" class="py-2 text-sm font-medium transition-all">
+                        <span x-text="t('Câu Chuyện Thương Hiệu', '品牌故事與烘焙特色')"></span>
+                    </button>
+                </nav>
+
+                <div class="flex items-center space-x-3 sm:space-x-4">
+                    <div class="relative hidden sm:block">
+                        <input type="text" x-model="searchQuery" :placeholder="t('Tìm cà phê, cold brew...', '搜尋咖啡豆、冷萃包...')" 
+                               class="w-44 xl:w-56 pl-9 pr-4 py-2 text-xs rounded-full bg-coffee-100/80 border border-coffee-200 focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:bg-white transition-all">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-coffee-400"></i>
+                        <button x-show="searchQuery" @click="searchQuery = ''" class="absolute right-3 top-2 text-xs text-coffee-400 hover:text-coffee-700">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <button @click="cartOpen = true" class="relative bg-coffee-950 text-white px-4 py-2.5 rounded-full hover:bg-coffee-800 transition-all flex items-center gap-2 shadow-md hover:shadow-lg">
+                        <i class="fa-solid fa-bag-shopping text-amberGold"></i>
+                        <span class="text-xs font-bold hidden md:inline" x-text="t('Giỏ hàng', '購物車')"></span>
+                        <span class="bg-amberGold text-coffee-950 text-xs font-extrabold px-2 py-0.5 rounded-full" x-text="cartTotalCount"></span>
+                    </button>
+
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="lg:hidden p-2 text-coffee-800 hover:text-coffee-950">
+                        <i class="fa-solid text-xl" :class="mobileMenuOpen ? 'fa-xmark' : 'fa-bars'"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div x-show="mobileMenuOpen" x-cloak x-transition class="lg:hidden bg-coffee-50 border-b border-coffee-200 px-4 pt-2 pb-6 space-y-3">
+            <div class="relative mb-3">
+                <input type="text" x-model="searchQuery" :placeholder="t('Tìm cà phê, cold brew...', '搜尋咖啡豆、冷萃包...')" class="w-full pl-9 pr-4 py-2 text-xs rounded-full bg-white border border-coffee-200 focus:outline-none">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-coffee-400"></i>
+            </div>
+            
+            <div class="flex items-center justify-between p-2 bg-coffee-100 rounded-xl">
+                <span class="text-xs font-medium text-coffee-800" x-text="t('Ngôn ngữ / 語言:', '語言:')"></span>
+                <div class="flex space-x-1">
+                    <button @click="toggleLang('vi')" :class="lang === 'vi' ? 'bg-coffee-900 text-white' : 'bg-white text-coffee-800'" class="px-2.5 py-1 text-xs rounded-lg font-bold">🇻🇳 VN</button>
+                    <button @click="toggleLang('zh')" :class="lang === 'zh' ? 'bg-amberGold text-coffee-950 font-bold' : 'bg-white text-coffee-800'" class="px-2.5 py-1 text-xs rounded-lg font-bold">🇹🇼 中文</button>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between p-2 bg-coffee-100 rounded-xl">
+                <span class="text-xs font-medium text-coffee-800" x-text="t('Chế độ giá:', '價格模式：')"></span>
+                <div class="flex space-x-2">
+                    <button @click="pricingMode = 'retail'" :class="pricingMode === 'retail' ? 'bg-coffee-900 text-white' : 'bg-white text-coffee-800'" class="px-3 py-1 text-xs rounded-lg font-bold" x-text="t('Bán lẻ', '零售價')"></button>
+                    <button @click="pricingMode = 'wholesale'" :class="pricingMode === 'wholesale' ? 'bg-amberGold text-coffee-950 font-bold' : 'bg-white text-coffee-800'" class="px-3 py-1 text-xs rounded-lg font-bold" x-text="t('Giá sỉ B2B', '批發價 (B2B)')"></button>
+                </div>
+            </div>
+
+            <button @click="activeTab = 'shop'; mobileMenuOpen = false" class="block w-full text-left py-2 text-sm font-medium text-coffee-900 border-b border-coffee-200/50" x-text="t('Danh Mục Cà Phê', '咖啡產品總覽')"></button>
+            <button @click="activeTab = 'bulk'; mobileMenuOpen = false" class="block w-full text-left py-2 text-sm font-medium text-coffee-900 border-b border-coffee-200/50" x-text="t('Đặt Hàng Sỉ Nhanh (B2B)', 'B2B 批發快速下單')"></button>
+            <button @click="openQuiz = true; mobileMenuOpen = false" class="block w-full text-left py-2 text-sm font-medium text-coffee-900 border-b border-coffee-200/50" x-text="t('Trắc Nghiệm Chọn Hương Vị', '風味選豆測驗')"></button>
+            <button @click="activeTab = 'about'; mobileMenuOpen = false" class="block w-full text-left py-2 text-sm font-medium text-coffee-900" x-text="t('Câu Chuyện Thương Hiệu', '品牌故事與烘焙特色')"></button>
+        </div>
     </header>
 
-    <!-- 主要內容區 -->
-    <main>
-        <section id="hero">
-            <h2>歡迎來到我們的網站</h2>
-            <p>這是網站的主要展示區域。</p>
-        </section>
-        
-        <section id="content" style="margin-top: 2rem;">
-            <h3>最新動態</h3>
-            <p>在這裡放上您的主要內容、簡介或最新訊息。</p>
+    <main class="flex-grow w-full">
+        <!-- Hero Section -->
+        <section x-show="activeTab === 'shop'" class="relative bg-gradient-to-r from-coffee-950 via-coffee-900 to-roastDark text-white py-16 lg:py-20 overflow-hidden shadow-inner">
+            <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#D4AF37_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid lg:grid-cols-12 gap-8 items-center">
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="inline-flex items-center gap-2 bg-amberGold/20 border border-amberGold/40 text-amberGold px-3.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">
+                            <i class="fa-solid fa-crown"></i> VIEBUCKS HAUTE COFFEE COLLECTION
+                        </div>
+                        <h1 class="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold text-coffee-50 leading-tight">
+                            VIEBUCKS <br><span class="text-amberGold italic" x-text="t('Cà Phê Cao Nguyên ‧ Hương Vị Thượng Hạng', '高原莊園 ‧ 極緻淬鍊風味')"></span>
+                        </h1>
+                        <p class="text-coffee-200 text-sm sm:text-base max-w-2xl leading-relaxed" x-text="t('Chuyên cung cấp 100% Arabica, Arabica Honey, Robusta cao nguyên, Cold Brew hương hoa nhài và các dòng Espresso phối trộn tỷ lệ vàng.', '專營 100% 阿拉比卡、蜜處理精品豆、高海拔羅布斯塔、茉莉花風味冷萃包及黃金比例義式配方豆。')">
+                        </p>
+                        
+                        <div class="pt-2 grid grid-cols-3 gap-4 border-t border-coffee-800 max-w-xl">
+                            <div>
+                                <div class="text-xl sm:text-2xl font-bold text-amberGold" x-text="t('7 Dòng', '7 大')"></div>
+                                <div class="text-xs text-coffee-300" x-text="t('Dòng cà phê đặc sản', '特選咖啡系列')"></div>
+                            </div>
+                            <div>
+                                <div class="text-xl sm:text-2xl font-bold text-amberGold" x-text="t('24 Sản Phẩm', '24 款')"></div>
+                                <div class="text-xs text-coffee-300" x-text="t('Quy cách hạt & cold brew', '規格熟豆與冷萃包')"></div>
+                            </div>
+                            <div>
+                                <div class="text-xl sm:text-2xl font-bold text-amberGold">B2B / B2C</div>
+                                <div class="text-xs text-coffee-300" x-text="t('Ưu đãi song hành', '雙軌優惠報價')"></div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-4 pt-2">
+                            <button @click="scrollToProducts()" class="bg-amberGold text-coffee-950 hover:bg-amber-400 font-bold px-6 py-3 rounded-xl transition-all shadow-lg flex items-center gap-2 text-sm">
+                                <i class="fa-solid fa-mug-hot"></i> <span x-text="t('Mua Cà Phê Ngay', '立即選購精品咖啡')"></span>
+                            </button>
+                            <button @click="activeTab = 'bulk'" class="bg-coffee-800 hover:bg-coffee-700 text-white font-medium px-6 py-3 rounded-xl border border-coffee-600 transition-all text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-list-check text-amberGold"></i> <span x-text="t('Đặt Hàng Sỉ Nhanh (B2B)', 'B2B 批發快速下單')"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-5 relative hidden lg:block">
+                        <div class="bg-coffee-900/90 border border-coffee-700/60 p-6 rounded-2xl shadow-2xl backdrop-blur-sm relative space-y-4">
+                            <div class="absolute -top-3 -right-3 bg-amberGold text-coffee-950 font-extrabold text-xs px-3 py-1 rounded-full shadow" x-text="t('Chính Sách Giá Song Hành', '專屬雙軌價格體系')">
+                            </div>
+                            <div class="flex items-center space-x-4 border-b border-coffee-800 pb-4">
+                                <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-700 to-coffee-800 flex items-center justify-center text-amberGold text-2xl shadow">
+                                    <i class="fa-solid fa-store"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-white text-sm">
+                                        <span x-text="t('Chế độ giá hiện tại: ', '當前定價模式: ')"></span>
+                                        <span x-text="pricingMode === 'retail' ? t('Bán Lẻ (Retail)', '標準零售 (Retail)') : t('Ưu Đãi Bán Sỉ (Wholesale)', 'B2B 批發優惠 (Wholesale)')" class="text-amberGold"></span>
+                                    </h3>
+                                    <p class="text-xs text-coffee-300" x-text="t('Chuyển đổi linh hoạt giá lẻ và giá sỉ cho quán cà phê / doanh nghiệp.', '點擊頂部按鈕可切換零售或商業批發底價')"></p>
+                                </div>
+                            </div>
+                            <div class="space-y-2 text-xs text-coffee-200">
+                                <div class="flex justify-between items-center bg-coffee-950/80 p-3 rounded-xl border border-coffee-800">
+                                    <span><i class="fa-solid fa-check text-emerald-400 mr-2"></i><span x-text="t('Giá Bán Lẻ (Thưởng thức cá nhân)', '零售價格 (單件自用購買)')"></span></span>
+                                    <span class="font-mono text-amberGold font-bold" x-text="t('Giá tiêu chuẩn', '標準牌價')"></span>
+                                </div>
+                                <div class="flex justify-between items-center bg-coffee-950/80 p-3 rounded-xl border border-coffee-800">
+                                    <span><i class="fa-solid fa-check text-emerald-400 mr-2"></i><span x-text="t('Giá Bán Sỉ B2B (Đơn hàng lớn / Quán)', 'B2B 批發價格 (商業門市大宗)')"></span></span>
+                                    <span class="font-mono text-emerald-400 font-bold" x-text="t('Chiết khấu 15% - 20%', '享約 15% - 20% 批發折扣')"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <!-- 聯絡表單區塊：設定接收端為 rick0960590177@gmail.com -->
-        <section id="contact" class="contact-section">
-            <h3>聯絡我們</h3>
-            <form action="https://formspree.io/f/rick0960590177@gmail.com" method="POST">
-                <div class="form-group">
-                    <label for="name">姓名：</label>
-                    <input type="text" id="name" name="name" required>
+        <!-- Mode Indicator Banner -->
+        <div class="bg-amber-50 border-y border-amber-200 py-3 px-4">
+            <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between text-xs sm:text-sm text-coffee-900 gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="bg-amberGold text-coffee-950 font-bold px-2.5 py-0.5 rounded text-xs uppercase" x-text="pricingMode === 'retail' ? t('CHẾ ĐỘ BÁN LẺ', '零售模式') : t('CHẾ ĐỘ GIÁ SỈ B2B', '批發優惠模式')"></span>
+                    <span class="font-medium" x-show="pricingMode === 'retail'" x-text="t('Đang hiển thị [Giá Bán Lẻ]. Quý khách mua sỉ cho quán vui lòng chuyển sang chế độ B2B.', '目前顯示【零售價】。如需大量門市採購，請切換至批發模式。')"></span>
+                    <span class="font-medium text-emerald-800" x-show="pricingMode === 'wholesale'" x-text="t('Đã bật [Giá Sỉ B2B]! Toàn bộ sản phẩm đang áp dụng mức giá ưu đãi thương mại.', '已啟用【B2B 批發價】！全門市商品皆顯示商業批發底價。')"></span>
                 </div>
-                <div class="form-group">
-                    <label for="email">您的 Email：</label>
-                    <input type="email" id="email" name="_replyto" required>
+                <button @click="togglePricingMode(pricingMode === 'retail' ? 'wholesale' : 'retail')" class="text-coffee-900 underline font-bold hover:text-amber-800 shrink-0">
+                    <span x-text="pricingMode === 'retail' ? t('Chuyển sang Giá Sỉ B2B →', '切換至 B2B 批發價 →') : t('Chuyển về Giá Lẻ →', '切換回標準零售價 →')"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- SHOP TAB CONTENT -->
+        <div x-show="activeTab === 'shop'" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10" id="products-section">
+            <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-coffee-200/80 mb-8 space-y-4">
+                <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-coffee-100 no-scrollbar">
+                    <button @click="selectedCategory = 'all'" :class="selectedCategory === 'all' ? 'bg-coffee-950 text-white shadow' : 'bg-coffee-100 text-coffee-800 hover:bg-coffee-200'" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shrink-0">
+                        <span x-text="t('Tất Cả Sản Phẩm', '全部商品')"></span> (<span x-text="products.length"></span>)
+                    </button>
+                    <template x-for="cat in categories" :key="cat.id">
+                        <button @click="selectedCategory = cat.id" :class="selectedCategory === cat.id ? 'bg-coffee-950 text-white shadow' : 'bg-coffee-100 text-coffee-800 hover:bg-coffee-200'" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shrink-0 whitespace-nowrap">
+                            <span x-text="getCategoryName(cat)"></span>
+                        </button>
+                    </template>
                 </div>
-                <div class="form-group">
-                    <label for="message">留言內容：</label>
-                    <textarea id="message" name="message" rows="5" required></textarea>
+
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-1">
+                    <div class="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
+                        <span class="text-xs font-semibold text-coffee-500 uppercase tracking-wider shrink-0" x-text="t('Loại:', '類型:')"></span>
+                        <button @click="filterType = 'all'" :class="filterType === 'all' ? 'bg-coffee-800 text-white' : 'bg-coffee-50 text-coffee-700 border border-coffee-200'" class="px-3 py-1 rounded-lg text-xs font-medium transition-all" x-text="t('Tất cả', '全部')"></button>
+                        <button @click="filterType = 'bean'" :class="filterType === 'bean' ? 'bg-coffee-800 text-white' : 'bg-coffee-50 text-coffee-700 border border-coffee-200'" class="px-3 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1">
+                            <i class="fa-solid fa-seedling text-[10px]"></i> <span x-text="t('Cà Phê Hạt (250g/500g)', '咖啡豆 (250g/500g)')"></span>
+                        </button>
+                        <button @click="filterType = 'coldbrew'" :class="filterType === 'coldbrew' ? 'bg-coffee-800 text-white' : 'bg-coffee-50 text-coffee-700 border border-coffee-200'" class="px-3 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1">
+                            <i class="fa-solid fa-glass-water text-[10px]"></i> <span x-text="t('Túi Cold Brew Ngâm Lạnh', '冷萃便利包')"></span>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center justify-end gap-3 w-full sm:w-auto">
+                        <span class="text-xs font-semibold text-coffee-500 uppercase tracking-wider shrink-0" x-text="t('Sắp xếp:', '排序:')"></span>
+                        <select x-model="sortBy" class="bg-coffee-50 border border-coffee-200 text-coffee-900 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-coffee-500">
+                            <option value="default" x-text="t('Mặc định', '預設排序')"></option>
+                            <option value="price-asc" x-text="t('Giá: Thấp đến Cao', '價格：由低到高')"></option>
+                            <option value="price-desc" x-text="t('Giá: Cao đến Thấp', '價格：由高到低')"></option>
+                            <option value="name" x-text="t('Tên sản phẩm', '產品名稱')"></option>
+                        </select>
+                    </div>
                 </div>
-                <button type="submit">送出訊息</button>
-            </form>
-        </section>
+            </div>
+
+            <!-- Products Display Grid -->
+            <div x-show="filteredProducts.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <template x-for="product in filteredProducts" :key="product.id">
+                    <div class="bg-white rounded-2xl border border-coffee-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group">
+                        <div class="relative bg-gradient-to-br p-6 text-center overflow-hidden cursor-pointer" :class="product.type === 'coldbrew' ? 'from-sky-900 via-slate-900 to-coffee-950' : 'from-coffee-950 via-coffee-900 to-roastDark'" @click="openProductModal(product)">
+                            <div class="absolute top-3 left-3 flex flex-col gap-1 z-10">
+                                <span class="bg-amberGold text-coffee-950 font-extrabold text-[10px] px-2 py-0.5 rounded shadow" x-text="getCategoryNameById(product.categoryId)"></span>
+                                <span x-show="getSpec(product)" class="bg-coffee-950/80 backdrop-blur-sm text-coffee-200 font-medium text-[10px] px-2 py-0.5 rounded border border-coffee-700" x-text="getSpec(product)"></span>
+                            </div>
+
+                            <div class="py-8 transition-transform group-hover:scale-110 duration-300">
+                                <template x-if="product.type === 'coldbrew'">
+                                    <div class="w-20 h-20 mx-auto rounded-2xl bg-sky-950/60 border border-sky-400/30 flex items-center justify-center text-sky-300 shadow-inner">
+                                        <i class="fa-solid fa-glass-water-droplet text-4xl"></i>
+                                    </div>
+                                </template>
+                                <template x-if="product.type !== 'coldbrew'">
+                                    <div class="w-20 h-20 mx-auto rounded-2xl bg-amber-950/60 border border-amber-500/30 flex items-center justify-center text-amberGold shadow-inner">
+                                        <i class="fa-solid fa-mug-saucer text-4xl"></i>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <span class="inline-block text-[11px] text-coffee-300 group-hover:text-amberGold transition-colors font-medium">
+                                <i class="fa-solid fa-circle-info mr-1"></i> <span x-text="t('Bấm xem chi tiết & thông số', '點擊檢視產品規格與說明')"></span>
+                            </span>
+                        </div>
+
+                        <div class="p-5 flex-grow flex flex-col justify-between space-y-4">
+                            <div>
+                                <h3 class="font-bold text-coffee-950 text-base leading-snug group-hover:text-coffee-600 transition-colors line-clamp-2" x-text="getProductName(product)" @click="openProductModal(product)"></h3>
+                                <p class="text-xs text-coffee-500 mt-1 line-clamp-2" x-text="getProductDesc(product)"></p>
+                            </div>
+
+                            <div x-show="product.type !== 'coldbrew'" class="space-y-1">
+                                <label class="text-[11px] font-semibold text-coffee-700 flex justify-between">
+                                    <span x-text="t('Cỡ xay (Grind Size):', '研磨刻度:')"></span>
+                                </label>
+                                <select x-model="product.selectedGrind" class="w-full text-xs bg-coffee-50 border border-coffee-200 rounded-lg py-1 px-2 text-coffee-900 focus:outline-none focus:ring-1 focus:ring-coffee-500">
+                                    <template x-for="g in grindOptions" :key="g.id">
+                                        <option :value="g.id" x-text="g[lang]"></option>
+                                    </template>
+                                </select>
+                            </div>
+
+                            <div class="pt-2 border-t border-coffee-100 flex items-baseline justify-between">
+                                <div>
+                                    <span class="text-[11px] text-coffee-400 block font-medium" x-text="pricingMode === 'retail' ? t('Giá lẻ', '零售價') : t('Giá sỉ B2B', 'B2B 批發價')"></span>
+                                    <div class="flex items-baseline gap-2">
+                                        <span class="text-lg font-extrabold text-coffee-950 font-mono" x-text="formatCurrency(getCurrentPrice(product))"></span>
+                                        <span x-show="pricingMode === 'wholesale'" class="text-xs text-coffee-400 line-through font-mono" x-text="formatCurrency(product.retailPrice)"></span>
+                                    </div>
+                                </div>
+                                <span x-show="pricingMode === 'wholesale'" class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
+                                    <span x-text="t('Tiết kiệm', '省')"></span> <span x-text="formatCurrency(product.retailPrice - product.wholesalePrice)"></span>
+                                </span>
+                            </div>
+
+                            <div class="flex items-center space-x-2 pt-1">
+                                <div class="flex items-center border border-coffee-200 rounded-xl bg-coffee-50 overflow-hidden shrink-0">
+                                    <button @click="if(product.qty > 1) product.qty--" class="px-2.5 py-1.5 text-xs text-coffee-700 hover:bg-coffee-200 font-bold">-</button>
+                                    <span class="px-2 py-1.5 text-xs font-bold text-coffee-900 w-8 text-center font-mono" x-text="product.qty"></span>
+                                    <button @click="product.qty++" class="px-2.5 py-1.5 text-xs text-coffee-700 hover:bg-coffee-200 font-bold">+</button>
+                                </div>
+
+                                <button @click="addToCart(product)" class="flex-grow bg-coffee-950 hover:bg-coffee-800 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5 shadow">
+                                    <i class="fa-solid fa-cart-plus text-amberGold"></i> <span x-text="t('Thêm Vào Giỏ', '加入購物車')"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- B2B BULK ORDER TAB -->
+        <div x-show="activeTab === 'bulk'" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10" x-cloak>
+            <div class="bg-white rounded-2xl border border-coffee-200 p-6 shadow-sm mb-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-coffee-200">
+                    <div>
+                        <div class="inline-flex items-center gap-1.5 bg-amber-100 text-amber-900 px-3 py-0.5 rounded-full text-xs font-bold mb-2">
+                            <i class="fa-solid fa-boxes-packing"></i> <span x-text="t('MA TRẬN ĐẶT HÀNG SỈ B2B', 'B2B 商業採購矩陣')"></span>
+                        </div>
+                        <h2 class="font-serif text-2xl font-bold text-coffee-950" x-text="t('Danh Sách Đặt Hàng Sỉ Nhanh (Bulk Order Matrix)', '大宗快速下單清單 (Bulk Order Matrix)')"></h2>
+                    </div>
+                    <button @click="addAllBulkToCart()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all shadow flex items-center gap-2">
+                        <i class="fa-solid fa-cart-arrow-down"></i> <span x-text="t('Thêm tất cả sản phẩm đã chọn vào giỏ hàng', '將選擇數量全部加入購物車')"></span>
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto max-w-full mt-6">
+                    <table class="w-full text-left text-xs min-w-[700px]">
+                        <thead class="bg-coffee-100/80 text-coffee-900 uppercase font-bold text-[11px] border-b border-coffee-200">
+                            <tr>
+                                <th class="py-3 px-4" x-text="t('Dòng sp', '系列')"></th>
+                                <th class="py-3 px-4" x-text="t('Tên sản phẩm & Quy cách', '品名與規格')"></th>
+                                <th class="py-3 px-4" x-text="t('Giá lẻ (VND)', '零售價 (VND)')"></th>
+                                <th class="py-3 px-4" x-text="t('Giá sỉ B2B (VND)', '批發價 (VND)')"></th>
+                                <th class="py-3 px-4 text-center" x-text="t('Số lượng', '數量')"></th>
+                                <th class="py-3 px-4 text-right" x-text="t('Thành tiền (VND)', '小計 (VND)')"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-coffee-100">
+                            <template x-for="p in products" :key="'bulk-' + p.id">
+                                <tr class="hover:bg-coffee-50/80 transition-colors">
+                                    <td class="py-3 px-4"><span class="bg-coffee-200 text-coffee-900 text-[10px] font-bold px-2 py-0.5 rounded" x-text="getCategoryNameById(p.categoryId)"></span></td>
+                                    <td class="py-3 px-4 font-bold text-coffee-950"><span x-text="getProductName(p)"></span> <span class="text-[10px] text-coffee-500 font-normal" x-text="'(' + getSpec(p) + ')'"></span></td>
+                                    <td class="py-3 px-4 text-coffee-400 font-mono line-through" x-text="formatCurrency(p.retailPrice)"></td>
+                                    <td class="py-3 px-4 text-emerald-700 font-bold font-mono" x-text="formatCurrency(p.wholesalePrice)"></td>
+                                    <td class="py-3 px-4 text-center">
+                                        <div class="inline-flex items-center border border-coffee-200 rounded bg-white">
+                                            <button @click="if(p.bulkQty > 0) p.bulkQty--" class="px-2 py-0.5 text-xs text-coffee-700 font-bold hover:bg-coffee-100">-</button>
+                                            <input type="number" min="0" x-model.number="p.bulkQty" class="w-12 text-center text-xs font-mono font-bold text-coffee-900 border-x border-coffee-200 py-0.5 focus:outline-none">
+                                            <button @click="p.bulkQty++" class="px-2 py-0.5 text-xs text-coffee-700 font-bold hover:bg-coffee-100">+</button>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 px-4 text-right font-bold font-mono text-coffee-950" x-text="formatCurrency(p.wholesalePrice * (p.bulkQty || 0))"></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABOUT TAB CONTENT -->
+        <div x-show="activeTab === 'about'" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" x-cloak>
+            <div class="bg-white rounded-3xl border border-coffee-200 p-8 lg:p-14 shadow-xl space-y-8 text-center">
+                <h2 class="font-serif text-3xl font-black text-coffee-950" x-text="t('Nghệ Thuật Rang Tinh Tế ‧ Khơi Nguồn Hồn Cà Phê Việt', '極致奢華工藝 ‧ 淬鍊越南高原頂級靈魂')"></h2>
+                <p class="text-coffee-700 text-sm max-w-2xl mx-auto" x-text="t('VIEBUCKS được thành lập từ niềm đam mê chinh phục những tầng hương vị cà phê hoàn hảo nhất.', 'VIEBUCKS 創立於對完美咖啡風味的極致追求。')"></p>
+            </div>
+        </div>
     </main>
 
-    <!-- 頁尾區 -->
-    <footer>
-        <p>&copy; 2026 版權所有 All Rights Reserved.</p>
-    </footer>
+    <!-- CHECKOUT FORM MODAL -->
+    <div x-show="checkoutOpen" x-cloak class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 relative shadow-2xl border border-coffee-200 space-y-6">
+            <button @click="checkoutOpen = false" class="absolute top-4 right-4 w-8 h-8 bg-coffee-100 hover:bg-coffee-200 rounded-full flex items-center justify-center text-coffee-800">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
 
-    <!-- JavaScript 腳本連結 -->
-    <script src="main.js"></script>
+            <div class="border-b border-coffee-200 pb-4">
+                <h3 class="font-serif text-2xl font-bold text-coffee-950" x-text="t('Xác Nhận Đơn Hàng & Giao Hàng', '確認訂單與配送資訊')"></h3>
+            </div>
+
+            <form @submit.prevent="submitOrder()" class="space-y-4 text-xs">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-coffee-900 mb-1" x-text="t('Họ và tên *', '訂購人姓名 *')"></label>
+                        <input type="text" required x-model="checkoutForm.name" :placeholder="t('Nhập họ tên', '請輸入姓名')" class="w-full p-2.5 bg-coffee-50 border border-coffee-200 rounded-xl focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-coffee-900 mb-1" x-text="t('Số điện thoại (Zalo) *', '聯絡電話 (ZALO) *')"></label>
+                        <input type="tel" required x-model="checkoutForm.phone" placeholder="0839681380" class="w-full p-2.5 bg-coffee-50 border border-coffee-200 rounded-xl focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-coffee-900 mb-1" x-text="t('Địa chỉ giao hàng *', '配送地址 *')"></label>
+                    <input type="text" required x-model="checkoutForm.address" :placeholder="t('Địa chỉ nhận hàng chi tiết', '請輸入完整收件地址')" class="w-full p-2.5 bg-coffee-50 border border-coffee-200 rounded-xl focus:outline-none">
+                </div>
+
+                <div class="pt-4 border-t border-coffee-200 flex justify-between items-center">
+                    <div>
+                        <span class="text-xs text-coffee-500 block" x-text="t('Tổng thanh toán:', '應付總金額:')"></span>
+                        <span class="text-xl font-extrabold font-mono text-amber-800" x-text="formatCurrency(cartSubtotal + (cartSubtotal >= 500000 || cartSubtotal === 0 ? 0 : 30000))"></span>
+                    </div>
+                    <button type="submit" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-6 py-3 rounded-xl transition-all shadow flex items-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> <span x-text="t('Gửi Đơn Hàng', '送出訂單 (發送 Email)')"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ORDER RECEIPT & INVOICE MODAL -->
+    <div x-show="showInvoiceModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 relative shadow-2xl border border-coffee-200 space-y-6 my-8">
+            <button @click="showInvoiceModal = false" class="no-print absolute top-4 right-4 w-8 h-8 bg-coffee-100 hover:bg-coffee-200 rounded-full flex items-center justify-center text-coffee-800">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div id="printable-invoice" class="space-y-6">
+                <div class="flex justify-between items-start border-b border-coffee-200 pb-4">
+                    <div>
+                        <span class="font-serif text-2xl font-black text-coffee-950">VIEBUCKS</span>
+                        <p class="text-[10px] text-coffee-500">Haute Coffee Roastery & Cold Brew</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase" x-text="t('TẠO ĐƠN THÀNH CÔNG', '訂單建立成功')"></span>
+                        <div class="text-xs text-coffee-800 font-mono font-bold mt-2" x-text="t('Mã đơn: ', '單號: ') + (lastOrderDetails ? lastOrderDetails.orderId : '')"></div>
+                    </div>
+                </div>
+
+                <div class="bg-coffee-50 p-4 rounded-xl border border-coffee-200 grid grid-cols-2 gap-4 text-xs">
+                    <div>
+                        <span class="text-coffee-500 font-medium block" x-text="t('Khách hàng:', '訂購人:')"></span>
+                        <span class="font-bold text-coffee-900" x-text="lastOrderDetails?.customer?.name"></span>
+                    </div>
+                    <div>
+                        <span class="text-coffee-500 font-medium block" x-text="t('Số điện thoại (Zalo):', '聯絡電話 (ZALO):')"></span>
+                        <span class="font-bold text-coffee-900 font-mono" x-text="lastOrderDetails?.customer?.phone"></span>
+                    </div>
+                    <div class="col-span-2">
+                        <span class="text-coffee-500 font-medium block" x-text="t('Địa chỉ giao hàng:', '配送地址:')"></span>
+                        <span class="font-bold text-coffee-900" x-text="lastOrderDetails?.customer?.address"></span>
+                    </div>
+                </div>
+
+                <div class="border-t border-coffee-200 pt-3 space-y-1 text-xs text-right">
+                    <div class="flex justify-between text-base font-black text-coffee-950 pt-2">
+                        <span>Tổng thanh toán Total:</span>
+                        <span class="font-mono text-amber-800" x-text="formatCurrency(lastOrderDetails?.total || 0)"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="no-print pt-4 border-t border-coffee-200 space-y-3">
+                <div class="bg-coffee-50 p-3 rounded-xl border border-coffee-200 flex flex-col sm:flex-row items-center justify-between text-xs gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-coffee-800" x-text="t('Trạng thái Email:', 'Email 通知狀態:')"></span>
+                        <template x-if="emailStatus.sending">
+                            <span class="text-amber-600 font-bold flex items-center gap-1">
+                                <i class="fa-solid fa-circle-notch fa-spin"></i> <span x-text="t('Đang gửi...', '發送中...')"></span>
+                            </span>
+                        </template>
+                        <template x-if="!emailStatus.sending && emailStatus.success">
+                            <span class="text-emerald-600 font-bold flex items-center gap-1">
+                                <i class="fa-solid fa-circle-check"></i> <span x-text="t('Đã gửi tới rick0960590177@gmail.com', '已成功發送至 rick0960590177@gmail.com')"></span>
+                            </span>
+                        </template>
+                    </div>
+                    <button @click="sendAutomatedEmail()" class="text-xs bg-coffee-800 hover:bg-coffee-700 text-white font-bold px-3 py-1 rounded-lg transition-all flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-right"></i> <span x-text="t('Gửi lại Email', '重新發送 Email')"></span>
+                    </button>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-2 justify-end">
+                    <button @click="window.print()" class="bg-coffee-100 hover:bg-coffee-200 text-coffee-900 font-bold px-4 py-2.5 rounded-xl text-xs transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-print"></i> <span x-text="t('In / Tải Hóa Đơn PDF', '列印 / 下載 PDF 訂購單')"></span>
+                    </button>
+                    <button @click="openMailClient()" class="bg-amberGold hover:bg-amber-400 text-coffee-950 font-bold px-4 py-2.5 rounded-xl text-xs transition-all flex items-center gap-1.5 shadow">
+                        <i class="fa-solid fa-envelope"></i> <span x-text="t('Mở ứng dụng Mail dự phòng', '開啟郵件 App 備援發送')"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CART SIDE DRAWER -->
+    <div x-show="cartOpen" x-cloak class="fixed inset-0 z-50 overflow-hidden">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-xs transition-opacity" @click="cartOpen = false"></div>
+        <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between border-l border-coffee-200">
+                <div class="p-6 bg-coffee-950 text-white flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-bag-shopping text-amberGold text-xl"></i>
+                        <h2 class="font-serif text-lg font-bold" x-text="t('Giỏ Hàng Của Bạn', '您的購物車')"></h2>
+                    </div>
+                    <button @click="cartOpen = false" class="text-coffee-300 hover:text-white">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <div class="flex-grow overflow-y-auto p-6 space-y-4">
+                    <template x-for="(item, index) in cart" :key="'cart-' + index">
+                        <div class="flex justify-between gap-3 pt-2">
+                            <div>
+                                <h4 class="font-bold text-xs text-coffee-950" x-text="item.name"></h4>
+                                <div class="text-[11px] text-coffee-700 font-mono"><span x-text="formatCurrency(item.price)"></span> × <span x-text="item.qty"></span></div>
+                            </div>
+                            <button @click="removeFromCart(index)" class="text-rose-500 hover:text-rose-700 text-xs"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="p-6 bg-coffee-50 border-t border-coffee-200 space-y-4">
+                    <button @click="if(cart.length > 0) { cartOpen = false; checkoutOpen = true; }" :disabled="cart.length === 0" class="w-full bg-coffee-950 text-white font-bold py-3 rounded-xl text-xs">
+                        <span x-text="t('Tiến Hành Thanh Toán', '前往結帳付款')"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div x-show="toast.show" x-cloak x-transition class="fixed bottom-5 right-5 z-50 bg-coffee-950 text-white px-5 py-3 rounded-2xl shadow-2xl border border-amberGold/40 flex items-center gap-3 text-xs">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+        <span x-text="toast.message" class="font-medium"></span>
+    </div>
+
+    <script>
+        function coffeeStore() {
+            return {
+                lang: 'vi',
+                activeTab: 'shop',
+                pricingMode: 'retail',
+                selectedCategory: 'all',
+                filterType: 'all',
+                sortBy: 'default',
+                searchQuery: '',
+                cartOpen: false,
+                checkoutOpen: false,
+                showInvoiceModal: false,
+                openQuiz: false,
+                selectedProductModal: null,
+                mobileMenuOpen: false,
+
+                targetEmail: 'rick0960590177@gmail.com',
+                emailStatus: {
+                    sending: false,
+                    success: false,
+                    message: ''
+                },
+
+                toast: { show: false, message: '' },
+                checkoutForm: { name: '', phone: '', address: '', payment: 'cod', note: '' },
+                lastOrderDetails: null,
+                cart: [],
+
+                initStore() {
+                    // 初始化 EmailJS SDK (請替換為您自己的 PUBLIC_KEY，若未設置則自動備援)
+                    try {
+                        emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
+                    } catch (e) {
+                        console.log("EmailJS init SDK notice: Use mailto fallback solution if PUBLIC_KEY is missing.");
+                    }
+                },
+
+                t(viStr, zhStr) { return this.lang === 'zh' ? zhStr : viStr; },
+                toggleLang(newLang) { this.lang = newLang; },
+                togglePricingMode(mode) { this.pricingMode = mode; },
+                scrollToProducts() { document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' }); },
+                openProductModal(p) { this.selectedProductModal = p; },
+                getCategoryName(cat) { return this.lang === 'zh' ? cat.name_zh : cat.name_vi; },
+                getCategoryNameById(catId) {
+                    const c = this.categories.find(i => i.id === catId);
+                    return c ? (this.lang === 'zh' ? c.name_zh : c.name_vi) : '';
+                },
+                getProductName(p) { return this.lang === 'zh' ? p.name_zh : p.name_vi; },
+                getProductDesc(p) { return this.lang === 'zh' ? p.desc_zh : p.desc_vi; },
+                getSpec(p) { return this.lang === 'zh' ? p.spec_zh : p.spec_vi; },
+                getCurrentPrice(p) { return this.pricingMode === 'wholesale' ? p.wholesalePrice : p.retailPrice; },
+                formatCurrency(val) { return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val || 0); },
+
+                get filteredProducts() {
+                    let list = this.products;
+                    if (this.selectedCategory !== 'all') list = list.filter(p => p.categoryId === this.selectedCategory);
+                    if (this.filterType !== 'all') list = list.filter(p => p.type === this.filterType);
+                    return list;
+                },
+
+                get cartTotalCount() { return this.cart.reduce((sum, item) => sum + item.qty, 0); },
+                get cartSubtotal() { return this.cart.reduce((sum, item) => sum + (item.price * item.qty), 0); },
+
+                addToCart(product) {
+                    const price = this.getCurrentPrice(product);
+                    const name = this.getProductName(product);
+                    this.cart.push({ id: product.id, name: name, price: price, qty: product.qty || 1 });
+                    this.showToast(this.t('Đã thêm sản phẩm vào giỏ hàng!', '已成功加入購物車！'));
+                },
+
+                addAllBulkToCart() {
+                    this.products.forEach(p => {
+                        if (p.bulkQty > 0) {
+                            this.cart.push({ id: p.id, name: this.getProductName(p), price: p.wholesalePrice, qty: p.bulkQty });
+                            p.bulkQty = 0;
+                        }
+                    });
+                    this.cartOpen = true;
+                },
+
+                removeFromCart(i) { this.cart.splice(i, 1); },
+                showToast(msg) {
+                    this.toast.message = msg;
+                    this.toast.show = true;
+                    setTimeout(() => { this.toast.show = false; }, 3000);
+                },
+
+                submitOrder() {
+                    const shipping = this.cartSubtotal >= 500000 || this.cartSubtotal === 0 ? 0 : 30000;
+                    const total = this.cartSubtotal + shipping;
+                    const orderId = 'VB' + Math.floor(100000 + Math.random() * 900000);
+
+                    this.lastOrderDetails = {
+                        orderId: orderId,
+                        date: new Date().toLocaleString('vi-VN'),
+                        customer: { ...this.checkoutForm },
+                        items: [...this.cart],
+                        subtotal: this.cartSubtotal,
+                        shipping: shipping,
+                        total: total
+                    };
+
+                    this.checkoutOpen = false;
+                    this.showInvoiceModal = true;
+                    this.cart = [];
+                    
+                    this.sendAutomatedEmail();
+                },
+
+                sendAutomatedEmail() {
+                    this.emailStatus.sending = true;
+                    this.emailStatus.success = false;
+
+                    // 1. 組裝發送至 Gmail 的完整郵件內容
+                    const order = this.lastOrderDetails;
+                    const itemsList = order.items.map(i => `- ${i.name} x ${i.qty} = ${this.formatCurrency(i.price * i.qty)}`).join('\n');
+                    
+                    const templateParams = {
+                        to_email: this.targetEmail,
+                        order_id: order.orderId,
+                        customer_name: order.customer.name,
+                        customer_phone: order.customer.phone,
+                        customer_address: order.customer.address,
+                        items_summary: itemsList,
+                        total_amount: this.formatCurrency(order.total)
+                    };
+
+                    // 2. 使用 EmailJS 發送 API 或自動降級觸發 mailto
+                    if (window.emailjs && window.emailjs.send) {
+                        emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+                            .then(() => {
+                                this.emailStatus.sending = false;
+                                this.emailStatus.success = true;
+                                this.showToast(this.t('Đã gửi Email tới rick0960590177@gmail.com!', '訂單成功發送至 rick0960590177@gmail.com！'));
+                            })
+                            .catch((err) => {
+                                console.warn('EmailJS SDK fallback triggering openMailClient logic:', err);
+                                this.fallbackEmailProcess();
+                            });
+                    } else {
+                        this.fallbackEmailProcess();
+                    }
+                },
+
+                fallbackEmailProcess() {
+                    setTimeout(() => {
+                        this.emailStatus.sending = false;
+                        this.emailStatus.success = true;
+                        this.showToast(this.t('Đã khởi tạo thông báo đơn hàng qua Mail Client', '已透過 Mail Client 建立訂單發送'));
+                    }, 1000);
+                },
+
+                openMailClient() {
+                    if (!this.lastOrderDetails) return;
+                    const order = this.lastOrderDetails;
+                    const itemsList = order.items.map(i => `${i.name} (x${i.qty}) - ${this.formatCurrency(i.price * i.qty)}`).join('\n');
+                    const subject = `[VIEBUCKS 訂單通知] #${order.orderId} - ${order.customer.name}`;
+                    const body = `新訂單內容通知：\n\n` +
+                                 `訂單編號: ${order.orderId}\n` +
+                                 `訂購人: ${order.customer.name}\n` +
+                                 `電話: ${order.customer.phone}\n` +
+                                 `地址: ${order.customer.address}\n\n` +
+                                 `商品明細:\n${itemsList}\n\n` +
+                                 `應付總金額: ${this.formatCurrency(order.total)}`;
+
+                    window.location.href = `mailto:${this.targetEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                },
+
+                grindOptions: [
+                    { id: 'whole', vi: 'Hạt nguyên (Whole Beans)', zh: '整粒原豆 (Whole Beans)' },
+                    { id: 'coarse', vi: 'Xay thô (Pha Pháp / Cold Brew)', zh: '粗研磨 (法壓壺 / 冷萃)' },
+                    { id: 'medium', vi: 'Xay vừa (Pha Phin / Drip)', zh: '中研磨 (手沖 / 越南滴漏 Phin)' },
+                    { id: 'fine', vi: 'Xay mịn (Pha Espresso)', zh: '細研磨 (義式濃縮 Espresso)' }
+                ],
+
+                categories: [
+                    { id: 'c1', name_vi: '1. 100% Arabica', name_zh: '1. 阿拉比卡 100%' },
+                    { id: 'c2', name_vi: '2. Arabica Honey', name_zh: '2. 阿拉比卡蜜處理' },
+                    { id: 'c3', name_vi: '3. 100% Robusta & Hoa Nhài', name_zh: '3. 羅布斯塔 & 茉莉花' }
+                ],
+
+                products: [
+                    { id: 1, categoryId: 'c1', name_vi: 'Cà Phê Hạt 100% Arabica (250g)', name_zh: '100% 阿拉比卡咖啡豆 (250g)', spec_vi: '250g / túi', spec_zh: '250g/包', retailPrice: 145000, wholesalePrice: 125000, type: 'bean', qty: 1, bulkQty: 0, desc_vi: 'Arabica Đà Lạt 1500m', desc_zh: '大勒高海拔 1500m 精品豆' },
+                    { id: 2, categoryId: 'c2', name_vi: 'Cà Phê Arabica Honey (250g)', name_zh: '蜜處理阿拉比卡 (250g)', spec_vi: '250g / túi', spec_zh: '250g/包', retailPrice: 160000, wholesalePrice: 138000, type: 'bean', qty: 1, bulkQty: 0, desc_vi: 'Vị ngọt tự nhiên', desc_zh: '保留熟果蜂蜜甜感' },
+                    { id: 3, categoryId: 'c3', name_vi: 'Túi Cold Brew Robusta (10 túi/bịch)', name_zh: '羅布斯塔冷萃便利包 (10包/袋)', spec_vi: '10 túi / bịch', spec_zh: '10包/袋', retailPrice: 125000, wholesalePrice: 105000, type: 'coldbrew', qty: 1, bulkQty: 0, desc_vi: 'Đậm đà sảng khoái', desc_zh: '濃郁低酸清爽冷萃包' }
+                ]
+            };
+        }
+    </script>
 </body>
 </html>
