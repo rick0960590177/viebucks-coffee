@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-TW" class="scroll-smooth">
+<html lang="vi" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIEBUCKS - 頂級莊園精品咖啡與冷萃包 (零售/批發)</title>
+    <title>VIEBUCKS - Cà Phê Mới Rang Đặc Sản & Cold Brew (Bán Sỉ / Bán Lẻ)</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,7 +54,6 @@
         .font-serif {
             font-family: 'Playfair Display', Georgia, serif;
         }
-        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -75,7 +74,6 @@
         }
         [x-cloak] { display: none !important; }
 
-        /* Print styles for invoice download */
         @media print {
             body * {
                 visibility: hidden;
@@ -103,28 +101,39 @@
     <!-- Top Announcement Bar -->
     <div class="bg-coffee-950 text-coffee-200 text-xs py-2 px-4 flex justify-between items-center border-b border-coffee-800">
         <div class="hidden md:flex items-center space-x-4">
-            <span><i class="fa-solid fa-truck-fast text-amberGold mr-1"></i> 全館滿 VND 500,000 免運費</span>
-            <span><i class="fa-solid fa-certificate text-amberGold mr-1"></i> 100% 嚴選越南莊園直送</span>
+            <span><i class="fa-solid fa-truck-fast text-amberGold mr-1"></i> <span x-text="t('freeShipping')"></span></span>
+            <span><i class="fa-solid fa-certificate text-amberGold mr-1"></i> <span x-text="t('originCert')"></span></span>
         </div>
+        
         <div class="w-full md:w-auto text-center flex justify-center items-center gap-2">
-            <span class="font-medium text-amberGold">當前採購模式：</span>
+            <span class="font-medium text-amberGold hidden sm:inline" x-text="t('modeLabel')"></span>
             <button @click="togglePricingMode('retail')" 
                     :class="pricingMode === 'retail' ? 'bg-amberGold text-coffee-950 font-bold shadow' : 'bg-coffee-800 text-coffee-300 hover:text-white'"
-                    class="px-2.5 py-0.5 rounded text-[11px] transition-all">
-                零售 Retail
+                    class="px-2.5 py-0.5 rounded text-[11px] transition-all" x-text="t('retailMode')">
             </button>
             <button @click="togglePricingMode('wholesale')" 
                     :class="pricingMode === 'wholesale' ? 'bg-amberGold text-coffee-950 font-bold shadow' : 'bg-coffee-800 text-coffee-300 hover:text-white'"
                     class="px-2.5 py-0.5 rounded text-[11px] transition-all flex items-center gap-1">
-                <i class="fa-solid fa-briefcase text-[10px]"></i> B2B 批發 Wholesale
+                <i class="fa-solid fa-briefcase text-[10px]"></i> <span x-text="t('wholesaleMode')"></span>
             </button>
         </div>
+
         <div class="hidden lg:flex items-center space-x-3 text-xs">
+            <!-- Language Selector Dropdown -->
+            <div class="relative flex items-center gap-1 bg-coffee-900 border border-coffee-700 px-2 py-0.5 rounded">
+                <i class="fa-solid fa-globe text-amberGold text-[11px]"></i>
+                <select x-model="lang" class="bg-transparent text-amberGold font-bold text-[11px] focus:outline-none cursor-pointer">
+                    <option value="vi" class="bg-coffee-900 text-white">🇻🇳 Tiếng Việt</option>
+                    <option value="zh" class="bg-coffee-900 text-white">🇹🇼 繁體中文</option>
+                    <option value="en" class="bg-coffee-900 text-white">🇺🇸 English</option>
+                </select>
+            </div>
+            <span>|</span>
             <a href="https://zalo.me/839681380" target="_blank" class="hover:text-amberGold transition-colors flex items-center gap-1 font-semibold">
-                <i class="fa-solid fa-headset text-amberGold"></i> 客服專線 ZALO: 839681380 / 0348246669
+                <i class="fa-solid fa-headset text-amberGold"></i> Hotline Zalo: 0839681380 / 0348246669
             </a>
             <span>|</span>
-            <span class="text-coffee-400">貨幣: VND (₫)</span>
+            <span class="text-coffee-400">VND (₫)</span>
         </div>
     </div>
 
@@ -146,17 +155,15 @@
 
                 <!-- Desktop Navigation Links -->
                 <nav class="hidden lg:flex items-center space-x-8">
-                    <button @click="activeTab = 'shop'" :class="activeTab === 'shop' ? 'text-coffee-950 font-bold border-b-2 border-amberGold' : 'text-coffee-700 hover:text-coffee-950'" class="py-2 text-sm font-medium transition-all">
-                        咖啡產品總覽
+                    <button @click="activeTab = 'shop'" :class="activeTab === 'shop' ? 'text-coffee-950 font-bold border-b-2 border-amberGold' : 'text-coffee-700 hover:text-coffee-950'" class="py-2 text-sm font-medium transition-all" x-text="t('navShop')">
                     </button>
                     <button @click="activeTab = 'bulk'" :class="activeTab === 'bulk' ? 'text-coffee-950 font-bold border-b-2 border-amberGold' : 'text-coffee-700 hover:text-coffee-950'" class="py-2 text-sm font-medium transition-all flex items-center gap-1.5">
-                        <span class="bg-coffee-200 text-coffee-900 text-[10px] px-1.5 py-0.5 rounded font-bold">B2B</span> 批發快速下單
+                        <span class="bg-coffee-200 text-coffee-900 text-[10px] px-1.5 py-0.5 rounded font-bold">B2B</span> <span x-text="t('navBulk')"></span>
                     </button>
                     <button @click="openQuiz = true" class="py-2 text-sm font-medium text-coffee-700 hover:text-coffee-950 transition-all flex items-center gap-1">
-                        <i class="fa-solid fa-wand-magic-sparkles text-amber-600"></i> 風味選豆測驗
+                        <i class="fa-solid fa-wand-magic-sparkles text-amber-600"></i> <span x-text="t('navQuiz')"></span>
                     </button>
-                    <button @click="activeTab = 'about'" :class="activeTab === 'about' ? 'text-coffee-950 font-bold border-b-2 border-amberGold' : 'text-coffee-700 hover:text-coffee-950'" class="py-2 text-sm font-medium transition-all">
-                        品牌故事與烘焙特色
+                    <button @click="activeTab = 'about'" :class="activeTab === 'about' ? 'text-coffee-950 font-bold border-b-2 border-amberGold' : 'text-coffee-700 hover:text-coffee-950'" class="py-2 text-sm font-medium transition-all" x-text="t('navAbout')">
                     </button>
                 </nav>
 
@@ -165,7 +172,7 @@
                     
                     <!-- Search Input -->
                     <div class="relative hidden sm:block">
-                        <input type="text" x-model="searchQuery" placeholder="搜尋咖啡豆、冷萃包..." 
+                        <input type="text" x-model="searchQuery" :placeholder="t('searchPlaceholder')" 
                                class="w-44 xl:w-56 pl-9 pr-4 py-2 text-xs rounded-full bg-coffee-100/80 border border-coffee-200 focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:bg-white transition-all">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-coffee-400"></i>
                         <button x-show="searchQuery" @click="searchQuery = ''" class="absolute right-3 top-2 text-xs text-coffee-400 hover:text-coffee-700">
@@ -176,7 +183,7 @@
                     <!-- Cart Drawer Toggle -->
                     <button @click="cartOpen = true" class="relative bg-coffee-950 text-white px-4 py-2.5 rounded-full hover:bg-coffee-800 transition-all flex items-center gap-2 shadow-md hover:shadow-lg">
                         <i class="fa-solid fa-bag-shopping text-amberGold"></i>
-                        <span class="text-xs font-bold hidden md:inline">購物車</span>
+                        <span class="text-xs font-bold hidden md:inline" x-text="t('cartTitle')"></span>
                         <span class="bg-amberGold text-coffee-950 text-xs font-extrabold px-2 py-0.5 rounded-full" x-text="cartTotalCount"></span>
                     </button>
 
@@ -192,21 +199,34 @@
         <div x-show="mobileMenuOpen" x-cloak x-transition 
              class="lg:hidden bg-coffee-50 border-b border-coffee-200 px-4 pt-2 pb-6 space-y-3">
             <div class="relative mb-3">
-                <input type="text" x-model="searchQuery" placeholder="搜尋咖啡豆、冷萃包..." 
+                <input type="text" x-model="searchQuery" :placeholder="t('searchPlaceholder')" 
                        class="w-full pl-9 pr-4 py-2 text-xs rounded-full bg-white border border-coffee-200 focus:outline-none">
                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-coffee-400"></i>
             </div>
-            <div class="flex items-center justify-between p-2 bg-coffee-100 rounded-xl">
-                <span class="text-xs font-medium text-coffee-800">價格模式：</span>
+            
+            <!-- Mobile Language Switcher -->
+            <div class="flex items-center justify-between p-2.5 bg-coffee-100 rounded-xl">
+                <span class="text-xs font-bold text-coffee-900 flex items-center gap-1.5">
+                    <i class="fa-solid fa-globe text-amberGold"></i> <span x-text="t('langLabel')"></span>:
+                </span>
+                <select x-model="lang" class="bg-white border border-coffee-200 text-coffee-900 font-bold text-xs rounded-lg px-2 py-1 focus:outline-none">
+                    <option value="vi">🇻🇳 Tiếng Việt</option>
+                    <option value="zh">🇹🇼 繁體中文</option>
+                    <option value="en">🇺🇸 English</option>
+                </select>
+            </div>
+
+            <div class="flex items-center justify-between p-2.5 bg-coffee-100 rounded-xl">
+                <span class="text-xs font-medium text-coffee-800" x-text="t('modeLabel')"></span>
                 <div class="flex space-x-2">
-                    <button @click="pricingMode = 'retail'" :class="pricingMode === 'retail' ? 'bg-coffee-900 text-white' : 'bg-white text-coffee-800'" class="px-3 py-1 text-xs rounded-lg font-bold">零售價</button>
-                    <button @click="pricingMode = 'wholesale'" :class="pricingMode === 'wholesale' ? 'bg-amberGold text-coffee-950 font-bold' : 'bg-white text-coffee-800'" class="px-3 py-1 text-xs rounded-lg font-bold">批發價 (B2B)</button>
+                    <button @click="pricingMode = 'retail'" :class="pricingMode === 'retail' ? 'bg-coffee-900 text-white' : 'bg-white text-coffee-800'" class="px-3 py-1 text-xs rounded-lg font-bold" x-text="t('retailMode')"></button>
+                    <button @click="pricingMode = 'wholesale'" :class="pricingMode === 'wholesale' ? 'bg-amberGold text-coffee-950 font-bold' : 'bg-white text-coffee-800'" class="px-3 py-1 text-xs rounded-lg font-bold" x-text="t('wholesaleMode')"></button>
                 </div>
             </div>
-            <button @click="activeTab = 'shop'; mobileMenuOpen = false" class="block w-full text-left py-2 text-sm font-medium text-coffee-900 border-b border-coffee-200/50">咖啡產品總覽</button>
-            <button @click="activeTab = 'bulk'; mobileMenuOpen = false" class="block w-full text-left py-2 text-sm font-medium text-coffee-900 border-b border-coffee-200/50">B2B 批發快速下單</button>
-            <button @click="openQuiz = true; mobileMenuOpen = false" class="block w-full text-left py-2 text-sm font-medium text-coffee-900 border-b border-coffee-200/50">風味選豆測驗</button>
-            <button @click="activeTab = 'about'; mobileMenuOpen = false" class="block w-full text-left py-2 text-sm font-medium text-coffee-900">品牌故事與烘焙特色</button>
+            <button @click="activeTab = 'shop'; mobileMenuOpen = false" class="block w-full text-left py-2 text-sm font-medium text-coffee-900 border-b border-coffee-200/50" x-text="t('navShop')"></button>
+            <button @click="activeTab = 'bulk'; mobileMenuOpen = false" class="block w-full text-left py-2 text-sm font-medium text-coffee-900 border-b border-coffee-200/50" x-text="t('navBulk')"></button>
+            <button @click="openQuiz = true; mobileMenuOpen = false" class="block w-full text-left py-2 text-sm font-medium text-coffee-900 border-b border-coffee-200/50" x-text="t('navQuiz')"></button>
+            <button @click="activeTab = 'about'; mobileMenuOpen = false" class="block w-full text-left py-2 text-sm font-medium text-coffee-900" x-text="t('navAbout')"></button>
         </div>
     </header>
 
@@ -219,37 +239,36 @@
                 <div class="grid lg:grid-cols-12 gap-8 items-center">
                     <div class="lg:col-span-7 space-y-6">
                         <div class="inline-flex items-center gap-2 bg-amberGold/20 border border-amberGold/40 text-amberGold px-3.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">
-                            <i class="fa-solid fa-crown"></i> VIEBUCKS 奢華莊園極緻系列
+                            <i class="fa-solid fa-crown"></i> <span x-text="t('heroBadge')"></span>
                         </div>
                         <h1 class="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold text-coffee-50 leading-tight">
-                            VIEBUCKS <br><span class="text-amberGold italic">高原莊園 ‧ 極緻淬鍊風味</span>
+                            VIEBUCKS <br><span class="text-amberGold italic" x-text="t('heroTitle')"></span>
                         </h1>
-                        <p class="text-coffee-200 text-sm sm:text-base max-w-2xl leading-relaxed">
-                            專營 100% 阿拉比卡、蜜處理精品豆、高海拔羅布斯塔、茉莉花風味冷萃包及黃金比例義式配方豆。全系列提供完整 250g / 500g 熟豆與冷萃包，全面支援零售品飲與 B2B 大宗商業批發採購。
+                        <p class="text-coffee-200 text-sm sm:text-base max-w-2xl leading-relaxed" x-text="t('heroDesc')">
                         </p>
                         
                         <!-- Quick Stats Badges -->
                         <div class="pt-2 grid grid-cols-3 gap-4 border-t border-coffee-800 max-w-xl">
                             <div>
-                                <div class="text-xl sm:text-2xl font-bold text-amberGold">7 大</div>
-                                <div class="text-xs text-coffee-300">特選咖啡系列</div>
+                                <div class="text-xl sm:text-2xl font-bold text-amberGold" x-text="t('stat1Num')"></div>
+                                <div class="text-xs text-coffee-300" x-text="t('stat1Label')"></div>
                             </div>
                             <div>
-                                <div class="text-xl sm:text-2xl font-bold text-amberGold">24 款</div>
-                                <div class="text-xs text-coffee-300">規格熟豆與冷萃包</div>
+                                <div class="text-xl sm:text-2xl font-bold text-amberGold" x-text="t('stat2Num')"></div>
+                                <div class="text-xs text-coffee-300" x-text="t('stat2Label')"></div>
                             </div>
                             <div>
-                                <div class="text-xl sm:text-2xl font-bold text-amberGold">B2B/B2C</div>
-                                <div class="text-xs text-coffee-300">雙軌優惠報價</div>
+                                <div class="text-xl sm:text-2xl font-bold text-amberGold">B2B / B2C</div>
+                                <div class="text-xs text-coffee-300" x-text="t('stat3Label')"></div>
                             </div>
                         </div>
 
                         <div class="flex flex-wrap gap-4 pt-2">
                             <button @click="scrollToProducts()" class="bg-amberGold text-coffee-950 hover:bg-amber-400 font-bold px-6 py-3 rounded-xl transition-all shadow-lg flex items-center gap-2 text-sm">
-                                <i class="fa-solid fa-mug-hot"></i> 立即選購精品咖啡
+                                <i class="fa-solid fa-mug-hot"></i> <span x-text="t('shopNowBtn')"></span>
                             </button>
                             <button @click="activeTab = 'bulk'" class="bg-coffee-800 hover:bg-coffee-700 text-white font-medium px-6 py-3 rounded-xl border border-coffee-600 transition-all text-sm flex items-center gap-2">
-                                <i class="fa-solid fa-list-check text-amberGold"></i> B2B 批發快速下單
+                                <i class="fa-solid fa-list-check text-amberGold"></i> <span x-text="t('b2bOrderBtn')"></span>
                             </button>
                         </div>
                     </div>
@@ -257,26 +276,25 @@
                     <!-- Hero Visual Card -->
                     <div class="lg:col-span-5 relative hidden lg:block">
                         <div class="bg-coffee-900/90 border border-coffee-700/60 p-6 rounded-2xl shadow-2xl backdrop-blur-sm relative space-y-4">
-                            <div class="absolute -top-3 -right-3 bg-amberGold text-coffee-950 font-extrabold text-xs px-3 py-1 rounded-full shadow">
-                                專屬雙軌價格體系
+                            <div class="absolute -top-3 -right-3 bg-amberGold text-coffee-950 font-extrabold text-xs px-3 py-1 rounded-full shadow" x-text="t('pricingSystemTag')">
                             </div>
                             <div class="flex items-center space-x-4 border-b border-coffee-800 pb-4">
                                 <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-700 to-coffee-800 flex items-center justify-center text-amberGold text-2xl shadow">
                                     <i class="fa-solid fa-store"></i>
                                 </div>
                                 <div>
-                                    <h3 class="font-bold text-white text-sm">當前定價模式: <span x-text="pricingMode === 'retail' ? '標準零售 (Retail)' : 'B2B 批發優惠 (Wholesale)'" class="text-amberGold"></span></h3>
-                                    <p class="text-xs text-coffee-300">點擊頂部按鈕可切換零售或商業批發底價</p>
+                                    <h3 class="font-bold text-white text-sm"><span x-text="t('currentPricingMode')"></span>: <span x-text="pricingMode === 'retail' ? t('retailMode') : t('wholesaleMode')" class="text-amberGold"></span></h3>
+                                    <p class="text-xs text-coffee-300" x-text="t('switchTip')"></p>
                                 </div>
                             </div>
                             <div class="space-y-2 text-xs text-coffee-200">
                                 <div class="flex justify-between items-center bg-coffee-950/80 p-3 rounded-xl border border-coffee-800">
-                                    <span><i class="fa-solid fa-check text-emerald-400 mr-2"></i>零售價格 (單件自用購買)</span>
-                                    <span class="font-mono text-amberGold font-bold">標準牌價</span>
+                                    <span><i class="fa-solid fa-check text-emerald-400 mr-2"></i><span x-text="t('retailPriceDetail')"></span></span>
+                                    <span class="font-mono text-amberGold font-bold" x-text="t('standardRate')"></span>
                                 </div>
                                 <div class="flex justify-between items-center bg-coffee-950/80 p-3 rounded-xl border border-coffee-800">
-                                    <span><i class="fa-solid fa-check text-emerald-400 mr-2"></i>B2B 批發價格 (商業門市大宗)</span>
-                                    <span class="font-mono text-emerald-400 font-bold">享約 15% - 20% 批發折扣</span>
+                                    <span><i class="fa-solid fa-check text-emerald-400 mr-2"></i><span x-text="t('wholesalePriceDetail')"></span></span>
+                                    <span class="font-mono text-emerald-400 font-bold" x-text="t('wholesaleDiscountNotice')"></span>
                                 </div>
                             </div>
                         </div>
@@ -289,13 +307,13 @@
         <div class="bg-amber-50 border-y border-amber-200 py-3 px-4">
             <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between text-xs sm:text-sm text-coffee-900 gap-2">
                 <div class="flex items-center gap-2">
-                    <span class="bg-amberGold text-coffee-950 font-bold px-2.5 py-0.5 rounded text-xs uppercase" x-text="pricingMode === 'retail' ? '零售模式' : '批發優惠模式'"></span>
-                    <span class="font-medium" x-show="pricingMode === 'retail'">目前顯示【零售價】。如需大量門市採購，請切換至批發模式。</span>
-                    <span class="font-medium text-emerald-800" x-show="pricingMode === 'wholesale'">已啟用【B2B 批發價】！全門市商品皆顯示商業批發底價。</span>
+                    <span class="bg-amberGold text-coffee-950 font-bold px-2.5 py-0.5 rounded text-xs uppercase" x-text="pricingMode === 'retail' ? t('retailMode') : t('wholesaleMode')"></span>
+                    <span class="font-medium" x-show="pricingMode === 'retail'" x-text="t('bannerRetailMsg')"></span>
+                    <span class="font-medium text-emerald-800" x-show="pricingMode === 'wholesale'" x-text="t('bannerWholesaleMsg')"></span>
                 </div>
                 <button @click="togglePricingMode(pricingMode === 'retail' ? 'wholesale' : 'retail')" 
                         class="text-coffee-900 underline font-bold hover:text-amber-800 shrink-0">
-                    <span x-text="pricingMode === 'retail' ? '切換至 B2B 批發價 →' : '切換回標準零售價 →'"></span>
+                    <span x-text="pricingMode === 'retail' ? t('switchToWholesale') : t('switchToRetail')"></span>
                 </button>
             </div>
         </div>
@@ -311,13 +329,13 @@
                     <button @click="selectedCategory = 'all'" 
                             :class="selectedCategory === 'all' ? 'bg-coffee-950 text-white shadow' : 'bg-coffee-100 text-coffee-800 hover:bg-coffee-200'"
                             class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shrink-0">
-                        全部商品 (<span x-text="products.length"></span>)
+                        <span x-text="t('allCategories')"></span> (<span x-text="products.length"></span>)
                     </button>
                     <template x-for="cat in categories" :key="cat.id">
                         <button @click="selectedCategory = cat.id" 
                                 :class="selectedCategory === cat.id ? 'bg-coffee-950 text-white shadow' : 'bg-coffee-100 text-coffee-800 hover:bg-coffee-200'"
                                 class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shrink-0 whitespace-nowrap">
-                            <span x-text="cat.name"></span>
+                            <span x-text="cat.name[lang] || cat.name.vi"></span>
                         </button>
                     </template>
                 </div>
@@ -325,31 +343,30 @@
                 <!-- Secondary Type Filter & Sorting -->
                 <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-1">
                     <div class="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
-                        <span class="text-xs font-semibold text-coffee-500 uppercase tracking-wider shrink-0">類型:</span>
+                        <span class="text-xs font-semibold text-coffee-500 uppercase tracking-wider shrink-0" x-text="t('typeFilterLabel')"></span>
                         <button @click="filterType = 'all'" 
                                 :class="filterType === 'all' ? 'bg-coffee-800 text-white' : 'bg-coffee-50 text-coffee-700 border border-coffee-200'" 
-                                class="px-3 py-1 rounded-lg text-xs font-medium transition-all">
-                            全部
+                                class="px-3 py-1 rounded-lg text-xs font-medium transition-all" x-text="t('allTypes')">
                         </button>
                         <button @click="filterType = 'bean'" 
                                 :class="filterType === 'bean' ? 'bg-coffee-800 text-white' : 'bg-coffee-50 text-coffee-700 border border-coffee-200'" 
                                 class="px-3 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1">
-                            <i class="fa-solid fa-seedling text-[10px]"></i> 咖啡豆 (250g/500g)
+                            <i class="fa-solid fa-seedling text-[10px]"></i> <span x-text="t('typeBeans')"></span>
                         </button>
                         <button @click="filterType = 'coldbrew'" 
                                 :class="filterType === 'coldbrew' ? 'bg-coffee-800 text-white' : 'bg-coffee-50 text-coffee-700 border border-coffee-200'" 
                                 class="px-3 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1">
-                            <i class="fa-solid fa-glass-water text-[10px]"></i> 冷萃便利包
+                            <i class="fa-solid fa-glass-water text-[10px]"></i> <span x-text="t('typeColdbrew')"></span>
                         </button>
                     </div>
 
                     <div class="flex items-center justify-end gap-3 w-full sm:w-auto">
-                        <span class="text-xs font-semibold text-coffee-500 uppercase tracking-wider shrink-0">排序:</span>
+                        <span class="text-xs font-semibold text-coffee-500 uppercase tracking-wider shrink-0" x-text="t('sortLabel')"></span>
                         <select x-model="sortBy" class="bg-coffee-50 border border-coffee-200 text-coffee-900 text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-coffee-500">
-                            <option value="default">預設排序</option>
-                            <option value="price-asc">價格：由低到高</option>
-                            <option value="price-desc">價格：由高到低</option>
-                            <option value="name">產品名稱</option>
+                            <option value="default" x-text="t('sortDefault')"></option>
+                            <option value="price-asc" x-text="t('sortPriceAsc')"></option>
+                            <option value="price-desc" x-text="t('sortPriceDesc')"></option>
+                            <option value="name" x-text="t('sortName')"></option>
                         </select>
                     </div>
                 </div>
@@ -367,7 +384,7 @@
                             
                             <!-- Badges -->
                             <div class="absolute top-3 left-3 flex flex-col gap-1 z-10">
-                                <span class="bg-amberGold text-coffee-950 font-extrabold text-[10px] px-2 py-0.5 rounded shadow" x-text="product.categoryName"></span>
+                                <span class="bg-amberGold text-coffee-950 font-extrabold text-[10px] px-2 py-0.5 rounded shadow" x-text="getCategoryName(product.categoryId)"></span>
                                 <span x-show="product.spec" class="bg-coffee-950/80 backdrop-blur-sm text-coffee-200 font-medium text-[10px] px-2 py-0.5 rounded border border-coffee-700" x-text="product.spec"></span>
                             </div>
 
@@ -386,7 +403,7 @@
                             </div>
 
                             <span class="inline-block text-[11px] text-coffee-300 group-hover:text-amberGold transition-colors font-medium">
-                                <i class="fa-solid fa-circle-info mr-1"></i> 點擊檢視產品規格與說明
+                                <i class="fa-solid fa-circle-info mr-1"></i> <span x-text="t('clickForDetail')"></span>
                             </span>
                         </div>
 
@@ -394,34 +411,34 @@
                         <div class="p-5 flex-grow flex flex-col justify-between space-y-4">
                             <div>
                                 <h3 class="font-bold text-coffee-950 text-base leading-snug group-hover:text-coffee-600 transition-colors line-clamp-2" 
-                                    x-text="product.name" @click="openProductModal(product)"></h3>
-                                <p class="text-xs text-coffee-500 mt-1 line-clamp-2" x-text="product.description"></p>
+                                    x-text="product.name[lang] || product.name.vi" @click="openProductModal(product)"></h3>
+                                <p class="text-xs text-coffee-500 mt-1 line-clamp-2" x-text="product.description[lang] || product.description.vi"></p>
                             </div>
 
                             <!-- Grind Selector for Beans -->
                             <div x-show="product.type !== 'coldbrew'" class="space-y-1">
                                 <label class="text-[11px] font-semibold text-coffee-700 flex justify-between">
-                                    <span>研磨刻度:</span>
+                                    <span x-text="t('grindLabel')"></span>
                                 </label>
-                                <select x-model="product.selectedGrind" class="w-full text-xs bg-coffee-50 border border-coffee-200 rounded-lg py-1 px-2 text-coffee-900 focus:outline-none focus:ring-1 focus:ring-coffee-500">
-                                    <option value="原豆 (Whole Beans)">整粒原豆 (Whole Beans)</option>
-                                    <option value="粗研磨 - 法壓壺/冷萃">粗研磨 (法壓壺 / 冷萃)</option>
-                                    <option value="中研磨 - 手沖/越南滴漏">中研磨 (手沖 / 越南滴漏 Phin)</option>
-                                    <option value="細研磨 - 義式濃縮 Espresso">細研磨 (義式濃縮 Espresso)</option>
+                                <select x-model="product.selectedGrindKey" class="w-full text-xs bg-coffee-50 border border-coffee-200 rounded-lg py-1 px-2 text-coffee-900 focus:outline-none focus:ring-1 focus:ring-coffee-500">
+                                    <option value="whole" x-text="grindOptions['whole'][lang]"></option>
+                                    <option value="coarse" x-text="grindOptions['coarse'][lang]"></option>
+                                    <option value="medium" x-text="grindOptions['medium'][lang]"></option>
+                                    <option value="fine" x-text="grindOptions['fine'][lang]"></option>
                                 </select>
                             </div>
 
                             <!-- Price Display -->
                             <div class="pt-2 border-t border-coffee-100 flex items-baseline justify-between">
                                 <div>
-                                    <span class="text-[11px] text-coffee-400 block font-medium" x-text="pricingMode === 'retail' ? '零售價' : 'B2B 批發價'"></span>
+                                    <span class="text-[11px] text-coffee-400 block font-medium" x-text="pricingMode === 'retail' ? t('retailMode') : t('wholesaleMode')"></span>
                                     <div class="flex items-baseline gap-2">
                                         <span class="text-lg font-extrabold text-coffee-950 font-mono" x-text="formatCurrency(getCurrentPrice(product))"></span>
                                         <span x-show="pricingMode === 'wholesale'" class="text-xs text-coffee-400 line-through font-mono" x-text="formatCurrency(product.retailPrice)"></span>
                                     </div>
                                 </div>
                                 <span x-show="pricingMode === 'wholesale'" class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
-                                    省 <span x-text="formatCurrency(product.retailPrice - product.wholesalePrice)"></span>
+                                    <span x-text="t('saveLabel')"></span> <span x-text="formatCurrency(product.retailPrice - product.wholesalePrice)"></span>
                                 </span>
                             </div>
 
@@ -435,7 +452,7 @@
 
                                 <button @click="addToCart(product)" 
                                         class="flex-grow bg-coffee-950 hover:bg-coffee-800 text-white text-xs font-bold py-2.5 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5 shadow">
-                                    <i class="fa-solid fa-cart-plus text-amberGold"></i> 加入購物車
+                                    <i class="fa-solid fa-cart-plus text-amberGold"></i> <span x-text="t('addToCart')"></span>
                                 </button>
                             </div>
                         </div>
@@ -446,9 +463,9 @@
             <!-- Empty Search State -->
             <div x-show="filteredProducts.length === 0" class="text-center py-16 bg-white rounded-2xl border border-coffee-200 p-8">
                 <i class="fa-solid fa-mug-hot text-5xl text-coffee-300 mb-4"></i>
-                <h3 class="text-lg font-bold text-coffee-900">找不到符合條件的咖啡產品</h3>
-                <p class="text-xs text-coffee-500 mt-1">請嘗試調整關鍵字或選擇其他咖啡系列</p>
-                <button @click="selectedCategory = 'all'; filterType = 'all'; searchQuery = ''" class="mt-4 bg-coffee-900 text-white text-xs px-4 py-2 rounded-xl font-medium">重置搜尋條件</button>
+                <h3 class="text-lg font-bold text-coffee-900" x-text="t('noProductsFound')"></h3>
+                <p class="text-xs text-coffee-500 mt-1" x-text="t('noProductsTip')"></p>
+                <button @click="selectedCategory = 'all'; filterType = 'all'; searchQuery = ''" class="mt-4 bg-coffee-900 text-white text-xs px-4 py-2 rounded-xl font-medium" x-text="t('resetFilters')"></button>
             </div>
         </div>
 
@@ -458,14 +475,14 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-coffee-200">
                     <div>
                         <div class="inline-flex items-center gap-1.5 bg-amber-100 text-amber-900 px-3 py-0.5 rounded-full text-xs font-bold mb-2">
-                            <i class="fa-solid fa-boxes-packing"></i> B2B 商業採購矩陣
+                            <i class="fa-solid fa-boxes-packing"></i> <span x-text="t('b2bMatrixTag')"></span>
                         </div>
-                        <h2 class="font-serif text-2xl font-bold text-coffee-950">大宗快速下單清單 (Bulk Order Matrix)</h2>
-                        <p class="text-xs text-coffee-600 mt-1">專為咖啡館、辦公室及經銷門市設計。可在此一次勾選調整多項產品數量，快速加入購物車。</p>
+                        <h2 class="font-serif text-2xl font-bold text-coffee-950" x-text="t('bulkTitle')"></h2>
+                        <p class="text-xs text-coffee-600 mt-1" x-text="t('bulkSubtitle')"></p>
                     </div>
                     <div class="flex items-center gap-3">
                         <button @click="addAllBulkToCart()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all shadow flex items-center gap-2">
-                            <i class="fa-solid fa-cart-arrow-down"></i> 將選擇數量全部加入購物車
+                            <i class="fa-solid fa-cart-arrow-down"></i> <span x-text="t('addBulkToCart')"></span>
                         </button>
                     </div>
                 </div>
@@ -475,24 +492,24 @@
                     <table class="w-full text-left text-xs">
                         <thead class="bg-coffee-100/80 text-coffee-900 uppercase font-bold text-[11px] border-b border-coffee-200">
                             <tr>
-                                <th class="py-3 px-4">系列</th>
-                                <th class="py-3 px-4">品名與規格</th>
-                                <th class="py-3 px-4">零售價 (VND)</th>
-                                <th class="py-3 px-4">批發價 (VND)</th>
-                                <th class="py-3 px-4">單件折扣</th>
-                                <th class="py-3 px-4 text-center">研磨選擇</th>
-                                <th class="py-3 px-4 text-center">數量</th>
-                                <th class="py-3 px-4 text-right">小計 (VND)</th>
+                                <th class="py-3 px-4" x-text="t('matrixColCategory')"></th>
+                                <th class="py-3 px-4" x-text="t('matrixColProduct')"></th>
+                                <th class="py-3 px-4" x-text="t('matrixColRetail')"></th>
+                                <th class="py-3 px-4" x-text="t('matrixColWholesale')"></th>
+                                <th class="py-3 px-4" x-text="t('matrixColDiscount')"></th>
+                                <th class="py-3 px-4 text-center" x-text="t('matrixColGrind')"></th>
+                                <th class="py-3 px-4 text-center" x-text="t('matrixColQty')"></th>
+                                <th class="py-3 px-4 text-right" x-text="t('matrixColSubtotal')"></th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-coffee-100">
                             <template x-for="p in products" :key="'bulk-' + p.id">
                                 <tr class="hover:bg-coffee-50/80 transition-colors">
                                     <td class="py-3 px-4">
-                                        <span class="bg-coffee-200 text-coffee-900 text-[10px] font-bold px-2 py-0.5 rounded" x-text="p.categoryName"></span>
+                                        <span class="bg-coffee-200 text-coffee-900 text-[10px] font-bold px-2 py-0.5 rounded" x-text="getCategoryName(p.categoryId)"></span>
                                     </td>
                                     <td class="py-3 px-4 font-bold text-coffee-950">
-                                        <span x-text="p.name"></span>
+                                        <span x-text="p.name[lang] || p.name.vi"></span>
                                         <span class="text-[10px] text-coffee-500 ml-1 font-normal" x-text="'(' + p.spec + ')'"></span>
                                     </td>
                                     <td class="py-3 px-4 text-coffee-400 font-mono line-through" x-text="formatCurrency(p.retailPrice)"></td>
@@ -500,15 +517,15 @@
                                     <td class="py-3 px-4 text-emerald-600 font-mono" x-text="formatCurrency(p.retailPrice - p.wholesalePrice)"></td>
                                     <td class="py-3 px-4 text-center">
                                         <template x-if="p.type !== 'coldbrew'">
-                                            <select x-model="p.selectedGrind" class="text-[11px] bg-coffee-50 border border-coffee-200 rounded p-1 text-coffee-800">
-                                                <option value="原豆 (Whole Beans)">原豆</option>
-                                                <option value="粗研磨 - 法壓壺/冷萃">粗研磨</option>
-                                                <option value="中研磨 - 手沖/越南滴漏">中研磨</option>
-                                                <option value="細研磨 - 義式濃縮 Espresso">細研磨</option>
+                                            <select x-model="p.selectedGrindKey" class="text-[11px] bg-coffee-50 border border-coffee-200 rounded p-1 text-coffee-800">
+                                                <option value="whole" x-text="grindOptions['whole'][lang]"></option>
+                                                <option value="coarse" x-text="grindOptions['coarse'][lang]"></option>
+                                                <option value="medium" x-text="grindOptions['medium'][lang]"></option>
+                                                <option value="fine" x-text="grindOptions['fine'][lang]"></option>
                                             </select>
                                         </template>
                                         <template x-if="p.type === 'coldbrew'">
-                                            <span class="text-coffee-400 text-[10px]">便利浸泡包</span>
+                                            <span class="text-coffee-400 text-[10px]" x-text="t('coldbrewPouchType')"></span>
                                         </template>
                                     </td>
                                     <td class="py-3 px-4 text-center">
@@ -527,7 +544,7 @@
             </div>
         </div>
 
-        <!-- ABOUT TAB CONTENT (High-End Professional Brand Story) -->
+        <!-- ABOUT TAB CONTENT -->
         <div x-show="activeTab === 'about'" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" x-cloak>
             <div class="bg-white rounded-3xl border border-coffee-200 p-8 lg:p-14 shadow-xl space-y-12 relative overflow-hidden">
                 <div class="absolute -top-24 -right-24 w-96 h-96 bg-amber-100/40 rounded-full filter blur-3xl pointer-events-none"></div>
@@ -537,11 +554,9 @@
                     <span class="inline-block bg-coffee-950 text-amberGold text-xs font-extrabold px-4 py-1 rounded-full uppercase tracking-widest border border-amberGold/30">
                         <i class="fa-solid fa-crown mr-1"></i> VIEBUCKS HAUTE ROASTERY
                     </span>
-                    <h2 class="font-serif text-3xl sm:text-5xl font-black text-coffee-950 tracking-tight">
-                        極致奢華工藝 ‧ 淬鍊越南高原頂級靈魂
+                    <h2 class="font-serif text-3xl sm:text-5xl font-black text-coffee-950 tracking-tight" x-text="t('aboutTitle')">
                     </h2>
-                    <p class="text-coffee-700 text-sm sm:text-base leading-relaxed font-medium">
-                        VIEBUCKS 創立於對完美咖啡風味的極致追求。我們深入越南中央高原 (Đắk Lắk & Đà Lạt) 海拔 1,500 公尺以上的獨家火山灰契作莊園，堅持僅採收 100% 完熟紅櫻桃，結合歐洲精緻工藝與國際 Q Grader 杯測標準，為品味家與精品咖啡門市呈獻世界級的極致咖啡體驗。
+                    <p class="text-coffee-700 text-sm sm:text-base leading-relaxed font-medium" x-text="t('aboutDesc')">
                     </p>
                 </div>
 
@@ -551,52 +566,44 @@
                         <div class="w-12 h-12 rounded-xl bg-coffee-950 text-amberGold flex items-center justify-center text-xl shadow">
                             <i class="fa-solid fa-mountain-sun"></i>
                         </div>
-                        <h3 class="font-bold text-coffee-950 text-base">SCA 85+ 莊園微批次</h3>
-                        <p class="text-xs text-coffee-600 leading-relaxed">
-                            嚴選大勒 (Đà Lạt) 特優高海拔微氣候產區，全人工單顆手採完熟果實，風味杯測分數均達 SCA 85 分以上頂級標準。
-                        </p>
+                        <h3 class="font-bold text-coffee-950 text-base" x-text="t('pillar1Title')"></h3>
+                        <p class="text-xs text-coffee-600 leading-relaxed" x-text="t('pillar1Desc')"></p>
                     </div>
 
                     <div class="p-6 bg-gradient-to-b from-coffee-50 to-white rounded-2xl border border-coffee-200 shadow-sm space-y-3 hover:shadow-md transition-shadow">
                         <div class="w-12 h-12 rounded-xl bg-coffee-950 text-amberGold flex items-center justify-center text-xl shadow">
                             <i class="fa-solid fa-fire-burner"></i>
                         </div>
-                        <h3 class="font-bold text-coffee-950 text-base">德製 Probat 精準烘焙</h3>
-                        <p class="text-xs text-coffee-600 leading-relaxed">
-                            引進德國頂級 Probat 烘焙系統，搭配資深烘焙師親自調校的獨家熱風烘焙曲線，完美釋放花果甜香與濃郁餘韻。
-                        </p>
+                        <h3 class="font-bold text-coffee-950 text-base" x-text="t('pillar2Title')"></h3>
+                        <p class="text-xs text-coffee-600 leading-relaxed" x-text="t('pillar2Desc')"></p>
                     </div>
 
                     <div class="p-6 bg-gradient-to-b from-coffee-50 to-white rounded-2xl border border-coffee-200 shadow-sm space-y-3 hover:shadow-md transition-shadow">
                         <div class="w-12 h-12 rounded-xl bg-coffee-950 text-amberGold flex items-center justify-center text-xl shadow">
                             <i class="fa-solid fa-gem"></i>
                         </div>
-                        <h3 class="font-bold text-coffee-950 text-base">AI 色選與充氮保鮮</h3>
-                        <p class="text-xs text-coffee-600 leading-relaxed">
-                            採用 AI 光學色選機剔除瑕疵豆，並以食品級單向排氣閥與充氮封裝，確保每一粒咖啡豆新鮮宛如剛出爐。
-                        </p>
+                        <h3 class="font-bold text-coffee-950 text-base" x-text="t('pillar3Title')"></h3>
+                        <p class="text-xs text-coffee-600 leading-relaxed" x-text="t('pillar3Desc')"></p>
                     </div>
 
                     <div class="p-6 bg-gradient-to-b from-coffee-50 to-white rounded-2xl border border-coffee-200 shadow-sm space-y-3 hover:shadow-md transition-shadow">
                         <div class="w-12 h-12 rounded-xl bg-coffee-950 text-amberGold flex items-center justify-center text-xl shadow">
                             <i class="fa-solid fa-award"></i>
                         </div>
-                        <h3 class="font-bold text-coffee-950 text-base">B2B 商業高定方案</h3>
-                        <p class="text-xs text-coffee-600 leading-relaxed">
-                            為星級飯店、高級精品門市與商業客戶提供專屬風味調配、極速補貨與全方位 B2B 供應鏈支援。
-                        </p>
+                        <h3 class="font-bold text-coffee-950 text-base" x-text="t('pillar4Title')"></h3>
+                        <p class="text-xs text-coffee-600 leading-relaxed" x-text="t('pillar4Desc')"></p>
                     </div>
                 </div>
 
                 <!-- Quality Guarantee Banner -->
                 <div class="bg-gradient-to-r from-coffee-950 via-coffee-900 to-roastDark p-8 rounded-2xl text-white flex flex-col md:flex-row items-center justify-between gap-6 relative z-10 border border-amberGold/30">
                     <div class="space-y-2 text-center md:text-left">
-                        <span class="text-amberGold text-xs font-bold uppercase tracking-wider"><i class="fa-solid fa-shield-halved mr-1"></i> VIEBUCKS 頂級品質承諾</span>
-                        <h4 class="font-serif text-2xl font-bold">每一顆咖啡豆，皆為大自然與大師匠心的結晶</h4>
-                        <p class="text-xs text-coffee-300">若有任何風味諮詢或批發客製需求，我們的精品咖啡顧問隨時為您服務。</p>
+                        <span class="text-amberGold text-xs font-bold uppercase tracking-wider"><i class="fa-solid fa-shield-halved mr-1"></i> <span x-text="t('qualityCommitment')"></span></span>
+                        <h4 class="font-serif text-2xl font-bold" x-text="t('commitmentTitle')"></h4>
+                        <p class="text-xs text-coffee-300" x-text="t('commitmentDesc')"></p>
                     </div>
                     <a href="https://zalo.me/839681380" target="_blank" class="shrink-0 bg-amberGold hover:bg-amber-400 text-coffee-950 font-black px-6 py-3 rounded-xl transition-all shadow-lg text-xs flex items-center gap-2">
-                        <i class="fa-solid fa-comments"></i> 聯繫專屬精品咖啡顧問
+                        <i class="fa-solid fa-comments"></i> <span x-text="t('contactAdvisor')"></span>
                     </a>
                 </div>
             </div>
@@ -618,38 +625,38 @@
                             <i :class="selectedProductModal.type === 'coldbrew' ? 'fa-solid fa-glass-water-droplet text-sky-400' : 'fa-solid fa-mug-hot'"></i>
                         </div>
                         <div>
-                            <span class="bg-amber-100 text-amber-900 text-[10px] font-bold px-2 py-0.5 rounded" x-text="selectedProductModal.categoryName"></span>
-                            <h2 class="text-lg font-serif font-bold text-coffee-950 mt-1" x-text="selectedProductModal.name"></h2>
-                            <p class="text-xs text-coffee-500 mt-1" x-text="selectedProductModal.description"></p>
+                            <span class="bg-amber-100 text-amber-900 text-[10px] font-bold px-2 py-0.5 rounded" x-text="getCategoryName(selectedProductModal.categoryId)"></span>
+                            <h2 class="text-lg font-serif font-bold text-coffee-950 mt-1" x-text="selectedProductModal.name[lang] || selectedProductModal.name.vi"></h2>
+                            <p class="text-xs text-coffee-500 mt-1" x-text="selectedProductModal.description[lang] || selectedProductModal.description.vi"></p>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3 bg-coffee-50 p-4 rounded-2xl border border-coffee-200 text-xs">
                         <div>
-                            <span class="text-coffee-400 block font-medium">規格容量</span>
+                            <span class="text-coffee-400 block font-medium" x-text="t('specCapacity')"></span>
                             <span class="font-bold text-coffee-900" x-text="selectedProductModal.spec"></span>
                         </div>
                         <div>
-                            <span class="text-coffee-400 block font-medium">推薦沖煮</span>
-                            <span class="font-bold text-coffee-900" x-text="selectedProductModal.type === 'coldbrew' ? '冷萃 / 冰萃浸泡' : '手沖 / 義式 / 越南滴漏'"></span>
+                            <span class="text-coffee-400 block font-medium" x-text="t('recommendBrew')"></span>
+                            <span class="font-bold text-coffee-900" x-text="selectedProductModal.type === 'coldbrew' ? t('brewColdbrew') : t('brewHot')"></span>
                         </div>
                     </div>
 
                     <!-- Dual Price Box -->
                     <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl flex justify-between items-center">
                         <div>
-                            <span class="text-xs text-coffee-600 block">零售價格 (Retail)</span>
+                            <span class="text-xs text-coffee-600 block" x-text="t('retailPriceDetail')"></span>
                             <span class="text-lg font-bold font-mono text-coffee-900" x-text="formatCurrency(selectedProductModal.retailPrice)"></span>
                         </div>
                         <div class="text-right">
-                            <span class="text-xs text-emerald-800 font-bold block"><i class="fa-solid fa-briefcase"></i> B2B 批發優惠價</span>
+                            <span class="text-xs text-emerald-800 font-bold block"><i class="fa-solid fa-briefcase"></i> <span x-text="t('wholesalePriceDetail')"></span></span>
                             <span class="text-xl font-extrabold font-mono text-emerald-700" x-text="formatCurrency(selectedProductModal.wholesalePrice)"></span>
                         </div>
                     </div>
 
                     <button @click="addToCart(selectedProductModal); selectedProductModal = null" 
                             class="w-full bg-coffee-950 hover:bg-coffee-800 text-white font-bold py-3 rounded-xl transition-all shadow text-sm flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-cart-plus text-amberGold"></i> 加入購物車
+                        <i class="fa-solid fa-cart-plus text-amberGold"></i> <span x-text="t('addToCart')"></span>
                     </button>
                 </div>
             </template>
@@ -667,30 +674,29 @@
                 <div class="w-12 h-12 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center mx-auto text-xl">
                     <i class="fa-solid fa-wand-magic-sparkles"></i>
                 </div>
-                <h3 class="font-serif text-xl font-bold text-coffee-950">咖啡風味選豆測驗</h3>
-                <p class="text-xs text-coffee-600">快速回答問題，為您推薦最適合的熟豆或冷萃包</p>
+                <h3 class="font-serif text-xl font-bold text-coffee-950" x-text="t('quizTitle')"></h3>
+                <p class="text-xs text-coffee-600" x-text="t('quizSubtitle')"></p>
             </div>
 
             <div class="space-y-4 text-xs">
                 <div>
-                    <label class="block font-bold text-coffee-900 mb-2">1. 您喜好的口感特色？</label>
+                    <label class="block font-bold text-coffee-900 mb-2" x-text="t('quizQ1')"></label>
                     <div class="grid grid-cols-2 gap-2">
-                        <button @click="quizAnswer.flavor = 'fruity'" :class="quizAnswer.flavor === 'fruity' ? 'bg-coffee-900 text-white' : 'bg-coffee-50 border border-coffee-200 text-coffee-800'" class="p-2.5 rounded-xl font-medium">柔順果香與高雅花香</button>
-                        <button @click="quizAnswer.flavor = 'strong'" :class="quizAnswer.flavor === 'strong' ? 'bg-coffee-900 text-white' : 'bg-coffee-50 border border-coffee-200 text-coffee-800'" class="p-2.5 rounded-xl font-medium">濃郁回甘、低酸苦香</button>
+                        <button @click="quizAnswer.flavor = 'fruity'" :class="quizAnswer.flavor === 'fruity' ? 'bg-coffee-900 text-white' : 'bg-coffee-50 border border-coffee-200 text-coffee-800'" class="p-2.5 rounded-xl font-medium" x-text="t('quizA1_1')"></button>
+                        <button @click="quizAnswer.flavor = 'strong'" :class="quizAnswer.flavor === 'strong' ? 'bg-coffee-900 text-white' : 'bg-coffee-50 border border-coffee-200 text-coffee-800'" class="p-2.5 rounded-xl font-medium" x-text="t('quizA1_2')"></button>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block font-bold text-coffee-900 mb-2">2. 您最常使用的沖煮方式？</label>
+                    <label class="block font-bold text-coffee-900 mb-2" x-text="t('quizQ2')"></label>
                     <div class="grid grid-cols-2 gap-2">
-                        <button @click="quizAnswer.brew = 'coldbrew'" :class="quizAnswer.brew === 'coldbrew' ? 'bg-coffee-900 text-white' : 'bg-coffee-50 border border-coffee-200 text-coffee-800'" class="p-2.5 rounded-xl font-medium">冷萃 / 冰萃便利包</button>
-                        <button @click="quizAnswer.brew = 'espresso'" :class="quizAnswer.brew === 'espresso' ? 'bg-coffee-900 text-white' : 'bg-coffee-50 border border-coffee-200 text-coffee-800'" class="p-2.5 rounded-xl font-medium">手沖 / 義式 / 滴漏</button>
+                        <button @click="quizAnswer.brew = 'coldbrew'" :class="quizAnswer.brew === 'coldbrew' ? 'bg-coffee-900 text-white' : 'bg-coffee-50 border border-coffee-200 text-coffee-800'" class="p-2.5 rounded-xl font-medium" x-text="t('quizA2_1')"></button>
+                        <button @click="quizAnswer.brew = 'espresso'" :class="quizAnswer.brew === 'espresso' ? 'bg-coffee-900 text-white' : 'bg-coffee-50 border border-coffee-200 text-coffee-800'" class="p-2.5 rounded-xl font-medium" x-text="t('quizA2_2')"></button>
                     </div>
                 </div>
             </div>
 
-            <button @click="runQuizRecommendation()" class="w-full bg-amberGold hover:bg-amber-400 text-coffee-950 font-bold py-3 rounded-xl transition-all shadow text-xs">
-                獲得專屬推薦咖啡
+            <button @click="runQuizRecommendation()" class="w-full bg-amberGold hover:bg-amber-400 text-coffee-950 font-bold py-3 rounded-xl transition-all shadow text-xs" x-text="t('quizSubmit')">
             </button>
         </div>
     </div>
@@ -706,7 +712,7 @@
                 <div class="p-6 bg-coffee-950 text-white flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <i class="fa-solid fa-bag-shopping text-amberGold text-xl"></i>
-                        <h2 class="font-serif text-lg font-bold">您的購物車</h2>
+                        <h2 class="font-serif text-lg font-bold" x-text="t('cartTitle')"></h2>
                     </div>
                     <button @click="cartOpen = false" class="text-coffee-300 hover:text-white">
                         <i class="fa-solid fa-xmark text-xl"></i>
@@ -716,8 +722,8 @@
                 <!-- Shipping Progress Bar -->
                 <div class="bg-coffee-50 px-6 py-3 border-b border-coffee-200 text-xs">
                     <div class="flex justify-between font-medium text-coffee-800 mb-1">
-                        <span>免運費進度 (滿 500,000 ₫ 免運):</span>
-                        <span x-text="cartSubtotal >= 500000 ? '已達免運門檻！' : '還差 ' + formatCurrency(500000 - cartSubtotal)"></span>
+                        <span x-text="t('freeShippingProgress')"></span>
+                        <span x-text="cartSubtotal >= 500000 ? t('freeShippingReached') : t('freeShippingDiff') + formatCurrency(500000 - cartSubtotal)"></span>
                     </div>
                     <div class="w-full bg-coffee-200 rounded-full h-2 overflow-hidden">
                         <div class="bg-amberGold h-full transition-all duration-300" :style="'width: ' + Math.min(100, (cartSubtotal/500000)*100) + '%'"></div>
@@ -729,7 +735,7 @@
                     <template x-if="cart.length === 0">
                         <div class="text-center py-12 space-y-3">
                             <i class="fa-solid fa-cart-flatbed text-4xl text-coffee-300"></i>
-                            <p class="text-xs text-coffee-500">購物車目前是空的</p>
+                            <p class="text-xs text-coffee-500" x-text="t('cartEmpty')"></p>
                         </div>
                     </template>
 
@@ -737,7 +743,7 @@
                         <div class="pt-4 flex justify-between gap-3">
                             <div class="flex-grow">
                                 <h4 class="font-bold text-xs text-coffee-950" x-text="item.name"></h4>
-                                <div class="text-[11px] text-coffee-500 mt-0.5" x-show="item.selectedGrind">刻度: <span x-text="item.selectedGrind"></span></div>
+                                <div class="text-[11px] text-coffee-500 mt-0.5" x-show="item.selectedGrind"><span x-text="t('grindLabel')"></span>: <span x-text="item.selectedGrind"></span></div>
                                 <div class="text-[11px] font-mono text-coffee-700 mt-1">
                                     <span x-text="formatCurrency(item.price)"></span> × <span x-text="item.qty"></span>
                                 </div>
@@ -757,15 +763,15 @@
                 <div class="p-6 bg-coffee-50 border-t border-coffee-200 space-y-4">
                     <div class="space-y-1.5 text-xs">
                         <div class="flex justify-between text-coffee-600">
-                            <span>商品小計:</span>
+                            <span x-text="t('subtotal')"></span>
                             <span class="font-mono font-bold text-coffee-900" x-text="formatCurrency(cartSubtotal)"></span>
                         </div>
                         <div class="flex justify-between text-coffee-600">
-                            <span>預估運費:</span>
-                            <span class="font-mono font-bold text-coffee-900" x-text="cartSubtotal >= 500000 || cartSubtotal === 0 ? '免費' : formatCurrency(30000)"></span>
+                            <span x-text="t('estShipping')"></span>
+                            <span class="font-mono font-bold text-coffee-900" x-text="cartSubtotal >= 500000 || cartSubtotal === 0 ? t('freeShippingTag') : formatCurrency(30000)"></span>
                         </div>
                         <div class="flex justify-between text-base font-bold text-coffee-950 pt-2 border-t border-coffee-200">
-                            <span>總計 (Total):</span>
+                            <span x-text="t('cartTotal')"></span>
                             <span class="font-mono text-amber-800" x-text="formatCurrency(cartSubtotal + (cartSubtotal >= 500000 || cartSubtotal === 0 ? 0 : 30000))"></span>
                         </div>
                     </div>
@@ -774,7 +780,7 @@
                             :disabled="cart.length === 0"
                             :class="cart.length === 0 ? 'bg-coffee-300 cursor-not-allowed' : 'bg-coffee-950 hover:bg-coffee-800'"
                             class="w-full text-white font-bold py-3 rounded-xl transition-all shadow text-xs flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-credit-card"></i> 前往結帳付款
+                        <i class="fa-solid fa-credit-card"></i> <span x-text="t('proceedCheckout')"></span>
                     </button>
                 </div>
             </div>
@@ -789,49 +795,49 @@
             </button>
 
             <div class="border-b border-coffee-200 pb-4">
-                <h3 class="font-serif text-2xl font-bold text-coffee-950">確認訂單與配送資訊</h3>
-                <p class="text-xs text-coffee-600 mt-1">填寫下方資料後送出，平台將自動發送 Email 訂單通知並生成專屬訂購單頁面</p>
+                <h3 class="font-serif text-2xl font-bold text-coffee-950" x-text="t('checkoutTitle')"></h3>
+                <p class="text-xs text-coffee-600 mt-1" x-text="t('checkoutSubtitle')"></p>
             </div>
 
             <form @submit.prevent="submitOrder()" class="space-y-4 text-xs">
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block font-bold text-coffee-900 mb-1">訂購人姓名 *</label>
-                        <input type="text" required x-model="checkoutForm.name" placeholder="請輸入姓名" class="w-full p-2.5 bg-coffee-50 border border-coffee-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-coffee-500">
+                        <label class="block font-bold text-coffee-900 mb-1" x-text="t('inputName') + ' *'"></label>
+                        <input type="text" required x-model="checkoutForm.name" :placeholder="t('placeholderName')" class="w-full p-2.5 bg-coffee-50 border border-coffee-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-coffee-500">
                     </div>
                     <div>
-                        <label class="block font-bold text-coffee-900 mb-1">聯絡電話 (ZALO) *</label>
-                        <input type="tel" required x-model="checkoutForm.phone" placeholder="例如: 0839681380" class="w-full p-2.5 bg-coffee-50 border border-coffee-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-coffee-500">
+                        <label class="block font-bold text-coffee-900 mb-1" x-text="t('inputPhone') + ' *'"></label>
+                        <input type="tel" required x-model="checkoutForm.phone" placeholder="VD: 0839681380" class="w-full p-2.5 bg-coffee-50 border border-coffee-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-coffee-500">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block font-bold text-coffee-900 mb-1">配送地址 *</label>
-                    <input type="text" required x-model="checkoutForm.address" placeholder="請輸入完整收件地址" class="w-full p-2.5 bg-coffee-50 border border-coffee-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-coffee-500">
+                    <label class="block font-bold text-coffee-900 mb-1" x-text="t('inputAddress') + ' *'"></label>
+                    <input type="text" required x-model="checkoutForm.address" :placeholder="t('placeholderAddress')" class="w-full p-2.5 bg-coffee-50 border border-coffee-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-coffee-500">
                 </div>
 
                 <div>
-                    <label class="block font-bold text-coffee-900 mb-1">付款方式</label>
+                    <label class="block font-bold text-coffee-900 mb-1" x-text="t('inputPayment')"></label>
                     <select x-model="checkoutForm.payment" class="w-full p-2.5 bg-coffee-50 border border-coffee-200 rounded-xl font-medium text-coffee-900">
-                        <option value="cod">貨到付款 (COD)</option>
-                        <option value="bank">銀行轉帳 (Bank Transfer)</option>
-                        <option value="momo">MoMo 電子支付</option>
-                        <option value="zalopay">ZaloPay</option>
+                        <option value="cod" x-text="t('paymentCOD')"></option>
+                        <option value="bank" x-text="t('paymentBank')"></option>
+                        <option value="momo">Ví MoMo</option>
+                        <option value="zalopay">Ví ZaloPay</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block font-bold text-coffee-900 mb-1">訂單備註 (選填)</label>
-                    <textarea x-model="checkoutForm.note" placeholder="如需發票統一編號或特定送貨時間請註明" class="w-full p-2.5 bg-coffee-50 border border-coffee-200 rounded-xl h-16 focus:outline-none"></textarea>
+                    <label class="block font-bold text-coffee-900 mb-1" x-text="t('inputNote')"></label>
+                    <textarea x-model="checkoutForm.note" :placeholder="t('placeholderNote')" class="w-full p-2.5 bg-coffee-50 border border-coffee-200 rounded-xl h-16 focus:outline-none"></textarea>
                 </div>
 
                 <div class="pt-4 border-t border-coffee-200 flex justify-between items-center">
                     <div>
-                        <span class="text-xs text-coffee-500 block">應付總金額:</span>
+                        <span class="text-xs text-coffee-500 block" x-text="t('totalPayable')"></span>
                         <span class="text-xl font-extrabold font-mono text-amber-800" x-text="formatCurrency(cartSubtotal + (cartSubtotal >= 500000 || cartSubtotal === 0 ? 0 : 30000))"></span>
                     </div>
                     <button type="submit" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-6 py-3 rounded-xl transition-all shadow flex items-center gap-2">
-                        <i class="fa-solid fa-paper-plane"></i> 送出訂單 (平台自動發送 Email)
+                        <i class="fa-solid fa-paper-plane"></i> <span x-text="t('submitOrderBtn')"></span>
                     </button>
                 </div>
             </form>
@@ -858,11 +864,11 @@
                             <span class="font-serif text-2xl font-black text-coffee-950">VIEBUCKS</span>
                         </div>
                         <p class="text-[10px] text-coffee-600 font-semibold mt-0.5">Haute Coffee Roastery & Cold Brew</p>
-                        <p class="text-[10px] text-coffee-500 mt-1">地址: 365 QL 13, Thu Dau Mot, Ho Chi Minh</p>
+                        <p class="text-[10px] text-coffee-500 mt-1"><span x-text="t('addressLabel')"></span>: 365 QL 13, Thu Dau Mot, Binh Duong / Ho Chi Minh</p>
                     </div>
                     <div class="text-right">
-                        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase">訂單建立成功</span>
-                        <div class="text-xs text-coffee-800 font-mono font-bold mt-2" x-text="'單號: ' + (lastOrderDetails ? lastOrderDetails.orderId : '')"></div>
+                        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase" x-text="t('orderSuccess')"></span>
+                        <div class="text-xs text-coffee-800 font-mono font-bold mt-2" x-text="t('orderCode') + ': ' + (lastOrderDetails ? lastOrderDetails.orderId : '')"></div>
                         <div class="text-[10px] text-coffee-500 font-mono" x-text="lastOrderDetails ? lastOrderDetails.date : ''"></div>
                     </div>
                 </div>
@@ -870,15 +876,15 @@
                 <!-- Customer Details -->
                 <div class="bg-coffee-50 p-4 rounded-xl border border-coffee-200 grid grid-cols-2 gap-4 text-xs">
                     <div>
-                        <span class="text-coffee-500 font-medium block">訂購人:</span>
+                        <span class="text-coffee-500 font-medium block" x-text="t('inputName') + ':'"></span>
                         <span class="font-bold text-coffee-900" x-text="lastOrderDetails?.customer?.name"></span>
                     </div>
                     <div>
-                        <span class="text-coffee-500 font-medium block">聯絡電話 (ZALO):</span>
+                        <span class="text-coffee-500 font-medium block" x-text="t('inputPhone') + ':'"></span>
                         <span class="font-bold text-coffee-900 font-mono" x-text="lastOrderDetails?.customer?.phone"></span>
                     </div>
                     <div class="col-span-2">
-                        <span class="text-coffee-500 font-medium block">配送地址:</span>
+                        <span class="text-coffee-500 font-medium block" x-text="t('inputAddress') + ':'"></span>
                         <span class="font-bold text-coffee-900" x-text="lastOrderDetails?.customer?.address"></span>
                     </div>
                 </div>
@@ -888,10 +894,10 @@
                     <table class="w-full text-left text-xs border-collapse">
                         <thead>
                             <tr class="bg-coffee-100 text-coffee-900 font-bold border-b border-coffee-200">
-                                <th class="py-2 px-3">品名與規格</th>
-                                <th class="py-2 px-3 text-center">數量</th>
-                                <th class="py-2 px-3 text-right">單價 (VND)</th>
-                                <th class="py-2 px-3 text-right">小計 (VND)</th>
+                                <th class="py-2 px-3" x-text="t('matrixColProduct')"></th>
+                                <th class="py-2 px-3 text-center" x-text="t('matrixColQty')"></th>
+                                <th class="py-2 px-3 text-right" x-text="t('invoiceUnitPrice')"></th>
+                                <th class="py-2 px-3 text-right" x-text="t('matrixColSubtotal')"></th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-coffee-100">
@@ -899,7 +905,7 @@
                                 <tr>
                                     <td class="py-2.5 px-3">
                                         <div class="font-bold text-coffee-950" x-text="item.name"></div>
-                                        <div class="text-[10px] text-coffee-500" x-show="item.selectedGrind" x-text="'刻度: ' + item.selectedGrind"></div>
+                                        <div class="text-[10px] text-coffee-500" x-show="item.selectedGrind" x-text="t('grindLabel') + ': ' + item.selectedGrind"></div>
                                     </td>
                                     <td class="py-2.5 px-3 text-center font-mono font-bold" x-text="item.qty"></td>
                                     <td class="py-2.5 px-3 text-right font-mono text-coffee-700" x-text="formatCurrency(item.price)"></td>
@@ -913,15 +919,15 @@
                 <!-- Invoice Total -->
                 <div class="border-t border-coffee-200 pt-3 space-y-1 text-xs text-right">
                     <div class="flex justify-between text-coffee-600">
-                        <span>商品小計 Subtotal:</span>
+                        <span x-text="t('subtotal') + ':'"></span>
                         <span class="font-mono font-bold" x-text="formatCurrency(lastOrderDetails?.subtotal || 0)"></span>
                     </div>
                     <div class="flex justify-between text-coffee-600">
-                        <span>運費 Shipping:</span>
+                        <span x-text="t('estShipping') + ':'"></span>
                         <span class="font-mono font-bold" x-text="formatCurrency(lastOrderDetails?.shipping || 0)"></span>
                     </div>
                     <div class="flex justify-between text-base font-black text-coffee-950 pt-2 border-t border-coffee-200">
-                        <span>應付總金額 Total:</span>
+                        <span x-text="t('totalPayable') + ':'"></span>
                         <span class="font-mono text-amber-800" x-text="formatCurrency(lastOrderDetails?.total || 0)"></span>
                     </div>
                 </div>
@@ -929,40 +935,12 @@
 
             <!-- Action Buttons -->
             <div class="no-print pt-4 border-t border-coffee-200 space-y-3">
-                <!-- Email Status Bar -->
-                <div class="bg-coffee-50 p-3 rounded-xl border border-coffee-200 flex flex-col sm:flex-row items-center justify-between text-xs gap-2">
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-coffee-800">Email 通知狀態:</span>
-                        <template x-if="emailStatus.sending">
-                            <span class="text-amber-600 font-bold flex items-center gap-1">
-                                <i class="fa-solid fa-circle-notch fa-spin"></i> 發送中...
-                            </span>
-                        </template>
-                        <template x-if="!emailStatus.sending && emailStatus.success">
-                            <span class="text-emerald-600 font-bold flex items-center gap-1">
-                                <i class="fa-solid fa-circle-check"></i> 已成功發送至 rick0960590177@gmail.com
-                            </span>
-                        </template>
-                        <template x-if="!emailStatus.sending && !emailStatus.success && emailStatus.message">
-                            <span class="text-rose-600 font-bold flex items-center gap-1" x-text="emailStatus.message"></span>
-                        </template>
-                    </div>
-                    <div class="flex gap-2">
-                        <button @click="sendAutomatedEmail()" class="text-xs bg-coffee-800 hover:bg-coffee-700 text-white font-bold px-3 py-1 rounded-lg transition-all flex items-center gap-1">
-                            <i class="fa-solid fa-rotate-right"></i> 重新發送 Email
-                        </button>
-                    </div>
-                </div>
-
                 <div class="flex flex-col sm:flex-row gap-2 justify-end">
                     <button @click="window.print()" class="bg-coffee-100 hover:bg-coffee-200 text-coffee-900 font-bold px-4 py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-print"></i> 列印 / 下載 PDF 訂購單
+                        <i class="fa-solid fa-print"></i> <span x-text="t('printPDF')"></span>
                     </button>
                     <button @click="sendToZalo()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-comment-dots"></i> 透過 ZALO 傳送訂單給客服
-                    </button>
-                    <button @click="openMailClient()" class="bg-amberGold hover:bg-amber-400 text-coffee-950 font-bold px-4 py-2.5 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 shadow">
-                        <i class="fa-solid fa-envelope"></i> 開啟郵件 App 備援發送
+                        <i class="fa-solid fa-comment-dots"></i> <span x-text="t('sendZalo')"></span>
                     </button>
                 </div>
             </div>
@@ -988,37 +966,36 @@
                         </div>
                         <span class="font-serif text-xl font-bold text-white">VIEBUCKS</span>
                     </div>
-                    <p class="text-xs text-coffee-400 leading-relaxed">
-                        專業越南頂級精品咖啡熟豆與冷萃包供應商。全面支援零售購物與 B2B 大宗商業採購。
+                    <p class="text-xs text-coffee-400 leading-relaxed" x-text="t('footerDesc')">
                     </p>
                 </div>
 
                 <div>
-                    <h4 class="text-white font-bold text-xs uppercase tracking-wider mb-3">產品系列</h4>
+                    <h4 class="text-white font-bold text-xs uppercase tracking-wider mb-3" x-text="t('footerCol1Title')"></h4>
                     <ul class="space-y-2 text-xs">
-                        <li><a href="#" @click.prevent="selectedCategory = 'c1'; activeTab = 'shop'" class="hover:text-amberGold">100% 阿拉比卡</a></li>
-                        <li><a href="#" @click.prevent="selectedCategory = 'c2'; activeTab = 'shop'" class="hover:text-amberGold">蜜處理阿拉比卡</a></li>
-                        <li><a href="#" @click.prevent="selectedCategory = 'c3'; activeTab = 'shop'" class="hover:text-amberGold">100% 羅布斯塔 / 茉莉冷萃</a></li>
-                        <li><a href="#" @click.prevent="selectedCategory = 'c5'; activeTab = 'shop'" class="hover:text-amberGold">黃金配方豆 (80/20, 70/30, 50/50)</a></li>
+                        <li><a href="#" @click.prevent="selectedCategory = 'c1'; activeTab = 'shop'" class="hover:text-amberGold">100% Arabica Cầu Đất</a></li>
+                        <li><a href="#" @click.prevent="selectedCategory = 'c2'; activeTab = 'shop'" class="hover:text-amberGold">Arabica Honey Process</a></li>
+                        <li><a href="#" @click.prevent="selectedCategory = 'c3'; activeTab = 'shop'" class="hover:text-amberGold">100% Robusta & Cold Brew Hoa Nhài</a></li>
+                        <li><a href="#" @click.prevent="selectedCategory = 'c5'; activeTab = 'shop'" class="hover:text-amberGold">Gu Espresso Hoàn Hảo (80/20, 70/30)</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="text-white font-bold text-xs uppercase tracking-wider mb-3">商業合作</h4>
+                    <h4 class="text-white font-bold text-xs uppercase tracking-wider mb-3" x-text="t('footerCol2Title')"></h4>
                     <ul class="space-y-2 text-xs">
-                        <li><a href="#" @click.prevent="activeTab = 'bulk'" class="hover:text-amberGold">B2B 批發快速下單矩陣</a></li>
-                        <li><a href="#" class="hover:text-amberGold">咖啡門市豆款客製</a></li>
-                        <li><a href="#" class="hover:text-amberGold">冷萃包代工與商業批發</a></li>
+                        <li><a href="#" @click.prevent="activeTab = 'bulk'" class="hover:text-amberGold" x-text="t('navBulk')"></a></li>
+                        <li><a href="#" class="hover:text-amberGold" x-text="t('customRoastService')"></a></li>
+                        <li><a href="#" class="hover:text-amberGold" x-text="t('oemColdbrewService')"></a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="text-white font-bold text-xs uppercase tracking-wider mb-3">聯絡我們</h4>
+                    <h4 class="text-white font-bold text-xs uppercase tracking-wider mb-3" x-text="t('footerContactTitle')"></h4>
                     <ul class="space-y-2 text-xs text-coffee-400">
-                        <li><i class="fa-solid fa-location-dot mr-1.5 text-amberGold"></i> 地址：365 QL 13, Thu Dau Mot, Ho Chi Minh</li>
-                        <li><i class="fa-solid fa-mountain mr-1.5 text-amberGold"></i> 越南胡志明市/大勒精品產區</li>
-                        <li><i class="fa-solid fa-envelope mr-1.5 text-amberGold"></i> E-mail：rick0960590177@gmail.com</li>
-                        <li><i class="fa-solid fa-phone mr-1.5 text-amberGold"></i> 電話(ZALO)：+84 839681380 - +84 348246669</li>
+                        <li><i class="fa-solid fa-location-dot mr-1.5 text-amberGold"></i> 365 QL 13, Thu Dau Mot, Binh Duong / TP. Hồ Chí Minh</li>
+                        <li><i class="fa-solid fa-mountain mr-1.5 text-amberGold"></i> Xưởng rang: TP. Đà Lạt, Lâm Đồng</li>
+                        <li><i class="fa-solid fa-envelope mr-1.5 text-amberGold"></i> E-mail: rick0960590177@gmail.com</li>
+                        <li><i class="fa-solid fa-phone mr-1.5 text-amberGold"></i> Hotline (Zalo): +84 839681380 - +84 348246669</li>
                     </ul>
                 </div>
 
@@ -1027,17 +1004,19 @@
             <div class="pt-6 border-t border-coffee-900 text-center text-[11px] text-coffee-500 flex flex-col sm:flex-row justify-between items-center gap-2">
                 <div>© 2026 VIEBUCKS Haute Coffee Roastery. All rights reserved.</div>
                 <div class="flex space-x-4">
-                    <span>隱私權條款</span>
-                    <span>服務條款</span>
-                    <span>B2B 採購合約</span>
+                    <span x-text="t('privacyTerm')"></span>
+                    <span x-text="t('serviceTerm')"></span>
+                    <span x-text="t('b2bContract')"></span>
                 </div>
             </div>
         </div>
     </footer>
 
+    <!-- Alpine.js Store Logic & Multilingual Dictionary -->
     <script>
         function coffeeStore() {
             return {
+                lang: 'vi', // Default language: Vietnamese ('vi', 'zh', 'en')
                 activeTab: 'shop',
                 pricingMode: 'retail', // 'retail' or 'wholesale'
                 selectedCategory: 'all',
@@ -1050,13 +1029,6 @@
                 openQuiz: false,
                 selectedProductModal: null,
                 mobileMenuOpen: false,
-
-                targetEmail: 'rick0960590177@gmail.com',
-                emailStatus: {
-                    sending: false,
-                    success: false,
-                    message: ''
-                },
 
                 toast: {
                     show: false,
@@ -1079,58 +1051,309 @@
                 lastOrderDetails: null,
                 cart: [],
 
+                // Localized Dictionary
+                dict: {
+                    freeShipping: { vi: 'Miễn phí vận chuyển cho đơn hàng từ 500.000 ₫', zh: '全館滿 VND 500,000 免運費', en: 'Free shipping on orders over 500,000 VND' },
+                    originCert: { vi: '100% Cà phê Nông trại Cao nguyên Việt Nam', zh: '100% 嚴選越南莊園直送', en: '100% Direct from Vietnamese Highland Estates' },
+                    modeLabel: { vi: 'Chế độ giá:', zh: '當前採購模式：', en: 'Pricing Mode:' },
+                    retailMode: { vi: 'Bán Lẻ', zh: '零售 Retail', en: 'Retail' },
+                    wholesaleMode: { vi: 'Bán Sỉ (B2B)', zh: 'B2B 批發 Wholesale', en: 'B2B Wholesale' },
+                    langLabel: { vi: 'Ngôn ngữ', zh: '語言選擇', en: 'Language' },
+                    navShop: { vi: 'Tất Cả Sản Phẩm', zh: '咖啡產品總覽', en: 'Coffee Products' },
+                    navBulk: { vi: 'Đặt Hàng Sỉ Nhanh', zh: '批發快速下單', en: 'Bulk Quick Order' },
+                    navQuiz: { vi: 'Trắc Nghiệm Chọn Gu', zh: '風味選豆測驗', en: 'Flavor Quiz' },
+                    navAbout: { vi: 'Thương Hiệu & Xưởng Rang', zh: '品牌故事與烘焙特色', en: 'Roastery Story' },
+                    searchPlaceholder: { vi: 'Tìm cà phê hạt, cold brew...', zh: '搜尋咖啡豆、冷萃包...', en: 'Search beans, cold brew...' },
+                    cartTitle: { vi: 'Giỏ Hàng', zh: '購物車', en: 'Shopping Cart' },
+                    heroBadge: { vi: 'Dòng Cà Phê Thượng Hạng VIEBUCKS', zh: 'VIEBUCKS 奢華莊園極緻系列', en: 'VIEBUCKS Luxury Highland Collection' },
+                    heroTitle: { vi: 'Hương Vị Đặc Sản Cao Nguyên Đắk Lắk & Đà Lạt', zh: '高原莊園 ‧ 極緻淬鍊風味', en: 'Highland Estate Specialty Coffee' },
+                    heroDesc: { vi: 'Chuyên cung cấp Arabica Cầu Đất, Robusta chế biến honey, cold brew ướp hoa nhài và các dòng Espresso phối trộn chuẩn Ý. Phục vụ bán lẻ thưởng thức & bán sỉ cho quán cà phê, khách sạn B2B.', zh: '專營 100% 阿拉比卡、蜜處理精品豆、高海拔羅布斯塔、茉莉花風味冷萃包及黃金比例義式配方豆。', en: 'Specializing in 100% Arabica, Honey processed beans, High-altitude Robusta, Jasmine Cold Brews & Golden Espresso Blends.' },
+                    stat1Num: { vi: '7 Dòng', zh: '7 大', en: '7 Lines' },
+                    stat1Label: { vi: 'Cà phê tuyển chọn', zh: '特選咖啡系列', en: 'Selected Series' },
+                    stat2Num: { vi: '24 Loại', zh: '24 款', en: '24 Types' },
+                    stat2Label: { vi: 'Hạt rang & cold brew', zh: '規格熟豆與冷萃包', en: 'Roasted Beans & Pouches' },
+                    stat3Label: { vi: 'Bảng giá linh hoạt', zh: '雙軌優惠報價', en: 'Dual Price Tiers' },
+                    shopNowBtn: { vi: 'Mua Cà Phê Ngay', zh: '立即選購精品咖啡', en: 'Shop Specialty Coffee' },
+                    b2bOrderBtn: { vi: 'Đặt Hàng Sỉ B2B', zh: 'B2B 批發快速下單', en: 'B2B Wholesale Matrix' },
+                    pricingSystemTag: { vi: 'Hệ thống Bảng giá Kép', zh: '專屬雙軌價格體系', en: 'Dual Pricing System' },
+                    currentPricingMode: { vi: 'Chế độ giá hiện tại', zh: '當前定價模式', en: 'Current Pricing' },
+                    switchTip: { vi: 'Bấm nút trên cùng để chuyển đổi giữa giá lẻ và giá sỉ', zh: '點擊頂部按鈕可切換零售或商業批發底價', en: 'Toggle top switch for wholesale rates' },
+                    retailPriceDetail: { vi: 'Giá bán lẻ (Mua lẻ / Dùng cá nhân)', zh: '零售價格 (單件自用購買)', en: 'Retail Price (Personal)' },
+                    standardRate: { vi: 'Giá tiêu chuẩn', zh: '標準牌價', en: 'Standard Rate' },
+                    wholesalePriceDetail: { vi: 'Giá bán sỉ B2B (Dành cho quán & đại lý)', zh: 'B2B 批發價格 (商業門市大宗)', en: 'B2B Wholesale (Cafes & Dealers)' },
+                    wholesaleDiscountNotice: { vi: 'Ưu đãi sỉ 15% - 20%', zh: '享約 15% - 20% 批發折扣', en: '15% - 20% Discount' },
+                    bannerRetailMsg: { vi: 'Đang hiển thị 【Giá Bán Lẻ】. Nếu mua số lượng lớn cho quán, vui lòng chuyển sang Chế độ Bán Sỉ.', zh: '目前顯示【零售價】。如需大量門市採購，請切換至批發模式。', en: 'Showing Retail Rates. Switch to Wholesale for commercial orders.' },
+                    bannerWholesaleMsg: { vi: 'Đã kích hoạt 【Giá Bán Sỉ B2B】! Tất cả sản phẩm áp dụng giá sỉ chiết khấu.', zh: '已啟用【B2B 批發價】！全門市商品皆顯示商業批發底價。', en: 'B2B Wholesale Active! Commercial discounted rates applied.' },
+                    switchToWholesale: { vi: 'Chuyển sang Giá Sỉ B2B →', zh: '切換至 B2B 批發價 →', en: 'Switch to Wholesale →' },
+                    switchToRetail: { vi: 'Quay lại Giá Bán Lẻ →', zh: '切換回標準零售價 →', en: 'Switch to Retail →' },
+                    allCategories: { vi: 'Tất Cả', zh: '全部商品', en: 'All Categories' },
+                    typeFilterLabel: { vi: 'Loại:', zh: '類型:', en: 'Type:' },
+                    allTypes: { vi: 'Tất cả', zh: '全部', en: 'All' },
+                    typeBeans: { vi: 'Cà phê hạt (250g/500g)', zh: '咖啡豆 (250g/500g)', en: 'Roasted Beans' },
+                    typeColdbrew: { vi: 'Túi Lọc Cold Brew', zh: '冷萃便利包', en: 'Cold Brew Pouches' },
+                    sortLabel: { vi: 'Sắp xếp:', zh: '排序:', en: 'Sort By:' },
+                    sortDefault: { vi: 'Mặc định', zh: '預設排序', en: 'Default' },
+                    sortPriceAsc: { vi: 'Giá: Thấp đến Cao', zh: '價格：由低到高', en: 'Price: Low to High' },
+                    sortPriceDesc: { vi: 'Giá: Cao đến Thấp', zh: '價格：由高到低', en: 'Price: High to Low' },
+                    sortName: { vi: 'Tên sản phẩm', zh: '產品名稱', en: 'Product Name' },
+                    clickForDetail: { vi: 'Bấm xem chi tiết & thông số', zh: '點擊檢視產品規格與說明', en: 'Click for details' },
+                    grindLabel: { vi: 'Mức xay', zh: '研磨刻度', en: 'Grind Level' },
+                    saveLabel: { vi: 'Tiết kiệm', zh: '省', en: 'Save' },
+                    addToCart: { vi: 'Thêm Vào Giỏ', zh: '加入購物車', en: 'Add to Cart' },
+                    noProductsFound: { vi: 'Không tìm thấy sản phẩm cà phê phù hợp', zh: '找不到符合條件的咖啡產品', en: 'No matching coffee found' },
+                    noProductsTip: { vi: 'Vui lòng thử từ khóa khác hoặc chọn danh mục khác', zh: '請嘗試調整關鍵字或選擇其他咖啡系列', en: 'Try adjusting keywords or filters' },
+                    resetFilters: { vi: 'Đặt lại bộ lọc', zh: '重置搜尋條件', en: 'Reset Filters' },
+                    b2bMatrixTag: { vi: 'Ma Trận Mua Sỉ B2B', zh: 'B2B 商業採購矩陣', en: 'B2B Bulk Purchasing Matrix' },
+                    bulkTitle: { vi: 'Bảng Đặt Hàng Sỉ Nhanh (Bulk Order)', zh: '大宗快速下單清單 (Bulk Order Matrix)', en: 'Bulk Quick Order Matrix' },
+                    bulkSubtitle: { vi: 'Thiết kế riêng cho quán cà phê, văn phòng & đại lý. Chọn số lượng cho nhiều loại cùng lúc.', zh: '專為咖啡館、辦公室及經銷門市設計。可在此一次勾選調整多項產品數量，快速加入購物車。', en: 'Designed for cafes, offices & dealers. Adjust quantities across multiple items.' },
+                    addBulkToCart: { vi: 'Thêm Tất Cả Số Lượng Đã Chọn Vào Giỏ', zh: '將選擇數量全部加入購物車', en: 'Add Selected Items to Cart' },
+                    matrixColCategory: { vi: 'Dòng', zh: '系列', en: 'Category' },
+                    matrixColProduct: { vi: 'Sản phẩm & Quy cách', zh: '品名與規格', en: 'Product & Spec' },
+                    matrixColRetail: { vi: 'Giá lẻ (VND)', zh: '零售價 (VND)', en: 'Retail (VND)' },
+                    matrixColWholesale: { vi: 'Giá sỉ (VND)', zh: '批發價 (VND)', en: 'Wholesale (VND)' },
+                    matrixColDiscount: { vi: 'Chiết khấu', zh: '單件折扣', en: 'Discount' },
+                    matrixColGrind: { vi: 'Mức xay', zh: '研磨選擇', en: 'Grind Selection' },
+                    matrixColQty: { vi: 'Số lượng', zh: '數量', en: 'Quantity' },
+                    matrixColSubtotal: { vi: 'Thành tiền', zh: '小計 (VND)', en: 'Subtotal' },
+                    coldbrewPouchType: { vi: 'Túi lọc ngâm lạnh', zh: '便利浸泡包', en: 'Steep Bag' },
+                    aboutTitle: { vi: 'Nghệ Thuật Rang Cà Phê ‧ Đỉnh Cao Tinh Hoa Cao Nguyên', zh: '極致奢華工藝 ‧ 淬鍊越南高原頂級靈魂', en: 'Craft Coffee Roastery ‧ Highland Heritage' },
+                    aboutDesc: { vi: 'VIEBUCKS ra đời từ tình yêu với hương vị cà phê nguyên bản. Chúng tôi canh tác tại các nông trại núi lửa trên 1,500m ở Đắk Lắk & Đà Lạt, chỉ hái tay 100% quả chín mọng và rang trên công nghệ Probat của Đức theo tiêu chuẩn Q Grader quốc tế.', zh: 'VIEBUCKS 創立於對完美咖啡風味的極致追求。我們深入越南中央高原 (Đắk Lắk & Đà Lạt) 海拔 1,500 公尺以上的獨家火山灰契作莊園...', en: 'VIEBUCKS originates from a passion for specialty coffee. Cultivated above 1,500m in Đắk Lắk & Đà Lạt, hand-harvested ripe cherries roasted with German Probat systems.' },
+                    pillar1Title: { vi: 'SCA 85+ Micro-lot', zh: 'SCA 85+ 莊園微批次', en: 'SCA 85+ Micro-lot' },
+                    pillar1Desc: { vi: 'Tuyển chọn từ độ cao 1.500m Đà Lạt, hái chín thủ công, điểm cupping đạt tiêu chuẩn specialty SCA trên 85 điểm.', zh: '嚴選大勒 (Đà Lạt) 特優高海拔微氣候產區...', en: 'Hand-picked 100% red cherries from Đà Lạt high altitude with 85+ SCA cupping scores.' },
+                    pillar2Title: { vi: 'Công Nghệ Probat Đức', zh: '德製 Probat 精準烘焙', en: 'German Probat Roasting' },
+                    pillar2Desc: { vi: 'Hệ thống máy rang Probat hàng đầu từ Đức, kiểm soát đường cong nhiệt giúp bung tỏa hương hoa quả và hậu vị ngọt lịm.', zh: '引進德國頂級 Probat 烘焙系統...', en: 'German Probat roasters precision-tuned to unlock natural floral and chocolate notes.' },
+                    pillar3Title: { vi: 'Bắn Màu AI & Đóng Khí Nitơ', zh: 'AI 色選與充氮保鮮', en: 'AI Sorting & Nitrogen Flush' },
+                    pillar3Desc: { vi: 'Bắn màu AI loại bỏ hạt lỗi, đóng gói van 1 chiều xả khí nitơ giữ cà phê luôn tươi mới như vừa ra lò.', zh: '採用 AI 光學色選機剔除瑕疵豆...', en: 'AI optical color sorting removes defects; nitrogen gas flush locks in ultimate freshness.' },
+                    pillar4Title: { vi: 'Giải Pháp B2B Cao Cấp', zh: 'B2B 商業高定方案', en: 'Tailored B2B Supply' },
+                    pillar4Desc: { vi: 'Tư vấn gu rang riêng cho chuỗi quán, khách sạn 5 sao, giao hàng nhanh và hỗ trợ chuỗi cung ứng B2B toàn diện.', zh: '為星級飯店、高級精品門市與商業客戶提供專屬風味調配...', en: 'Custom roast profiling and reliable supply chain support for cafes & hotels.' },
+                    qualityCommitment: { vi: 'Cam Kết Chất Lượng VIEBUCKS', zh: 'VIEBUCKS 頂級品質承諾', en: 'VIEBUCKS Quality Promise' },
+                    commitmentTitle: { vi: 'Mỗi hạt cà phê là sự kết tinh của thiên nhiên & tâm huyết người thợ rang', zh: '每一顆咖啡豆，皆為大自然與大師匠心的結晶', en: 'Every bean represents nature and roasting mastery' },
+                    commitmentDesc: { vi: 'Nếu cần tư vấn gu cà phê hoặc báo giá sỉ riêng, chuyên viên của chúng tôi luôn sẵn sàng hỗ trợ bạn.', zh: '若有任何風味諮詢或批發客製需求，我們的精品咖啡顧問隨時為您服務。', en: 'Consult our specialty coffee advisors for custom blends or wholesale inquiries.' },
+                    contactAdvisor: { vi: 'Tư Vấn Khách Hàng Zalo', zh: '聯繫專屬精品咖啡顧問', en: 'Contact Coffee Consultant' },
+                    specCapacity: { vi: 'Quy cách', zh: '規格容量', en: 'Specification' },
+                    recommendBrew: { vi: 'Gợi ý pha chế', zh: '推薦沖煮', en: 'Recommended Brew' },
+                    brewColdbrew: { vi: 'Ủ lạnh Cold Brew / Ice Drip', zh: '冷萃 / 冰萃浸泡', en: 'Cold Brew / Ice Drip' },
+                    brewHot: { vi: 'Pha Phin / Pour-over / Máy Espresso', zh: '手沖 / 義式 / 越南滴漏', en: 'Phin / Pour-over / Espresso' },
+                    quizTitle: { vi: 'Trắc Nghiệm Tìm Gu Cà Phê', zh: '咖啡風味選豆測驗', en: 'Find Your Coffee Flavor' },
+                    quizSubtitle: { vi: 'Trả lời 2 câu hỏi nhanh để tìm loại hạt phù hợp nhất với bạn', zh: '快速回答問題，為您推薦最適合的熟豆或冷萃包', en: 'Answer 2 quick questions to get recommended beans' },
+                    quizQ1: { vi: '1. Bạn thích gu vị nào nhất?', zh: '1. 您喜好的口感特色？', en: '1. Preferred flavor profile?' },
+                    quizA1_1: { vi: 'Hương hoa quả thanh thoát, chua nhẹ', zh: '柔順果香與高雅花香', en: 'Fruity, floral & smooth acidity' },
+                    quizA1_2: { vi: 'Đậm đà, đắng thơm, hậu ngọt đậm', zh: '濃郁回甘、低酸苦香', en: 'Strong, rich, low acidity' },
+                    quizQ2: { vi: '2. Phương pháp pha thường dùng?', zh: '2. 您最常使用的沖煮方式？', en: '2. Preferred brew method?' },
+                    quizA2_1: { vi: 'Túi lọc Ủ Lạnh / Cold Brew', zh: '冷萃 / 冰萃便利包', en: 'Cold Brew Pouch' },
+                    quizA2_2: { vi: 'Pha Phin / Máy Espresso / Pour-over', zh: '手沖 / 義式 / 滴漏', en: 'Phin / Espresso / Drip' },
+                    quizSubmit: { vi: 'Xem Gợi Ý Dành Cho Bạn', zh: '獲得專屬推薦咖啡', en: 'Get Recommendation' },
+                    freeShippingProgress: { vi: 'Đơn hàng từ 500.000 ₫ được Miễn Phí Vận Chuyển:', zh: '免運費進度 (滿 500,000 ₫ 免運):', en: 'Free shipping progress (500,000 ₫ threshold):' },
+                    freeShippingReached: { vi: 'Đã đủ điều kiện 免 shipping!', zh: '已達免運門檻！', en: 'Free Shipping Unlocked!' },
+                    freeShippingDiff: { vi: 'Cần thêm ', zh: '還差 ', en: 'Add ' },
+                    cartEmpty: { vi: 'Giỏ hàng của bạn đang trống', zh: '購物車目前是空的', en: 'Your cart is empty' },
+                    subtotal: { vi: 'Tiền hàng', zh: '商品小計', en: 'Subtotal' },
+                    estShipping: { vi: 'Phí vận chuyển', zh: '預估運費', en: 'Shipping' },
+                    freeShippingTag: { vi: 'Miễn phí', zh: '免費', en: 'Free' },
+                    cartTotal: { vi: 'Tổng thanh toán', zh: '總計 (Total)', en: 'Total' },
+                    proceedCheckout: { vi: 'Thanh Toán Đơn Hàng', zh: '前往結帳付款', en: 'Proceed to Checkout' },
+                    checkoutTitle: { vi: 'Xác Nhận Đơn Hàng & Giao Hàng', zh: '確認訂單與配送資訊', en: 'Order & Shipping Information' },
+                    checkoutSubtitle: { vi: 'Điền thông tin bên dưới để hoàn tất đặt hàng', zh: '填寫下方資料後送出，平台將自動發送 Email 訂單通知並生成專屬訂購單頁面', en: 'Fill in your details to process the order' },
+                    inputName: { vi: 'Họ và tên người nhận', zh: '訂購人姓名', en: 'Full Name' },
+                    placeholderName: { vi: 'Nhập họ tên', zh: '請輸入姓名', en: 'Enter your name' },
+                    inputPhone: { vi: 'Số điện thoại (Zalo)', zh: '聯絡電話 (ZALO)', en: 'Phone Number (Zalo)' },
+                    inputAddress: { vi: 'Địa chỉ giao hàng', zh: '配送地址', en: 'Shipping Address' },
+                    placeholderAddress: { vi: 'Địa chỉ cụ thể (Số nhà, đường, phường/xã, quận/huyện)', zh: '請輸入完整收件地址', en: 'Full delivery address' },
+                    inputPayment: { vi: 'Hình thức thanh toán', zh: '付款方式', en: 'Payment Method' },
+                    paymentCOD: { vi: 'Thanh toán khi nhận hàng (COD)', zh: '貨到付款 (COD)', en: 'Cash on Delivery (COD)' },
+                    paymentBank: { vi: 'Chuyển khoản ngân hàng (Bank Transfer)', zh: '銀行轉帳 (Bank Transfer)', en: 'Bank Transfer' },
+                    inputNote: { vi: 'Ghi chú đơn hàng (Không bắt buộc)', zh: '訂單備註 (選填)', en: 'Order Notes (Optional)' },
+                    placeholderNote: { vi: 'Ghi chú về thời gian giao hàng hoặc xuất hóa đơn VAT...', zh: '如需發票統一編號或特定送貨時間請註明', en: 'Special instructions or VAT request...' },
+                    totalPayable: { vi: 'Tổng tiền thanh toán', zh: '應付總金額', en: 'Total Amount Payable' },
+                    submitOrderBtn: { vi: 'Gửi Đơn Hàng Ngay', zh: '送出訂單 (平台自動發送 Email)', en: 'Submit Order' },
+                    orderSuccess: { vi: 'TẠO ĐƠN THÀNH CÔNG', zh: '訂單建立成功', en: 'ORDER PLACED' },
+                    orderCode: { vi: 'Mã đơn', zh: '單號', en: 'Order ID' },
+                    addressLabel: { vi: 'Địa chỉ', zh: '地址', en: 'Address' },
+                    invoiceUnitPrice: { vi: 'Đơn giá (VND)', zh: '單價 (VND)', en: 'Unit Price' },
+                    printPDF: { vi: 'In / Tải Đơn Hàng PDF', zh: '列印 / 下載 PDF 訂購單', en: 'Print / Save PDF' },
+                    sendZalo: { vi: 'Gửi Đơn Qua Zalo Hỗ Trợ', zh: '透過 ZALO 傳送訂單給客服', en: 'Send via Zalo' },
+                    footerDesc: { vi: 'Thương hiệu cà phê rang xay cao cấp. Chuyên cung cấp sỉ & lẻ cà phê mảng Espresso, Drip & Cold brew chuẩn quốc tế.', zh: '專業越南頂級精品咖啡熟豆與冷萃包供應商。全面支援零售購物與 B2B 大宗商業採購。', en: 'High-end specialty coffee roaster. Serving retail coffee lovers and B2B wholesale buyers.' },
+                    footerCol1Title: { vi: 'Dòng Cà Phê', zh: '產品系列', en: 'Coffee Series' },
+                    footerCol2Title: { vi: 'Hợp Tác B2B', zh: '商業合作', en: 'B2B Business' },
+                    customRoastService: { vi: 'Rang gia công theo gu quán', zh: '咖啡門市豆款客製', en: 'Custom Roast Profiling' },
+                    oemColdbrewService: { vi: 'Gia công túi lọc Cold Brew', zh: '冷萃包代工與商業批發', en: 'OEM Cold Brew Pouches' },
+                    footerContactTitle: { vi: 'Liên Hệ', zh: '聯絡我們', en: 'Contact Us' },
+                    privacyTerm: { vi: 'Chính sách bảo mật', zh: '隱私權條款', en: 'Privacy Policy' },
+                    serviceTerm: { vi: 'Điều khoản dịch vụ', zh: '服務條款', en: 'Terms of Service' },
+                    b2bContract: { vi: 'Hợp đồng sỉ B2B', zh: 'B2B 採購合約', en: 'B2B Contract' }
+                },
+
+                // Grind Options localized
+                grindOptions: {
+                    whole: { vi: 'Nguyên hạt (Whole Beans)', zh: '整粒原豆 (Whole Beans)', en: 'Whole Beans' },
+                    coarse: { vi: 'Xay thô (Ủ Lạnh / Bình Pháp Press)', zh: '粗研磨 (法壓壺 / 冷萃)', en: 'Coarse (French Press / Cold Brew)' },
+                    medium: { vi: 'Xay vừa (Pha Phin / Pour-over)', zh: '中研磨 (手沖 / 越南滴漏 Phin)', en: 'Medium (Phin / Drip)' },
+                    fine: { vi: 'Xay mịn (Pha Máy Espresso)', zh: '細研磨 (義式濃縮 Espresso)', en: 'Fine (Espresso Machine)' }
+                },
+
                 categories: [
-                    { id: 'c1', name: '1. 阿拉比卡 100%' },
-                    { id: 'c2', name: '2. 阿拉比卡蜜處理' },
-                    { id: 'c3', name: '3. 羅布斯塔 100%' },
-                    { id: 'c4', name: '4. 羅布斯塔蜜處理' },
-                    { id: 'c5', name: '5. 濃縮配方 (80/20)' },
-                    { id: 'c6', name: '6. 商業配方 (70/30)' },
-                    { id: 'c7', name: '7. 南義配方 (50/50)' }
+                    { id: 'c1', name: { vi: '1. Arabica 100% Cầu Đất', zh: '1. 阿拉比卡 100%', en: '1. 100% Arabica' } },
+                    { id: 'c2', name: { vi: '2. Arabica Honey Process', zh: '2. 阿拉比卡蜜處理', en: '2. Honey Arabica' } },
+                    { id: 'c3', name: { vi: '3. Robusta 100% & Cold Brew Nhài', zh: '3. 羅布斯塔 100%', en: '3. 100% Robusta & Jasmine' } },
+                    { id: 'c4', name: { vi: '4. Robusta Honey Process', zh: '4. 羅布斯塔蜜處理', en: '4. Honey Robusta' } },
+                    { id: 'c5', name: { vi: '5. Gu Espresso Đậm Vừa (80/20)', zh: '5. 濃縮配方 (80/20)', en: '5. Espresso Blend (80/20)' } },
+                    { id: 'c6', name: { vi: '6. Gu Quán Cân Bằng (70/30)', zh: '6. 商業配方 (70/30)', en: '6. Cafe Blend (70/30)' } },
+                    { id: 'c7', name: { vi: '7. Gu Ý Đậm Đắng (50/50)', zh: '7. 南義配方 (50/50)', en: '7. Italian Dark Blend (50/50)' } }
                 ],
 
                 products: [
-                    // Category 1: 100% Arabica
-                    { id: 1, categoryId: 'c1', categoryName: '100% 阿拉比卡', name: '100% 阿拉比卡咖啡豆 (250g)', spec: '250g/包', retailPrice: 145000, wholesalePrice: 125000, type: 'bean', selectedGrind: '原豆 (Whole Beans)', qty: 1, bulkQty: 0, description: '產自大勒 1,500m 高海拔莊園，帶有細緻花果香與柔和明亮酸值。' },
-                    { id: 2, categoryId: 'c1', categoryName: '100% 阿拉比卡', name: '100% 阿拉比卡咖啡豆 (500g)', spec: '500g/包', retailPrice: 280000, wholesalePrice: 240000, type: 'bean', selectedGrind: '原豆 (Whole Beans)', qty: 1, bulkQty: 0, description: '經典高海拔阿拉比卡 500g 商業熟豆包裝。' },
-                    { id: 3, categoryId: 'c1', categoryName: '100% 阿拉比卡', name: '100% 阿拉比卡冷萃咖啡 (10包/袋)', spec: '10包/袋', retailPrice: 125000, wholesalePrice: 105000, type: 'coldbrew', selectedGrind: '', qty: 1, bulkQty: 0, description: '特製冷萃濾袋，浸泡 12 小時即享清爽花果甜香冷萃咖啡。' },
-                    { id: 4, categoryId: 'c1', categoryName: '100% 阿拉比卡', name: '100% 阿拉比卡冷萃咖啡 (30包/袋)', spec: '30包/袋', retailPrice: 350000, wholesalePrice: 295000, type: 'coldbrew', selectedGrind: '', qty: 1, bulkQty: 0, description: '大容量 30 包商業量販冷萃包。' },
+                    // Category 1
+                    { 
+                        id: 1, categoryId: 'c1', spec: '250g/túi', retailPrice: 145000, wholesalePrice: 125000, type: 'bean', selectedGrindKey: 'whole', qty: 1, bulkQty: 0,
+                        name: { vi: 'Cà Phê Hạt 100% Arabica Cầu Đất (250g)', zh: '100% 阿拉比卡咖啡豆 (250g)', en: '100% Arabica Beans (250g)' },
+                        description: { vi: 'Trồng tại độ cao 1.500m Đà Lạt, hương hoa trái tự nhiên, vị chua thanh tao và hậu vị ngọt kéo dài.', zh: '產自大勒 1,500m 高海拔莊園，帶有細緻花果香與柔和明亮酸值。', en: 'Grown at 1,500m in Đà Lạt. Delicate floral and fruity aromas with bright, clean finish.' }
+                    },
+                    { 
+                        id: 2, categoryId: 'c1', spec: '500g/túi', retailPrice: 280000, wholesalePrice: 240000, type: 'bean', selectedGrindKey: 'whole', qty: 1, bulkQty: 0,
+                        name: { vi: 'Cà Phê Hạt 100% Arabica Cầu Đất (500g)', zh: '100% 阿拉比卡咖啡豆 (500g)', en: '100% Arabica Beans (500g)' },
+                        description: { vi: 'Gói 500g tiết kiệm cho quán và người uống thường xuyên.', zh: '經典高海拔阿拉比卡 500g 商業熟豆包裝。', en: '500g commercial pack for coffee enthusiasts and cafes.' }
+                    },
+                    { 
+                        id: 3, categoryId: 'c1', spec: '10 túi/gói', retailPrice: 125000, wholesalePrice: 105000, type: 'coldbrew', selectedGrindKey: 'coarse', qty: 1, bulkQty: 0,
+                        name: { vi: 'Túi Lọc Cold Brew 100% Arabica (10 túi/gói)', zh: '100% 阿拉比卡冷萃咖啡 (10包/袋)', en: '100% Arabica Cold Brew (10 pouches)' },
+                        description: { vi: 'Túi ngâm lạnh tiện lợi, ngâm 12 tiếng trong tủ lạnh có ngay ly Cold Brew thơm mát.', zh: '特製冷萃濾袋，浸泡 12 小時即享清爽花果甜香冷萃咖啡。', en: 'Steep for 12 hours in fridge for a smooth, refreshing cold brew.' }
+                    },
+                    { 
+                        id: 4, categoryId: 'c1', spec: '30 túi/gói', retailPrice: 350000, wholesalePrice: 295000, type: 'coldbrew', selectedGrindKey: 'coarse', qty: 1, bulkQty: 0,
+                        name: { vi: 'Túi Lọc Cold Brew 100% Arabica (30 túi/gói)', zh: '100% 阿拉比卡冷萃咖啡 (30包/袋)', en: '100% Arabica Cold Brew (30 pouches)' },
+                        description: { vi: 'Gói lớn 30 túi lọc dùng cho văn phòng hoặc quán bán Cold Brew.', zh: '大容量 30 包商業量販冷萃包。', en: '30-pouch bulk pack ideal for offices or cafes.' }
+                    },
 
-                    // Category 2: Honey Arabica
-                    { id: 5, categoryId: 'c2', categoryName: '蜜處理阿拉比卡', name: '蜜處理阿拉比卡咖啡豆 (250g)', spec: '250g/包', retailPrice: 160000, wholesalePrice: 138000, type: 'bean', selectedGrind: '原豆 (Whole Beans)', qty: 1, bulkQty: 0, description: '精品黃金蜜處理，保留果肉甜份，口感圓潤帶有熟果蜜甜。' },
-                    { id: 6, categoryId: 'c2', categoryName: '蜜處理阿拉比卡', name: '蜜處理阿拉比卡咖啡豆 (500g)', spec: '500g/包', retailPrice: 310000, wholesalePrice: 265000, type: 'bean', selectedGrind: '原豆 (Whole Beans)', qty: 1, bulkQty: 0, description: '精品蜜處理 500g 熟豆包裝。' },
-                    { id: 7, categoryId: 'c2', categoryName: '蜜處理阿拉比卡', name: '冷萃阿拉比卡蜂蜜咖啡 (10包/袋)', spec: '10包/袋', retailPrice: 140000, wholesalePrice: 118000, type: 'coldbrew', selectedGrind: '', qty: 1, bulkQty: 0, description: '蜜處理阿拉比卡冷萃包，自然蜂蜜甜感豐富。' },
-                    { id: 8, categoryId: 'c2', categoryName: '蜜處理阿拉比卡', name: '冷萃阿拉比卡蜂蜜咖啡 (30包/袋)', spec: '30包/袋', retailPrice: 390000, wholesalePrice: 330000, type: 'coldbrew', selectedGrind: '', qty: 1, bulkQty: 0, description: '蜜處理阿拉比卡冷萃 30 包商業裝。' },
+                    // Category 2
+                    { 
+                        id: 5, categoryId: 'c2', spec: '250g/túi', retailPrice: 160000, wholesalePrice: 138000, type: 'bean', selectedGrindKey: 'whole', qty: 1, bulkQty: 0,
+                        name: { vi: 'Cà Phê Arabica Chế Biến Honey (250g)', zh: '蜜處理阿拉比卡咖啡豆 (250g)', en: 'Honey Process Arabica (250g)' },
+                        description: { vi: 'Phương pháp chế biến mật ong giữ lại lớp đường tự nhiên, vị tròn trịa ngọt như mật phảng phất hương trái cây.', zh: '精品黃金蜜處理，保留果肉甜份，口感圓潤帶有熟果蜜甜。', en: 'Honey processed to retain natural sugars. Smooth body with honey sweetness.' }
+                    },
+                    { 
+                        id: 6, categoryId: 'c2', spec: '500g/túi', retailPrice: 310000, wholesalePrice: 265000, type: 'bean', selectedGrindKey: 'whole', qty: 1, bulkQty: 0,
+                        name: { vi: 'Cà Phê Arabica Chế Biến Honey (500g)', zh: '蜜處理阿拉比卡咖啡豆 (500g)', en: 'Honey Process Arabica (500g)' },
+                        description: { vi: 'Gói rang 500g Arabica Honey đặc sản cao cấp.', zh: '精品蜜處理 500g 熟豆包裝。', en: 'Specialty Honey process Arabica in 500g bag.' }
+                    },
+                    { 
+                        id: 7, categoryId: 'c2', spec: '10 túi/gói', retailPrice: 140000, wholesalePrice: 118000, type: 'coldbrew', selectedGrindKey: 'coarse', qty: 1, bulkQty: 0,
+                        name: { vi: 'Cold Brew Arabica Honey Vị Mật Tự Nhiên (10 túi)', zh: '冷萃阿拉比卡蜂蜜咖啡 (10包/袋)', en: 'Cold Brew Honey Arabica (10 pouches)' },
+                        description: { vi: 'Hương thơm ngọt tự nhiên ngâm lạnh vị êm dịu sảng khoái.', zh: '蜜處理阿拉比卡冷萃包，自然蜂蜜甜感豐富。', en: 'Naturally sweet and fruity cold brew steeped from Honey Arabica.' }
+                    },
+                    { 
+                        id: 8, categoryId: 'c2', spec: '30 túi/gói', retailPrice: 390000, wholesalePrice: 330000, type: 'coldbrew', selectedGrindKey: 'coarse', qty: 1, bulkQty: 0,
+                        name: { vi: 'Cold Brew Arabica Honey Vị Mật Tự Nhiên (30 túi)', zh: '冷萃阿拉比卡蜂蜜咖啡 (30包/袋)', en: 'Cold Brew Honey Arabica (30 pouches)' },
+                        description: { vi: 'Gói thương mại 30 túi ngâm lạnh Arabica Honey.', zh: '蜜處理阿拉比卡冷萃 30 包商業裝。', en: '30-pack commercial cold brew pouches.' }
+                    },
 
-                    // Category 3: 100% Robusta & Jasmine
-                    { id: 9, categoryId: 'c3', categoryName: '100% 羅布斯塔', name: '100% 羅布斯塔咖啡豆 (250g)', spec: '250g/包', retailPrice: 91000, wholesalePrice: 78000, type: 'bean', selectedGrind: '原豆 (Whole Beans)', qty: 1, bulkQty: 0, description: '嚴選火山灰土壤成熟羅布斯塔，濃郁回甘、Cream厚實。' },
-                    { id: 10, categoryId: 'c3', categoryName: '100% 羅布斯塔', name: '100% 羅布斯塔咖啡豆 (500g)', spec: '500g/包', retailPrice: 172000, wholesalePrice: 148000, type: 'bean', selectedGrind: '原豆 (Whole Beans)', qty: 1, bulkQty: 0, description: '傳統越南義式配方首選 500g 熟豆。' },
-                    { id: 11, categoryId: 'c3', categoryName: '100% 羅布斯塔', name: '100% 羅布斯塔冷萃咖啡 (10包/袋)', spec: '10包/袋', retailPrice: 80000, wholesalePrice: 70000, type: 'coldbrew', selectedGrind: '', qty: 1, bulkQty: 0, description: '濃醇低酸冷萃包，適合搭配牛奶調製冷萃拿鐵。' },
-                    { id: 12, categoryId: 'c3', categoryName: '100% 羅布斯塔', name: '100% 羅布斯塔冷萃咖啡 (30包/袋)', spec: '30包/袋', retailPrice: 230000, wholesalePrice: 200000, type: 'coldbrew', selectedGrind: '', qty: 1, bulkQty: 0, description: '羅布斯塔冷萃 30 包量販包。' },
-                    { id: 13, categoryId: 'c3', categoryName: '100% 羅布斯塔', name: '羅布斯塔冷萃咖啡-茉莉花風味 (10包/袋)', spec: '10包/袋', retailPrice: 100000, wholesalePrice: 88000, type: 'coldbrew', selectedGrind: '', qty: 1, bulkQty: 0, description: '融合新鮮茉莉花薰香，冷萃呈現高雅花香與濃郁咖啡體。' },
-                    { id: 14, categoryId: 'c3', categoryName: '100% 羅布斯塔', name: '羅布斯塔冷萃咖啡-茉莉花風味 (30包/袋)', spec: '30包/袋', retailPrice: 250000, wholesalePrice: 220000, type: 'coldbrew', selectedGrind: '', qty: 1, bulkQty: 0, description: '茉莉花風味冷萃 30 包量販裝。' },
+                    // Category 3
+                    { 
+                        id: 9, categoryId: 'c3', spec: '250g/túi', retailPrice: 91000, wholesalePrice: 78000, type: 'bean', selectedGrindKey: 'whole', qty: 1, bulkQty: 0,
+                        name: { vi: 'Cà Phê Hạt 100% Robusta Đắk Lắk (250g)', zh: '100% 羅布斯塔咖啡豆 (250g)', en: '100% Robusta Đắk Lắk (250g)' },
+                        description: { vi: 'Hạt Robusta chọn lọc từ đất đỏ bazan, vị đắng sô-cô-la đậm đà, crema dày mịn.', zh: '嚴選火山灰土壤成熟羅布斯塔，濃郁回甘、Cream厚實。', en: 'Rich chocolate undertones, low acidity, thick crema from basalt soil.' }
+                    },
+                    { 
+                        id: 10, categoryId: 'c3', spec: '500g/túi', retailPrice: 172000, wholesalePrice: 148000, type: 'bean', selectedGrindKey: 'whole', qty: 1, bulkQty: 0,
+                        name: { vi: 'Cà Phê Hạt 100% Robusta Đắk Lắk (500g)', zh: '100% 羅布斯塔咖啡豆 (500g)', en: '100% Robusta Đắk Lắk (500g)' },
+                        description: { vi: 'Gói 500g Robusta chuẩn gu truyền thống pha Phin hoặc Espresso.', zh: '傳統越南義式配方首選 500g 熟豆。', en: '500g bean pack preferred for traditional Phin or Espresso.' }
+                    },
+                    { 
+                        id: 11, categoryId: 'c3', spec: '10 túi/gói', retailPrice: 80000, wholesalePrice: 70000, type: 'coldbrew', selectedGrindKey: 'coarse', qty: 1, bulkQty: 0,
+                        name: { vi: 'Túi Lọc Cold Brew 100% Robusta (10 túi/gói)', zh: '100% 羅布斯塔冷萃咖啡 (10包/袋)', en: '100% Robusta Cold Brew (10 pouches)' },
+                        description: { vi: 'Vị đắng đầm không chua, rất thích hợp pha Cold Brew Latte sữa tươi.', zh: '濃醇低酸冷萃包，適合搭配牛奶調製冷萃拿鐵。', en: 'Rich, low-acid cold brew pouch perfect for Cold Brew Latte.' }
+                    },
+                    { 
+                        id: 12, categoryId: 'c3', spec: '30 túi/gói', retailPrice: 230000, wholesalePrice: 200000, type: 'coldbrew', selectedGrindKey: 'coarse', qty: 1, bulkQty: 0,
+                        name: { vi: 'Túi Lọc Cold Brew 100% Robusta (30 túi/gói)', zh: '100% 羅布斯塔冷萃咖啡 (30包/袋)', en: '100% Robusta Cold Brew (30 pouches)' },
+                        description: { vi: 'Gói lớn 30 túi lọc Robusta ngâm lạnh.', zh: '羅布斯塔冷萃 30 包量販包。', en: '30 pouches bulk pack for robust cold brews.' }
+                    },
+                    { 
+                        id: 13, categoryId: 'c3', spec: '10 túi/gói', retailPrice: 100000, wholesalePrice: 88000, type: 'coldbrew', selectedGrindKey: 'coarse', qty: 1, bulkQty: 0,
+                        name: { vi: 'Cold Brew Robusta Ướp Hoa Nhài Tươi (10 túi)', zh: '羅布斯塔冷萃咖啡-茉莉花風味 (10包/袋)', en: 'Jasmine Scented Robusta Cold Brew (10 pouches)' },
+                        description: { vi: 'Ướp hoa nhài tươi tự nhiên, sự kết hợp hoàn hảo giữa hương hoa thanh lịch và vị cà phê đậm đà.', zh: '融合新鮮茉莉花薰香，冷萃呈現高雅花香與濃郁咖啡體。', en: 'Infused with natural fresh jasmine flowers for a floral cold brew experience.' }
+                    },
+                    { 
+                        id: 14, categoryId: 'c3', spec: '30 túi/gói', retailPrice: 250000, wholesalePrice: 220000, type: 'coldbrew', selectedGrindKey: 'coarse', qty: 1, bulkQty: 0,
+                        name: { vi: 'Cold Brew Robusta Ướp Hoa Nhài Tươi (30 túi)', zh: '羅布斯塔冷萃咖啡-茉莉花風味 (30包/袋)', en: 'Jasmine Scented Robusta Cold Brew (30 pouches)' },
+                        description: { vi: 'Gói thương mại 30 túi Cold Brew Hoa Nhài độc đáo.', zh: '茉莉花風味冷萃 30 包量販裝。', en: '30 pouches pack infused with real jasmine blossoms.' }
+                    },
 
-                    // Category 4: Honey Robusta
-                    { id: 15, categoryId: 'c4', categoryName: '蜜處理羅布斯塔', name: '蜜處理羅布斯塔咖啡豆 (250g)', spec: '250g/包', retailPrice: 105000, wholesalePrice: 90000, type: 'bean', selectedGrind: '原豆 (Whole Beans)', qty: 1, bulkQty: 0, description: '精細蜜處理降低羅布斯塔苦味，散發黑糖與堅果焦香。' },
-                    { id: 16, categoryId: 'c4', categoryName: '蜜處理羅布斯塔', name: '蜜處理羅布斯塔咖啡豆 (500g)', spec: '500g/包', retailPrice: 200000, wholesalePrice: 170000, type: 'bean', selectedGrind: '原豆 (Whole Beans)', qty: 1, bulkQty: 0, description: '蜜處理羅布斯塔 500g 商業熟豆。' },
-                    { id: 17, categoryId: 'c4', categoryName: '蜜處理羅布斯塔', name: '冷萃羅布斯塔蜂蜜咖啡 (10包/袋)', spec: '10包/袋', retailPrice: 95000, wholesalePrice: 82000, type: 'coldbrew', selectedGrind: '', qty: 1, bulkQty: 0, description: '蜜處理羅布斯塔冷萃包，焦糖與可可香氣十足。' },
-                    { id: 18, categoryId: 'c4', categoryName: '蜜處理羅布斯塔', name: '冷萃羅布斯塔蜂蜜咖啡 (30包/袋)', spec: '30包/袋', retailPrice: 270000, wholesalePrice: 230000, type: 'coldbrew', selectedGrind: '', qty: 1, bulkQty: 0, description: '蜜處理羅布斯塔冷萃 30 包商業裝。' },
+                    // Category 4
+                    { 
+                        id: 15, categoryId: 'c4', spec: '250g/túi', retailPrice: 105000, wholesalePrice: 90000, type: 'bean', selectedGrindKey: 'whole', qty: 1, bulkQty: 0,
+                        name: { vi: 'Cà Phê Robusta Chế Biến Honey (250g)', zh: '蜜處理羅布斯塔咖啡豆 (250g)', en: 'Honey Process Robusta (250g)' },
+                        description: { vi: 'Sử dụng phương pháp Honey làm giảm độ gắt, tạo nên vị ngọt đường nâu và hạt dẻ nướng.', zh: '精細蜜處理降低羅布斯塔苦味，散發黑糖與堅果焦香。', en: 'Honey processing softens harshness, revealing brown sugar & toasted nut notes.' }
+                    },
+                    { 
+                        id: 16, categoryId: 'c4', spec: '500g/túi', retailPrice: 200000, wholesalePrice: 170000, type: 'bean', selectedGrindKey: 'whole', qty: 1, bulkQty: 0,
+                        name: { vi: 'Cà Phê Robusta Chế Biến Honey (500g)', zh: '蜜處理羅布斯塔咖啡豆 (500g)', en: 'Honey Process Robusta (500g)' },
+                        description: { vi: 'Gói 500g Robusta Honey dành cho pha Phin & Espresso cao cấp.', zh: '蜜處理羅布斯塔 500g 商業熟豆。', en: '500g Honey process Robusta bean bag.' }
+                    },
+                    { 
+                        id: 17, categoryId: 'c4', spec: '10 túi/gói', retailPrice: 95000, wholesalePrice: 82000, type: 'coldbrew', selectedGrindKey: 'coarse', qty: 1, bulkQty: 0,
+                        name: { vi: 'Cold Brew Robusta Honey Ngọt Dịu (10 túi)', zh: '冷萃羅布斯塔蜂蜜咖啡 (10包/袋)', en: 'Cold Brew Honey Robusta (10 pouches)' },
+                        description: { vi: 'Túi ngâm Cold Brew thơm mùi caramen và sô-cô-la ngọt dịu.', zh: '蜜處理羅布斯塔冷萃包，焦糖與可可香氣十足。', en: 'Rich caramel and cocoa notes with sweet honey finish.' }
+                    },
+                    { 
+                        id: 18, categoryId: 'c4', spec: '30 túi/gói', retailPrice: 270000, wholesalePrice: 230000, type: 'coldbrew', selectedGrindKey: 'coarse', qty: 1, bulkQty: 0,
+                        name: { vi: 'Cold Brew Robusta Honey Ngọt Dịu (30 túi)', zh: '冷萃羅布斯塔蜂蜜咖啡 (30包/袋)', en: 'Cold Brew Honey Robusta (30 pouches)' },
+                        description: { vi: 'Gói 30 túi Cold Brew Robusta Honey.', zh: '蜜處理羅布斯塔冷萃 30 包商業裝。', en: '30 pouches bulk pack of Honey Robusta cold brew.' }
+                    },
 
-                    // Category 5: Espresso Blend 80/20
-                    { id: 19, categoryId: 'c5', categoryName: '濃縮配方 (80/20)', name: '80/20 濃縮配方咖啡豆 (250g)', spec: '250g/包', retailPrice: 135000, wholesalePrice: 115000, type: 'bean', selectedGrind: '原豆 (Whole Beans)', qty: 1, bulkQty: 0, description: '80% 阿拉比卡 + 20% 羅布斯塔，專為義式濃縮與拿鐵設計。' },
-                    { id: 20, categoryId: 'c5', categoryName: '濃縮配方 (80/20)', name: '80/20 濃縮配方咖啡豆 (500g)', spec: '500g/包', retailPrice: 260000, wholesalePrice: 220000, type: 'bean', selectedGrind: '原豆 (Whole Beans)', qty: 1, bulkQty: 0, description: '80/20 濃縮配方 500g 門市營業用熟豆。' },
+                    // Category 5
+                    { 
+                        id: 19, categoryId: 'c5', spec: '250g/túi', retailPrice: 135000, wholesalePrice: 115000, type: 'bean', selectedGrindKey: 'whole', qty: 1, bulkQty: 0,
+                        name: { vi: 'Phối Trộn Espresso 80% Arabica - 20% Robusta (250g)', zh: '80/20 濃縮配方咖啡豆 (250g)', en: 'Espresso Blend 80/20 (250g)' },
+                        description: { vi: '80% Arabica Cầu Đất tạo hương thơm nồng nàn + 20% Robusta tạo vị đằm và lớp crema mượt.', zh: '80% 阿拉比卡 + 20% 羅布斯塔，專為義式濃縮與拿鐵設計。', en: '80% Arabica for floral acidity + 20% Robusta for rich crema and body.' }
+                    },
+                    { 
+                        id: 20, categoryId: 'c5', spec: '500g/túi', retailPrice: 260000, wholesalePrice: 220000, type: 'bean', selectedGrindKey: 'whole', qty: 1, bulkQty: 0,
+                        name: { vi: 'Phối Trộn Espresso 80% Arabica - 20% Robusta (500g)', zh: '80/20 濃縮配方咖啡豆 (500g)', en: 'Espresso Blend 80/20 (500g)' },
+                        description: { vi: 'Gói 500g phổ biến cho các quán cà phê chuẩn Ý.', zh: '80/20 濃縮配方 500g 門市營業用熟豆。', en: '500g bag engineered for specialty cafe espresso machines.' }
+                    },
 
-                    // Category 6: Commercial Blend 70/30
-                    { id: 21, categoryId: 'c6', categoryName: '商業配方 (70/30)', name: '商業混合咖啡 70/30 (250g)', spec: '250g/包', retailPrice: 128000, wholesalePrice: 110000, type: 'bean', selectedGrind: '原豆 (Whole Beans)', qty: 1, bulkQty: 0, description: '70% 阿拉比卡 + 30% 羅布斯塔，平衡圓潤、大眾喜愛度極高。' },
-                    { id: 22, categoryId: 'c6', categoryName: '商業配方 (70/30)', name: '商業混合咖啡 70/30 (500g)', spec: '500g/包', retailPrice: 245000, wholesalePrice: 210000, type: 'bean', selectedGrind: '原豆 (Whole Beans)', qty: 1, bulkQty: 0, description: '商業配方 70/30 500g 營業常用包裝。' },
+                    // Category 6
+                    { 
+                        id: 21, categoryId: 'c6', spec: '250g/túi', retailPrice: 128000, wholesalePrice: 110000, type: 'bean', selectedGrindKey: 'whole', qty: 1, bulkQty: 0,
+                        name: { vi: 'Phối Trộn Gu Quán 70% Arabica - 30% Robusta (250g)', zh: '商業混合咖啡 70/30 (250g)', en: 'House Blend 70/30 (250g)' },
+                        description: { vi: 'Tỷ lệ vàng 70/30 tạo sự cân bằng hoàn hảo giữa đắng thơm và chua nhẹ, dễ uống cho mọi khách hàng.', zh: '70% 阿拉比卡 + 30% 羅布斯塔，平衡圓潤、大眾喜愛度極高。', en: '70% Arabica + 30% Robusta balance. Crowd-pleaser for daily drinking.' }
+                    },
+                    { 
+                        id: 22, categoryId: 'c6', spec: '500g/túi', retailPrice: 245000, wholesalePrice: 210000, type: 'bean', selectedGrindKey: 'whole', qty: 1, bulkQty: 0,
+                        name: { vi: 'Phối Trộn Gu Quán 70% Arabica - 30% Robusta (500g)', zh: '商業混合咖啡 70/30 (500g)', en: 'House Blend 70/30 (500g)' },
+                        description: { vi: 'Gói 500g dùng cho pha phin và pha máy tại quán.', zh: '商業配方 70/30 500g 營業常用包裝。', en: '500g popular commercial house blend.' }
+                    },
 
-                    // Category 7: Southern Italian Blend 50/50
-                    { id: 23, categoryId: 'c7', categoryName: '南義配方 (50/50)', name: '50/50 南義風味配方咖啡豆 (250g)', spec: '250g/包', retailPrice: 118000, wholesalePrice: 100000, type: 'bean', selectedGrind: '原豆 (Whole Beans)', qty: 1, bulkQty: 0, description: '50% 阿拉比卡 + 50% 羅布斯塔，經典南義重焙風格，極度濃郁油脂。' },
-                    { id: 24, categoryId: 'c7', categoryName: '南義配方 (50/50)', name: '50/50 南義風味配方咖啡豆 (500g)', spec: '500g/包', retailPrice: 225000, wholesalePrice: 190000, type: 'bean', selectedGrind: '原豆 (Whole Beans)', qty: 1, bulkQty: 0, description: '50/50 南義風格 500g 門市濃縮豆。' }
+                    // Category 7
+                    { 
+                        id: 23, categoryId: 'c7', spec: '250g/túi', retailPrice: 118000, wholesalePrice: 100000, type: 'bean', selectedGrindKey: 'whole', qty: 1, bulkQty: 0,
+                        name: { vi: 'Phối Trộn Gu Ý Đầm 50% Arabica - 50% Robusta (250g)', zh: '50/50 南義風味配方咖啡豆 (250g)', en: 'Southern Italian Dark 50/50 (250g)' },
+                        description: { vi: 'Phong cách rang đậm Nam Ý, body dày đậm, hậu vị sô-cô-la đen truyền thống.', zh: '50% 阿拉比卡 + 50% 羅布斯塔，經典南義重焙風格，極度濃郁油脂。', en: 'Classic Italian dark roast profile. Robust crema and dark chocolate body.' }
+                    },
+                    { 
+                        id: 24, categoryId: 'c7', spec: '500g/túi', retailPrice: 225000, wholesalePrice: 190000, type: 'bean', selectedGrindKey: 'whole', qty: 1, bulkQty: 0,
+                        name: { vi: 'Phối Trộn Gu Ý Đầm 50% Arabica - 50% Robusta (500g)', zh: '50/50 南義風味配方咖啡豆 (500g)', en: 'Southern Italian Dark 50/50 (500g)' },
+                        description: { vi: 'Gói 500g gu đắng đậm thơm nồng.', zh: '50/50 南義風格 500g 門市濃縮豆。', en: '500g bold dark roast blend.' }
+                    }
                 ],
 
+                t(key) {
+                    if (this.dict[key] && this.dict[key][this.lang]) {
+                        return this.dict[key][this.lang];
+                    }
+                    return (this.dict[key] && this.dict[key].vi) ? this.dict[key].vi : key;
+                },
+
+                getCategoryName(catId) {
+                    const c = this.categories.find(item => item.id === catId);
+                    if (c) {
+                        return c.name[this.lang] || c.name.vi;
+                    }
+                    return catId;
+                },
+
                 initStore() {
-                    console.log('VIEBUCKS Store successfully loaded with Alpine.js');
+                    console.log('VIEBUCKS Store loaded in language:', this.lang);
                 },
 
                 get filteredProducts() {
@@ -1146,7 +1369,11 @@
 
                     if (this.searchQuery.trim() !== '') {
                         const q = this.searchQuery.toLowerCase();
-                        list = list.filter(p => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
+                        list = list.filter(p => {
+                            const nameStr = (p.name[this.lang] || p.name.vi).toLowerCase();
+                            const descStr = (p.description[this.lang] || p.description.vi).toLowerCase();
+                            return nameStr.includes(q) || descStr.includes(q);
+                        });
                     }
 
                     if (this.sortBy === 'price-asc') {
@@ -1154,7 +1381,7 @@
                     } else if (this.sortBy === 'price-desc') {
                         list = [...list].sort((a, b) => this.getCurrentPrice(b) - this.getCurrentPrice(a));
                     } else if (this.sortBy === 'name') {
-                        list = [...list].sort((a, b) => a.name.localeCompare(b.name));
+                        list = [...list].sort((a, b) => (a.name[this.lang] || a.name.vi).localeCompare(b.name[this.lang] || b.name.vi));
                     }
 
                     return list;
@@ -1174,65 +1401,82 @@
 
                 togglePricingMode(mode) {
                     this.pricingMode = mode;
-                    this.showToast(mode === 'wholesale' ? '已切換至【B2B 批發優惠價】模式' : '已切換至【標準零售價】模式');
+                    const msg = mode === 'wholesale' 
+                        ? (this.lang === 'vi' ? 'Đã chuyển sang 【Giá Bán Sỉ B2B】' : (this.lang === 'zh' ? '已切換至【B2B 批發優惠價】模式' : 'Switched to 【B2B Wholesale Rate】'))
+                        : (this.lang === 'vi' ? 'Đã chuyển sang 【Giá Bán Lẻ Standard】' : (this.lang === 'zh' ? '已切換至【標準零售價】模式' : 'Switched to 【Standard Retail Rate】'));
+                    this.showToast(msg);
+                },
+
+                formatCurrency(val) {
+                    return new Intl.NumberFormat('vi-VN').format(val) + ' ₫';
                 },
 
                 addToCart(product) {
                     const price = this.getCurrentPrice(product);
-                    const grind = product.type === 'coldbrew' ? '浸泡冷萃包' : product.selectedGrind;
+                    const grindText = product.type === 'coldbrew' 
+                        ? this.t('coldbrewPouchType') 
+                        : (this.grindOptions[product.selectedGrindKey] ? this.grindOptions[product.selectedGrindKey][this.lang] : product.selectedGrindKey);
 
-                    const existingIndex = this.cart.findIndex(i => i.id === product.id && i.selectedGrind === grind && i.price === price);
+                    const nameText = product.name[this.lang] || product.name.vi;
+
+                    const existingIndex = this.cart.findIndex(i => i.id === product.id && i.selectedGrind === grindText && i.price === price);
 
                     if (existingIndex > -1) {
                         this.cart[existingIndex].qty += product.qty;
                     } else {
                         this.cart.push({
                             id: product.id,
-                            name: product.name,
+                            name: nameText,
                             price: price,
                             qty: product.qty,
-                            selectedGrind: grind
+                            selectedGrind: grindText
                         });
                     }
 
-                    this.showToast(`已將「${product.name}」加入購物車`);
+                    const toastMsg = this.lang === 'vi' ? `Đã thêm "${nameText}" vào giỏ hàng` : (this.lang === 'zh' ? `已將「${nameText}」加入購物車` : `Added "${nameText}" to cart`);
+                    this.showToast(toastMsg);
                 },
 
                 addAllBulkToCart() {
                     let addedCount = 0;
                     this.products.forEach(p => {
                         if (p.bulkQty && p.bulkQty > 0) {
-                            const price = p.wholesalePrice; // Bulk matrix uses wholesale price
-                            const grind = p.type === 'coldbrew' ? '浸泡冷萃包' : p.selectedGrind;
-                            const existingIndex = this.cart.findIndex(i => i.id === p.id && i.selectedGrind === grind && i.price === price);
+                            const price = p.wholesalePrice;
+                            const grindText = p.type === 'coldbrew' ? this.t('coldbrewPouchType') : (this.grindOptions[p.selectedGrindKey] ? this.grindOptions[p.selectedGrindKey][this.lang] : p.selectedGrindKey);
+                            const nameText = p.name[this.lang] || p.name.vi;
+
+                            const existingIndex = this.cart.findIndex(i => i.id === p.id && i.selectedGrind === grindText && i.price === price);
 
                             if (existingIndex > -1) {
                                 this.cart[existingIndex].qty += p.bulkQty;
                             } else {
                                 this.cart.push({
                                     id: p.id,
-                                    name: p.name,
+                                    name: nameText,
                                     price: price,
                                     qty: p.bulkQty,
-                                    selectedGrind: grind
+                                    selectedGrind: grindText
                                 });
                             }
                             addedCount += p.bulkQty;
-                            p.bulkQty = 0; // Reset after adding
+                            p.bulkQty = 0;
                         }
                     });
 
                     if (addedCount > 0) {
-                        this.showToast(`已批發加入 ${addedCount} 件商品至購物車！`);
+                        const msg = this.lang === 'vi' ? `Đã thêm sỉ ${addedCount} sản phẩm vào giỏ hàng!` : (this.lang === 'zh' ? `已批發加入 ${addedCount} 件商品至購物車！` : `Added ${addedCount} wholesale items to cart!`);
+                        this.showToast(msg);
                         this.cartOpen = true;
                     } else {
-                        this.showToast('請先在列表中的「數量」欄位填寫欲採購數量');
+                        const msg = this.lang === 'vi' ? 'Vui lòng điền số lượng cần mua vào cột Số Lượng' : (this.lang === 'zh' ? '請先在列表中的「數量」欄位填寫欲採購數量' : 'Please specify quantities in the matrix');
+                        this.showToast(msg);
                     }
                 },
 
                 removeFromCart(index) {
                     this.cart.splice(index, 1);
-                    this.showToast('已自購物車移除商品');
+                    const msg = this.lang === 'vi' ? 'Đã xóa sản phẩm khỏi giỏ hàng' : (this.lang === 'zh' ? '已自購物車移除商品' : 'Removed item from cart');
+                    this.showToast(msg);
                 },
 
                 openProductModal(product) {
@@ -1252,7 +1496,8 @@
                         this.filterType = 'bean';
                     }
                     this.activeTab = 'shop';
-                    this.showToast('已根據您的口味道喜好為您篩選推薦產品！');
+                    const msg = this.lang === 'vi' ? 'Đã lọc sản phẩm phù hợp nhất với gu vị của bạn!' : (this.lang === 'zh' ? '已根據您的口味道喜好為您篩選推薦產品！' : 'Filtered recommended coffee based on your tastes!');
+                    this.showToast(msg);
                     this.scrollToProducts();
                 },
 
@@ -1270,7 +1515,7 @@
 
                     this.lastOrderDetails = {
                         orderId: orderId,
-                        date: new Date().toLocaleString('zh-TW'),
+                        date: new Date().toLocaleString('vi-VN'),
                         customer: { ...this.checkoutForm },
                         items: JSON.parse(JSON.stringify(this.cart)),
                         subtotal: subtotal,
@@ -1278,146 +1523,25 @@
                         total: total
                     };
 
-                    // Clear cart & show receipt modal
                     this.checkoutOpen = false;
                     this.cart = [];
                     this.showInvoiceModal = true;
-                    
-                    // Trigger multi-channel automated email dispatch
-                    this.sendAutomatedEmail();
-                },
-
-                async sendAutomatedEmail() {
-                    if (!this.lastOrderDetails) return;
-                    const o = this.lastOrderDetails;
-                    
-                    this.emailStatus.sending = true;
-                    this.emailStatus.success = false;
-                    this.emailStatus.message = '正在發送訂單通知郵件...';
-
-                    // Format readable item details for email content
-                    const itemsSummary = o.items.map((i, idx) => 
-                        `${idx + 1}. ${i.name} ${i.selectedGrind ? '('+i.selectedGrind+')' : ''} x ${i.qty} = ${this.formatCurrency(i.price * i.qty)}`
-                    ).join('\n');
-
-                    const emailPayload = {
-                        _subject: `[VIEBUCKS 新訂單] 單號:${o.orderId} - ${o.customer.name}`,
-                        _template: "table",
-                        _captcha: "false",
-                        "訂單編號": o.orderId,
-                        "訂購日期": o.date,
-                        "客戶姓名": o.customer.name,
-                        "聯絡電話 (ZALO)": o.customer.phone,
-                        "配送地址": o.customer.address,
-                        "付款方式": o.customer.payment.toUpperCase(),
-                        "備註事項": o.customer.note || '無',
-                        "訂購商品明細": itemsSummary,
-                        "商品小計": this.formatCurrency(o.subtotal),
-                        "運費": this.formatCurrency(o.shipping),
-                        "應付總金額": this.formatCurrency(o.total),
-                        "_replyto": o.customer.phone + "@viebucks-order.com"
-                    };
-
-                    try {
-                        // Primary Dispatch Service: FormSubmit AJAX
-                        const response = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(this.targetEmail)}`, {
-                            method: 'POST',
-                            headers: { 
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json' 
-                            },
-                            body: JSON.stringify(emailPayload)
-                        });
-
-                        const resData = await response.json();
-
-                        if (response.ok || resData.success === "true" || resData.success === true) {
-                            this.emailStatus.sending = false;
-                            this.emailStatus.success = true;
-                            this.emailStatus.message = `成功發送至 ${this.targetEmail}`;
-                            this.showToast(`✅ [ Email 發送成功] 訂單已發送至 ${this.targetEmail}`);
-                            return;
-                        }
-                        
-                        throw new Error(resData.message || 'FormSubmit 服務回應異常');
-
-                    } catch (err) {
-                        console.warn('Primary email dispatch failed, trying backup API...', err);
-                        
-                        // Secondary Backup Dispatch Service: Web3Forms API
-                        try {
-                            const backupPayload = {
-                                access_key: "e34ba1db-e32d-4d43-9830-4e36d4bc2299", // public demo fallback
-                                subject: emailPayload._subject,
-                                from_name: "VIEBUCKS Order System",
-                                to_email: this.targetEmail,
-                                message: `訂單編號: ${o.orderId}\n客戶: ${o.customer.name}\n電話: ${o.customer.phone}\n地址: ${o.customer.address}\n總金額: ${this.formatCurrency(o.total)}\n\n明細:\n${itemsSummary}`
-                            };
-
-                            const backupRes = await fetch("https://api.web3forms.com/submit", {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify(backupPayload)
-                            });
-
-                            if (backupRes.ok) {
-                                this.emailStatus.sending = false;
-                                this.emailStatus.success = true;
-                                this.emailStatus.message = `透過備援通道成功發送至 ${this.targetEmail}`;
-                                this.showToast(`✅ [ Email 備援發送成功] 已送達 ${this.targetEmail}`);
-                                return;
-                            }
-                        } catch (backupErr) {
-                            console.error('Backup email service error:', backupErr);
-                        }
-
-                        // If API limits are reached, update status
-                        this.emailStatus.sending = false;
-                        this.emailStatus.success = false;
-                        this.emailStatus.message = '伺服器 API 自動發送失敗，可點擊「開啟郵件 App」備援';
-                        this.showToast('⚠️ 電子郵件自動發送超時，請點擊「開啟郵件 App」手動發送');
-                    }
-                },
-
-                openMailClient() {
-                    if (!this.lastOrderDetails) return;
-                    const o = this.lastOrderDetails;
-                    const subject = encodeURIComponent(`[VIEBUCKS 訂單] 單號:${o.orderId} - ${o.customer.name}`);
-                    const body = encodeURIComponent(
-                        `VIEBUCKS 訂單通知\n` +
-                        `-----------------------\n` +
-                        `訂單編號: ${o.orderId}\n` +
-                        `訂購人: ${o.customer.name}\n` +
-                        `電話: ${o.customer.phone}\n` +
-                        `地址: ${o.customer.address}\n` +
-                        `總金額: ${this.formatCurrency(o.total)}\n\n` +
-                        `商品明細:\n` +
-                        o.items.map(i => `- ${i.name} x${i.qty} (${this.formatCurrency(i.price * i.qty)})`).join('\n')
-                    );
-                    
-                    window.location.href = `mailto:${this.targetEmail}?subject=${subject}&body=${body}`;
-                    this.showToast('已開啟本地郵件程式！');
                 },
 
                 sendToZalo() {
                     if (!this.lastOrderDetails) return;
                     const o = this.lastOrderDetails;
-                    const textToCopy = `[VIEBUCKS 訂單 ${o.orderId}]\n姓名: ${o.customer.name}\n電話: ${o.customer.phone}\n總金額: ${this.formatCurrency(o.total)}`;
-                    
-                    const tempInput = document.createElement('textarea');
-                    tempInput.value = textToCopy;
-                    document.body.appendChild(tempInput);
-                    tempInput.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(tempInput);
+                    let text = `[VIEBUCKS ORDER ${o.orderId}]\n`;
+                    text += `Khách hàng: ${o.customer.name} - SĐT: ${o.customer.phone}\n`;
+                    text += `Địa chỉ: ${o.customer.address}\n`;
+                    text += `Sản phẩm:\n`;
+                    o.items.forEach((item, i) => {
+                        text += `${i+1}. ${item.name} (${item.selectedGrind}) x ${item.qty} = ${this.formatCurrency(item.price * item.qty)}\n`;
+                    });
+                    text += `TỔNG CỘNG: ${this.formatCurrency(o.total)}`;
 
-                    this.showToast('已複製訂單概要，正在開啟 Zalo 客服視窗...');
-                    window.open('https://zalo.me/839681380', '_blank');
-                },
-
-                formatCurrency(val) {
-                    if (!val && val !== 0) return 'VND 0';
-                    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val);
+                    const zaloUrl = `https://zalo.me/839681380?text=${encodeURIComponent(text)}`;
+                    window.open(zaloUrl, '_blank');
                 },
 
                 showToast(msg) {
@@ -1425,7 +1549,7 @@
                     this.toast.show = true;
                     setTimeout(() => {
                         this.toast.show = false;
-                    }, 3200);
+                    }, 3000);
                 }
             };
         }
