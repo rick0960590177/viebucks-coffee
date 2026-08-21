@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>VIEBUCKS Cafe - 精品手作咖啡館</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -37,10 +37,19 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+    /* 防止手機端點擊輸入框時畫面變形 */
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+    @media (min-width: 640px) {
+      input, select, textarea {
+        font-size: 0.875rem !important;
+      }
+    }
   </style>
 </head>
-<body class="bg-coffee-50 text-coffee-900 font-sans selection:bg-coffee-200">
-  <div id="root"></div>
+<body class="bg-coffee-50 text-coffee-900 font-sans selection:bg-coffee-200 min-h-screen flex flex-col antialiased">
+  <div id="root" class="flex-grow flex flex-col"></div>
 
   <script type="text/babel">
     const { useState, useEffect, useMemo } = React;
@@ -165,7 +174,7 @@
         passwordSubmit: '確認登入',
         passwordError: '密碼錯誤，請重新輸入',
         historyPasswordTitle: '歷史訂單驗證',
-        historyPasswordDesc: '此功能僅限管理者使用，請輸入密碼',
+        historyPasswordDesc: '請輸入管理密碼以檢視歷史訂單',
         grindOptions: {
           beans: { label: '保留原豆', detail: 'Whole Beans' },
           phin: { label: '越南滴漏', detail: 'Phin Filter' },
@@ -239,7 +248,7 @@
         passwordSubmit: 'Xác nhận',
         passwordError: 'Sai mật khẩu, vui lòng thử lại',
         historyPasswordTitle: 'Xác thực lịch sử đơn hàng',
-        historyPasswordDesc: 'Tính năng này chỉ dành cho quản trị viên',
+        historyPasswordDesc: 'Vui lòng nhập mật khẩu để xem lịch sử',
         grindOptions: {
           beans: { label: 'Nguyên hạt', detail: 'Whole Beans' },
           phin: { label: 'Pha Phin', detail: 'Phin Filter' },
@@ -359,17 +368,17 @@
       const totalCartItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
       return (
-        <div className="min-h-screen flex flex-col">
+        <div className="w-full flex-grow flex flex-col">
           {/* Header Nav */}
-          <nav className="sticky top-0 z-30 bg-coffee-900 text-coffee-100 shadow-md">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 sm:hidden rounded-lg text-coffee-200 hover:bg-coffee-800">
+          <nav className="sticky top-0 z-35 bg-coffee-900 text-coffee-100 shadow-md w-full">
+            <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-20 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
+                <button onClick={() => setIsMobileMenuOpen(true)} className="p-1.5 sm:hidden rounded-lg text-coffee-200 hover:bg-coffee-800">
                   <Icons.Menu className="h-6 w-6" />
                 </button>
-                <div className="flex items-center gap-2">
-                  <Icons.Coffee className="h-7 w-7 sm:h-8 sm:w-8 text-coffee-200" />
-                  <span className="text-xl sm:text-2xl font-bold tracking-wider font-serif">VIEBUCKS CAFE</span>
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <Icons.Coffee className="h-6 w-6 sm:h-8 sm:w-8 text-coffee-200 flex-shrink-0" />
+                  <span className="text-lg sm:text-2xl font-bold tracking-wider font-serif truncate">VIEBUCKS</span>
                 </div>
               </div>
 
@@ -389,18 +398,18 @@
               <div className="flex items-center gap-1 sm:gap-2">
                 <button
                   onClick={toggleLanguage}
-                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-coffee-800 hover:bg-coffee-700 text-xs font-medium text-amber-300 border border-coffee-700 transition-colors mr-1"
+                  className="flex items-center gap-1 px-2 py-1.5 rounded-full bg-coffee-800 hover:bg-coffee-700 text-xs font-medium text-amber-300 border border-coffee-700 transition-colors"
                 >
-                  <Icons.Globe className="h-4 w-4" />
+                  <Icons.Globe className="h-3.5 w-3.5" />
                   <span>{lang === 'zh-TW' ? '繁中' : 'VN'}</span>
                 </button>
 
                 <button onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)} className="p-2 md:hidden rounded-full text-coffee-200 hover:bg-coffee-800">
-                  <Icons.Search className="h-6 w-6" />
+                  <Icons.Search className="h-5 w-5" />
                 </button>
 
                 <button onClick={() => setIsPasswordModalOpen(true)} className="p-2 hover:bg-coffee-800 rounded-full text-coffee-200 hover:text-white" title={t.adminPanel}>
-                  <Icons.Settings className="h-6 w-6" />
+                  <Icons.Settings className="h-5 w-5 sm:h-6 sm:w-6" />
                 </button>
 
                 <button onClick={() => setIsHistoryPasswordModalOpen(true)} className="hidden sm:flex p-2 hover:bg-coffee-800 rounded-full text-coffee-200 hover:text-white" title={t.history}>
@@ -410,7 +419,7 @@
                 <button onClick={() => setIsCartOpen(true)} className="relative p-2 hover:bg-coffee-800 rounded-full">
                   <Icons.ShoppingBag className="h-6 w-6 sm:h-7 sm:w-7 text-coffee-100" />
                   {totalCartItems > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+                    <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-[10px] sm:text-xs font-bold rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center animate-pulse">
                       {totalCartItems}
                     </span>
                   )}
@@ -418,9 +427,9 @@
               </div>
             </div>
 
-            {/* Mobile Search */}
+            {/* Mobile Search Bar */}
             {isMobileSearchOpen && (
-              <div className="md:hidden px-4 pb-3 pt-1 border-t border-coffee-800 bg-coffee-900">
+              <div className="md:hidden px-3 pb-3 pt-1 border-t border-coffee-800 bg-coffee-900">
                 <div className="relative">
                   <input
                     type="text"
@@ -428,7 +437,7 @@
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     autoFocus
-                    className="w-full bg-coffee-800 text-coffee-100 placeholder-coffee-200/60 rounded-full py-2 pl-10 pr-10 focus:outline-none focus:ring-2 focus:ring-coffee-200 border border-coffee-700 text-sm"
+                    className="w-full bg-coffee-800 text-coffee-100 placeholder-coffee-200/60 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-coffee-200 border border-coffee-700 text-sm"
                   />
                   <Icons.Search className="absolute left-3 top-2.5 h-4 w-4 text-coffee-200/60" />
                 </div>
@@ -437,16 +446,16 @@
           </nav>
 
           {/* Content Area */}
-          <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 w-full">
-            {/* Category Tabs */}
-            <div className="overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 mb-6 sm:mb-8">
-              <div className="flex gap-2 sm:gap-3 min-w-max pb-2 sm:pb-0">
+          <main className="flex-grow w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+            {/* Category Tabs (Auto Scrollable for small screens) */}
+            <div className="overflow-x-auto no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0 mb-4 sm:mb-8">
+              <div className="flex gap-2 sm:gap-3 min-w-max pb-1">
                 {Object.keys(t.cats).map(catKey => (
                   <button
                     key={catKey}
                     onClick={() => setSelectedCategory(catKey)}
-                    className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
-                      selectedCategory === catKey ? 'bg-coffee-800 text-coffee-50 shadow-md' : 'bg-coffee-100 text-coffee-800 hover:bg-coffee-200'
+                    className={`px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all whitespace-nowrap shadow-sm ${
+                      selectedCategory === catKey ? 'bg-coffee-800 text-coffee-50 ring-2 ring-coffee-300' : 'bg-white text-coffee-800 hover:bg-coffee-100 border border-coffee-200'
                     }`}
                   >
                     {t.cats[catKey]}
@@ -455,7 +464,7 @@
               </div>
             </div>
 
-            {/* Product Cards */}
+            {/* Product Cards Grid (Fully Responsive: 1 col on mobile, 2 on tablet, 3-4 on desktop) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {filteredProducts.map(product => {
                 const productName = lang === 'zh-TW' ? product.nameZh : product.nameVi;
@@ -465,36 +474,38 @@
                 const isLow = product.stock > 0 && product.stock <= product.threshold;
 
                 return (
-                  <div key={product.id} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow border border-coffee-100 flex flex-col">
-                    <div className="h-48 sm:h-52 overflow-hidden relative bg-coffee-100">
-                      <img src={product.image} alt={productName} className={`w-full h-full object-cover transition-transform duration-500 ${isOut ? 'grayscale opacity-60' : 'hover:scale-105'}`} />
-                      <span className="absolute top-3 right-3 text-xs bg-coffee-900/80 text-white px-2.5 py-1 rounded-full backdrop-blur-md font-medium">
-                        {specText}
-                      </span>
+                  <div key={product.id} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-coffee-100 flex flex-col justify-between">
+                    <div>
+                      <div className="h-44 sm:h-52 overflow-hidden relative bg-coffee-100">
+                        <img src={product.image} alt={productName} className={`w-full h-full object-cover transition-transform duration-500 ${isOut ? 'grayscale opacity-60' : 'hover:scale-105'}`} />
+                        <span className="absolute top-3 right-3 text-xs bg-coffee-900/80 text-white px-2.5 py-1 rounded-full backdrop-blur-md font-medium shadow">
+                          {specText}
+                        </span>
 
-                      {/* Stock Status Tag */}
-                      <div className="absolute top-3 left-3">
-                        {isOut ? (
-                          <span className="bg-red-600 text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow">{t.soldOut}</span>
-                        ) : isLow ? (
-                          <span className="bg-amber-600 text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow flex items-center gap-1">
-                            <Icons.AlertTriangle className="h-3 w-3" /> {t.lowStock}{product.stock}{t.units}
-                          </span>
-                        ) : null}
+                        {/* Stock Status Tag */}
+                        <div className="absolute top-3 left-3">
+                          {isOut ? (
+                            <span className="bg-red-600 text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow">{t.soldOut}</span>
+                          ) : isLow ? (
+                            <span className="bg-amber-600 text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow flex items-center gap-1">
+                              <Icons.AlertTriangle className="h-3 w-3" /> {t.lowStock}{product.stock}{t.units}
+                            </span>
+                          ) : null}
+                        </div>
+                      </div>
+
+                      <div className="p-4 sm:p-5">
+                        <h3 className="text-base sm:text-lg font-bold text-coffee-900 font-serif line-clamp-1">{productName}</h3>
+                        <p className="text-xs text-coffee-600 italic mb-3 line-clamp-1">{productSubName}</p>
                       </div>
                     </div>
 
-                    <div className="p-4 sm:p-5 flex flex-col flex-grow justify-between">
-                      <div>
-                        <h3 className="text-base sm:text-lg font-bold text-coffee-900 font-serif">{productName}</h3>
-                        <p className="text-xs text-coffee-600 italic mb-3">{productSubName}</p>
-                      </div>
-
+                    <div className="p-4 sm:p-5 pt-0">
                       <div className="pt-3 border-t border-coffee-100 space-y-3">
                         <div className="flex items-baseline justify-between">
                           <div>
                             <div className="text-[10px] sm:text-xs text-coffee-500">{t.retailPrice}</div>
-                            <div className="text-base sm:text-lg font-bold text-coffee-900">{product.price.toLocaleString()} VND</div>
+                            <div className="text-sm sm:text-base font-bold text-coffee-900">{product.price.toLocaleString()} VND</div>
                           </div>
                           <div className="text-right">
                             <div className="text-[10px] sm:text-xs text-amber-700 font-bold">{t.wholesalePrice}</div>
@@ -506,7 +517,7 @@
                           disabled={isOut}
                           onClick={() => setSelectedProduct(product)}
                           className={`w-full py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
-                            isOut ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-coffee-800 hover:bg-coffee-900 text-white'
+                            isOut ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-coffee-800 hover:bg-coffee-900 text-white shadow'
                           }`}
                         >
                           <Icons.Plus className="h-4 w-4" /> {isOut ? t.soldOut : t.selectAndBuy}
@@ -523,19 +534,19 @@
           {isMobileMenuOpen && (
             <div className="fixed inset-0 z-50 sm:hidden">
               <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
-              <div className="fixed inset-y-0 left-0 w-4/5 max-w-xs bg-coffee-900 text-coffee-100 shadow-xl flex flex-col justify-between p-6 z-10">
+              <div className="fixed inset-y-0 left-0 w-4/5 max-w-xs bg-coffee-900 text-coffee-100 shadow-2xl flex flex-col justify-between p-5 z-10">
                 <div>
-                  <div className="flex items-center justify-between pb-6 border-b border-coffee-800">
+                  <div className="flex items-center justify-between pb-4 border-b border-coffee-800">
                     <div className="flex items-center gap-2">
-                      <Icons.Coffee className="h-7 w-7 text-coffee-200" />
-                      <span className="text-lg font-bold tracking-wider font-serif">VIEBUCKS CAFE</span>
+                      <Icons.Coffee className="h-6 w-6 text-coffee-200" />
+                      <span className="text-base font-bold tracking-wider font-serif">VIEBUCKS</span>
                     </div>
                     <button onClick={() => setIsMobileMenuOpen(false)} className="p-1 rounded-full text-coffee-200 hover:bg-coffee-800">
                       <Icons.X className="h-6 w-6" />
                     </button>
                   </div>
 
-                  <div className="mt-6 space-y-4">
+                  <div className="mt-5 space-y-3">
                     <button onClick={toggleLanguage} className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-coffee-800 text-amber-300 font-medium text-sm">
                       <span className="flex items-center gap-2"><Icons.Globe className="h-5 w-5" /> 語言 / Ngôn ngữ</span>
                       <span>{lang === 'zh-TW' ? '繁體中文' : 'Tiếng Việt'}</span>
@@ -549,7 +560,7 @@
                       <Icons.Clock className="h-5 w-5" /> {t.history}
                     </button>
 
-                    <div className="pt-4 border-t border-coffee-800">
+                    <div className="pt-3 border-t border-coffee-800">
                       <p className="text-xs font-bold text-coffee-300 uppercase tracking-wider mb-2 px-3">{t.categories}</p>
                       <div className="space-y-1">
                         {Object.keys(t.cats).map(catKey => (
@@ -672,42 +683,40 @@
       };
 
       return (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-          <div className="flex min-h-full items-center justify-center p-4">
-            <div className="relative w-full max-w-sm bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-6 space-y-4">
-              <button onClick={onClose} className="absolute right-4 top-4 p-1.5 rounded-full hover:bg-coffee-200"><Icons.X className="h-5 w-5" /></button>
+          <div className="relative w-full max-w-sm bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-5 sm:p-6 space-y-4 z-10">
+            <button onClick={onClose} className="absolute right-4 top-4 p-1.5 rounded-full hover:bg-coffee-200"><Icons.X className="h-5 w-5" /></button>
 
-              <div className="text-center space-y-1">
-                <div className="w-12 h-12 bg-coffee-100 text-coffee-800 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <Icons.Lock className="h-6 w-6" />
-                </div>
-                <h3 className="text-lg font-bold font-serif text-coffee-900">{title}</h3>
-                <p className="text-xs text-coffee-600">{desc}</p>
+            <div className="text-center space-y-1">
+              <div className="w-12 h-12 bg-coffee-100 text-coffee-800 rounded-full flex items-center justify-center mx-auto mb-2">
+                <Icons.Lock className="h-6 w-6" />
               </div>
-
-              <form onSubmit={handleSubmit} className="space-y-3">
-                <input
-                  type="password"
-                  placeholder={t.passwordPlaceholder}
-                  value={password}
-                  onChange={(e) => { setPassword(e.target.value); setError(false); }}
-                  autoFocus
-                  className="w-full bg-white border border-coffee-200 rounded-xl p-3 text-sm text-center font-bold tracking-widest focus:outline-none focus:ring-2 focus:ring-coffee-800"
-                />
-
-                {error && (
-                  <p className="text-xs text-red-600 text-center font-bold">{t.passwordError}</p>
-                )}
-
-                <button
-                  type="submit"
-                  className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 rounded-xl shadow-md text-xs sm:text-sm transition-colors"
-                >
-                  {t.passwordSubmit}
-                </button>
-              </form>
+              <h3 className="text-lg font-bold font-serif text-coffee-900">{title}</h3>
+              <p className="text-xs text-coffee-600">{desc}</p>
             </div>
+
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <input
+                type="password"
+                placeholder={t.passwordPlaceholder}
+                value={password}
+                onChange={(e) => { setPassword(e.target.value); setError(false); }}
+                autoFocus
+                className="w-full bg-white border border-coffee-200 rounded-xl p-3 text-sm text-center font-bold tracking-widest focus:outline-none focus:ring-2 focus:ring-coffee-800"
+              />
+
+              {error && (
+                <p className="text-xs text-red-600 text-center font-bold">{t.passwordError}</p>
+              )}
+
+              <button
+                type="submit"
+                className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 rounded-xl shadow-md text-xs sm:text-sm transition-colors"
+              >
+                {t.passwordSubmit}
+              </button>
+            </form>
           </div>
         </div>
       );
@@ -746,95 +755,93 @@
       };
 
       return (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-          <div className="flex min-h-full items-center justify-center p-4">
-            <div className="relative w-full max-w-4xl bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-5 sm:p-6 flex flex-col max-h-[85vh]">
-              <div className="flex justify-between items-center mb-4 border-b border-coffee-200 pb-3">
-                <h2 className="text-lg sm:text-xl font-bold font-serif text-coffee-900 flex items-center gap-2">
-                  <Icons.Settings className="h-5 w-5 text-coffee-800" /> {t.adminTitle}
-                </h2>
-                <button onClick={onClose} className="p-1 rounded-full hover:bg-coffee-200"><Icons.X className="h-5 w-5" /></button>
-              </div>
+          <div className="relative w-full max-w-4xl bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-4 sm:p-6 flex flex-col max-h-[90vh] z-10">
+            <div className="flex justify-between items-center mb-3 border-b border-coffee-200 pb-3">
+              <h2 className="text-base sm:text-xl font-bold font-serif text-coffee-900 flex items-center gap-2">
+                <Icons.Settings className="h-5 w-5 text-coffee-800" /> {t.adminTitle}
+              </h2>
+              <button onClick={onClose} className="p-1 rounded-full hover:bg-coffee-200"><Icons.X className="h-5 w-5" /></button>
+            </div>
 
-              <div className="flex-1 overflow-y-auto space-y-3 pr-1">
-                {editedProducts.map(product => {
-                  const name = lang === 'zh-TW' ? product.nameZh : product.nameVi;
-                  const spec = lang === 'zh-TW' ? product.specZh : product.specVi;
-                  return (
-                    <div key={product.id} className="bg-white p-3.5 rounded-xl border border-coffee-100 grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
-                      <div className="md:col-span-4 flex items-center gap-3">
-                        <img src={product.image} alt={name} className="w-12 h-12 object-cover rounded-lg flex-shrink-0" />
-                        <div>
-                          <h4 className="font-bold text-xs sm:text-sm text-coffee-900">{name}</h4>
-                          <span className="text-[10px] text-coffee-500 bg-coffee-100 px-2 py-0.5 rounded">{spec}</span>
-                        </div>
-                      </div>
-
-                      <div className="md:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                        <div>
-                          <label className="block text-[10px] text-coffee-600 mb-0.5">{t.stockQty}</label>
-                          <input
-                            type="number"
-                            min="0"
-                            value={product.stock}
-                            onChange={(e) => handleFieldChange(product.id, 'stock', e.target.value)}
-                            className="w-full border border-coffee-200 rounded p-1.5 font-bold text-coffee-900"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[10px] text-coffee-600 mb-0.5">{t.alertThreshold}</label>
-                          <input
-                            type="number"
-                            min="0"
-                            value={product.threshold}
-                            onChange={(e) => handleFieldChange(product.id, 'threshold', e.target.value)}
-                            className="w-full border border-coffee-200 rounded p-1.5 text-coffee-800"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[10px] text-coffee-600 mb-0.5">{t.retailPrice} (VND)</label>
-                          <input
-                            type="number"
-                            step="1000"
-                            value={product.price}
-                            onChange={(e) => handleFieldChange(product.id, 'price', e.target.value)}
-                            className="w-full border border-coffee-200 rounded p-1.5 text-coffee-900 font-bold"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[10px] text-coffee-600 mb-0.5">{t.wholesalePrice} (VND)</label>
-                          <input
-                            type="number"
-                            step="1000"
-                            value={product.wholesalePrice}
-                            onChange={(e) => handleFieldChange(product.id, 'wholesalePrice', e.target.value)}
-                            className="w-full border border-coffee-200 rounded p-1.5 text-amber-800 font-bold"
-                          />
-                        </div>
+            <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+              {editedProducts.map(product => {
+                const name = lang === 'zh-TW' ? product.nameZh : product.nameVi;
+                const spec = lang === 'zh-TW' ? product.specZh : product.specVi;
+                return (
+                  <div key={product.id} className="bg-white p-3 rounded-xl border border-coffee-100 grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+                    <div className="md:col-span-4 flex items-center gap-3">
+                      <img src={product.image} alt={name} className="w-12 h-12 object-cover rounded-lg flex-shrink-0" />
+                      <div>
+                        <h4 className="font-bold text-xs sm:text-sm text-coffee-900 line-clamp-1">{name}</h4>
+                        <span className="text-[10px] text-coffee-500 bg-coffee-100 px-2 py-0.5 rounded">{spec}</span>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
 
-              <div className="pt-4 border-t border-coffee-200 mt-4 flex flex-col sm:flex-row justify-between gap-2">
-                <button
-                  onClick={handleReset}
-                  className="px-4 py-2 border border-red-300 text-red-600 hover:bg-red-50 rounded-xl text-xs font-bold transition-colors"
-                >
-                  {t.resetDefault}
-                </button>
-                <button
-                  onClick={handleSave}
-                  className="px-6 py-2.5 bg-coffee-800 hover:bg-coffee-900 text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-md transition-colors"
-                >
-                  <Icons.Save className="h-4 w-4" /> {t.saveChanges}
-                </button>
-              </div>
+                    <div className="md:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                      <div>
+                        <label className="block text-[10px] text-coffee-600 mb-0.5">{t.stockQty}</label>
+                        <input
+                          type="number"
+                          min="0"
+                          value={product.stock}
+                          onChange={(e) => handleFieldChange(product.id, 'stock', e.target.value)}
+                          className="w-full border border-coffee-200 rounded p-1.5 font-bold text-coffee-900"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] text-coffee-600 mb-0.5">{t.alertThreshold}</label>
+                        <input
+                          type="number"
+                          min="0"
+                          value={product.threshold}
+                          onChange={(e) => handleFieldChange(product.id, 'threshold', e.target.value)}
+                          className="w-full border border-coffee-200 rounded p-1.5 text-coffee-800"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] text-coffee-600 mb-0.5">{t.retailPrice}</label>
+                        <input
+                          type="number"
+                          step="1000"
+                          value={product.price}
+                          onChange={(e) => handleFieldChange(product.id, 'price', e.target.value)}
+                          className="w-full border border-coffee-200 rounded p-1.5 text-coffee-900 font-bold"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] text-coffee-600 mb-0.5">{t.wholesalePrice}</label>
+                        <input
+                          type="number"
+                          step="1000"
+                          value={product.wholesalePrice}
+                          onChange={(e) => handleFieldChange(product.id, 'wholesalePrice', e.target.value)}
+                          className="w-full border border-coffee-200 rounded p-1.5 text-amber-800 font-bold"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="pt-3 border-t border-coffee-200 mt-3 flex flex-col sm:flex-row justify-between gap-2">
+              <button
+                onClick={handleReset}
+                className="px-4 py-2 border border-red-300 text-red-600 hover:bg-red-50 rounded-xl text-xs font-bold transition-colors"
+              >
+                {t.resetDefault}
+              </button>
+              <button
+                onClick={handleSave}
+                className="px-6 py-2.5 bg-coffee-800 hover:bg-coffee-900 text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-md transition-colors"
+              >
+                <Icons.Save className="h-4 w-4" /> {t.saveChanges}
+              </button>
             </div>
           </div>
         </div>
@@ -866,67 +873,65 @@
       };
 
       return (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-          <div className="flex min-h-full items-center justify-center p-4">
-            <div className="relative w-full max-w-xl bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-5 sm:p-6 space-y-5">
-              <button onClick={onClose} className="absolute right-4 top-4 p-2 bg-white/80 rounded-full hover:bg-white"><Icons.X className="h-5 w-5" /></button>
+          <div className="relative w-full max-w-lg bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-4 sm:p-6 space-y-4 max-h-[90vh] overflow-y-auto z-10">
+            <button onClick={onClose} className="absolute right-4 top-4 p-2 bg-white/80 rounded-full hover:bg-white"><Icons.X className="h-5 w-5" /></button>
 
-              <div>
-                <span className="text-xs font-bold text-coffee-600 uppercase">{specText}</span>
-                <h2 className="text-xl sm:text-2xl font-bold font-serif text-coffee-900">{productName}</h2>
-                <p className="text-xs text-coffee-600 italic">{productSubName}</p>
-              </div>
-
-              <div className="flex items-baseline justify-between bg-white p-3.5 sm:p-4 rounded-xl border border-coffee-100">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-xl sm:text-2xl font-extrabold text-coffee-800">{currentUnitPrice.toLocaleString()} VND</span>
-                  {quantity >= 10 ? (
-                    <span className="text-[10px] sm:text-xs bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded">{t.wholesaleApplied}</span>
-                  ) : (
-                    <span className="text-[10px] sm:text-xs text-coffee-500">{t.wholesaleUpgrade}</span>
-                  )}
-                </div>
-                <div className="text-xs font-semibold text-coffee-600">
-                  可購數量: <span className="text-coffee-900 font-bold">{maxStock}</span>
-                </div>
-              </div>
-
-              {isBeanProduct ? (
-                <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase text-coffee-800 flex items-center gap-1"><Icons.Settings className="h-3.5 w-3.5" /> {t.grindSize}</label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {Object.keys(t.grindOptions).filter(k => k !== 'coldbrew').map(key => (
-                      <button
-                        key={key}
-                        onClick={() => setSelectedGrind(key)}
-                        className={`p-2.5 sm:p-3 rounded-lg text-left border transition-all ${
-                          selectedGrind === key ? 'bg-coffee-800 text-white border-coffee-800' : 'bg-white text-coffee-800 border-coffee-200'
-                        }`}
-                      >
-                        <div className="text-xs font-bold">{t.grindOptions[key].label}</div>
-                        <div className="text-[10px] opacity-75">{t.grindOptions[key].detail}</div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <div className="p-3 bg-coffee-100 rounded-lg text-xs text-coffee-700">{t.coldbrewNotice}</div>
-              )}
-
-              <div className="flex items-center justify-between pt-2">
-                <span className="text-xs sm:text-sm font-bold text-coffee-900">{t.quantity}</span>
-                <div className="flex items-center rounded-lg border border-coffee-300 bg-white p-1">
-                  <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="p-1.5 hover:bg-coffee-100 rounded"><Icons.Minus className="h-4 w-4" /></button>
-                  <span className="w-8 text-center text-sm font-bold">{quantity}</span>
-                  <button onClick={() => setQuantity(q => Math.min(maxStock, q + 1))} className="p-1.5 hover:bg-coffee-100 rounded"><Icons.Plus className="h-4 w-4" /></button>
-                </div>
-              </div>
-
-              <button onClick={handleAdd} className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 sm:py-3.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-xs sm:text-sm">
-                <Icons.ShoppingBag className="h-4 w-4" /> {t.addToCart} • {(currentUnitPrice * quantity).toLocaleString()} VND
-              </button>
+            <div>
+              <span className="text-xs font-bold text-coffee-600 uppercase">{specText}</span>
+              <h2 className="text-lg sm:text-2xl font-bold font-serif text-coffee-900">{productName}</h2>
+              <p className="text-xs text-coffee-600 italic">{productSubName}</p>
             </div>
+
+            <div className="flex items-baseline justify-between bg-white p-3 sm:p-4 rounded-xl border border-coffee-100">
+              <div className="flex items-baseline gap-2 flex-wrap">
+                <span className="text-lg sm:text-2xl font-extrabold text-coffee-800">{currentUnitPrice.toLocaleString()} VND</span>
+                {quantity >= 10 ? (
+                  <span className="text-[10px] sm:text-xs bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded">{t.wholesaleApplied}</span>
+                ) : (
+                  <span className="text-[10px] sm:text-xs text-coffee-500">{t.wholesaleUpgrade}</span>
+                )}
+              </div>
+              <div className="text-xs font-semibold text-coffee-600 whitespace-nowrap">
+                庫存: <span className="text-coffee-900 font-bold">{maxStock}</span>
+              </div>
+            </div>
+
+            {isBeanProduct ? (
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase text-coffee-800 flex items-center gap-1"><Icons.Settings className="h-3.5 w-3.5" /> {t.grindSize}</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {Object.keys(t.grindOptions).filter(k => k !== 'coldbrew').map(key => (
+                    <button
+                      key={key}
+                      onClick={() => setSelectedGrind(key)}
+                      className={`p-2.5 sm:p-3 rounded-lg text-left border transition-all ${
+                        selectedGrind === key ? 'bg-coffee-800 text-white border-coffee-800' : 'bg-white text-coffee-800 border-coffee-200'
+                      }`}
+                    >
+                      <div className="text-xs font-bold">{t.grindOptions[key].label}</div>
+                      <div className="text-[10px] opacity-75">{t.grindOptions[key].detail}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="p-3 bg-coffee-100 rounded-lg text-xs text-coffee-700">{t.coldbrewNotice}</div>
+            )}
+
+            <div className="flex items-center justify-between pt-1">
+              <span className="text-xs sm:text-sm font-bold text-coffee-900">{t.quantity}</span>
+              <div className="flex items-center rounded-lg border border-coffee-300 bg-white p-1">
+                <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="p-1 hover:bg-coffee-100 rounded"><Icons.Minus className="h-4 w-4" /></button>
+                <span className="w-8 text-center text-sm font-bold">{quantity}</span>
+                <button onClick={() => setQuantity(q => Math.min(maxStock, q + 1))} className="p-1 hover:bg-coffee-100 rounded"><Icons.Plus className="h-4 w-4" /></button>
+              </div>
+            </div>
+
+            <button onClick={handleAdd} className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 sm:py-3.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-xs sm:text-sm">
+              <Icons.ShoppingBag className="h-4 w-4" /> {t.addToCart} • {(currentUnitPrice * quantity).toLocaleString()} VND
+            </button>
           </div>
         </div>
       );
@@ -946,12 +951,12 @@
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
           <div className="fixed inset-y-0 right-0 max-w-full flex">
             <div className="w-screen max-w-md bg-coffee-50 text-coffee-900 shadow-2xl flex flex-col">
-              <div className="p-4 sm:p-6 bg-coffee-900 text-coffee-100 flex items-center justify-between">
-                <h2 className="text-lg sm:text-xl font-bold flex items-center gap-2 font-serif"><Icons.ShoppingBag className="h-5 w-5" /> {t.cart}</h2>
+              <div className="p-4 sm:p-5 bg-coffee-900 text-coffee-100 flex items-center justify-between">
+                <h2 className="text-base sm:text-xl font-bold flex items-center gap-2 font-serif"><Icons.ShoppingBag className="h-5 w-5" /> {t.cart}</h2>
                 <button onClick={onClose} className="p-1 hover:bg-coffee-800 rounded-full"><Icons.X className="h-6 w-6" /></button>
               </div>
 
-              <div className="bg-coffee-100 p-3.5 sm:p-4 border-b border-coffee-200">
+              <div className="bg-coffee-100 p-3 sm:p-4 border-b border-coffee-200">
                 <div className="flex items-center justify-between text-xs font-semibold text-coffee-800 mb-1.5">
                   <span className="flex items-center gap-1"><Icons.Truck className="h-4 w-4" /> {t.freeShippingGoal}</span>
                   <span>{isFreeShipping ? t.freeShippingReached : `${t.freeShippingShort}${amountNeeded.toLocaleString()} VND`}</span>
@@ -961,7 +966,7 @@
                 </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4">
+              <div className="flex-1 overflow-y-auto p-3 sm:p-5 space-y-3">
                 {cart.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-coffee-600">
                     <p className="text-sm">{t.emptyCart}</p>
@@ -975,7 +980,7 @@
                           <img src={item.image} alt={item.name} className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-lg flex-shrink-0" />
                           <div className="flex-1 min-w-0">
                             <h4 className="font-bold text-coffee-900 text-xs sm:text-sm truncate">{item.name}</h4>
-                            <p className="text-[10px] sm:text-xs text-coffee-600">{item.spec} | {item.grindLabel}</p>
+                            <p className="text-[10px] sm:text-xs text-coffee-600 truncate">{item.spec} | {item.grindLabel}</p>
                             <div className="mt-1 flex items-center gap-2">
                               <span className="text-xs font-bold text-coffee-800">{unitPrice.toLocaleString()} VND</span>
                             </div>
@@ -997,16 +1002,16 @@
               </div>
 
               {cart.length > 0 && (
-                <div className="p-4 sm:p-6 bg-white border-t border-coffee-100 space-y-3">
+                <div className="p-4 sm:p-5 bg-white border-t border-coffee-100 space-y-3">
                   <div className="space-y-1 text-xs sm:text-sm text-coffee-700">
                     <div className="flex justify-between"><span>{t.subtotal}</span><span>{subtotal.toLocaleString()} VND</span></div>
                     <div className="flex justify-between"><span>{t.shippingFee}</span><span>{isFreeShipping ? t.free : `${shippingFee.toLocaleString()} VND`}</span></div>
                     <div className="flex justify-between font-bold text-sm sm:text-base text-coffee-900 pt-2 border-t border-coffee-100">
-                      <span>{t.total}</span><span className="text-lg sm:text-xl text-coffee-800">{grandTotal.toLocaleString()} VND</span>
+                      <span>{t.total}</span><span className="text-base sm:text-xl text-coffee-800">{grandTotal.toLocaleString()} VND</span>
                     </div>
                   </div>
 
-                  <button onClick={onOpenCheckout} className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 sm:py-3.5 rounded-xl shadow-md flex items-center justify-center gap-2 text-xs sm:text-sm">
+                  <button onClick={onOpenCheckout} className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 rounded-xl shadow-md flex items-center justify-center gap-2 text-xs sm:text-sm">
                     <Icons.Send className="h-4 w-4" /> {t.checkout}
                   </button>
                 </div>
@@ -1108,62 +1113,60 @@
       };
 
       return (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-          <div className="flex min-h-full items-center justify-center p-4">
-            <div className="relative w-full max-w-lg bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-5 sm:p-8">
-              <button onClick={onClose} className="absolute right-4 top-4 p-2 bg-white/80 rounded-full hover:bg-white"><Icons.X className="h-5 w-5" /></button>
+          <div className="relative w-full max-w-lg bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-4 sm:p-8 max-h-[95vh] overflow-y-auto z-10">
+            <button onClick={onClose} className="absolute right-4 top-4 p-2 bg-white/80 rounded-full hover:bg-white"><Icons.X className="h-5 w-5" /></button>
 
-              {isSuccess ? (
-                <div className="py-10 text-center space-y-4">
-                  <Icons.CheckCircle className="h-16 w-16 text-green-600 mx-auto animate-bounce" />
-                  <h3 className="text-xl sm:text-2xl font-bold font-serif text-coffee-900">{t.orderSuccess}</h3>
-                  <p className="text-xs sm:text-sm text-coffee-600">{t.orderSuccessDesc}</p>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmitOrder} className="space-y-4">
-                  <h2 className="text-xl sm:text-2xl font-bold font-serif text-coffee-900">{t.customerInfo}</h2>
+            {isSuccess ? (
+              <div className="py-10 text-center space-y-4">
+                <Icons.CheckCircle className="h-16 w-16 text-green-600 mx-auto animate-bounce" />
+                <h3 className="text-xl sm:text-2xl font-bold font-serif text-coffee-900">{t.orderSuccess}</h3>
+                <p className="text-xs sm:text-sm text-coffee-600">{t.orderSuccessDesc}</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmitOrder} className="space-y-3 sm:space-y-4">
+                <h2 className="text-lg sm:text-2xl font-bold font-serif text-coffee-900">{t.customerInfo}</h2>
 
-                  {lowStockAlerts.length > 0 && (
-                    <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-2 text-xs text-amber-800">
-                      <Icons.AlertTriangle className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <span className="font-bold">{t.restockAlertTitle}: </span>
-                        {t.restockAlertNotice}
-                      </div>
+                {lowStockAlerts.length > 0 && (
+                  <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-2 text-xs text-amber-800">
+                    <Icons.AlertTriangle className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <span className="font-bold">{t.restockAlertTitle}: </span>
+                      {t.restockAlertNotice}
                     </div>
-                  )}
-
-                  <div>
-                    <label className="block text-xs font-bold text-coffee-800 mb-1">{t.fullName}</label>
-                    <input type="text" name="fullName" required value={formData.fullName} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm" />
                   </div>
+                )}
 
-                  <div>
-                    <label className="block text-xs font-bold text-coffee-800 mb-1">{t.phone}</label>
-                    <input type="tel" name="phone" required value={formData.phone} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm" />
-                  </div>
+                <div>
+                  <label className="block text-xs font-bold text-coffee-800 mb-1">{t.fullName}</label>
+                  <input type="text" name="fullName" required value={formData.fullName} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm" />
+                </div>
 
-                  <div>
-                    <label className="block text-xs font-bold text-coffee-800 mb-1">{t.address}</label>
-                    <input type="text" name="address" required value={formData.address} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm" />
-                  </div>
+                <div>
+                  <label className="block text-xs font-bold text-coffee-800 mb-1">{t.phone}</label>
+                  <input type="tel" name="phone" required value={formData.phone} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm" />
+                </div>
 
-                  <div>
-                    <label className="block text-xs font-bold text-coffee-800 mb-1">{t.notes}</label>
-                    <textarea name="notes" rows={2} value={formData.notes} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm" />
-                  </div>
+                <div>
+                  <label className="block text-xs font-bold text-coffee-800 mb-1">{t.address}</label>
+                  <input type="text" name="address" required value={formData.address} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm" />
+                </div>
 
-                  <div className="bg-coffee-100 p-4 rounded-xl space-y-1 text-sm font-bold text-coffee-900">
-                    <div className="flex justify-between"><span>{t.payable}</span><span className="text-base sm:text-lg text-coffee-800">{grandTotal.toLocaleString()} VND</span></div>
-                  </div>
+                <div>
+                  <label className="block text-xs font-bold text-coffee-800 mb-1">{t.notes}</label>
+                  <textarea name="notes" rows={2} value={formData.notes} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm" />
+                </div>
 
-                  <button type="submit" disabled={isSubmitting} className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 sm:py-3.5 rounded-xl shadow-md flex items-center justify-center gap-2 text-xs sm:text-sm disabled:opacity-50">
-                    <Icons.Send className="h-4 w-4" /> {isSubmitting ? t.submitting : t.submitOrder}
-                  </button>
-                </form>
-              )}
-            </div>
+                <div className="bg-coffee-100 p-3 sm:p-4 rounded-xl space-y-1 text-sm font-bold text-coffee-900">
+                  <div className="flex justify-between items-center"><span>{t.payable}</span><span className="text-base sm:text-lg text-coffee-800">{grandTotal.toLocaleString()} VND</span></div>
+                </div>
+
+                <button type="submit" disabled={isSubmitting} className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 sm:py-3.5 rounded-xl shadow-md flex items-center justify-center gap-2 text-xs sm:text-sm disabled:opacity-50">
+                  <Icons.Send className="h-4 w-4" /> {isSubmitting ? t.submitting : t.submitOrder}
+                </button>
+              </form>
+            )}
           </div>
         </div>
       );
@@ -1185,44 +1188,42 @@
       };
 
       return (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-          <div className="flex min-h-full items-center justify-center p-4">
-            <div className="relative w-full max-w-xl bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-5 sm:p-6">
-              <div className="flex justify-between items-center mb-4 border-b border-coffee-200 pb-3">
-                <h2 className="text-lg sm:text-xl font-bold font-serif text-coffee-900 flex items-center gap-2"><Icons.Package className="h-5 w-5" /> {t.orderHistoryTitle}</h2>
-                <div className="flex items-center gap-2">
-                  {history.length > 0 && (
-                    <button onClick={clearHistory} className="text-xs text-red-600 hover:underline flex items-center gap-1"><Icons.Trash className="h-3.5 w-3.5" /> {t.clearHistory}</button>
-                  )}
-                  <button onClick={onClose} className="p-1 rounded-full hover:bg-coffee-200"><Icons.X className="h-5 w-5" /></button>
-                </div>
-              </div>
-
-              <div className="max-h-[60vh] overflow-y-auto space-y-3">
-                {history.length === 0 ? (
-                  <p className="text-center py-8 text-xs sm:text-sm text-coffee-600">{t.noHistory}</p>
-                ) : (
-                  history.map(item => (
-                    <div key={item.id} className="bg-white p-3.5 sm:p-4 rounded-xl border border-coffee-100 space-y-2 text-xs">
-                      <div className="flex justify-between font-bold text-coffee-900">
-                        <span>{t.orderId}: #{item.id}</span>
-                        <span className="text-coffee-600">{item.date}</span>
-                      </div>
-                      <div className="text-coffee-700">{item.customerName} ({item.phone})</div>
-                      <div className="bg-coffee-50 p-2 rounded space-y-1">
-                        {item.items.map((prod, idx) => (
-                          <div key={idx} className="flex justify-between text-coffee-800">
-                            <span>{prod.name} ({prod.spec}) - {prod.grindLabel}</span>
-                            <span>x{prod.quantity}</span>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="text-right font-bold text-xs sm:text-sm text-coffee-900">{item.grandTotal.toLocaleString()} VND</div>
-                    </div>
-                  ))
+          <div className="relative w-full max-w-xl bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-4 sm:p-6 max-h-[90vh] flex flex-col z-10">
+            <div className="flex justify-between items-center mb-3 border-b border-coffee-200 pb-3">
+              <h2 className="text-base sm:text-xl font-bold font-serif text-coffee-900 flex items-center gap-2"><Icons.Package className="h-5 w-5" /> {t.orderHistoryTitle}</h2>
+              <div className="flex items-center gap-2">
+                {history.length > 0 && (
+                  <button onClick={clearHistory} className="text-xs text-red-600 hover:underline flex items-center gap-1"><Icons.Trash className="h-3.5 w-3.5" /> {t.clearHistory}</button>
                 )}
+                <button onClick={onClose} className="p-1 rounded-full hover:bg-coffee-200"><Icons.X className="h-5 w-5" /></button>
               </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+              {history.length === 0 ? (
+                <p className="text-center py-8 text-xs sm:text-sm text-coffee-600">{t.noHistory}</p>
+              ) : (
+                history.map(item => (
+                  <div key={item.id} className="bg-white p-3 sm:p-4 rounded-xl border border-coffee-100 space-y-2 text-xs">
+                    <div className="flex justify-between font-bold text-coffee-900">
+                      <span>{t.orderId}: #{item.id}</span>
+                      <span className="text-coffee-600">{item.date}</span>
+                    </div>
+                    <div className="text-coffee-700">{item.customerName} ({item.phone})</div>
+                    <div className="bg-coffee-50 p-2 rounded space-y-1">
+                      {item.items.map((prod, idx) => (
+                        <div key={idx} className="flex justify-between text-coffee-800">
+                          <span className="truncate pr-2">{prod.name} ({prod.spec}) - {prod.grindLabel}</span>
+                          <span className="flex-shrink-0">x{prod.quantity}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="text-right font-bold text-xs sm:text-sm text-coffee-900">{item.grandTotal.toLocaleString()} VND</div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
