@@ -2,7 +2,7 @@
 <html lang="vi" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>VIEBUCKS - Cà Phê Mẫu Đơn & Túi Cold Brew Cao Cấp (Bán Lẻ / Bán Sỉ B2B)</title>
     
     <!-- Google Fonts -->
@@ -46,6 +46,11 @@
 
     <!-- Custom CSS -->
     <style>
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #FDFBF7;
@@ -98,7 +103,7 @@
         }
     </style>
 </head>
-<body x-data="coffeeStore()" x-init="initStore()" class="min-h-screen flex flex-col antialiased selection:bg-coffee-500 selection:text-white">
+<body x-data="coffeeStore()" x-init="initStore()" class="min-h-screen flex flex-col antialiased selection:bg-coffee-500 selection:text-white w-full overflow-x-hidden">
 
     <!-- Top Announcement Bar -->
     <div class="bg-coffee-950 text-coffee-200 text-xs py-2 px-4 flex justify-between items-center border-b border-coffee-800">
@@ -243,7 +248,7 @@
         </div>
     </header>
 
-    <main class="flex-grow">
+    <main class="flex-grow w-full">
 
         <!-- Hero Section -->
         <section x-show="activeTab === 'shop'" class="relative bg-gradient-to-r from-coffee-950 via-coffee-900 to-roastDark text-white py-16 lg:py-20 overflow-hidden shadow-inner">
@@ -503,8 +508,8 @@
                 </div>
 
                 <!-- Matrix Table -->
-                <div class="overflow-x-auto mt-6">
-                    <table class="w-full text-left text-xs">
+                <div class="overflow-x-auto max-w-full mt-6">
+                    <table class="w-full text-left text-xs min-w-[700px]">
                         <thead class="bg-coffee-100/80 text-coffee-900 uppercase font-bold text-[11px] border-b border-coffee-200">
                             <tr>
                                 <th class="py-3 px-4" x-text="t('Dòng sp', '系列')"></th>
@@ -910,8 +915,8 @@
                 </div>
 
                 <!-- Items Table -->
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs border-collapse">
+                <div class="overflow-x-auto max-w-full">
+                    <table class="w-full text-left text-xs border-collapse min-w-[500px]">
                         <thead>
                             <tr class="bg-coffee-100 text-coffee-900 font-bold border-b border-coffee-200">
                                 <th class="py-2 px-3" x-text="t('Sản phẩm & Quy cách', '品名與規格')"></th>
@@ -1003,7 +1008,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-coffee-950 text-coffee-300 pt-12 pb-8 border-t border-coffee-800 mt-16">
+    <footer class="bg-coffee-950 text-coffee-300 pt-12 pb-8 border-t border-coffee-800 mt-16 w-full overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 
@@ -1105,6 +1110,8 @@
                 lastOrderDetails: null,
                 cart: [],
 
+                initStore() {},
+
                 // Helper translate method
                 t(viStr, zhStr) {
                     return this.lang === 'zh' ? zhStr : viStr;
@@ -1113,6 +1120,240 @@
                 toggleLang(newLang) {
                     this.lang = newLang;
                     this.showToast(newLang === 'vi' ? 'Đã chuyển giao diện sang Tiếng Việt' : '已將界面切換為繁體中文');
+                },
+
+                togglePricingMode(mode) {
+                    this.pricingMode = mode;
+                },
+
+                scrollToProducts() {
+                    const el = document.getElementById('products-section');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                },
+
+                openProductModal(product) {
+                    this.selectedProductModal = product;
+                },
+
+                getCategoryName(cat) {
+                    return this.lang === 'zh' ? cat.name_zh : cat.name_vi;
+                },
+
+                getCategoryNameById(catId) {
+                    const c = this.categories.find(item => item.id === catId);
+                    return c ? (this.lang === 'zh' ? c.name_zh : c.name_vi) : '';
+                },
+
+                getProductName(product) {
+                    return this.lang === 'zh' ? product.name_zh : product.name_vi;
+                },
+
+                getProductDesc(product) {
+                    return this.lang === 'zh' ? product.desc_zh : product.desc_vi;
+                },
+
+                getSpec(product) {
+                    return this.lang === 'zh' ? product.spec_zh : product.spec_vi;
+                },
+
+                getCurrentPrice(product) {
+                    return this.pricingMode === 'wholesale' ? product.wholesalePrice : product.retailPrice;
+                },
+
+                getGrindLabel(grindId) {
+                    const g = this.grindOptions.find(item => item.id === grindId);
+                    return g ? g[this.lang] : '';
+                },
+
+                formatCurrency(val) {
+                    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val || 0);
+                },
+
+                get filteredProducts() {
+                    let list = this.products;
+
+                    if (this.selectedCategory !== 'all') {
+                        list = list.filter(p => p.categoryId === this.selectedCategory);
+                    }
+
+                    if (this.filterType !== 'all') {
+                        list = list.filter(p => p.type === this.filterType);
+                    }
+
+                    if (this.searchQuery.trim() !== '') {
+                        const q = this.searchQuery.toLowerCase();
+                        list = list.filter(p => 
+                            p.name_vi.toLowerCase().includes(q) || 
+                            p.name_zh.toLowerCase().includes(q) || 
+                            p.desc_vi.toLowerCase().includes(q) || 
+                            p.desc_zh.toLowerCase().includes(q)
+                        );
+                    }
+
+                    if (this.sortBy === 'price-asc') {
+                        list = [...list].sort((a, b) => this.getCurrentPrice(a) - this.getCurrentPrice(b));
+                    } else if (this.sortBy === 'price-desc') {
+                        list = [...list].sort((a, b) => this.getCurrentPrice(b) - this.getCurrentPrice(a));
+                    } else if (this.sortBy === 'name') {
+                        list = [...list].sort((a, b) => this.getProductName(a).localeCompare(this.getProductName(b)));
+                    }
+
+                    return list;
+                },
+
+                get cartTotalCount() {
+                    return this.cart.reduce((sum, item) => sum + item.qty, 0);
+                },
+
+                get cartSubtotal() {
+                    return this.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+                },
+
+                addToCart(product) {
+                    const price = this.getCurrentPrice(product);
+                    const name = this.getProductName(product);
+                    const selectedGrind = product.type !== 'coldbrew' ? (product.selectedGrind || 'whole') : '';
+                    
+                    const existingIndex = this.cart.findIndex(i => i.id === product.id && i.selectedGrind === selectedGrind);
+
+                    if (existingIndex > -1) {
+                        this.cart[existingIndex].qty += (product.qty || 1);
+                    } else {
+                        this.cart.push({
+                            id: product.id,
+                            name: name,
+                            price: price,
+                            qty: product.qty || 1,
+                            selectedGrind: selectedGrind
+                        });
+                    }
+
+                    this.showToast(this.t('Đã thêm sản phẩm vào giỏ hàng!', '已成功加入購物車！'));
+                    product.qty = 1;
+                },
+
+                addAllBulkToCart() {
+                    let added = 0;
+                    this.products.forEach(p => {
+                        if (p.bulkQty && p.bulkQty > 0) {
+                            const price = p.wholesalePrice;
+                            const name = this.getProductName(p);
+                            const selectedGrind = p.type !== 'coldbrew' ? (p.selectedGrind || 'whole') : '';
+
+                            const existingIndex = this.cart.findIndex(i => i.id === p.id && i.selectedGrind === selectedGrind);
+                            if (existingIndex > -1) {
+                                this.cart[existingIndex].qty += p.bulkQty;
+                            } else {
+                                this.cart.push({
+                                    id: p.id,
+                                    name: name,
+                                    price: price,
+                                    qty: p.bulkQty,
+                                    selectedGrind: selectedGrind
+                                });
+                            }
+                            added += p.bulkQty;
+                            p.bulkQty = 0;
+                        }
+                    });
+
+                    if (added > 0) {
+                        this.showToast(this.t(`Đã thêm ${added} sản phẩm sỉ vào giỏ hàng!`, `已將 ${added} 件大宗商品加入購物車！`));
+                        this.cartOpen = true;
+                    } else {
+                        alert(this.t('Vui lòng chọn số lượng cho ít nhất 1 sản phẩm!', '請至少選擇一項商品的採購數量！'));
+                    }
+                },
+
+                removeFromCart(index) {
+                    this.cart.splice(index, 1);
+                },
+
+                showToast(msg) {
+                    this.toast.message = msg;
+                    this.toast.show = true;
+                    setTimeout(() => {
+                        this.toast.show = false;
+                    }, 3000);
+                },
+
+                runQuizRecommendation() {
+                    this.openQuiz = false;
+                    this.activeTab = 'shop';
+                    
+                    if (this.quizAnswer.brew === 'coldbrew') {
+                        this.filterType = 'coldbrew';
+                        if (this.quizAnswer.flavor === 'fruity') {
+                            this.selectedCategory = 'c1';
+                        } else {
+                            this.selectedCategory = 'c3';
+                        }
+                    } else {
+                        this.filterType = 'bean';
+                        if (this.quizAnswer.flavor === 'fruity') {
+                            this.selectedCategory = 'c1';
+                        } else {
+                            this.selectedCategory = 'c3';
+                        }
+                    }
+
+                    this.showToast(this.t('Đã tìm thấy sản phẩm phù hợp với gu của bạn!', '已根據您的喜好為您篩選推薦商品！'));
+                    this.scrollToProducts();
+                },
+
+                submitOrder() {
+                    const shipping = this.cartSubtotal >= 500000 || this.cartSubtotal === 0 ? 0 : 30000;
+                    const total = this.cartSubtotal + shipping;
+                    const orderId = 'VB' + Math.floor(100000 + Math.random() * 900000);
+                    const now = new Date();
+                    const dateStr = now.toLocaleString('vi-VN');
+
+                    this.lastOrderDetails = {
+                        orderId: orderId,
+                        date: dateStr,
+                        customer: { ...this.checkoutForm },
+                        items: [...this.cart],
+                        subtotal: this.cartSubtotal,
+                        shipping: shipping,
+                        total: total
+                    };
+
+                    this.checkoutOpen = false;
+                    this.showInvoiceModal = true;
+                    this.cart = [];
+                    
+                    this.sendAutomatedEmail();
+                },
+
+                sendAutomatedEmail() {
+                    this.emailStatus.sending = true;
+                    this.emailStatus.success = false;
+                    this.emailStatus.message = '';
+
+                    setTimeout(() => {
+                        this.emailStatus.sending = false;
+                        this.emailStatus.success = true;
+                        this.showToast(this.t('Hệ thống đã gửi thông báo đơn hàng thành công!', '系統已自動發送訂單通知！'));
+                    }, 1200);
+                },
+
+                sendToZalo() {
+                    if (!this.lastOrderDetails) return;
+                    const text = `VIEBUCKS Order #${this.lastOrderDetails.orderId}\n` +
+                                 `Khách: ${this.lastOrderDetails.customer.name} (${this.lastOrderDetails.customer.phone})\n` +
+                                 `Tổng tiền: ${this.formatCurrency(this.lastOrderDetails.total)}`;
+                    window.open(`https://zalo.me/839681380?text=${encodeURIComponent(text)}`, '_blank');
+                },
+
+                openMailClient() {
+                    if (!this.lastOrderDetails) return;
+                    const subject = `[VIEBUCKS] Đơn hàng mới #${this.lastOrderDetails.orderId}`;
+                    const body = `Mã đơn hàng: ${this.lastOrderDetails.orderId}\n` +
+                                 `Tên khách hàng: ${this.lastOrderDetails.customer.name}\n` +
+                                 `SĐT: ${this.lastOrderDetails.customer.phone}\n` +
+                                 `Địa chỉ: ${this.lastOrderDetails.customer.address}\n` +
+                                 `Tổng thanh toán: ${this.formatCurrency(this.lastOrderDetails.total)}`;
+                    window.location.href = `mailto:${this.targetEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
                 },
 
                 grindOptions: [
@@ -1359,512 +1600,10 @@
                         selectedGrind: '', 
                         qty: 1, 
                         bulkQty: 0, 
-                        desc_vi: 'Gói sỉ 30 túi Cold Brew ướp hoa nhài đặc trưng.', 
-                        desc_zh: '茉莉花風味冷萃 30 包量販裝。' 
-                    },
-
-                    // Category 4: Honey Robusta
-                    { 
-                        id: 15, 
-                        categoryId: 'c4', 
-                        name_vi: 'Cà Phê Robusta Chế Biến Mật (250g)', 
-                        name_zh: '蜜處理羅布斯塔咖啡豆 (250g)', 
-                        spec_vi: '250g / túi', 
-                        spec_zh: '250g/包', 
-                        retailPrice: 105000, 
-                        wholesalePrice: 90000, 
-                        type: 'bean', 
-                        selectedGrind: 'whole', 
-                        qty: 1, 
-                        bulkQty: 0, 
-                        desc_vi: 'Robusta Honey giảm đắng chát, tỏa hương caramel, mạch nha và sô-cô-la.', 
-                        desc_zh: '精細蜜處理降低羅布斯塔苦味，散發黑糖與堅果焦香。' 
-                    },
-                    { 
-                        id: 16, 
-                        categoryId: 'c4', 
-                        name_vi: 'Cà Phê Robusta Chế Biến Mật (500g)', 
-                        name_zh: '蜜處理羅布斯塔咖啡豆 (500g)', 
-                        spec_vi: '500g / túi', 
-                        spec_zh: '500g/包', 
-                        retailPrice: 200000, 
-                        wholesalePrice: 170000, 
-                        type: 'bean', 
-                        selectedGrind: 'whole', 
-                        qty: 1, 
-                        bulkQty: 0, 
-                        desc_vi: 'Gói 500g Robusta Honey thơm ngọt đậm đà.', 
-                        desc_zh: '蜜處理羅布斯塔 500g 商業熟豆。' 
-                    },
-                    { 
-                        id: 17, 
-                        categoryId: 'c4', 
-                        name_vi: 'Túi Cold Brew Robusta Honey (10 túi/bịch)', 
-                        name_zh: '冷萃羅布斯塔蜂蜜咖啡 (10包/袋)', 
-                        spec_vi: '10 túi / bịch', 
-                        spec_zh: '10包/袋', 
-                        retailPrice: 95000, 
-                        wholesalePrice: 82000, 
-                        type: 'coldbrew', 
-                        selectedGrind: '', 
-                        qty: 1, 
-                        bulkQty: 0, 
-                        desc_vi: 'Cold Brew Robusta Honey thơm nồng vị ca-cao và đường phèn.', 
-                        desc_zh: '蜜處理羅布斯塔冷萃包，焦糖與可可香氣十足。' 
-                    },
-                    { 
-                        id: 18, 
-                        categoryId: 'c4', 
-                        name_vi: 'Túi Cold Brew Robusta Honey (30 túi/bịch)', 
-                        name_zh: '冷萃羅布斯塔蜂蜜咖啡 (30包/袋)', 
-                        spec_vi: '30 túi / bịch', 
-                        spec_zh: '30包/袋', 
-                        retailPrice: 270000, 
-                        wholesalePrice: 230000, 
-                        type: 'coldbrew', 
-                        selectedGrind: '', 
-                        qty: 1, 
-                        bulkQty: 0, 
-                        desc_vi: 'Gói 30 túi Cold Brew Robusta Honey.', 
-                        desc_zh: '蜜處理羅布斯塔冷萃 30 包商業裝。' 
-                    },
-
-                    // Category 5: Espresso Blend 80/20
-                    { 
-                        id: 19, 
-                        categoryId: 'c5', 
-                        name_vi: 'Cà Phê Phối Trộn Espresso 80/20 (250g)', 
-                        name_zh: '80/20 濃縮配方咖啡豆 (250g)', 
-                        spec_vi: '250g / túi', 
-                        spec_zh: '250g/包', 
-                        retailPrice: 135000, 
-                        wholesalePrice: 115000, 
-                        type: 'bean', 
-                        selectedGrind: 'whole', 
-                        qty: 1, 
-                        bulkQty: 0, 
-                        desc_vi: '80% Arabica + 20% Robusta, chuyên biệt cho dòng máy pha Espresso & Latte.', 
-                        desc_zh: '80% 阿拉比卡 + 20% 羅布斯塔，專為義式濃縮與拿鐵設計。' 
-                    },
-                    { 
-                        id: 20, 
-                        categoryId: 'c5', 
-                        name_vi: 'Cà Phê Phối Trộn Espresso 80/20 (500g)', 
-                        name_zh: '80/20 濃縮配方咖啡豆 (500g)', 
-                        spec_vi: '500g / túi', 
-                        spec_zh: '500g/包', 
-                        retailPrice: 260000, 
-                        wholesalePrice: 220000, 
-                        type: 'bean', 
-                        selectedGrind: 'whole', 
-                        qty: 1, 
-                        bulkQty: 0, 
-                        desc_vi: 'Gói 500g Espresso 80/20 chuẩn gu quán hiện đại.', 
-                        desc_zh: '80/20 濃縮配方 500g 門市營業用熟豆。' 
-                    },
-
-                    // Category 6: Commercial Blend 70/30
-                    { 
-                        id: 21, 
-                        categoryId: 'c6', 
-                        name_vi: 'Cà Phê Phối Trộn Thương Mại 70/30 (250g)', 
-                        name_zh: '商業混合咖啡 70/30 (250g)', 
-                        spec_vi: '250g / túi', 
-                        spec_zh: '250g/包', 
-                        retailPrice: 128000, 
-                        wholesalePrice: 110000, 
-                        type: 'bean', 
-                        selectedGrind: 'whole', 
-                        qty: 1, 
-                        bulkQty: 0, 
-                        desc_vi: '70% Arabica + 30% Robusta, vị cân bằng tròn trịa, hợp gu số đông khách hàng.', 
-                        desc_zh: '70% 阿拉比卡 + 30% 羅布斯塔，平衡圓潤、大眾喜愛度極高。' 
-                    },
-                    { 
-                        id: 22, 
-                        categoryId: 'c6', 
-                        name_vi: 'Cà Phê Phối Trộn Thương Mại 70/30 (500g)', 
-                        name_zh: '商業混合咖啡 70/30 (500g)', 
-                        spec_vi: '500g / túi', 
-                        spec_zh: '500g/包', 
-                        retailPrice: 245000, 
-                        wholesalePrice: 210000, 
-                        type: 'bean', 
-                        selectedGrind: 'whole', 
-                        qty: 1, 
-                        bulkQty: 0, 
-                        desc_vi: 'Gói 500g phối trộn 70/30 bán chạy cho menu cà phê đá & cà phê sữa.', 
-                        desc_zh: '商業配方 70/30 500g 營業常用包裝。' 
-                    },
-
-                    // Category 7: Southern Italian Blend 50/50
-                    { 
-                        id: 23, 
-                        categoryId: 'c7', 
-                        name_vi: 'Cà Phê Phối Trộn Gui Nam Ý 50/50 (250g)', 
-                        name_zh: '50/50 南義風味配方咖啡豆 (250g)', 
-                        spec_vi: '250g / túi', 
-                        spec_zh: '250g/包', 
-                        retailPrice: 118000, 
-                        wholesalePrice: 100000, 
-                        type: 'bean', 
-                        selectedGrind: 'whole', 
-                        qty: 1, 
-                        bulkQty: 0, 
-                        desc_vi: '50% Arabica + 50% Robusta, phong cách rang đậm kiểu Nam Ý, lớp crema siêu dày, cực đậm đà.', 
-                        desc_zh: '50% 阿拉比卡 + 50% 羅布斯塔，經典南義重焙風格，極度濃郁油脂。' 
-                    },
-                    { 
-                        id: 24, 
-                        categoryId: 'c7', 
-                        name_vi: 'Cà Phê Phối Trộn Gui Nam Ý 50/50 (500g)', 
-                        name_zh: '50/50 南義風味配方咖啡豆 (500g)', 
-                        spec_vi: '500g / túi', 
-                        spec_zh: '500g/包', 
-                        retailPrice: 225000, 
-                        wholesalePrice: 190000, 
-                        type: 'bean', 
-                        selectedGrind: 'whole', 
-                        qty: 1, 
-                        bulkQty: 0, 
-                        desc_vi: 'Gói 500g Nam Ý 50/50 gu đậm đà nguyên bản.', 
-                        desc_zh: '50/50 南義風格 500g 門市濃縮豆。' 
+                        desc_vi: 'Gói sỉ 30 túi', 
+                        desc_zh: '茉莉花冷萃 30 包量販包。' 
                     }
-                ],
-
-                initStore() {
-                    console.log('VIEBUCKS Store successfully initialized with Alpine.js (Primary: Vietnamese)');
-                },
-
-                getCategoryName(cat) {
-                    return this.lang === 'zh' ? cat.name_zh : cat.name_vi;
-                },
-
-                getCategoryNameById(catId) {
-                    const c = this.categories.find(item => item.id === catId);
-                    if (!c) return '';
-                    return this.lang === 'zh' ? c.name_zh : c.name_vi;
-                },
-
-                getProductName(p) {
-                    return this.lang === 'zh' ? p.name_zh : p.name_vi;
-                },
-
-                getProductDesc(p) {
-                    return this.lang === 'zh' ? p.desc_zh : p.desc_vi;
-                },
-
-                getSpec(p) {
-                    return this.lang === 'zh' ? p.spec_zh : p.spec_vi;
-                },
-
-                getGrindLabel(grindId) {
-                    const found = this.grindOptions.find(g => g.id === grindId);
-                    if (found) {
-                        return found[this.lang];
-                    }
-                    return grindId;
-                },
-
-                get filteredProducts() {
-                    let list = this.products;
-
-                    if (this.selectedCategory !== 'all') {
-                        list = list.filter(p => p.categoryId === this.selectedCategory);
-                    }
-
-                    if (this.filterType !== 'all') {
-                        list = list.filter(p => p.type === this.filterType);
-                    }
-
-                    if (this.searchQuery.trim() !== '') {
-                        const q = this.searchQuery.toLowerCase();
-                        list = list.filter(p => 
-                            p.name_vi.toLowerCase().includes(q) || 
-                            p.name_zh.toLowerCase().includes(q) ||
-                            p.desc_vi.toLowerCase().includes(q) ||
-                            p.desc_zh.toLowerCase().includes(q)
-                        );
-                    }
-
-                    if (this.sortBy === 'price-asc') {
-                        list = [...list].sort((a, b) => this.getCurrentPrice(a) - this.getCurrentPrice(b));
-                    } else if (this.sortBy === 'price-desc') {
-                        list = [...list].sort((a, b) => this.getCurrentPrice(b) - this.getCurrentPrice(a));
-                    } else if (this.sortBy === 'name') {
-                        list = [...list].sort((a, b) => this.getProductName(a).localeCompare(this.getProductName(b)));
-                    }
-
-                    return list;
-                },
-
-                get cartTotalCount() {
-                    return this.cart.reduce((sum, item) => sum + item.qty, 0);
-                },
-
-                get cartSubtotal() {
-                    return this.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-                },
-
-                getCurrentPrice(product) {
-                    return this.pricingMode === 'wholesale' ? product.wholesalePrice : product.retailPrice;
-                },
-
-                togglePricingMode(mode) {
-                    this.pricingMode = mode;
-                    if (this.lang === 'zh') {
-                        this.showToast(mode === 'wholesale' ? '已切換至【B2B 批發優惠價】模式' : '已切換至【標準零售價】模式');
-                    } else {
-                        this.showToast(mode === 'wholesale' ? 'Đã chuyển sang chế độ [Giá Sỉ B2B]' : 'Đã chuyển sang chế độ [Giá Bán Lẻ]');
-                    }
-                },
-
-                addToCart(product) {
-                    const price = this.getCurrentPrice(product);
-                    const grind = product.type === 'coldbrew' ? '' : product.selectedGrind;
-                    const productName = this.getProductName(product);
-
-                    const existingIndex = this.cart.findIndex(i => i.id === product.id && i.selectedGrind === grind && i.price === price);
-
-                    if (existingIndex > -1) {
-                        this.cart[existingIndex].qty += product.qty;
-                    } else {
-                        this.cart.push({
-                            id: product.id,
-                            name: productName,
-                            price: price,
-                            qty: product.qty,
-                            selectedGrind: grind
-                        });
-                    }
-
-                    this.showToast(this.t(`Đã thêm "${productName}" vào giỏ hàng`, `已將「${productName}」加入購物車`));
-                },
-
-                addAllBulkToCart() {
-                    let addedCount = 0;
-                    this.products.forEach(p => {
-                        if (p.bulkQty && p.bulkQty > 0) {
-                            const price = p.wholesalePrice;
-                            const grind = p.type === 'coldbrew' ? '' : p.selectedGrind;
-                            const productName = this.getProductName(p);
-                            const existingIndex = this.cart.findIndex(i => i.id === p.id && i.selectedGrind === grind && i.price === price);
-
-                            if (existingIndex > -1) {
-                                this.cart[existingIndex].qty += p.bulkQty;
-                            } else {
-                                this.cart.push({
-                                    id: p.id,
-                                    name: productName,
-                                    price: price,
-                                    qty: p.bulkQty,
-                                    selectedGrind: grind
-                                });
-                            }
-                            addedCount += p.bulkQty;
-                            p.bulkQty = 0;
-                        }
-                    });
-
-                    if (addedCount > 0) {
-                        this.showToast(this.t(`Đã thêm sỉ ${addedCount} sản phẩm vào giỏ hàng!`, `已批發加入 ${addedCount} 件商品至購物車！`));
-                        this.cartOpen = true;
-                    } else {
-                        this.showToast(this.t('Vui lòng nhập số lượng vào cột "Số lượng" trong bảng', '請先在列表中的「數量」欄位填寫欲採購數量'));
-                    }
-                },
-
-                removeFromCart(index) {
-                    this.cart.splice(index, 1);
-                    this.showToast(this.t('Đã xóa sản phẩm khỏi giỏ hàng', '已自購物車移除商品'));
-                },
-
-                openProductModal(product) {
-                    this.selectedProductModal = product;
-                },
-
-                runQuizRecommendation() {
-                    this.openQuiz = false;
-                    if (this.quizAnswer.brew === 'coldbrew') {
-                        this.filterType = 'coldbrew';
-                        this.selectedCategory = 'c1';
-                    } else if (this.quizAnswer.flavor === 'fruity') {
-                        this.selectedCategory = 'c1';
-                        this.filterType = 'bean';
-                    } else {
-                        this.selectedCategory = 'c5';
-                        this.filterType = 'bean';
-                    }
-                    this.activeTab = 'shop';
-                    this.showToast(this.t('Đã lọc ra sản phẩm phù hợp nhất với khẩu vị của bạn!', '已根據您的口味道喜好為您篩選推薦產品！'));
-                    this.scrollToProducts();
-                },
-
-                scrollToProducts() {
-                    document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' });
-                },
-
-                submitOrder() {
-                    if (this.cart.length === 0) return;
-
-                    const orderId = 'VB-' + Math.floor(100000 + Math.random() * 900000);
-                    const subtotal = this.cartSubtotal;
-                    const shipping = (subtotal >= 500000 || subtotal === 0) ? 0 : 30000;
-                    const total = subtotal + shipping;
-
-                    this.lastOrderDetails = {
-                        orderId: orderId,
-                        date: new Date().toLocaleString(this.lang === 'zh' ? 'zh-TW' : 'vi-VN'),
-                        customer: { ...this.checkoutForm },
-                        items: JSON.parse(JSON.stringify(this.cart)),
-                        subtotal: subtotal,
-                        shipping: shipping,
-                        total: total
-                    };
-
-                    this.checkoutOpen = false;
-                    this.cart = [];
-                    this.showInvoiceModal = true;
-                    
-                    this.sendAutomatedEmail();
-                },
-
-                async sendAutomatedEmail() {
-                    if (!this.lastOrderDetails) return;
-                    const o = this.lastOrderDetails;
-                    
-                    this.emailStatus.sending = true;
-                    this.emailStatus.success = false;
-                    this.emailStatus.message = this.t('Đang gửi email thông báo đơn hàng...', '正在發送訂單通知郵件...');
-
-                    const itemsSummary = o.items.map((i, idx) => {
-                        const grindText = i.selectedGrind ? `(${this.getGrindLabel(i.selectedGrind)})` : '';
-                        return `${idx + 1}. ${i.name} ${grindText} x ${i.qty} = ${this.formatCurrency(i.price * i.qty)}`;
-                    }).join('\n');
-
-                    const emailPayload = {
-                        _subject: `[VIEBUCKS ĐƠN HÀNG MỚI] Mã đơn:${o.orderId} - ${o.customer.name}`,
-                        _template: "table",
-                        _captcha: "false",
-                        "Mã đơn hàng": o.orderId,
-                        "Ngày đặt": o.date,
-                        "Khách hàng": o.customer.name,
-                        "Số điện thoại (ZALO)": o.customer.phone,
-                        "Địa chỉ giao hàng": o.customer.address,
-                        "Thanh toán": o.customer.payment.toUpperCase(),
-                        "Ghi chú": o.customer.note || 'Không có',
-                        "Chi tiết sản phẩm": itemsSummary,
-                        "Tạm tính": this.formatCurrency(o.subtotal),
-                        "Phí vận chuyển": this.formatCurrency(o.shipping),
-                        "Tổng cộng": this.formatCurrency(o.total)
-                    };
-
-                    try {
-                        const response = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(this.targetEmail)}`, {
-                            method: 'POST',
-                            headers: { 
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json' 
-                            },
-                            body: JSON.stringify(emailPayload)
-                        });
-
-                        const resData = await response.json();
-
-                        if (response.ok || resData.success === "true" || resData.success === true) {
-                            this.emailStatus.sending = false;
-                            this.emailStatus.success = true;
-                            this.emailStatus.message = this.t(`Đã gửi thành công tới ${this.targetEmail}`, `成功發送至 ${this.targetEmail}`);
-                            this.showToast(this.t(`✅ Email đơn hàng đã gửi tới ${this.targetEmail}`, `✅ [ Email 發送成功] 訂單已發送至 ${this.targetEmail}`));
-                            return;
-                        }
-                        
-                        throw new Error(resData.message || 'FormSubmit response error');
-
-                    } catch (err) {
-                        console.warn('Primary email dispatch failed, trying backup API...', err);
-                        
-                        try {
-                            const backupPayload = {
-                                access_key: "e34ba1db-e32d-4d43-9830-4e36d4bc2299",
-                                subject: emailPayload._subject,
-                                from_name: "VIEBUCKS Order System",
-                                to_email: this.targetEmail,
-                                message: `Mã đơn: ${o.orderId}\nKhách hàng: ${o.customer.name}\nSĐT: ${o.customer.phone}\nĐịa chỉ: ${o.customer.address}\nTổng tiền: ${this.formatCurrency(o.total)}\n\nChi tiết:\n${itemsSummary}`
-                            };
-
-                            const backupRes = await fetch("https://api.web3forms.com/submit", {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify(backupPayload)
-                            });
-
-                            if (backupRes.ok) {
-                                this.emailStatus.sending = false;
-                                this.emailStatus.success = true;
-                                this.emailStatus.message = this.t(`Đã gửi qua kênh dự phòng tới ${this.targetEmail}`, `透過備援通道成功發送至 ${this.targetEmail}`);
-                                this.showToast(this.t(`✅ [Email Dự Phòng] Đã gửi tới ${this.targetEmail}`, `✅ [ Email 備援發送成功] 已送達 ${this.targetEmail}`));
-                                return;
-                            }
-                        } catch (backupErr) {
-                            console.error('Backup email service error:', backupErr);
-                        }
-
-                        this.emailStatus.sending = false;
-                        this.emailStatus.success = false;
-                        this.emailStatus.message = this.t('Tự động gửi email thất bại, có thể bấm "Mở ứng dụng Mail" để gửi thủ công', '伺服器 API 自動發送失敗，可點擊「開啟郵件 App」備援');
-                        this.showToast(this.t('⚠️ Gửi email tự động không thành công, vui lòng dùng nút Mở App Mail', '⚠️ 電子郵件自動發送超時，請點擊「開啟郵件 App」手動發送'));
-                    }
-                },
-
-                openMailClient() {
-                    if (!this.lastOrderDetails) return;
-                    const o = this.lastOrderDetails;
-                    const subject = encodeURIComponent(`[VIEBUCKS ĐƠN HÀNG] Mã:${o.orderId} - ${o.customer.name}`);
-                    const body = encodeURIComponent(
-                        `THÔNG TIN ĐƠN HÀNG VIEBUCKS\n` +
-                        `-----------------------\n` +
-                        `Mã đơn hàng: ${o.orderId}\n` +
-                        `Khách hàng: ${o.customer.name}\n` +
-                        `Số điện thoại: ${o.customer.phone}\n` +
-                        `Địa chỉ: ${o.customer.address}\n` +
-                        `Tổng thanh toán: ${this.formatCurrency(o.total)}\n\n` +
-                        `Sản phẩm:\n` +
-                        o.items.map(i => `- ${i.name} x${i.qty} (${this.formatCurrency(i.price * i.qty)})`).join('\n')
-                    );
-                    
-                    window.location.href = `mailto:${this.targetEmail}?subject=${subject}&body=${body}`;
-                    this.showToast(this.t('Đã mở ứng dụng Mail!', '已開啟本地郵件程式！'));
-                },
-
-                sendToZalo() {
-                    if (!this.lastOrderDetails) return;
-                    const o = this.lastOrderDetails;
-                    const textToCopy = `[ĐƠN HÀNG VIEBUCKS ${o.orderId}]\nHọ tên: ${o.customer.name}\nSĐT: ${o.customer.phone}\nTổng tiền: ${this.formatCurrency(o.total)}`;
-                    
-                    const tempInput = document.createElement('textarea');
-                    tempInput.value = textToCopy;
-                    document.body.appendChild(tempInput);
-                    tempInput.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(tempInput);
-
-                    this.showToast(this.t('Đã sao chép tóm tắt đơn hàng, đang mở Zalo CSKH...', '已複製訂單概要，正在開啟 Zalo 客服視窗...'));
-                    window.open('https://zalo.me/839681380', '_blank');
-                },
-
-                formatCurrency(val) {
-                    if (!val && val !== 0) return '0 ₫';
-                    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val);
-                },
-
-                showToast(msg) {
-                    this.toast.message = msg;
-                    this.toast.show = true;
-                    setTimeout(() => {
-                        this.toast.show = false;
-                    }, 3200);
-                }
+                ]
             };
         }
     </script>
