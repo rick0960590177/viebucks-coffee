@@ -46,6 +46,23 @@
         font-size: 0.875rem !important;
       }
     }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printable-receipt, #printable-receipt * {
+        visibility: visible;
+      }
+      #printable-receipt {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+      }
+    }
   </style>
 </head>
 <body class="bg-coffee-50 text-coffee-900 font-sans selection:bg-coffee-200 min-h-screen flex flex-col antialiased">
@@ -108,6 +125,12 @@
       ),
       Lock: (props) => (
         <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      ),
+      Printer: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+      ),
+      FileText: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
       )
     };
 
@@ -155,7 +178,7 @@
         submitOrder: '確認發送訂單',
         submitting: '正在傳送訂單...',
         orderSuccess: '訂單已成功送出！',
-        orderSuccessDesc: '訂單已記錄至歷史訂單。',
+        orderSuccessDesc: '訂單已記錄至歷史訂單，並可列印或儲存正式收據。',
         orderHistoryTitle: '歷史訂單紀錄',
         noHistory: '尚無歷史訂單紀錄',
         clearHistory: '清除歷史',
@@ -175,6 +198,10 @@
         passwordError: '密碼錯誤，請重新輸入',
         historyPasswordTitle: '歷史訂單驗證',
         historyPasswordDesc: '請輸入管理密碼以檢視歷史訂單',
+        printReceipt: '列印/儲存單據',
+        viewReceipt: '檢視單據',
+        receiptTitle: 'VIEBUCKS CAFE 正式訂單明細',
+        close: '關閉',
         grindOptions: {
           beans: { label: '保留原豆', detail: 'Whole Beans' },
           phin: { label: '越南滴漏', detail: 'Phin Filter' },
@@ -229,7 +256,7 @@
         submitOrder: 'Xác nhận đặt hàng',
         submitting: 'Đang gửi đơn hàng...',
         orderSuccess: 'Đặt hàng thành công!',
-        orderSuccessDesc: 'Đơn hàng đã được ghi lại vào lịch sử.',
+        orderSuccessDesc: 'Đơn hàng đã được ghi lại, bạn có thể in hoặc lưu hóa đơn.',
         orderHistoryTitle: 'Lịch sử đơn hàng',
         noHistory: 'Chưa có lịch sử đơn hàng',
         clearHistory: 'Xóa lịch sử',
@@ -249,6 +276,10 @@
         passwordError: 'Sai mật khẩu, vui lòng thử lại',
         historyPasswordTitle: 'Xác thực lịch sử đơn hàng',
         historyPasswordDesc: 'Vui lòng nhập mật khẩu để xem lịch sử',
+        printReceipt: 'In / Lưu hóa đơn',
+        viewReceipt: 'Xem hóa đơn',
+        receiptTitle: 'HÓA ĐƠN BÁN HÀNG VIEBUCKS CAFE',
+        close: 'Đóng',
         grindOptions: {
           beans: { label: 'Nguyên hạt', detail: 'Whole Beans' },
           phin: { label: 'Pha Phin', detail: 'Phin Filter' },
@@ -269,41 +300,28 @@
     };
 
     const INITIAL_PRODUCTS = [
-      // 1. Arabica
       { id: 'arabica-100-250g', nameZh: '100% 阿拉比卡咖啡豆', nameVi: 'Cà phê hạt Arabica 100%', category: 'arabica', specZh: '250公克', specVi: '250g', price: 145000, wholesalePrice: 125000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=600' },
       { id: 'arabica-100-500g', nameZh: '100% 阿拉比卡咖啡豆', nameVi: 'Cà phê hạt Arabica 100%', category: 'arabica', specZh: '500公克', specVi: '500g', price: 280000, wholesalePrice: 240000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=600' },
       { id: 'arabica-coldbrew-10', nameZh: '100% 阿拉比卡冷萃咖啡包', nameVi: 'Cà phê ủ lạnh Arabica 100%', category: 'coldbrew', specZh: '10包/袋', specVi: '10 túi/túi', price: 125000, wholesalePrice: 105000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
       { id: 'arabica-coldbrew-30', nameZh: '100% 阿拉比卡冷萃咖啡包', nameVi: 'Cà phê ủ lạnh Arabica 100%', category: 'coldbrew', specZh: '30包/袋', specVi: '30 túi/túi', price: 350000, wholesalePrice: 295000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
-
-      // 2. Arabica Honey Process
       { id: 'arabica-honey-250g', nameZh: '蜜處理阿拉比卡咖啡豆', nameVi: 'Cà phê hạt Arabica Honey chế biến mật', category: 'arabica_honey', specZh: '250公克', specVi: '250g', price: 160000, wholesalePrice: 138000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&q=80&w=600' },
       { id: 'arabica-honey-500g', nameZh: '蜜處理阿拉比卡咖啡豆', nameVi: 'Cà phê hạt Arabica Honey chế biến mật', category: 'arabica_honey', specZh: '500公克', specVi: '500g', price: 310000, wholesalePrice: 265000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&q=80&w=600' },
       { id: 'arabica-honey-coldbrew-10', nameZh: '蜜處理阿拉比卡冷萃咖啡包', nameVi: 'Cà phê ủ lạnh Arabica Honey', category: 'coldbrew', specZh: '10包/袋', specVi: '10 túi/túi', price: 140000, wholesalePrice: 118000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
       { id: 'arabica-honey-coldbrew-30', nameZh: '蜜處理阿拉比卡冷萃咖啡包', nameVi: 'Cà phê ủ lạnh Arabica Honey', category: 'coldbrew', specZh: '30包/袋', specVi: '30 túi/túi', price: 390000, wholesalePrice: 330000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
-
-      // 3. Robusta
       { id: 'robusta-100-250g', nameZh: '100% 羅布斯塔咖啡豆', nameVi: 'Cà phê hạt Robusta 100%', category: 'robusta', specZh: '250公克', specVi: '250g', price: 91000, wholesalePrice: 78000, type: 'beans', stock: 25, threshold: 5, image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
       { id: 'robusta-100-500g', nameZh: '100% 羅布斯塔咖啡豆', nameVi: 'Cà phê hạt Robusta 100%', category: 'robusta', specZh: '500公克', specVi: '500g', price: 172000, wholesalePrice: 148000, type: 'beans', stock: 25, threshold: 5, image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
       { id: 'robusta-coldbrew-10', nameZh: '100% 羅布斯塔冷萃咖啡包', nameVi: 'Cà phê ủ lạnh Robusta 100%', category: 'coldbrew', specZh: '10包/袋', specVi: '10 túi/túi', price: 80000, wholesalePrice: 70000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
       { id: 'robusta-coldbrew-30', nameZh: '100% 羅布斯塔冷萃咖啡包', nameVi: 'Cà phê ủ lạnh Robusta 100%', category: 'coldbrew', specZh: '30包/袋', specVi: '30 túi/túi', price: 230000, wholesalePrice: 200000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
       { id: 'robusta-jasmine-10', nameZh: '茉莉花風味羅布斯塔冷萃包', nameVi: 'Cà phê ủ lạnh Robusta - Hương hoa nhài', category: 'coldbrew', specZh: '10包/袋', specVi: '10 túi/túi', price: 100000, wholesalePrice: 88000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
       { id: 'robusta-jasmine-30', nameZh: '茉莉花風味羅布斯塔冷萃包', nameVi: 'Cà phê ủ lạnh Robusta - Hương hoa nhài', category: 'coldbrew', specZh: '30包/袋', specVi: '30 túi/túi', price: 250000, wholesalePrice: 220000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
-
-      // 4. Robusta Honey Process
       { id: 'robusta-honey-250g', nameZh: '蜜處理羅布斯塔咖啡豆', nameVi: 'Cà phê hạt Robusta Honey chế biến mật', category: 'robusta_honey', specZh: '250公克', specVi: '250g', price: 105000, wholesalePrice: 90000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
       { id: 'robusta-honey-500g', nameZh: '蜜處理羅布斯塔咖啡豆', nameVi: 'Cà phê hạt Robusta Honey chế biến mật', category: 'robusta_honey', specZh: '500公克', specVi: '500g', price: 200000, wholesalePrice: 170000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1610632380989-680fe40816c6?auto=format&fit=crop&q=80&w=600' },
       { id: 'robusta-honey-coldbrew-10', nameZh: '蜜處理羅布斯塔冷萃包', nameVi: 'Cà phê ủ lạnh Robusta Honey', category: 'coldbrew', specZh: '10包/袋', specVi: '10 túi/túi', price: 95000, wholesalePrice: 82000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
       { id: 'robusta-honey-coldbrew-30', nameZh: '蜜處理羅布斯塔冷萃包', nameVi: 'Cà phê ủ lạnh Robusta Honey', category: 'coldbrew', specZh: '30包/袋', specVi: '30 túi/túi', price: 270000, wholesalePrice: 230000, type: 'coldbrew', stock: 20, threshold: 5, image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&q=80&w=600' },
-
-      // 5. Espresso Blend (80/20)
       { id: 'blend-8020-250g', nameZh: '80/20 義式特調咖啡豆', nameVi: 'Cà phê phối trộn Blend 80/20 Espresso', category: 'blend', specZh: '250公克', specVi: '250g', price: 135000, wholesalePrice: 115000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
       { id: 'blend-8020-500g', nameZh: '80/20 義式特調咖啡豆', nameVi: 'Cà phê phối trộn Blend 80/20 Espresso', category: 'blend', specZh: '500公克', specVi: '500g', price: 260000, wholesalePrice: 220000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
-
-      // 6. Commercial Blend (70/30)
       { id: 'blend-7030-250g', nameZh: '70/30 商業特調咖啡豆', nameVi: 'Cà phê phối trộn Blend 70/30 Thương mại', category: 'blend', specZh: '250公克', specVi: '250g', price: 128000, wholesalePrice: 110000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
       { id: 'blend-7030-500g', nameZh: '70/30 商業特調咖啡豆', nameVi: 'Cà phê phối trộn Blend 70/30 Thương mại', category: 'blend', specZh: '500公克', specVi: '500g', price: 245000, wholesalePrice: 210000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
-
-      // 7. Southern Italian Blend (50/50)
       { id: 'blend-5050-250g', nameZh: '50/50 南義風格特調咖啡豆', nameVi: 'Cà phê phối trộn Blend 50/50 Phong cách Nam Ý', category: 'blend', specZh: '250公克', specVi: '250g', price: 118000, wholesalePrice: 100000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' },
       { id: 'blend-5050-500g', nameZh: '50/50 南義風格特調咖啡豆', nameVi: 'Cà phê phối trộn Blend 50/50 Phong cách Nam Ý', category: 'blend', specZh: '500公克', specVi: '500g', price: 225000, wholesalePrice: 190000, type: 'beans', stock: 15, threshold: 5, image: 'https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?auto=format&fit=crop&q=80&w=600' }
     ];
@@ -333,6 +351,7 @@
       const [isHistoryPasswordModalOpen, setIsHistoryPasswordModalOpen] = useState(false);
       const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
       const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+      const [activeReceiptOrder, setActiveReceiptOrder] = useState(null);
 
       const t = TRANSLATIONS[lang];
 
@@ -476,7 +495,7 @@
 
           {/* Content Area */}
           <main className="flex-grow w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
-            {/* Category Tabs (Auto Scrollable for small screens) */}
+            {/* Category Tabs */}
             <div className="overflow-x-auto no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0 mb-4 sm:mb-8">
               <div className="flex gap-2 sm:gap-3 min-w-max pb-1">
                 {Object.keys(t.cats).map(catKey => (
@@ -511,7 +530,6 @@
                           {specText}
                         </span>
 
-                        {/* Stock Status Tag */}
                         <div className="absolute top-3 left-3">
                           {isOut ? (
                             <span className="bg-red-600 text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow">{t.soldOut}</span>
@@ -642,6 +660,7 @@
               onClose={() => setIsCheckoutOpen(false)}
               cart={cart}
               clearCart={clearCart}
+              onOpenReceipt={(order) => setActiveReceiptOrder(order)}
             />
           )}
 
@@ -651,6 +670,7 @@
               lang={lang}
               t={t}
               onClose={() => setIsHistoryOpen(false)}
+              onViewReceipt={(order) => setActiveReceiptOrder(order)}
             />
           )}
 
@@ -692,6 +712,95 @@
               onClose={() => setIsAdminOpen(false)}
             />
           )}
+
+          {activeReceiptOrder && (
+            <ReceiptModal
+              order={activeReceiptOrder}
+              t={t}
+              onClose={() => setActiveReceiptOrder(null)}
+            />
+          )}
+        </div>
+      );
+    }
+
+    function ReceiptModal({ order, t, onClose }) {
+      const handlePrint = () => {
+        window.print();
+      };
+
+      return (
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-3 sm:p-4">
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+          <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-coffee-200 p-6 sm:p-8 max-h-[95vh] overflow-y-auto z-10 flex flex-col">
+            <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-200">
+              <div className="flex items-center gap-2">
+                <Icons.Coffee className="h-6 w-6 text-coffee-800" />
+                <h3 className="text-base sm:text-lg font-bold font-serif text-coffee-900">VIEBUCKS Cafe</h3>
+              </div>
+              <button onClick={onClose} className="p-1 rounded-full hover:bg-gray-100"><Icons.X className="h-5 w-5" /></button>
+            </div>
+
+            {/* Printable Area */}
+            <div id="printable-receipt" className="space-y-4 text-xs sm:text-sm text-gray-800 flex-1">
+              <div className="text-center space-y-1">
+                <h2 className="text-base sm:text-xl font-bold font-serif">{t.receiptTitle}</h2>
+                <p className="text-gray-500 text-xs">{order.date}</p>
+                <p className="font-bold text-coffee-800 text-xs">{t.orderId}: #{order.id}</p>
+              </div>
+
+              <div className="border-t border-b border-gray-200 py-3 space-y-1 text-xs">
+                <p><strong>收件人 / Người nhận:</strong> {order.customerName}</p>
+                <p><strong>電話 / Điện thoại:</strong> {order.phone}</p>
+                <p><strong>地址 / Địa chỉ:</strong> {order.address}</p>
+                {order.notes && <p><strong>備註 / Ghi chú:</strong> {order.notes}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <div className="font-bold border-b pb-1 text-xs text-gray-500 flex justify-between">
+                  <span>品項 / Sản phẩm</span>
+                  <span>小計 / Thành tiền</span>
+                </div>
+                {order.items.map((prod, idx) => (
+                  <div key={idx} className="flex justify-between items-start gap-2 py-1 border-b border-dashed border-gray-100">
+                    <div>
+                      <div className="font-bold">{prod.name} ({prod.spec})</div>
+                      <div className="text-[10px] text-gray-500">{prod.grindLabel} x {prod.quantity}</div>
+                    </div>
+                    <div className="font-bold whitespace-nowrap">{(prod.unitPrice * prod.quantity).toLocaleString()} VND</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="space-y-1 pt-2 border-t border-gray-200 text-xs">
+                <div className="flex justify-between"><span>商品小計:</span><span>{order.subtotal.toLocaleString()} VND</span></div>
+                <div className="flex justify-between"><span>運費:</span><span>{order.shippingFee === 0 ? '免費 / Miễn phí' : `${order.shippingFee.toLocaleString()} VND`}</span></div>
+                <div className="flex justify-between font-bold text-sm sm:text-base text-coffee-900 pt-2 border-t border-gray-200">
+                  <span>總計金額:</span>
+                  <span className="text-coffee-800">{order.grandTotal.toLocaleString()} VND</span>
+                </div>
+              </div>
+
+              <div className="text-center pt-4 text-[10px] text-gray-400 font-serif">
+                感謝您的選購！Xin cảm ơn quý khách! - VIEBUCKS CAFE
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-gray-200 mt-4 flex gap-3">
+              <button
+                onClick={handlePrint}
+                className="flex-1 bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 rounded-xl shadow-md flex items-center justify-center gap-2 text-xs sm:text-sm transition-colors"
+              >
+                <Icons.Printer className="h-4 w-4" /> {t.printReceipt}
+              </button>
+              <button
+                onClick={onClose}
+                className="px-5 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 rounded-xl text-xs sm:text-sm transition-colors"
+              >
+                {t.close}
+              </button>
+            </div>
+          </div>
         </div>
       );
     }
@@ -1051,10 +1160,11 @@
       );
     }
 
-    function CheckoutModal({ isOpen, onClose, cart, clearCart, products, deductStock, t, lang }) {
+    function CheckoutModal({ isOpen, onClose, cart, clearCart, products, deductStock, t, lang, onOpenReceipt }) {
       const [formData, setFormData] = useState({ fullName: '', phone: '', address: '', notes: '' });
       const [isSubmitting, setIsSubmitting] = useState(false);
       const [isSuccess, setIsSuccess] = useState(false);
+      const [lastCreatedOrder, setLastCreatedOrder] = useState(null);
 
       const getUnitPrice = (item) => item.quantity >= 10 ? item.wholesalePrice : item.price;
       const subtotal = cart.reduce((sum, item) => sum + getUnitPrice(item) * item.quantity, 0);
@@ -1129,10 +1239,10 @@
           const history = JSON.parse(localStorage.getItem(ORDER_HISTORY_STORAGE_KEY) || '[]');
           localStorage.setItem(ORDER_HISTORY_STORAGE_KEY, JSON.stringify([orderRecord, ...history]));
 
+          setLastCreatedOrder(orderRecord);
           setIsSubmitting(false);
           setIsSuccess(true);
           clearCart();
-          setTimeout(() => { setIsSuccess(false); onClose(); }, 3000);
 
         } catch (error) {
           console.error('送出訂單失敗:', error);
@@ -1148,10 +1258,18 @@
             <button onClick={onClose} className="absolute right-4 top-4 p-2 bg-white/80 rounded-full hover:bg-white"><Icons.X className="h-5 w-5" /></button>
 
             {isSuccess ? (
-              <div className="py-10 text-center space-y-4">
+              <div className="py-8 text-center space-y-4">
                 <Icons.CheckCircle className="h-16 w-16 text-green-600 mx-auto animate-bounce" />
                 <h3 className="text-xl sm:text-2xl font-bold font-serif text-coffee-900">{t.orderSuccess}</h3>
                 <p className="text-xs sm:text-sm text-coffee-600">{t.orderSuccessDesc}</p>
+                {lastCreatedOrder && (
+                  <button
+                    onClick={() => { onClose(); onOpenReceipt(lastCreatedOrder); }}
+                    className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 rounded-xl shadow-md flex items-center justify-center gap-2 text-sm mt-4"
+                  >
+                    <Icons.FileText className="h-5 w-5" /> {t.printReceipt}
+                  </button>
+                )}
               </div>
             ) : (
               <form onSubmit={handleSubmitOrder} className="space-y-3 sm:space-y-4">
@@ -1201,7 +1319,7 @@
       );
     }
 
-    function OrderHistoryModal({ isOpen, onClose, t }) {
+    function OrderHistoryModal({ isOpen, onClose, t, onViewReceipt }) {
       const [history, setHistory] = useState([]);
 
       useEffect(() => {
@@ -1249,7 +1367,15 @@
                         </div>
                       ))}
                     </div>
-                    <div className="text-right font-bold text-xs sm:text-sm text-coffee-900">{item.grandTotal.toLocaleString()} VND</div>
+                    <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+                      <span className="font-bold text-sm text-coffee-900">{item.grandTotal.toLocaleString()} VND</span>
+                      <button
+                        onClick={() => { onClose(); onViewReceipt(item); }}
+                        className="px-3 py-1.5 bg-coffee-800 hover:bg-coffee-900 text-white rounded-lg text-xs font-bold flex items-center gap-1 transition-colors"
+                      >
+                        <Icons.Printer className="h-3.5 w-3.5" /> {t.viewReceipt}
+                      </button>
+                    </div>
                   </div>
                 ))
               )}
