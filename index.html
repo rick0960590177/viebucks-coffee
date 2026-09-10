@@ -125,6 +125,9 @@
       ),
       FileText: (props) => (
         <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+      ),
+      Settings: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
       )
     };
 
@@ -185,6 +188,9 @@
         viewReceipt: '檢視單據',
         receiptTitle: 'VIEBUCKS CAFE 正式訂單明細',
         close: '關閉',
+        passwordPlaceholder: '請輸入管理密碼',
+        passwordError: '密碼錯誤，請重新輸入',
+        passwordSubmit: '確認送出',
         grindOptions: {
           beans: { label: '保留原豆', detail: 'Whole Beans' },
           phin: { label: '越南滴漏', detail: 'Phin Filter' },
@@ -250,6 +256,9 @@
         viewReceipt: 'Xem hóa đơn',
         receiptTitle: 'HÓA ĐƠN BÁN HÀNG VIEBUCKS CAFE',
         close: 'Đóng',
+        passwordPlaceholder: 'Nhập mật khẩu quản trị',
+        passwordError: 'Mật khẩu sai, vui lòng thử lại',
+        passwordSubmit: 'Xác nhận',
         grindOptions: {
           beans: { label: 'Nguyên hạt', detail: 'Whole Beans' },
           phin: { label: 'Pha Phin', detail: 'Phin Filter' },
@@ -655,7 +664,7 @@
       };
 
       return (
-        <div className="fixed inset-0 z-60 flex items-center justify-center p-3 sm:p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
           <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
           <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-coffee-200 p-6 sm:p-8 max-h-[95vh] overflow-y-auto z-10 flex flex-col">
             <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-200">
