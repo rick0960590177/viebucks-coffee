@@ -32,10 +32,9 @@
 
     <!-- 主內容區 -->
     <main class="container mx-auto px-4 py-8">
-        <!-- 標題與篩選 -->
         <div class="mb-8 text-center">
-            <h1 class="text-3xl font-bold text-amber-900 mb-2">精選越南咖啡系列</h1>
-            <p class="text-gray-600">頂級阿拉比卡、羅布斯塔與職人特調咖啡豆 / 冷萃包</p>
+            <h1 class="text-3xl font-bold text-amber-900 mb-2" id="mainTitle">精選越南咖啡系列</h1>
+            <p class="text-gray-600" id="mainSubtitle">頂級阿拉比卡、羅布斯塔與職人特調咖啡豆 / 冷萃包</p>
         </div>
 
         <!-- 產品列表格 -->
@@ -44,12 +43,12 @@
         </div>
     </main>
 
-    <!-- 購物車抽屜 / 視窗 (簡單範例) -->
+    <!-- 購物車側邊滑出視窗 -->
     <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex justify-end">
         <div class="bg-white w-full max-w-md h-full p-6 flex flex-col justify-between shadow-xl">
             <div>
                 <div class="flex justify-between items-center border-b pb-4 mb-4">
-                    <h2 class="text-xl font-bold text-amber-900">購物車內容</h2>
+                    <h2 class="text-xl font-bold text-amber-900" id="cartTitle">購物車內容</h2>
                     <button id="closeCart" class="text-gray-500 hover:text-gray-700 text-xl font-bold">&times;</button>
                 </div>
                 <div id="cartItemsList" class="space-y-4 overflow-y-auto max-h-[60vh]">
@@ -58,10 +57,10 @@
             </div>
             <div class="border-t pt-4">
                 <div class="flex justify-between items-center mb-4 font-bold text-lg">
-                    <span>總計金額：</span>
+                    <span id="totalLabel">總計金額：</span>
                     <span id="cartTotalPrice" class="text-amber-700">0 VNĐ</span>
                 </div>
-                <button onclick="alert('訂單送出功能建置中')" class="w-full bg-amber-900 hover:bg-amber-800 text-white py-3 rounded-lg font-bold transition">
+                <button onclick="alert('訂單送出功能建置中')" class="w-full bg-amber-900 hover:bg-amber-800 text-white py-3 rounded-lg font-bold transition" id="checkoutBtn">
                     確認送出訂單
                 </button>
             </div>
@@ -73,7 +72,7 @@
         const PRODUCTS_STORAGE_KEY = 'viebucks_products_v1';
         let currentLang = 'zh'; // 'zh' 或 'vi'
 
-        // 修正後的產品資料（使用正確的 Raw 網址）
+        // 完整產品資料庫（已修正為正確的 Raw 網址）
         const INITIAL_PRODUCTS = [
           { 
             id: 'arabica-100-250g', 
@@ -86,9 +85,32 @@
             wholesalePrice: 125000, 
             type: 'beans', 
             stock: 15, 
+            threshold: 5, 
             image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P1.jpg',
-            origin: '嚴選特定產區與小農莊園',
-            flavor: '前段明亮果香，中段堅果與焦糖甜感'
+            origin: '嚴選特定產區與小農莊園，追溯咖啡果實生長環境與風土條件',
+            altitude: '約 1,200 至 2,000 公尺（高海拔山區）',
+            process: '精準對應水洗、日曬或蜜處理法',
+            grade: 'Grade 1 / Specialty Grade 精品級',
+            flavor: '前段明亮果香或花香，中段堅果與焦糖甜感，尾韻乾淨綿長'
+          },
+          { 
+            id: 'arabica-100-500g', 
+            nameZh: '100% 精品阿拉比卡咖啡豆', 
+            nameVi: 'Cà phê đặc sản Arabica 100%', 
+            category: 'arabica', 
+            specZh: '500公克', 
+            specVi: '500g', 
+            price: 280000, 
+            wholesalePrice: 240000, 
+            type: 'beans', 
+            stock: 15, 
+            threshold: 5, 
+            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P1.jpg',
+            origin: '嚴選特定產區與小農莊園，追溯咖啡果實生長環境與風土條件',
+            altitude: '約 1,200 至 2,000 公尺（高海拔山區）',
+            process: '精準對應水洗、日曬或蜜處理法',
+            grade: 'Grade 1 / Specialty Grade 精品級',
+            flavor: '前段明亮果香或花香，中段堅果與焦糖甜感，尾韻乾淨綿長'
           },
           { 
             id: 'arabica-coldbrew-10', 
@@ -101,9 +123,32 @@
             wholesalePrice: 105000, 
             type: 'coldbrew', 
             stock: 20, 
+            threshold: 5, 
             image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P4.jpg',
-            origin: '嚴選單一產區阿拉比卡豆種',
-            flavor: '淺焙果酸花香、中焙焦糖甜感'
+            origin: '嚴選單一產區阿拉比卡豆種（Single Origin）',
+            altitude: '高海拔特選產區',
+            process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
+            grade: '精品冷萃浸泡包規格',
+            flavor: '淺焙果酸花香、中焙焦糖甜感、深焙黑巧克力尾韻，層次立體豐富'
+          },
+          { 
+            id: 'arabica-coldbrew-30', 
+            nameZh: '100% 精品阿拉比卡冷萃咖啡包', 
+            nameVi: 'Cà phê ủ lạnh Arabica 100%', 
+            category: 'coldbrew', 
+            specZh: '30包/袋', 
+            specVi: '30 Gói /Túi', 
+            price: 350000, 
+            wholesalePrice: 295000, 
+            type: 'coldbrew', 
+            stock: 20, 
+            threshold: 5, 
+            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P4.jpg',
+            origin: '嚴選單一產區阿拉比卡豆種（Single Origin）',
+            altitude: '高海拔特選產區',
+            process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
+            grade: '精品冷萃浸泡包規格',
+            flavor: '淺焙果酸花香、中焙焦糖甜感、深焙黑巧克力尾韻，層次立體豐富'
           },
           { 
             id: 'robusta-100-250g', 
@@ -116,9 +161,32 @@
             wholesalePrice: 78000, 
             type: 'beans', 
             stock: 25, 
+            threshold: 5, 
             image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P2.jpg',
-            origin: '精選頂級羅布斯塔莊園',
-            flavor: '醇厚濃郁、帶有黑可可與麥香'
+            origin: '精選頂級羅布斯塔莊園，濃郁風土與扎實口感',
+            altitude: '約 800 至 1,200 公尺',
+            process: '傳統日曬與水洗精製',
+            grade: 'Premium Grade 精選級',
+            flavor: '醇厚濃郁、帶有黑可可與麥香的獨特風味'
+          },
+          { 
+            id: 'robusta-100-500g', 
+            nameZh: '100% 精品羅布斯塔咖啡豆', 
+            nameVi: 'Cà phê đặc sản Robusta 100%', 
+            category: 'robusta', 
+            specZh: '500公克', 
+            specVi: '500g', 
+            price: 172000, 
+            wholesalePrice: 148000, 
+            type: 'beans', 
+            stock: 25, 
+            threshold: 5, 
+            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P2.jpg',
+            origin: '精選頂級羅布斯塔莊園，濃郁風土與扎實口感',
+            altitude: '約 800 至 1,200 公尺',
+            process: '傳統日曬與水洗精製',
+            grade: 'Premium Grade 精選級',
+            flavor: '醇厚濃郁、帶有黑可可與麥香的獨特風味'
           },
           { 
             id: 'robusta-coldbrew-10', 
@@ -131,9 +199,70 @@
             wholesalePrice: 88000, 
             type: 'coldbrew', 
             stock: 20, 
+            threshold: 5, 
             image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P3.jpg',
-            origin: '嚴選單一產區羅布斯塔豆種',
-            flavor: '口感厚實濃郁、低酸回甘'
+            origin: '嚴選單一產區羅布斯塔豆種（Single Origin）',
+            altitude: '精選優質產區',
+            process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
+            grade: '冷萃浸泡包規格',
+            flavor: '口感厚實濃郁、低酸回甘、具備強烈黑巧克力厚實尾韻'
+          },
+          { 
+            id: 'robusta-coldbrew-30', 
+            nameZh: '100% 精品羅布斯塔冷萃咖啡包', 
+            nameVi: 'Cà phê ủ lạnh Robusta 100%', 
+            category: 'coldbrew', 
+            specZh: '30包/袋', 
+            specVi: '30 Gói /Túi', 
+            price: 250000, 
+            wholesalePrice: 220000, 
+            type: 'coldbrew', 
+            stock: 20, 
+            threshold: 5, 
+            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P3.jpg',
+            origin: '嚴選單一產區羅布斯塔豆種（Single Origin）',
+            altitude: '精選優質產區',
+            process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
+            grade: '冷萃浸泡包規格',
+            flavor: '口感厚實濃郁、低酸回甘、具備強烈黑巧克力厚實尾韻'
+          },
+          { 
+            id: 'robusta-jasmine-10', 
+            nameZh: '茉莉花風味羅布斯塔冷萃包', 
+            nameVi: 'Cà phê ủ lạnh Robusta - Hương hoa nhài', 
+            category: 'coldbrew', 
+            specZh: '10包/袋', 
+            specVi: '10 Gói /Túi', 
+            price: 100000, 
+            wholesalePrice: 88000, 
+            type: 'coldbrew', 
+            stock: 20, 
+            threshold: 5, 
+            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P3.jpg',
+            origin: '單一產區羅布斯塔搭配天然花香調配（Single Origin）',
+            altitude: '精選優質產區',
+            process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
+            grade: '風味冷萃浸泡包規格',
+            flavor: '獨特茉莉花香、伴隨羅布斯塔厚實基底與三焙豐富層次'
+          },
+          { 
+            id: 'robusta-jasmine-30', 
+            nameZh: '茉莉花風味羅布斯塔冷萃包', 
+            nameVi: 'Cà phê ủ lạnh Robusta - Hương hoa nhài', 
+            category: 'coldbrew', 
+            specZh: '30包/袋', 
+            specVi: '30 Gói /Túi', 
+            price: 250000, 
+            wholesalePrice: 220000, 
+            type: 'coldbrew', 
+            stock: 20, 
+            threshold: 5, 
+            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P3.jpg',
+            origin: '單一產區羅布斯塔搭配天然花香調配（Single Origin）',
+            altitude: '精選優質產區',
+            process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
+            grade: '風味冷萃浸泡包規格',
+            flavor: '獨特茉莉花香、伴隨羅布斯塔厚實基底與三焙豐富層次'
           },
           { 
             id: 'blend-8020-250g', 
@@ -146,19 +275,125 @@
             wholesalePrice: 115000, 
             type: 'beans', 
             stock: 15, 
+            threshold: 5, 
             image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P5.jpg',
-            origin: '阿拉比卡（80%）與羅布斯塔（20%）',
-            flavor: '兼具優雅香氣與豐富油脂、濃厚Crema'
+            origin: '精選阿拉比卡（80%）與羅布斯塔（20%）黃金比例拼配',
+            altitude: '綜合高海拔與優質莊園產區',
+            process: '水洗與日曬融合處理法',
+            grade: 'Espresso Blend 義式精選級',
+            flavor: '兼具阿拉比卡的優雅香氣與羅布斯塔的豐富油脂、濃厚Crema'
+          },
+          { 
+            id: 'blend-8020-500g', 
+            nameZh: '80/20 義式特調咖啡豆', 
+            nameVi: 'Cà phê phối trộn Blend 80/20 Espresso', 
+            category: 'blend', 
+            specZh: '500公克', 
+            specVi: '500g', 
+            price: 260000, 
+            wholesalePrice: 220000, 
+            type: 'beans', 
+            stock: 15, 
+            threshold: 5, 
+            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P5.jpg',
+            origin: '精選阿拉比卡（80%）與羅布斯塔（20%）黃金比例拼配',
+            altitude: '綜合高海拔與優質莊園產區',
+            process: '水洗與日曬融合處理法',
+            grade: 'Espresso Blend 義式精選級',
+            flavor: '兼具阿拉比卡的優雅香氣與羅布斯塔的豐富油脂、濃厚Crema'
+          },
+          { 
+            id: 'blend-7030-250g', 
+            nameZh: '70/30 義式特調咖啡豆', 
+            nameVi: 'Cà phê phối trộn Blend 70/30 Espresso', 
+            category: 'blend', 
+            specZh: '250公克', 
+            specVi: '250g', 
+            price: 128000, 
+            wholesalePrice: 110000, 
+            type: 'beans', 
+            stock: 15, 
+            threshold: 5, 
+            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P5.jpg',
+            origin: '精選阿拉比卡（70%）與羅布斯塔（30%）完美拼配',
+            altitude: '綜合高海拔與優質莊園產區',
+            process: '水洗與日曬融合處理法',
+            grade: 'Espresso Blend 義式精選級',
+            flavor: '平衡的酸甜感與厚實口感，非常適合製作拿鐵與卡布奇諾'
+          },
+          { 
+            id: 'blend-7030-500g', 
+            nameZh: '70/30 義式特調咖啡豆', 
+            nameVi: 'Cà phê phối trộn Blend 70/30 Espresso', 
+            category: 'blend', 
+            specZh: '500公克', 
+            specVi: '500g', 
+            price: 245000, 
+            wholesalePrice: 210000, 
+            type: 'beans', 
+            stock: 15, 
+            threshold: 5, 
+            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P5.jpg',
+            origin: '精選阿拉比卡（70%）與羅布斯塔（30%）完美拼配',
+            altitude: '綜合高海拔與優質莊園產區',
+            process: '水洗與日曬融合處理法',
+            grade: 'Espresso Blend 義式精選級',
+            flavor: '平衡的酸甜感與厚實口感，非常適合製作拿鐵與卡布奇諾'
+          },
+          { 
+            id: 'blend-5050-250g', 
+            nameZh: '50/50 義式特調咖啡豆', 
+            nameVi: 'Cà phê phối trộn Blend 50/50 Espresso', 
+            category: 'blend', 
+            specZh: '250公克', 
+            specVi: '250g', 
+            price: 118000, 
+            wholesalePrice: 100000, 
+            type: 'beans', 
+            stock: 15, 
+            threshold: 5, 
+            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P5.jpg',
+            origin: '阿拉比卡（50%）與羅布斯塔（50%）均衡拼配',
+            altitude: '綜合高海拔與優質莊園產區',
+            process: '水洗與日曬融合處理法',
+            grade: 'Espresso Blend 義式精選級',
+            flavor: '濃郁強勁、焦糖香氣與厚實Body，專為越式咖啡與濃厚義式打造'
+          },
+          { 
+            id: 'blend-5050-500g', 
+            nameZh: '50/50 義式特調咖啡豆', 
+            nameVi: 'Cà phê phối trộn Blend 50/50 Espresso', 
+            category: 'blend', 
+            specZh: '500公克', 
+            specVi: '500g', 
+            price: 225000, 
+            wholesalePrice: 190000, 
+            type: 'beans', 
+            stock: 15, 
+            threshold: 5, 
+            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P5.jpg',
+            origin: '阿拉比卡（50%）與羅布斯塔（50%）均衡拼配',
+            altitude: '綜合高海拔與優質莊園產區',
+            process: '水洗與日曬融合處理法',
+            grade: 'Espresso Blend 義式精選級',
+            flavor: '濃郁強勁、焦糖香氣與厚實Body，專為越式咖啡與濃厚義式打造'
           }
         ];
 
         let products = JSON.parse(localStorage.getItem(PRODUCTS_STORAGE_KEY)) || INITIAL_PRODUCTS;
         let cart = [];
 
-        // 初始化渲染
+        // 渲染畫面
         function renderProducts() {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = '';
+
+            // 調整靜態文字語系
+            document.getElementById('mainTitle').innerText = currentLang === 'zh' ? '精選越南咖啡系列' : 'Bộ sưu tập cà phê Việt Nam tuyển chọn';
+            document.getElementById('mainSubtitle').innerText = currentLang === 'zh' ? '頂級阿拉比卡、羅布斯塔與職人特調咖啡豆 / 冷萃包' : 'Cà phê hạt và cà phê ủ lạnh Arabica, Robusta cao cấp';
+            document.getElementById('cartTitle').innerText = currentLang === 'zh' ? '購物車內容' : 'Giỏ hàng';
+            document.getElementById('totalLabel').innerText = currentLang === 'zh' ? '總計金額：' : 'Tổng cộng:';
+            document.getElementById('checkoutBtn').innerText = currentLang === 'zh' ? '確認送出訂單' : 'Gửi đơn hàng';
 
             products.forEach(p => {
                 const name = currentLang === 'zh' ? p.nameZh : p.nameVi;
