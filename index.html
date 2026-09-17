@@ -1,481 +1,1530 @@
+幫我檢查程式碼中的產品圖片網址有沒有問題
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VieBucks Coffee - 越南精品咖啡批發與零售</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-gray-50 text-gray-800 font-sans">
-
-    <!-- 導覽列 -->
-    <header class="bg-amber-900 text-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fa-solid fa-mug-hot text-2xl text-amber-400"></i>
-                <span class="text-xl font-bold tracking-wider">VieBucks Coffee</span>
-            </div>
-            <div class="flex items-center space-x-4">
-                <button id="langToggle" class="bg-amber-800 hover:bg-amber-750 px-3 py-1 rounded text-sm border border-amber-700 transition">
-                    🌐 中文 / Tiếng Việt
-                </button>
-                <div class="relative cursor-pointer" id="cartBtn">
-                    <i class="fa-solid fa-cart-shopping text-xl"></i>
-                    <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">0</span>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- 主內容區 -->
-    <main class="container mx-auto px-4 py-8">
-        <div class="mb-8 text-center">
-            <h1 class="text-3xl font-bold text-amber-900 mb-2" id="mainTitle">精選越南咖啡系列</h1>
-            <p class="text-gray-600" id="mainSubtitle">頂級阿拉比卡、羅布斯塔與職人特調咖啡豆 / 冷萃包</p>
-        </div>
-
-        <!-- 產品列表格 -->
-        <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- 產品卡片將由 JS 動態渲染 -->
-        </div>
-    </main>
-
-    <!-- 購物車側邊滑出視窗 -->
-    <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex justify-end">
-        <div class="bg-white w-full max-w-md h-full p-6 flex flex-col justify-between shadow-xl">
-            <div>
-                <div class="flex justify-between items-center border-b pb-4 mb-4">
-                    <h2 class="text-xl font-bold text-amber-900" id="cartTitle">購物車內容</h2>
-                    <button id="closeCart" class="text-gray-500 hover:text-gray-700 text-xl font-bold">&times;</button>
-                </div>
-                <div id="cartItemsList" class="space-y-4 overflow-y-auto max-h-[60vh]">
-                    <!-- 購物車項目 -->
-                </div>
-            </div>
-            <div class="border-t pt-4">
-                <div class="flex justify-between items-center mb-4 font-bold text-lg">
-                    <span id="totalLabel">總計金額：</span>
-                    <span id="cartTotalPrice" class="text-amber-700">0 VNĐ</span>
-                </div>
-                <button onclick="alert('訂單送出功能建置中')" class="w-full bg-amber-900 hover:bg-amber-800 text-white py-3 rounded-lg font-bold transition" id="checkoutBtn">
-                    確認送出訂單
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 腳本邏輯 -->
-    <script>
-        const PRODUCTS_STORAGE_KEY = 'viebucks_products_v1';
-        let currentLang = 'zh'; // 'zh' 或 'vi'
-
-        // 完整產品資料庫（已修正為正確的 Raw 網址）
-        const INITIAL_PRODUCTS = [
-          { 
-            id: 'arabica-100-250g', 
-            nameZh: '100% 精品阿拉比卡咖啡豆', 
-            nameVi: 'Cà phê đặc sản Arabica 100%', 
-            category: 'arabica', 
-            specZh: '250公克', 
-            specVi: '250g', 
-            price: 145000, 
-            wholesalePrice: 125000, 
-            type: 'beans', 
-            stock: 15, 
-            threshold: 5, 
-            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P1.jpg',
-            origin: '嚴選特定產區與小農莊園，追溯咖啡果實生長環境與風土條件',
-            altitude: '約 1,200 至 2,000 公尺（高海拔山區）',
-            process: '精準對應水洗、日曬或蜜處理法',
-            grade: 'Grade 1 / Specialty Grade 精品級',
-            flavor: '前段明亮果香或花香，中段堅果與焦糖甜感，尾韻乾淨綿長'
-          },
-          { 
-            id: 'arabica-100-500g', 
-            nameZh: '100% 精品阿拉比卡咖啡豆', 
-            nameVi: 'Cà phê đặc sản Arabica 100%', 
-            category: 'arabica', 
-            specZh: '500公克', 
-            specVi: '500g', 
-            price: 280000, 
-            wholesalePrice: 240000, 
-            type: 'beans', 
-            stock: 15, 
-            threshold: 5, 
-            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P1.jpg',
-            origin: '嚴選特定產區與小農莊園，追溯咖啡果實生長環境與風土條件',
-            altitude: '約 1,200 至 2,000 公尺（高海拔山區）',
-            process: '精準對應水洗、日曬或蜜處理法',
-            grade: 'Grade 1 / Specialty Grade 精品級',
-            flavor: '前段明亮果香或花香，中段堅果與焦糖甜感，尾韻乾淨綿長'
-          },
-          { 
-            id: 'arabica-coldbrew-10', 
-            nameZh: '100% 精品阿拉比卡冷萃咖啡包', 
-            nameVi: 'Cà phê ủ lạnh Arabica 100%', 
-            category: 'coldbrew', 
-            specZh: '10包/袋', 
-            specVi: '10 Gói /Túi', 
-            price: 125000, 
-            wholesalePrice: 105000, 
-            type: 'coldbrew', 
-            stock: 20, 
-            threshold: 5, 
-            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P4.jpg',
-            origin: '嚴選單一產區阿拉比卡豆種（Single Origin）',
-            altitude: '高海拔特選產區',
-            process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
-            grade: '精品冷萃浸泡包規格',
-            flavor: '淺焙果酸花香、中焙焦糖甜感、深焙黑巧克力尾韻，層次立體豐富'
-          },
-          { 
-            id: 'arabica-coldbrew-30', 
-            nameZh: '100% 精品阿拉比卡冷萃咖啡包', 
-            nameVi: 'Cà phê ủ lạnh Arabica 100%', 
-            category: 'coldbrew', 
-            specZh: '30包/袋', 
-            specVi: '30 Gói /Túi', 
-            price: 350000, 
-            wholesalePrice: 295000, 
-            type: 'coldbrew', 
-            stock: 20, 
-            threshold: 5, 
-            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P4.jpg',
-            origin: '嚴選單一產區阿拉比卡豆種（Single Origin）',
-            altitude: '高海拔特選產區',
-            process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
-            grade: '精品冷萃浸泡包規格',
-            flavor: '淺焙果酸花香、中焙焦糖甜感、深焙黑巧克力尾韻，層次立體豐富'
-          },
-          { 
-            id: 'robusta-100-250g', 
-            nameZh: '100% 精品羅布斯塔咖啡豆', 
-            nameVi: 'Cà phê đặc sản Robusta 100%', 
-            category: 'robusta', 
-            specZh: '250公克', 
-            specVi: '250g', 
-            price: 91000, 
-            wholesalePrice: 78000, 
-            type: 'beans', 
-            stock: 25, 
-            threshold: 5, 
-            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P2.jpg',
-            origin: '精選頂級羅布斯塔莊園，濃郁風土與扎實口感',
-            altitude: '約 800 至 1,200 公尺',
-            process: '傳統日曬與水洗精製',
-            grade: 'Premium Grade 精選級',
-            flavor: '醇厚濃郁、帶有黑可可與麥香的獨特風味'
-          },
-          { 
-            id: 'robusta-100-500g', 
-            nameZh: '100% 精品羅布斯塔咖啡豆', 
-            nameVi: 'Cà phê đặc sản Robusta 100%', 
-            category: 'robusta', 
-            specZh: '500公克', 
-            specVi: '500g', 
-            price: 172000, 
-            wholesalePrice: 148000, 
-            type: 'beans', 
-            stock: 25, 
-            threshold: 5, 
-            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P2.jpg',
-            origin: '精選頂級羅布斯塔莊園，濃郁風土與扎實口感',
-            altitude: '約 800 至 1,200 公尺',
-            process: '傳統日曬與水洗精製',
-            grade: 'Premium Grade 精選級',
-            flavor: '醇厚濃郁、帶有黑可可與麥香的獨特風味'
-          },
-          { 
-            id: 'robusta-coldbrew-10', 
-            nameZh: '100% 精品羅布斯塔冷萃咖啡包', 
-            nameVi: 'Cà phê ủ lạnh Robusta 100%', 
-            category: 'coldbrew', 
-            specZh: '10包/袋', 
-            specVi: '10 Gói /Túi', 
-            price: 100000, 
-            wholesalePrice: 88000, 
-            type: 'coldbrew', 
-            stock: 20, 
-            threshold: 5, 
-            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P3.jpg',
-            origin: '嚴選單一產區羅布斯塔豆種（Single Origin）',
-            altitude: '精選優質產區',
-            process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
-            grade: '冷萃浸泡包規格',
-            flavor: '口感厚實濃郁、低酸回甘、具備強烈黑巧克力厚實尾韻'
-          },
-          { 
-            id: 'robusta-coldbrew-30', 
-            nameZh: '100% 精品羅布斯塔冷萃咖啡包', 
-            nameVi: 'Cà phê ủ lạnh Robusta 100%', 
-            category: 'coldbrew', 
-            specZh: '30包/袋', 
-            specVi: '30 Gói /Túi', 
-            price: 250000, 
-            wholesalePrice: 220000, 
-            type: 'coldbrew', 
-            stock: 20, 
-            threshold: 5, 
-            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P3.jpg',
-            origin: '嚴選單一產區羅布斯塔豆種（Single Origin）',
-            altitude: '精選優質產區',
-            process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
-            grade: '冷萃浸泡包規格',
-            flavor: '口感厚實濃郁、低酸回甘、具備強烈黑巧克力厚實尾韻'
-          },
-          { 
-            id: 'robusta-jasmine-10', 
-            nameZh: '茉莉花風味羅布斯塔冷萃包', 
-            nameVi: 'Cà phê ủ lạnh Robusta - Hương hoa nhài', 
-            category: 'coldbrew', 
-            specZh: '10包/袋', 
-            specVi: '10 Gói /Túi', 
-            price: 100000, 
-            wholesalePrice: 88000, 
-            type: 'coldbrew', 
-            stock: 20, 
-            threshold: 5, 
-            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P3.jpg',
-            origin: '單一產區羅布斯塔搭配天然花香調配（Single Origin）',
-            altitude: '精選優質產區',
-            process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
-            grade: '風味冷萃浸泡包規格',
-            flavor: '獨特茉莉花香、伴隨羅布斯塔厚實基底與三焙豐富層次'
-          },
-          { 
-            id: 'robusta-jasmine-30', 
-            nameZh: '茉莉花風味羅布斯塔冷萃包', 
-            nameVi: 'Cà phê ủ lạnh Robusta - Hương hoa nhài', 
-            category: 'coldbrew', 
-            specZh: '30包/袋', 
-            specVi: '30 Gói /Túi', 
-            price: 250000, 
-            wholesalePrice: 220000, 
-            type: 'coldbrew', 
-            stock: 20, 
-            threshold: 5, 
-            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P3.jpg',
-            origin: '單一產區羅布斯塔搭配天然花香調配（Single Origin）',
-            altitude: '精選優質產區',
-            process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
-            grade: '風味冷萃浸泡包規格',
-            flavor: '獨特茉莉花香、伴隨羅布斯塔厚實基底與三焙豐富層次'
-          },
-          { 
-            id: 'blend-8020-250g', 
-            nameZh: '80/20 義式特調咖啡豆', 
-            nameVi: 'Cà phê phối trộn Blend 80/20 Espresso', 
-            category: 'blend', 
-            specZh: '250公克', 
-            specVi: '250g', 
-            price: 135000, 
-            wholesalePrice: 115000, 
-            type: 'beans', 
-            stock: 15, 
-            threshold: 5, 
-            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P5.jpg',
-            origin: '精選阿拉比卡（80%）與羅布斯塔（20%）黃金比例拼配',
-            altitude: '綜合高海拔與優質莊園產區',
-            process: '水洗與日曬融合處理法',
-            grade: 'Espresso Blend 義式精選級',
-            flavor: '兼具阿拉比卡的優雅香氣與羅布斯塔的豐富油脂、濃厚Crema'
-          },
-          { 
-            id: 'blend-8020-500g', 
-            nameZh: '80/20 義式特調咖啡豆', 
-            nameVi: 'Cà phê phối trộn Blend 80/20 Espresso', 
-            category: 'blend', 
-            specZh: '500公克', 
-            specVi: '500g', 
-            price: 260000, 
-            wholesalePrice: 220000, 
-            type: 'beans', 
-            stock: 15, 
-            threshold: 5, 
-            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P5.jpg',
-            origin: '精選阿拉比卡（80%）與羅布斯塔（20%）黃金比例拼配',
-            altitude: '綜合高海拔與優質莊園產區',
-            process: '水洗與日曬融合處理法',
-            grade: 'Espresso Blend 義式精選級',
-            flavor: '兼具阿拉比卡的優雅香氣與羅布斯塔的豐富油脂、濃厚Crema'
-          },
-          { 
-            id: 'blend-7030-250g', 
-            nameZh: '70/30 義式特調咖啡豆', 
-            nameVi: 'Cà phê phối trộn Blend 70/30 Espresso', 
-            category: 'blend', 
-            specZh: '250公克', 
-            specVi: '250g', 
-            price: 128000, 
-            wholesalePrice: 110000, 
-            type: 'beans', 
-            stock: 15, 
-            threshold: 5, 
-            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P5.jpg',
-            origin: '精選阿拉比卡（70%）與羅布斯塔（30%）完美拼配',
-            altitude: '綜合高海拔與優質莊園產區',
-            process: '水洗與日曬融合處理法',
-            grade: 'Espresso Blend 義式精選級',
-            flavor: '平衡的酸甜感與厚實口感，非常適合製作拿鐵與卡布奇諾'
-          },
-          { 
-            id: 'blend-7030-500g', 
-            nameZh: '70/30 義式特調咖啡豆', 
-            nameVi: 'Cà phê phối trộn Blend 70/30 Espresso', 
-            category: 'blend', 
-            specZh: '500公克', 
-            specVi: '500g', 
-            price: 245000, 
-            wholesalePrice: 210000, 
-            type: 'beans', 
-            stock: 15, 
-            threshold: 5, 
-            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P5.jpg',
-            origin: '精選阿拉比卡（70%）與羅布斯塔（30%）完美拼配',
-            altitude: '綜合高海拔與優質莊園產區',
-            process: '水洗與日曬融合處理法',
-            grade: 'Espresso Blend 義式精選級',
-            flavor: '平衡的酸甜感與厚實口感，非常適合製作拿鐵與卡布奇諾'
-          },
-          { 
-            id: 'blend-5050-250g', 
-            nameZh: '50/50 義式特調咖啡豆', 
-            nameVi: 'Cà phê phối trộn Blend 50/50 Espresso', 
-            category: 'blend', 
-            specZh: '250公克', 
-            specVi: '250g', 
-            price: 118000, 
-            wholesalePrice: 100000, 
-            type: 'beans', 
-            stock: 15, 
-            threshold: 5, 
-            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P5.jpg',
-            origin: '阿拉比卡（50%）與羅布斯塔（50%）均衡拼配',
-            altitude: '綜合高海拔與優質莊園產區',
-            process: '水洗與日曬融合處理法',
-            grade: 'Espresso Blend 義式精選級',
-            flavor: '濃郁強勁、焦糖香氣與厚實Body，專為越式咖啡與濃厚義式打造'
-          },
-          { 
-            id: 'blend-5050-500g', 
-            nameZh: '50/50 義式特調咖啡豆', 
-            nameVi: 'Cà phê phối trộn Blend 50/50 Espresso', 
-            category: 'blend', 
-            specZh: '500公克', 
-            specVi: '500g', 
-            price: 225000, 
-            wholesalePrice: 190000, 
-            type: 'beans', 
-            stock: 15, 
-            threshold: 5, 
-            image: 'https://raw.githubusercontent.com/rick0960590177/viebucks-coffee/main/images/P5.jpg',
-            origin: '阿拉比卡（50%）與羅布斯塔（50%）均衡拼配',
-            altitude: '綜合高海拔與優質莊園產區',
-            process: '水洗與日曬融合處理法',
-            grade: 'Espresso Blend 義式精選級',
-            flavor: '濃郁強勁、焦糖香氣與厚實Body，專為越式咖啡與濃厚義式打造'
-          }
-        ];
-
-        let products = JSON.parse(localStorage.getItem(PRODUCTS_STORAGE_KEY)) || INITIAL_PRODUCTS;
-        let cart = [];
-
-        // 渲染畫面
-        function renderProducts() {
-            const grid = document.getElementById('productGrid');
-            grid.innerHTML = '';
-
-            // 調整靜態文字語系
-            document.getElementById('mainTitle').innerText = currentLang === 'zh' ? '精選越南咖啡系列' : 'Bộ sưu tập cà phê Việt Nam tuyển chọn';
-            document.getElementById('mainSubtitle').innerText = currentLang === 'zh' ? '頂級阿拉比卡、羅布斯塔與職人特調咖啡豆 / 冷萃包' : 'Cà phê hạt và cà phê ủ lạnh Arabica, Robusta cao cấp';
-            document.getElementById('cartTitle').innerText = currentLang === 'zh' ? '購物車內容' : 'Giỏ hàng';
-            document.getElementById('totalLabel').innerText = currentLang === 'zh' ? '總計金額：' : 'Tổng cộng:';
-            document.getElementById('checkoutBtn').innerText = currentLang === 'zh' ? '確認送出訂單' : 'Gửi đơn hàng';
-
-            products.forEach(p => {
-                const name = currentLang === 'zh' ? p.nameZh : p.nameVi;
-                const spec = currentLang === 'zh' ? p.specZh : p.specVi;
-                
-                const card = document.createElement('div');
-                card.className = 'bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between';
-                card.innerHTML = `
-                    <div>
-                        <img src="${p.image}" alt="${name}" class="w-full h-48 object-cover" onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
-                        <div class="p-4">
-                            <span class="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded font-semibold uppercase">${p.category}</span>
-                            <h3 class="font-bold text-lg text-gray-800 mt-2">${name}</h3>
-                            <p class="text-sm text-gray-500 mt-1">${spec} | ${p.origin}</p>
-                            <p class="text-xs text-gray-600 mt-2 bg-gray-50 p-2 rounded">${p.flavor}</p>
-                        </div>
-                    </div>
-                    <div class="p-4 border-t bg-gray-50 flex justify-between items-center">
-                        <div>
-                            <span class="text-amber-800 font-bold text-lg">${p.price.toLocaleString()} VNĐ</span>
-                        </div>
-                        <button onclick="addToCart('${p.id}')" class="bg-amber-900 hover:bg-amber-800 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">
-                            ${currentLang === 'zh' ? '加入購物車' : 'Thêm vào giỏ'}
-                        </button>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function addToCart(id) {
-            const product = products.find(p => p.id === id);
-            const item = cart.find(i => i.id === id);
-            if (item) {
-                item.qty++;
-            } else {
-                cart.push({ ...product, qty: 1 });
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>VIEBUCKS Cafe - 精品手作咖啡館</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            coffee: {
+              50: '#fdfbf7',
+              100: '#f7f0e6',
+              200: '#ebdcc8',
+              300: '#d5bd9d',
+              600: '#8c5a3c',
+              800: '#4a2c1d',
+              900: '#2d190e',
             }
-            updateCartUI();
+          }
         }
+      }
+    }
+  </script>
+  <!-- React & Babel CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* 防止手機端點擊輸入框時畫面變形 */
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+    @media (min-width: 640px) {
+      input, select, textarea {
+        font-size: 0.875rem !important;
+      }
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printable-receipt, #printable-receipt * {
+        visibility: visible;
+      }
+      #printable-receipt {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-coffee-50 text-coffee-900 font-sans selection:bg-coffee-200 min-h-screen flex flex-col antialiased">
+  <div id="root" class="flex-grow flex flex-col"></div>
 
-        function updateCartUI() {
-            document.getElementById('cartCount').innerText = cart.reduce((sum, i) => sum + i.qty, 0);
-            const list = document.getElementById('cartItemsList');
-            list.innerHTML = '';
-            let total = 0;
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
 
-            cart.forEach(item => {
-                total += item.price * item.qty;
-                const name = currentLang === 'zh' ? item.nameZh : item.nameVi;
-                const div = document.createElement('div');
-                div.className = 'flex justify-between items-center border-b pb-2';
-                div.innerHTML = `
+    const Icons = {
+      Coffee: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+      ),
+      Search: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      ),
+      ShoppingBag: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      ),
+      Clock: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+      ),
+      Plus: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      ),
+      Minus: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      ),
+      X: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      ),
+      Menu: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      ),
+      Globe: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+      ),
+      Truck: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+      ),
+      Send: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      ),
+      CheckCircle: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      ),
+      Package: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+      ),
+      Trash: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+      ),
+      AlertTriangle: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+      ),
+      Lock: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      ),
+      Printer: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+      ),
+      FileText: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+      ),
+      Settings: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      ),
+      ShieldCheck: (props) => (
+        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+      )
+    };
+
+    const CART_STORAGE_KEY = 'VIEBUCKS_cafe_cart_v1';
+    const PRODUCTS_STORAGE_KEY = 'VIEBUCKS_cafe_products_v4';
+    const ORDER_HISTORY_STORAGE_KEY = 'VIEBUCKS_cafe_order_history_v1';
+    const ADMIN_PASSWORD = '0348246669';
+    const SHIPPING_CONFIG = { FREE_THRESHOLD: 500000, FLAT_RATE: 25000 };
+
+    const TRANSLATIONS = {
+      'zh-TW': {
+        searchPlaceholder: '搜尋產品名稱...',
+        history: '歷史訂單',
+        cart: '購物車',
+        categories: '產品分類',
+        retailPrice: '零售價',
+        wholesalePrice: '批發價 (10包+)',
+        selectAndBuy: '選擇與購買',
+        soldOut: '已售完',
+        grindSize: '選擇研磨度 (Grind Size)',
+        coldbrewNotice: '本商品為冷萃浸泡包：強調單一豆種，3種不同烘焙度混合。',
+        safetyInfoTitle: '產品安全與食品標示資訊',
+        safetyStorage: '保存方式：請置於陰涼乾燥處，避免陽光直射，開封後請盡速飲用完畢。',
+        safetyCert: '品質保證：100% 天然烘焙，通過嚴格食品安全檢驗，不含人工添加物。',
+        safetyUsage: '食用建議：孕婦、心血管疾病患者或對咖啡因敏感者，請斟酌個人體質適量飲用。',
+        coffeeDetailTitle: '咖啡豆詳細規格與風味',
+        origin: '產地來源',
+        altitude: '海拔高度',
+        process: '處理法',
+        grade: '咖啡等級',
+        flavor: '風味敘述',
+        coldbrewDetailTitle: '冷萃咖啡包特色說明',
+        coldbrewFeature1: '單一豆種（Single Origin）堅持：嚴選單一產區純粹豆種，不使用雜豆混搭，完整保留風土。',
+        coldbrewFeature2: '黃金三焙混調工藝：大膽結合淺焙、中焙、深焙三種不同烘焙度，交織出前所未有的立體層次。',
+        quantity: '數量',
+        addToCart: '加入購物車',
+        wholesaleApplied: '已享批發優惠價',
+        wholesaleUpgrade: '(滿 10 包升級批發價)',
+        freeShippingGoal: '滿 500,000 VND 免運',
+        freeShippingReached: '已達免運門檻！',
+        freeShippingShort: '還差 ',
+        emptyCart: '購物車目前是空的',
+        subtotal: '商品小計',
+        shippingFee: '運費',
+        free: '免費',
+        total: '總計金額',
+        checkout: '前往填寫收件資訊結帳',
+        customerInfo: '收件人資訊',
+        fullName: '姓名 *',
+        phone: '聯絡電話 *',
+        address: '收件地址 *',
+        notes: '備註 (可選)',
+        payable: '應付金額:',
+        submitOrder: '確認發送訂單',
+        submitting: '正在傳送訂單...',
+        orderSuccess: '訂單已成功送出！',
+        orderSuccessDesc: '訂單已記錄至歷史訂單，並可列印或儲存正式收據。',
+        orderHistoryTitle: '歷史訂單紀錄',
+        noHistory: '尚無歷史訂單紀錄',
+        clearHistory: '清除歷史',
+        orderId: '訂單編號',
+        confirmClear: '確定要清除所有歷史訂單紀錄？',
+        restockAlertTitle: '自動補貨提醒',
+        restockAlertNotice: '部分選購商品庫存過低，系統已記錄備貨需求。',
+        historyPasswordTitle: '歷史訂單驗證',
+        historyPasswordDesc: '請輸入管理密碼以檢視歷史訂單',
+        printReceipt: '列印/儲存單據',
+        viewReceipt: '檢視單據',
+        receiptTitle: 'VIEBUCKS CAFE 正式訂單明細',
+        close: '關閉',
+        passwordPlaceholder: '請輸入管理密碼',
+        passwordError: '密碼錯誤，請重新輸入',
+        passwordSubmit: '確認送出',
+        grindOptions: {
+          beans: { label: '保留原豆', detail: 'Whole Beans' },
+          phin: { label: '越南滴漏', detail: 'Phin Filter' },
+          espresso: { label: '義式濃縮', detail: 'Espresso' },
+          pour_over: { label: '手沖', detail: 'Pour-over' },
+          coldbrew: { label: '冷萃包', detail: 'Cold Brew' }
+        },
+        cats: {
+          all: '全部分類',
+          arabica: '阿拉比卡',
+          robusta: '羅布斯塔',
+          blend: '特調商業咖啡',
+          coldbrew: '冷萃包 (Cold Brew)'
+        }
+      },
+      'vi': {
+        searchPlaceholder: 'Tìm kiếm sản phẩm...',
+        history: 'Lịch sử đơn hàng',
+        cart: 'Giỏ hàng',
+        categories: 'Danh mục sản phẩm',
+        retailPrice: 'Giá lẻ',
+        wholesalePrice: 'Giá sỉ (10 gói+)',
+        selectAndBuy: 'Chọn mua',
+        soldOut: 'Hết hàng',
+        grindSize: 'Chọn mức độ xay (Grind Size)',
+        coldbrewNotice: 'Sản phẩm túi lọc Cold Brew: Nhấn mạnh đơn nguồn gốc, kết hợp 3 mức độ rang khác nhau.',
+        safetyInfoTitle: 'Thông tin an toàn & Tiêu chuẩn sản phẩm',
+        safetyStorage: 'Bảo quản: Nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp. Đóng kín sau khi mở.',
+        safetyCert: 'Cam kết chất lượng: 100% rang mộc tự nhiên, đạt tiêu chuẩn an toàn thực phẩm, không hóa chất.',
+        safetyUsage: 'Khuyến cáo: Phụ nữ mang thai, người bệnh tim mạch hoặc nhạy cảm với caffeine nên cân nhắc khi sử dụng.',
+        coffeeDetailTitle: 'Thông tin chi tiết & Hương vị cà phê hạt',
+        origin: 'Xuất xứ',
+        altitude: 'Độ cao',
+        process: 'Phương pháp chế biến',
+        grade: 'Cấp độ cà phê',
+        flavor: 'Hương vị',
+        coldbrewDetailTitle: 'Đặc điểm túi lọc Cold Brew',
+        coldbrewFeature1: 'Đơn nguồn gốc (Single Origin): Lựa chọn tinh tế từ một vùng trồng duy nhất, bảo tồn trọn vẹn hương vị bản địa.',
+        coldbrewFeature2: 'Công nghệ phối trộn 3 cấp độ rang: Kết hợp hoàn hảo giữa rang nhạt, rang vừa và rang đậm, mang đến tầng hương phong phú.',
+        quantity: 'Số lượng',
+        addToCart: 'Thêm vào giỏ hàng',
+        wholesaleApplied: 'Đã áp dụng giá sỉ',
+        wholesaleUpgrade: '(Mua 10 gói+ nâng giá sỉ)',
+        freeShippingGoal: 'Freeship từ 500,000 VND',
+        freeShippingReached: 'Đã đạt mức Freeship!',
+        freeShippingShort: 'Còn thiếu ',
+        emptyCart: 'Giỏ hàng đang trống',
+        subtotal: 'Tạm tính',
+        shippingFee: 'Phí vận chuyển',
+        free: 'Miễn phí',
+        total: 'Tổng cộng',
+        checkout: 'Thanh toán',
+        customerInfo: 'Thông tin người nhận',
+        fullName: 'Họ và tên *',
+        phone: 'Số điện thoại *',
+        address: 'Địa chỉ nhận hàng *',
+        notes: 'Ghi chú (Không bắt buộc)',
+        payable: 'Thành tiền:',
+        submitOrder: 'Xác nhận đặt hàng',
+        submitting: 'Đang gửi đơn hàng...',
+        orderSuccess: 'Đặt hàng thành công!',
+        orderSuccessDesc: 'Đơn hàng đã được ghi lại, bạn có thể in hoặc lưu hóa đơn.',
+        orderHistoryTitle: 'Lịch sử đơn hàng',
+        noHistory: 'Chưa có lịch sử đơn hàng',
+        clearHistory: 'Xóa lịch sử',
+        orderId: 'Mã đơn hàng',
+        confirmClear: 'Bạn có chắc muốn xóa lịch sử đơn hàng?',
+        restockAlertTitle: 'Cảnh báo nhập hàng',
+        restockAlertNotice: 'Một số sản phẩm gần hết hàng, hệ thống đã ghi nhận nhu cầu nhập thêm.',
+        historyPasswordTitle: 'Xác thực lịch sử đơn hàng',
+        historyPasswordDesc: 'Vui lòng nhập mật khẩu để xem lịch sử',
+        printReceipt: 'In / Lưu hóa đơn',
+        viewReceipt: 'Xem hóa đơn',
+        receiptTitle: 'HÓA ĐƠN BÁN HÀNG VIEBUCKS CAFE',
+        close: 'Đóng',
+        passwordPlaceholder: 'Nhập mật khẩu quản trị',
+        passwordError: 'Mật khẩu sai, vui lòng thử lại',
+        passwordSubmit: 'Xác nhận',
+        grindOptions: {
+          beans: { label: 'Nguyên hạt', detail: 'Whole Beans' },
+          phin: { label: 'Pha Phin', detail: 'Phin Filter' },
+          espresso: { label: 'Pha Máy', detail: 'Espresso' },
+          pour_over: { label: 'Pha Giấy Lọc', detail: 'Pour-over' },
+          coldbrew: { label: 'Cold Brew', detail: 'Cold Brew' }
+        },
+        cats: {
+          all: 'Tất cả danh mục',
+          arabica: 'Arabica',
+          robusta: 'Robusta',
+          blend: 'Cà phê Phối Trộn',
+          coldbrew: 'Túi Lọc Cold Brew'
+        }
+      }
+    };
+
+    const INITIAL_PRODUCTS = [
+      { 
+        id: 'arabica-100-250g', 
+        nameZh: '100% 精品阿拉比卡咖啡豆', 
+        nameVi: 'Cà phê đặc sản Arabica 100%', 
+        category: 'arabica', 
+        specZh: '250公克', 
+        specVi: '250g', 
+        price: 145000, 
+        wholesalePrice: 125000, 
+        type: 'beans', 
+        stock: 15, 
+        threshold: 5, 
+        image: 'https://github.com/rick0960590177/viebucks-coffee/blob/main/images/P1.jpg',
+        origin: '嚴選特定產區與小農莊園，追溯咖啡果實生長環境與風土條件',
+        altitude: '約 1,200 至 2,000 公尺（高海拔山區）',
+        process: '精準對應水洗、日曬或蜜處理法',
+        grade: 'Grade 1 / Specialty Grade 精品級',
+        flavor: '前段明亮果香或花香，中段堅果與焦糖甜感，尾韻乾淨綿長'
+      },
+      { 
+        id: 'arabica-100-500g', 
+        nameZh: '100% 精品阿拉比卡咖啡豆', 
+        nameVi: 'Cà phê đặc sản Arabica 100%', 
+        category: 'arabica', 
+        specZh: '500公克', 
+        specVi: '500g', 
+        price: 280000, 
+        wholesalePrice: 240000, 
+        type: 'beans', 
+        stock: 15, 
+        threshold: 5, 
+        image: 'https://github.com/rick0960590177/viebucks-coffee/blob/main/images/P1.jpg',
+        origin: '嚴選特定產區與小農莊園，追溯咖啡果實生長環境與風土條件',
+        altitude: '約 1,200 至 2,000 公尺（高海拔山區）',
+        process: '精準對應水洗、日曬或蜜處理法',
+        grade: 'Grade 1 / Specialty Grade 精品級',
+        flavor: '前段明亮果香或花香，中段堅果與焦糖甜感，尾韻乾淨綿長'
+      },
+      { 
+        id: 'arabica-coldbrew-10', 
+        nameZh: '100% 精品阿拉比卡冷萃咖啡包', 
+        nameVi: 'Cà phê ủ lạnh Arabica 100%', 
+        category: 'coldbrew', 
+        specZh: '10包/袋', 
+        specVi: '10 Gói /Túi', 
+        price: 125000, 
+        wholesalePrice: 105000, 
+        type: 'coldbrew', 
+        stock: 20, 
+        threshold: 5, 
+        image: 'https://github.com/rick0960590177/viebucks-coffee/blob/main/images/P4.jpg',
+        origin: '嚴選單一產區阿拉比卡豆種（Single Origin）',
+        altitude: '高海拔特選產區',
+        process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
+        grade: '精品冷萃浸泡包規格',
+        flavor: '淺焙果酸花香、中焙焦糖甜感、深焙黑巧克力尾韻，層次立體豐富'
+      },
+      { 
+        id: 'arabica-coldbrew-30', 
+        nameZh: '100% 精品阿拉比卡冷萃咖啡包', 
+        nameVi: 'Cà phê ủ lạnh Arabica 100%', 
+        category: 'coldbrew', 
+        specZh: '30包/袋', 
+        specVi: '30 Gói /Túi', 
+        price: 350000, 
+        wholesalePrice: 295000, 
+        type: 'coldbrew', 
+        stock: 20, 
+        threshold: 5, 
+        image: 'https://github.com/rick0960590177/viebucks-coffee/blob/main/images/P4.jpg',
+        origin: '嚴選單一產區阿拉比卡豆種（Single Origin）',
+        altitude: '高海拔特選產區',
+        process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
+        grade: '精品冷萃浸泡包規格',
+        flavor: '淺焙果酸花香、中焙焦糖甜感、深焙黑巧克力尾韻，層次立體豐富'
+      },
+      { 
+        id: 'robusta-100-250g', 
+        nameZh: '100% 精品羅布斯塔咖啡豆', 
+        nameVi: 'Cà phê đặc sản Robusta 100%', 
+        category: 'robusta', 
+        specZh: '250公克', 
+        specVi: '250g', 
+        price: 91000, 
+        wholesalePrice: 78000, 
+        type: 'beans', 
+        stock: 25, 
+        threshold: 5, 
+        image: 'https://github.com/rick0960590177/viebucks-coffee/blob/main/images/P2.jpg',
+        origin: '精選頂級羅布斯塔莊園，濃郁風土與扎實口感',
+        altitude: '約 800 至 1,200 公尺',
+        process: '傳統日曬與水洗精製',
+        grade: 'Premium Grade 精選級',
+        flavor: '醇厚濃郁、帶有黑可可與麥香的獨特風味'
+      },
+      { 
+        id: 'robusta-100-500g', 
+        nameZh: '100% 精品羅布斯塔咖啡豆', 
+        nameVi: 'Cà phê đặc sản Robusta 100%', 
+        category: 'robusta', 
+        specZh: '500公克', 
+        specVi: '500g', 
+        price: 172000, 
+        wholesalePrice: 148000, 
+        type: 'beans', 
+        stock: 25, 
+        threshold: 5, 
+        image: 'https://github.com/rick0960590177/viebucks-coffee/blob/main/images/P2.jpg',
+        origin: '精選頂級羅布斯塔莊園，濃郁風土與扎實口感',
+        altitude: '約 800 至 1,200 公尺',
+        process: '傳統日曬與水洗精製',
+        grade: 'Premium Grade 精選級',
+        flavor: '醇厚濃郁、帶有黑可可與麥香的獨特風味'
+      },
+      { 
+        id: 'robusta-coldbrew-10', 
+        nameZh: '100% 精品羅布斯塔冷萃咖啡包', 
+        nameVi: 'Cà phê ủ lạnh Robusta 100%', 
+        category: 'coldbrew', 
+        specZh: '10包/袋', 
+        specVi: '10 Gói /Túi', 
+        price: 100000, 
+        wholesalePrice: 88000, 
+        type: 'coldbrew', 
+        stock: 20, 
+        threshold: 5, 
+        image: 'https://github.com/rick0960590177/viebucks-coffee/blob/main/images/P3.jpg',
+        origin: '嚴選單一產區羅布斯塔豆種（Single Origin）',
+        altitude: '精選優質產區',
+        process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
+        grade: '冷萃浸泡包規格',
+        flavor: '口感厚實濃郁、低酸回甘、具備強烈黑巧克力厚實尾韻'
+      },
+      { 
+        id: 'robusta-coldbrew-30', 
+        nameZh: '100% 精品羅布斯塔冷萃咖啡包', 
+        nameVi: 'Cà phê ủ lạnh Robusta 100%', 
+        category: 'coldbrew', 
+        specZh: '30包/袋', 
+        specVi: '30 Gói /Túi', 
+        price: 250000, 
+        wholesalePrice: 220000, 
+        type: 'coldbrew', 
+        stock: 20, 
+        threshold: 5, 
+        image: 'https://github.com/rick0960590177/viebucks-coffee/blob/main/images/P3.jpg',
+        origin: '嚴選單一產區羅布斯塔豆種（Single Origin）',
+        altitude: '精選優質產區',
+        process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
+        grade: '冷萃浸泡包規格',
+        flavor: '口感厚實濃郁、低酸回甘、具備強烈黑巧克力厚實尾韻'
+      },
+      { 
+        id: 'robusta-jasmine-10', 
+        nameZh: '茉莉花風味羅布斯塔冷萃包', 
+        nameVi: 'Cà phê ủ lạnh Robusta - Hương hoa nhài', 
+        category: 'coldbrew', 
+        specZh: '10包/袋', 
+        specVi: '10 Gói /Túi', 
+        price: 100000, 
+        wholesalePrice: 88000, 
+        type: 'coldbrew', 
+        stock: 20, 
+        threshold: 5, 
+        image: 'https://github.com/rick0960590177/viebucks-coffee/blob/main/images/P3.jpg',
+        origin: '單一產區羅布斯塔搭配天然花香調配（Single Origin）',
+        altitude: '精選優質產區',
+        process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
+        grade: '風味冷萃浸泡包規格',
+        flavor: '獨特茉莉花香、伴隨羅布斯塔厚實基底與三焙豐富層次'
+      },
+      { 
+        id: 'robusta-jasmine-30', 
+        nameZh: '茉莉花風味羅布斯塔冷萃包', 
+        nameVi: 'Cà phê ủ lạnh Robusta - Hương hoa nhài', 
+        category: 'coldbrew', 
+        specZh: '30包/袋', 
+        specVi: '30 Gói /Túi', 
+        price: 250000, 
+        wholesalePrice: 220000, 
+        type: 'coldbrew', 
+        stock: 20, 
+        threshold: 5, 
+        image: 'https://github.com/rick0960590177/viebucks-coffee/blob/main/images/P3.jpg',
+        origin: '單一產區羅布斯塔搭配天然花香調配（Single Origin）',
+        altitude: '精選優質產區',
+        process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
+        grade: '風味冷萃浸泡包規格',
+        flavor: '獨特茉莉花香、伴隨羅布斯塔厚實基底與三焙豐富層次'
+      },
+      { 
+        id: 'blend-8020-250g', 
+        nameZh: '80/20 義式特調咖啡豆', 
+        nameVi: 'Cà phê phối trộn Blend 80/20 Espresso', 
+        category: 'blend', 
+        specZh: '250公克', 
+        specVi: '250g', 
+        price: 135000, 
+        wholesalePrice: 115000, 
+        type: 'beans', 
+        stock: 15, 
+        threshold: 5, 
+        image: 'https://github.com/rick0960590177/viebucks-coffee/blob/main/images/P5.jpg',
+        origin: '精選阿拉比卡（80%）與羅布斯塔（20%）黃金比例拼配',
+        altitude: '綜合高海拔與優質莊園產區',
+        process: '水洗與日曬融合處理法',
+        grade: 'Espresso Blend 義式精選級',
+        flavor: '兼具阿拉比卡的優雅香氣與羅布斯塔的豐富油脂、濃厚Crema'
+      },
+      { 
+        id: 'blend-8020-500g', 
+        nameZh: '80/20 義式特調咖啡豆', 
+        nameVi: 'Cà phê phối trộn Blend 80/20 Espresso', 
+        category: 'blend', 
+        specZh: '500公克', 
+        specVi: '500g', 
+        price: 260000, 
+        wholesalePrice: 220000, 
+        type: 'beans', 
+        stock: 15, 
+        threshold: 5, 
+        image: 'https://github.com/rick0960590177/viebucks-coffee/blob/main/images/P5.jpg',
+        origin: '精選阿拉比卡（80%）與羅布斯塔（20%）黃金比例拼配',
+        altitude: '綜合高海拔與優質莊園產區',
+        process: '水洗與日曬融合處理法',
+        grade: 'Espresso Blend 義式精選級',
+        flavor: '兼具阿拉比卡的優雅香氣與羅布斯塔的豐富油脂、濃厚Crema'
+      },
+      { 
+        id: 'blend-7030-250g', 
+        nameZh: '70/30 義式特調咖啡豆', 
+        nameVi: 'Cà phê phối trộn Blend 70/30 Espresso', 
+        category: 'blend', 
+        specZh: '250公克', 
+        specVi: '250g', 
+        price: 128000, 
+        wholesalePrice: 110000, 
+        type: 'beans', 
+        stock: 15, 
+        threshold: 5, 
+        image: 'https://github.com/rick0960590177/viebucks-coffee/blob/main/images/P5.jpg',
+        origin: '精選阿拉比卡（70%）與羅布斯塔（30%）完美拼配',
+        altitude: '綜合高海拔與優質莊園產區',
+        process: '水洗與日曬融合處理法',
+        grade: 'Espresso Blend 義式精選級',
+        flavor: '平衡的酸甜感與厚實口感，非常適合製作拿鐵與卡布奇諾'
+      },
+      { 
+        id: 'blend-7030-500g', 
+        nameZh: '70/30 義式特調咖啡豆', 
+        nameVi: 'Cà phê phối trộn Blend 70/30 Espresso', 
+        category: 'blend', 
+        specZh: '500公克', 
+        specVi: '500g', 
+        price: 245000, 
+        wholesalePrice: 210000, 
+        type: 'beans', 
+        stock: 15, 
+        threshold: 5, 
+        image: 'https://github.com/rick0960590177/viebucks-coffee/blob/main/images/P5.jpg',
+        origin: '精選阿拉比卡（70%）與羅布斯塔（30%）完美拼配',
+        altitude: '綜合高海拔與優質莊園產區',
+        process: '水洗與日曬融合處理法',
+        grade: 'Espresso Blend 義式精選級',
+        flavor: '平衡的酸甜感與厚實口感，非常適合製作拿鐵與卡布奇諾'
+      },
+      { 
+        id: 'blend-5050-250g', 
+        nameZh: '50/50 義式特調咖啡豆', 
+        nameVi: 'Cà phê phối trộn Blend 50/50 Espresso', 
+        category: 'blend', 
+        specZh: '250公克', 
+        specVi: '250g', 
+        price: 118000, 
+        wholesalePrice: 100000, 
+        type: 'beans', 
+        stock: 15, 
+        threshold: 5, 
+        image: 'https://github.com/rick0960590177/viebucks-coffee/blob/main/images/P5.jpg',
+        origin: '阿拉比卡（50%）與羅布斯塔（50%）均衡拼配',
+        altitude: '綜合高海拔與優質莊園產區',
+        process: '水洗與日曬融合處理法',
+        grade: 'Espresso Blend 義式精選級',
+        flavor: '濃郁強勁、焦糖香氣與厚實Body，專為越式咖啡與濃厚義式打造'
+      },
+      { 
+        id: 'blend-5050-500g', 
+        nameZh: '50/50 義式特調咖啡豆', 
+        nameVi: 'Cà phê phối trộn Blend 50/50 Espresso', 
+        category: 'blend', 
+        specZh: '500公克', 
+        specVi: '500g', 
+        price: 225000, 
+        wholesalePrice: 190000, 
+        type: 'beans', 
+        stock: 15, 
+        threshold: 5, 
+        image: 'https://github.com/rick0960590177/viebucks-coffee/blob/main/images/P5.jpg',
+        origin: '阿拉比卡（50%）與羅布斯塔（50%）均衡拼配',
+        altitude: '綜合高海拔與優質莊園產區',
+        process: '水洗與日曬融合處理法',
+        grade: 'Espresso Blend 義式精選級',
+        flavor: '濃郁強勁、焦糖香氣與厚實Body，專為越式咖啡與濃厚義式打造'
+      }
+    ];
+
+    function App() {
+      const [lang, setLang] = useState('zh-TW');
+      const [products, setProducts] = useState(() => {
+        try {
+          const saved = localStorage.getItem(PRODUCTS_STORAGE_KEY);
+          return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
+        } catch (e) { return INITIAL_PRODUCTS; }
+      });
+      const [cart, setCart] = useState(() => {
+        try {
+          const savedCart = localStorage.getItem(CART_STORAGE_KEY);
+          return savedCart ? JSON.parse(savedCart) : [];
+        } catch (e) { return []; }
+      });
+      const [searchQuery, setSearchQuery] = useState('');
+      const [selectedCategory, setSelectedCategory] = useState('all');
+      const [selectedProduct, setSelectedProduct] = useState(null);
+      const [isCartOpen, setIsCartOpen] = useState(false);
+      const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+      const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+      const [isHistoryPasswordModalOpen, setIsHistoryPasswordModalOpen] = useState(false);
+      const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+      const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+      const [activeReceiptOrder, setActiveReceiptOrder] = useState(null);
+
+      const t = TRANSLATIONS[lang];
+
+      useEffect(() => {
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+      }, [cart]);
+
+      useEffect(() => {
+        localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(products));
+      }, [products]);
+
+      const toggleLanguage = () => {
+        setLang(prev => prev === 'zh-TW' ? 'vi' : 'zh-TW');
+      };
+
+      const filteredProducts = useMemo(() => {
+        return products.filter(product => {
+          const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+          const name = lang === 'zh-TW' ? product.nameZh : product.nameVi;
+          const matchesSearch = name.toLowerCase().includes(searchQuery.toLowerCase());
+          return matchesCategory && matchesSearch;
+        });
+      }, [products, selectedCategory, searchQuery, lang]);
+
+      const handleAddToCart = (productToAdd) => {
+        setCart(prev => {
+          const cartKey = `${productToAdd.id}-${productToAdd.grind || 'default'}`;
+          const existing = prev.find(item => item.cartKey === cartKey);
+          if (existing) {
+            return prev.map(item => item.cartKey === cartKey ? { ...item, quantity: item.quantity + productToAdd.quantity } : item);
+          }
+          return [...prev, { ...productToAdd, cartKey }];
+        });
+      };
+
+      const updateQuantity = (cartKey, delta) => {
+        setCart(prev => prev.map(item => {
+          if (item.cartKey === cartKey) {
+            const product = products.find(p => p.id === item.id);
+            const maxStock = product ? product.stock : 99;
+            const newQty = item.quantity + delta;
+            if (newQty > maxStock) return item;
+            return newQty > 0 ? { ...item, quantity: newQty } : null;
+          }
+          return item;
+        }).filter(Boolean));
+      };
+
+      const deductStock = (cartItems) => {
+        setProducts(prevProducts => prevProducts.map(prod => {
+          const itemsPurchased = cartItems.filter(item => item.id === prod.id);
+          const totalDeduction = itemsPurchased.reduce((sum, item) => sum + item.quantity, 0);
+          return totalDeduction > 0 ? { ...prod, stock: Math.max(0, prod.stock - totalDeduction) } : prod;
+        }));
+      };
+
+      const clearCart = () => {
+        setCart([]);
+        localStorage.removeItem(CART_STORAGE_KEY);
+      };
+
+      const totalCartItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+      return (
+        <div className="w-full flex-grow flex flex-col">
+          {/* Header Nav */}
+          <nav className="sticky top-0 z-35 bg-coffee-900 text-coffee-100 shadow-md w-full">
+            <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-20 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
+                <button onClick={() => setIsMobileMenuOpen(true)} className="p-1.5 sm:hidden rounded-lg text-coffee-200 hover:bg-coffee-800">
+                  <Icons.Menu className="h-6 w-6" />
+                </button>
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <Icons.Coffee className="h-6 w-6 sm:h-8 sm:w-8 text-coffee-200 flex-shrink-0" />
+                  <span className="text-lg sm:text-2xl font-bold tracking-wider font-serif">VIEBUCKS</span>
+                </div>
+              </div>
+
+              {/* Desktop Search Bar */}
+              <div className="relative flex-1 max-w-md hidden md:block">
+                <input
+                  type="text"
+                  placeholder={t.searchPlaceholder}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-coffee-800 text-coffee-100 placeholder-coffee-200/60 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-coffee-200 border border-coffee-800 text-sm"
+                />
+                <Icons.Search className="absolute left-3 top-2.5 h-4 w-4 text-coffee-200/60" />
+              </div>
+
+              {/* Language Switcher & Controls */}
+              <div className="flex items-center gap-1 sm:gap-2">
+                <button
+                  onClick={toggleLanguage}
+                  className="flex items-center gap-1 px-2 py-1.5 rounded-full bg-coffee-800 hover:bg-coffee-700 text-xs font-medium text-amber-300 border border-coffee-700 transition-colors"
+                >
+                  <Icons.Globe className="h-3.5 w-3.5" />
+                  <span>{lang === 'zh-TW' ? '繁中' : 'VN'}</span>
+                </button>
+
+                <button onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)} className="p-2 md:hidden rounded-full text-coffee-200 hover:bg-coffee-800">
+                  <Icons.Search className="h-5 w-5" />
+                </button>
+
+                <button onClick={() => setIsHistoryPasswordModalOpen(true)} className="hidden sm:flex p-2 hover:bg-coffee-800 rounded-full text-coffee-200 hover:text-white" title={t.history}>
+                  <Icons.Clock className="h-6 w-6" />
+                </button>
+
+                <button onClick={() => setIsCartOpen(true)} className="relative p-2 hover:bg-coffee-800 rounded-full">
+                  <Icons.ShoppingBag className="h-6 w-6 sm:h-7 sm:w-7 text-coffee-100" />
+                  {totalCartItems > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-[10px] sm:text-xs font-bold rounded-full h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center animate-pulse">
+                      {totalCartItems}
+                    </span>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Mobile Search Bar */}
+            {isMobileSearchOpen && (
+              <div className="md:hidden px-3 pb-3 pt-1 border-t border-coffee-800 bg-coffee-900">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder={t.searchPlaceholder}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    autoFocus
+                    className="w-full bg-coffee-800 text-coffee-100 placeholder-coffee-200/60 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-coffee-200 border border-coffee-700 text-sm"
+                  />
+                  <Icons.Search className="absolute left-3 top-2.5 h-4 w-4 text-coffee-200/60" />
+                </div>
+              </div>
+            )}
+          </nav>
+
+          {/* Content Area */}
+          <main className="flex-grow w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+            {/* Category Tabs */}
+            <div className="overflow-x-auto no-scrollbar -mx-3 px-3 sm:mx-0 sm:px-0 mb-4 sm:mb-8">
+              <div className="flex gap-2 sm:gap-3 min-w-max pb-1">
+                {Object.keys(t.cats).map(catKey => (
+                  <button
+                    key={catKey}
+                    onClick={() => setSelectedCategory(catKey)}
+                    className={`px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all whitespace-nowrap shadow-sm ${
+                      selectedCategory === catKey ? 'bg-coffee-800 text-coffee-50 ring-2 ring-coffee-300' : 'bg-white text-coffee-800 hover:bg-coffee-100 border border-coffee-200'
+                    }`}
+                  >
+                    {t.cats[catKey]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Product Cards Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {filteredProducts.map(product => {
+                const productName = lang === 'zh-TW' ? product.nameZh : product.nameVi;
+                const productSubName = lang === 'zh-TW' ? product.nameVi : product.nameZh;
+                const specText = lang === 'zh-TW' ? product.specZh : product.specVi;
+                const isOut = product.stock <= 0;
+
+                return (
+                  <div key={product.id} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-coffee-100 flex flex-col justify-between">
                     <div>
-                        <h4 class="font-bold text-sm">${name}</h4>
-                        <p class="text-xs text-gray-500">${item.price.toLocaleString()} VNĐ x ${item.qty}</p>
+                      <div className="h-44 sm:h-52 overflow-hidden relative bg-coffee-100">
+                        <img src={product.image} alt={productName} className={`w-full h-full object-cover transition-transform duration-500 ${isOut ? 'grayscale opacity-60' : 'hover:scale-105'}`} />
+                        <span className="absolute top-3 right-3 text-xs bg-coffee-900/80 text-white px-2.5 py-1 rounded-full backdrop-blur-md font-medium shadow">
+                          {specText}
+                        </span>
+
+                        <div className="absolute top-3 left-3">
+                          {isOut && (
+                            <span className="bg-red-600 text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-full shadow">{t.soldOut}</span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="p-4 sm:p-5">
+                        <h3 className="text-base sm:text-lg font-bold text-coffee-900 font-serif line-clamp-1">{productName}</h3>
+                        <p className="text-xs text-coffee-600 italic mb-3 line-clamp-1">{productSubName}</p>
+                      </div>
                     </div>
-                    <span class="font-bold text-amber-900">${(item.price * item.qty).toLocaleString()} VNĐ</span>
-                `;
-                list.appendChild(div);
-            });
 
-            document.getElementById('cartTotalPrice').innerText = total.toLocaleString() + ' VNĐ';
+                    <div className="p-4 sm:p-5 pt-0">
+                      <div className="pt-3 border-t border-coffee-100 space-y-3">
+                        <div className="flex items-baseline justify-between">
+                          <div>
+                            <div className="text-[10px] sm:text-xs text-coffee-500">{t.retailPrice}</div>
+                            <div className="text-sm sm:text-base font-bold text-coffee-900">{product.price.toLocaleString()} VND</div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-[10px] sm:text-xs text-amber-700 font-bold">{t.wholesalePrice}</div>
+                            <div className="text-xs sm:text-sm font-bold text-amber-800">{product.wholesalePrice.toLocaleString()} VND</div>
+                          </div>
+                        </div>
+
+                        <button
+                          disabled={isOut}
+                          onClick={() => setSelectedProduct(product)}
+                          className={`w-full py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+                            isOut ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-coffee-800 hover:bg-coffee-900 text-white shadow'
+                          }`}
+                        >
+                          <Icons.Plus className="h-4 w-4" /> {isOut ? t.soldOut : t.selectAndBuy}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </main>
+
+          {/* Mobile Drawer Navigation */}
+          {isMobileMenuOpen && (
+            <div className="fixed inset-0 z-50 sm:hidden">
+              <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
+              <div className="fixed inset-y-0 left-0 w-4/5 max-w-xs bg-coffee-900 text-coffee-100 shadow-2xl flex flex-col justify-between p-5 z-10">
+                <div>
+                  <div className="flex items-center justify-between pb-4 border-b border-coffee-800">
+                    <div className="flex items-center gap-2">
+                      <Icons.Coffee className="h-6 w-6 text-coffee-200" />
+                      <span className="text-base font-bold tracking-wider font-serif">VIEBUCKS</span>
+                    </div>
+                    <button onClick={() => setIsMobileMenuOpen(false)} className="p-1 rounded-full text-coffee-200 hover:bg-coffee-800">
+                      <Icons.X className="h-6 w-6" />
+                    </button>
+                  </div>
+
+                  <div className="mt-5 space-y-3">
+                    <button onClick={toggleLanguage} className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-coffee-800 text-amber-300 font-medium text-sm">
+                      <span className="flex items-center gap-2"><Icons.Globe className="h-5 w-5" /> 語言 / Ngôn ngữ</span>
+                      <span>{lang === 'zh-TW' ? '繁體中文' : 'Tiếng Việt'}</span>
+                    </button>
+
+                    <button onClick={() => { setIsMobileMenuOpen(false); setIsHistoryPasswordModalOpen(true); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-coffee-800 text-coffee-200 hover:text-white font-medium text-sm">
+                      <Icons.Clock className="h-5 w-5" /> {t.history}
+                    </button>
+
+                    <div className="pt-3 border-t border-coffee-800">
+                      <p className="text-xs font-bold text-coffee-300 uppercase tracking-wider mb-2 px-3">{t.categories}</p>
+                      <div className="space-y-1">
+                        {Object.keys(t.cats).map(catKey => (
+                          <button
+                            key={catKey}
+                            onClick={() => { setSelectedCategory(catKey); setIsMobileMenuOpen(false); }}
+                            className={`w-full text-left px-3 py-2 rounded-lg text-sm ${selectedCategory === catKey ? 'bg-coffee-800 text-amber-400 font-bold' : 'text-coffee-200'}`}
+                          >
+                            {t.cats[catKey]}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Modals & Drawers */}
+          {selectedProduct && (
+            <ProductDetailModal
+              product={selectedProduct}
+              lang={lang}
+              t={t}
+              onClose={() => setSelectedProduct(null)}
+              onAddToCart={handleAddToCart}
+            />
+          )}
+
+          {isCartOpen && (
+            <CartDrawer
+              isOpen={isCartOpen}
+              lang={lang}
+              t={t}
+              onClose={() => setIsCartOpen(false)}
+              cart={cart}
+              updateQuantity={updateQuantity}
+              onOpenCheckout={() => { setIsCartOpen(false); setIsCheckoutOpen(true); }}
+            />
+          )}
+
+          {isCheckoutOpen && (
+            <CheckoutModal
+              isOpen={isCheckoutOpen}
+              lang={lang}
+              t={t}
+              products={products}
+              deductStock={deductStock}
+              onClose={() => setIsCheckoutOpen(false)}
+              cart={cart}
+              clearCart={clearCart}
+              onOpenReceipt={(order) => setActiveReceiptOrder(order)}
+            />
+          )}
+
+          {isHistoryOpen && (
+            <OrderHistoryModal
+              isOpen={isHistoryOpen}
+              lang={lang}
+              t={t}
+              onClose={() => setIsHistoryOpen(false)}
+              onViewReceipt={(order) => setActiveReceiptOrder(order)}
+            />
+          )}
+
+          {isHistoryPasswordModalOpen && (
+            <PasswordPromptModal
+              isOpen={isHistoryPasswordModalOpen}
+              title={t.historyPasswordTitle}
+              desc={t.historyPasswordDesc}
+              t={t}
+              onClose={() => setIsHistoryPasswordModalOpen(false)}
+              onSuccess={() => {
+                setIsHistoryPasswordModalOpen(false);
+                setIsHistoryOpen(true);
+              }}
+            />
+          )}
+
+          {activeReceiptOrder && (
+            <ReceiptModal
+              order={activeReceiptOrder}
+              t={t}
+              onClose={() => setActiveReceiptOrder(null)}
+            />
+          )}
+        </div>
+      );
+    }
+
+    function ReceiptModal({ order, t, onClose }) {
+      const handlePrint = () => {
+        window.print();
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+          <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-coffee-200 p-6 sm:p-8 max-h-[95vh] overflow-y-auto z-10 flex flex-col">
+            <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-200">
+              <div className="flex items-center gap-2">
+                <Icons.Coffee className="h-6 w-6 text-coffee-800" />
+                <h3 className="text-base sm:text-lg font-bold font-serif text-coffee-900">VIEBUCKS Cafe</h3>
+              </div>
+              <button onClick={onClose} className="p-1 rounded-full hover:bg-gray-100"><Icons.X className="h-5 w-5" /></button>
+            </div>
+
+            {/* Printable Area */}
+            <div id="printable-receipt" className="space-y-4 text-xs sm:text-sm text-gray-800 flex-1">
+              <div className="text-center space-y-1">
+                <h2 className="text-base sm:text-xl font-bold font-serif">{t.receiptTitle}</h2>
+                <p className="text-gray-500 text-xs">{order.date}</p>
+                <p className="font-bold text-coffee-800 text-xs">{t.orderId}: #{order.id}</p>
+              </div>
+
+              <div className="border-t border-b border-gray-200 py-3 space-y-1 text-xs">
+                <p><strong>收件人 / Người nhận:</strong> {order.customerName}</p>
+                <p><strong>電話 / Điện thoại:</strong> {order.phone}</p>
+                <p><strong>地址 / Địa chỉ:</strong> {order.address}</p>
+                {order.notes && <p><strong>備註 / Ghi chú:</strong> {order.notes}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <div className="font-bold border-b pb-1 text-xs text-gray-500 flex justify-between">
+                  <span>品項 / Sản phẩm</span>
+                  <span>小計 / Thành tiền</span>
+                </div>
+                {order.items.map((prod, idx) => (
+                  <div key={idx} className="flex justify-between items-start gap-2 py-1 border-b border-dashed border-gray-100">
+                    <div>
+                      <div className="font-bold">{prod.name} ({prod.spec})</div>
+                      <div className="text-[10px] text-gray-500">{prod.grindLabel} x {prod.quantity}</div>
+                    </div>
+                    <div className="font-bold whitespace-nowrap">{(prod.unitPrice * prod.quantity).toLocaleString()} VND</div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="space-y-1 pt-2 border-t border-gray-200 text-xs">
+                <div className="flex justify-between"><span>商品小計:</span><span>{order.subtotal.toLocaleString()} VND</span></div>
+                <div className="flex justify-between"><span>運費:</span><span>{order.shippingFee === 0 ? '免費 / Miễn phí' : `${order.shippingFee.toLocaleString()} VND`}</span></div>
+                <div className="flex justify-between font-bold text-sm sm:text-base text-coffee-900 pt-2 border-t border-gray-200">
+                  <span>總計金額:</span>
+                  <span className="text-coffee-800">{order.grandTotal.toLocaleString()} VND</span>
+                </div>
+              </div>
+
+              <div className="text-center pt-4 text-[10px] text-gray-400 font-serif">
+                感謝您的選購！Xin cảm ơn quý khách! - VIEBUCKS CAFE
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-gray-200 mt-4 flex gap-3">
+              <button
+                onClick={handlePrint}
+                className="flex-1 bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 rounded-xl shadow-md flex items-center justify-center gap-2 text-xs sm:text-sm transition-colors"
+              >
+                <Icons.Printer className="h-4 w-4" /> {t.printReceipt}
+              </button>
+              <button
+                onClick={onClose}
+                className="px-5 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 rounded-xl text-xs sm:text-sm transition-colors"
+              >
+                {t.close}
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function PasswordPromptModal({ isOpen, title, desc, t, onClose, onSuccess }) {
+      const [password, setPassword] = useState('');
+      const [error, setError] = useState(false);
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (password === ADMIN_PASSWORD) {
+          setError(false);
+          setPassword('');
+          onSuccess();
+        } else {
+          setError(true);
         }
+      };
 
-        // 語言切換按鈕事件
-        document.getElementById('langToggle').addEventListener('click', () => {
-            currentLang = currentLang === 'zh' ? 'vi' : 'zh';
-            renderProducts();
-            updateCartUI();
-        });
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+          <div className="relative w-full max-w-sm bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-5 sm:p-6 space-y-4 z-10">
+            <button onClick={onClose} className="absolute right-4 top-4 p-1.5 rounded-full hover:bg-coffee-200"><Icons.X className="h-5 w-5" /></button>
 
-        // 購物車互動
-        document.getElementById('cartBtn').addEventListener('click', () => {
-            document.getElementById('cartModal').classList.remove('hidden');
-        });
-        document.getElementById('closeCart').addEventListener('click', () => {
-            document.getElementById('cartModal').classList.add('hidden');
-        });
+            <div className="text-center space-y-1">
+              <div className="w-12 h-12 bg-coffee-100 text-coffee-800 rounded-full flex items-center justify-center mx-auto mb-2">
+                <Icons.Lock className="h-6 w-6" />
+              </div>
+              <h3 className="text-lg font-bold font-serif text-coffee-900">{title}</h3>
+              <p className="text-xs text-coffee-600">{desc}</p>
+            </div>
 
-        // 初次載入
-        renderProducts();
-    </script>
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <input
+                type="password"
+                placeholder={t.passwordPlaceholder}
+                value={password}
+                onChange={(e) => { setPassword(e.target.value); setError(false); }}
+                autoFocus
+                className="w-full bg-white border border-coffee-200 rounded-xl p-3 text-sm text-center font-bold tracking-widest focus:outline-none focus:ring-2 focus:ring-coffee-800"
+              />
+
+              {error && (
+                <p className="text-xs text-red-600 text-center font-bold">{t.passwordError}</p>
+              )}
+
+              <button
+                type="submit"
+                className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 rounded-xl shadow-md text-xs sm:text-sm transition-colors"
+              >
+                {t.passwordSubmit}
+              </button>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    function ProductDetailModal({ product, lang, t, onClose, onAddToCart }) {
+      const [quantity, setQuantity] = useState(1);
+      const [selectedGrind, setSelectedGrind] = useState('beans');
+
+      const isBeanProduct = product.type === 'beans';
+      const maxStock = product.stock;
+      const currentUnitPrice = quantity >= 10 ? product.wholesalePrice : product.price;
+      const productName = lang === 'zh-TW' ? product.nameZh : product.nameVi;
+      const productSubName = lang === 'zh-TW' ? product.nameVi : product.nameZh;
+      const specText = lang === 'zh-TW' ? product.specZh : product.specVi;
+
+      const handleAdd = () => {
+        const grindObj = t.grindOptions[selectedGrind];
+        onAddToCart({
+          ...product,
+          quantity,
+          name: productName,
+          spec: specText,
+          grind: isBeanProduct ? selectedGrind : 'coldbrew',
+          grindLabel: isBeanProduct ? grindObj.label : t.grindOptions.coldbrew.label
+        });
+        onClose();
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+          <div className="relative w-full max-w-lg bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-4 sm:p-6 space-y-4 max-h-[90vh] overflow-y-auto z-10">
+            <button onClick={onClose} className="absolute right-4 top-4 p-2 bg-white/80 rounded-full hover:bg-white"><Icons.X className="h-5 w-5" /></button>
+
+            <div>
+              <span className="text-xs font-bold text-coffee-600 uppercase">{specText}</span>
+              <h2 className="text-lg sm:text-2xl font-bold font-serif text-coffee-900">{productName}</h2>
+              <p className="text-xs text-coffee-600 italic">{productSubName}</p>
+            </div>
+
+            <div className="flex items-baseline justify-between bg-white p-3 sm:p-4 rounded-xl border border-coffee-100">
+              <div className="flex items-baseline gap-2 flex-wrap">
+                <span className="text-lg sm:text-2xl font-extrabold text-coffee-800">{currentUnitPrice.toLocaleString()} VND</span>
+                {quantity >= 10 ? (
+                  <span className="text-[10px] sm:text-xs bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded">{t.wholesaleApplied}</span>
+                ) : (
+                  <span className="text-[10px] sm:text-xs text-coffee-500">{t.wholesaleUpgrade}</span>
+                )}
+              </div>
+            </div>
+
+            {/* 詳細規格與說明區塊 (咖啡豆 vs 冷萃包分別帶入) */}
+            {isBeanProduct ? (
+              <div className="bg-coffee-100/75 border border-coffee-200 rounded-xl p-3 sm:p-4 space-y-2">
+                <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-coffee-900 font-serif">
+                  <Icons.Coffee className="h-4 w-4 text-coffee-800 flex-shrink-0" />
+                  <span>{t.coffeeDetailTitle}</span>
+                </div>
+                <div className="space-y-1 text-[11px] sm:text-xs text-coffee-800 leading-relaxed">
+                  <p>• <strong className="font-bold">{t.origin}：</strong>{product.origin}</p>
+                  <p>• <strong className="font-bold">{t.altitude}：</strong>{product.altitude}</p>
+                  <p>• <strong className="font-bold">{t.process}：</strong>{product.process}</p>
+                  <p>• <strong className="font-bold">{t.grade}：</strong>{product.grade}</p>
+                  <p>• <strong className="font-bold">{t.flavor}：</strong>{product.flavor}</p>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-amber-50/75 border border-amber-200 rounded-xl p-3 sm:p-4 space-y-2">
+                <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-amber-900 font-serif">
+                  <Icons.Package className="h-4 w-4 text-amber-700 flex-shrink-0" />
+                  <span>{t.coldbrewDetailTitle}</span>
+                </div>
+                <div className="space-y-1 text-[11px] sm:text-xs text-coffee-800 leading-relaxed">
+                  <p>• {t.coldbrewFeature1}</p>
+                  <p>• {t.coldbrewFeature2}</p>
+                  <p className="pt-1 text-amber-900 font-semibold">• <strong className="font-bold">{t.flavor}：</strong>{product.flavor}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Product Safety & Food Information Section */}
+            <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-3 sm:p-4 space-y-2.5">
+              <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-amber-900">
+                <Icons.ShieldCheck className="h-4 w-4 text-amber-700 flex-shrink-0" />
+                <span>{t.safetyInfoTitle}</span>
+              </div>
+              <div className="space-y-1.5 text-[11px] sm:text-xs text-coffee-800 leading-relaxed">
+                <p>• {t.safetyStorage}</p>
+                <p>• {t.safetyCert}</p>
+                <p>• {t.safetyUsage}</p>
+              </div>
+            </div>
+
+            {isBeanProduct ? (
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase text-coffee-800 flex items-center gap-1"><Icons.Settings className="h-3.5 w-3.5" /> {t.grindSize}</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {Object.keys(t.grindOptions).filter(k => k !== 'coldbrew').map(key => (
+                    <button
+                      key={key}
+                      onClick={() => setSelectedGrind(key)}
+                      className={`p-2.5 sm:p-3 rounded-lg text-left border transition-all ${
+                        selectedGrind === key ? 'bg-coffee-800 text-white border-coffee-800' : 'bg-white text-coffee-800 border-coffee-200'
+                      }`}
+                    >
+                      <div className="text-xs font-bold">{t.grindOptions[key].label}</div>
+                      <div className="text-[10px] opacity-75">{t.grindOptions[key].detail}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="p-3 bg-coffee-100 rounded-lg text-xs text-coffee-700">{t.coldbrewNotice}</div>
+            )}
+
+            <div className="flex items-center justify-between pt-1">
+              <span className="text-xs sm:text-sm font-bold text-coffee-900">{t.quantity}</span>
+              <div className="flex items-center rounded-lg border border-coffee-300 bg-white p-1">
+                <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="p-1 hover:bg-coffee-100 rounded"><Icons.Minus className="h-4 w-4" /></button>
+                <span className="w-8 text-center text-sm font-bold">{quantity}</span>
+                <button onClick={() => setQuantity(q => Math.min(maxStock, q + 1))} className="p-1 hover:bg-coffee-100 rounded"><Icons.Plus className="h-4 w-4" /></button>
+              </div>
+            </div>
+
+            <button onClick={handleAdd} className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 sm:py-3.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-xs sm:text-sm">
+              <Icons.ShoppingBag className="h-4 w-4" /> {t.addToCart} • {(currentUnitPrice * quantity).toLocaleString()} VND
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    function CartDrawer({ isOpen, onClose, cart, updateQuantity, onOpenCheckout, t }) {
+      const getUnitPrice = (item) => item.quantity >= 10 ? item.wholesalePrice : item.price;
+      const subtotal = cart.reduce((sum, item) => sum + getUnitPrice(item) * item.quantity, 0);
+      const isFreeShipping = subtotal >= SHIPPING_CONFIG.FREE_THRESHOLD || subtotal === 0;
+      const shippingFee = isFreeShipping ? 0 : SHIPPING_CONFIG.FLAT_RATE;
+      const grandTotal = subtotal + shippingFee;
+      const amountNeeded = Math.max(0, SHIPPING_CONFIG.FREE_THRESHOLD - subtotal);
+      const progress = Math.min(100, (subtotal / SHIPPING_CONFIG.FREE_THRESHOLD) * 100);
+
+      return (
+        <div className="fixed inset-0 z-50 overflow-hidden">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+          <div className="fixed inset-y-0 right-0 max-w-full flex">
+            <div className="w-screen max-w-md bg-coffee-50 text-coffee-900 shadow-2xl flex flex-col">
+              <div className="p-4 sm:p-5 bg-coffee-900 text-coffee-100 flex items-center justify-between">
+                <h2 className="text-base sm:text-xl font-bold flex items-center gap-2 font-serif"><Icons.ShoppingBag className="h-5 w-5" /> {t.cart}</h2>
+                <button onClick={onClose} className="p-1 hover:bg-coffee-800 rounded-full"><Icons.X className="h-6 w-6" /></button>
+              </div>
+
+              <div className="bg-coffee-100 p-3 sm:p-4 border-b border-coffee-200">
+                <div className="flex items-center justify-between text-xs font-semibold text-coffee-800 mb-1.5">
+                  <span className="flex items-center gap-1"><Icons.Truck className="h-4 w-4" /> {t.freeShippingGoal}</span>
+                  <span>{isFreeShipping ? t.freeShippingReached : `${t.freeShippingShort}${amountNeeded.toLocaleString()} VND`}</span>
+                </div>
+                <div className="w-full bg-coffee-200 rounded-full h-2 overflow-hidden">
+                  <div className="bg-amber-700 h-full transition-all duration-300" style={{ width: `${progress}%` }} />
+                </div>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-3 sm:p-5 space-y-3">
+                {cart.length === 0 ? (
+                  <div className="h-full flex flex-col items-center justify-center text-coffee-600">
+                    <p className="text-sm">{t.emptyCart}</p>
+                  </div>
+                ) : (
+                  cart.map(item => {
+                    const unitPrice = getUnitPrice(item);
+                    return (
+                      <div key={item.cartKey} className="p-3 bg-white rounded-xl shadow-sm border border-coffee-100 space-y-2">
+                        <div className="flex items-start gap-3">
+                          <img src={item.image} alt={item.name} className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-lg flex-shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-bold text-coffee-900 text-xs sm:text-sm truncate">{item.name}</h4>
+                            <p className="text-[10px] sm:text-xs text-coffee-600 truncate">{item.spec} | {item.grindLabel}</p>
+                            <div className="mt-1 flex items-center gap-2">
+                              <span className="text-xs font-bold text-coffee-800">{unitPrice.toLocaleString()} VND</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-2 border-t border-coffee-50">
+                          <div className="flex items-center gap-2 bg-coffee-100 rounded-lg p-1">
+                            <button onClick={() => updateQuantity(item.cartKey, -1)} className="p-1 hover:bg-coffee-200 rounded"><Icons.Minus className="h-3 w-3" /></button>
+                            <span className="text-xs font-bold w-6 text-center">{item.quantity}</span>
+                            <button onClick={() => updateQuantity(item.cartKey, 1)} className="p-1 hover:bg-coffee-200 rounded"><Icons.Plus className="h-3 w-3" /></button>
+                          </div>
+                          <div className="text-right font-bold text-xs">{(unitPrice * item.quantity).toLocaleString()} VND</div>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+
+              {cart.length > 0 && (
+                <div className="p-4 sm:p-5 bg-white border-t border-coffee-100 space-y-3">
+                  <div className="space-y-1 text-xs sm:text-sm text-coffee-700">
+                    <div className="flex justify-between"><span>{t.subtotal}</span><span>{subtotal.toLocaleString()} VND</span></div>
+                    <div className="flex justify-between"><span>{t.shippingFee}</span><span>{isFreeShipping ? t.free : `${shippingFee.toLocaleString()} VND`}</span></div>
+                    <div className="flex justify-between font-bold text-sm sm:text-base text-coffee-900 pt-2 border-t border-coffee-100">
+                      <span>{t.total}</span><span className="text-base sm:text-xl text-coffee-800">{grandTotal.toLocaleString()} VND</span>
+                    </div>
+                  </div>
+
+                  <button onClick={onOpenCheckout} className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 rounded-xl shadow-md flex items-center justify-center gap-2 text-xs sm:text-sm">
+                    <Icons.Send className="h-4 w-4" /> {t.checkout}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function CheckoutModal({ isOpen, onClose, cart, clearCart, products, deductStock, t, lang, onOpenReceipt }) {
+      const [formData, setFormData] = useState({ fullName: '', phone: '', address: '', notes: '' });
+      const [isSubmitting, setIsSubmitting] = useState(false);
+      const [isSuccess, setIsSuccess] = useState(false);
+      const [lastCreatedOrder, setLastCreatedOrder] = useState(null);
+
+      const getUnitPrice = (item) => item.quantity >= 10 ? item.wholesalePrice : item.price;
+      const subtotal = cart.reduce((sum, item) => sum + getUnitPrice(item) * item.quantity, 0);
+      const isFreeShipping = subtotal >= SHIPPING_CONFIG.FREE_THRESHOLD || subtotal === 0;
+      const shippingFee = isFreeShipping ? 0 : SHIPPING_CONFIG.FLAT_RATE;
+      const grandTotal = subtotal + shippingFee;
+
+      const handleInputChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+      const handleSubmitOrder = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        const orderId = Date.now().toString().slice(-6);
+        const orderDate = new Date().toLocaleString();
+
+        const itemsSummary = cart.map(item => 
+          `- ${item.name} (${item.spec}) [${item.grindLabel}] x ${item.quantity} ＝ ${(getUnitPrice(item) * item.quantity).toLocaleString()} VND`
+        ).join('\n');
+
+        const orderRecord = {
+          id: orderId,
+          date: orderDate,
+          customerName: formData.fullName,
+          phone: formData.phone,
+          address: formData.address,
+          notes: formData.notes,
+          items: cart.map(item => ({
+            name: item.name,
+            spec: item.spec,
+            grindLabel: item.grindLabel,
+            quantity: item.quantity,
+            unitPrice: getUnitPrice(item)
+          })),
+          subtotal,
+          shippingFee,
+          grandTotal
+        };
+
+        try {
+          const scriptURL = 'https://script.google.com/macros/s/AKfycbxZ0lung4gdqyrYsCMJCprWCLhuGK6VDA-0qyCuLMlpmruVzfaXbuTpvtDmixRhx-cD6g/exec';
+          
+          await fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              orderId,
+              orderDate,
+              fullName: formData.fullName,
+              phone: formData.phone,
+              address: formData.address,
+              notes: formData.notes || '無',
+              orderItems: itemsSummary,
+              subtotal,
+              shippingFee,
+              grandTotal,
+              restockNotice: '庫存顯示已關閉'
+            })
+          });
+
+          deductStock(cart);
+          const history = JSON.parse(localStorage.getItem(ORDER_HISTORY_STORAGE_KEY) || '[]');
+          localStorage.setItem(ORDER_HISTORY_STORAGE_KEY, JSON.stringify([orderRecord, ...history]));
+
+          setLastCreatedOrder(orderRecord);
+          setIsSubmitting(false);
+          setIsSuccess(true);
+          clearCart();
+
+        } catch (error) {
+          console.error('送出訂單失敗:', error);
+          alert('發送失敗，請稍後再試。');
+          setIsSubmitting(false);
+        }
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+          <div className="relative w-full max-w-lg bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-4 sm:p-8 max-h-[95vh] overflow-y-auto z-10">
+            <button onClick={onClose} className="absolute right-4 top-4 p-2 bg-white/80 rounded-full hover:bg-white"><Icons.X className="h-5 w-5" /></button>
+
+            {isSuccess ? (
+              <div className="py-8 text-center space-y-4">
+                <Icons.CheckCircle className="h-16 w-16 text-green-600 mx-auto animate-bounce" />
+                <h3 className="text-xl sm:text-2xl font-bold font-serif text-coffee-900">{t.orderSuccess}</h3>
+                <p className="text-xs sm:text-sm text-coffee-600">{t.orderSuccessDesc}</p>
+                {lastCreatedOrder && (
+                  <button
+                    onClick={() => { onClose(); onOpenReceipt(lastCreatedOrder); }}
+                    className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 rounded-xl shadow-md flex items-center justify-center gap-2 text-sm mt-4"
+                  >
+                    <Icons.FileText className="h-5 w-5" /> {t.printReceipt}
+                  </button>
+                )}
+              </div>
+            ) : (
+              <form onSubmit={handleSubmitOrder} className="space-y-3 sm:space-y-4">
+                <h2 className="text-lg sm:text-2xl font-bold font-serif text-coffee-900">{t.customerInfo}</h2>
+
+                <div>
+                  <label className="block text-xs font-bold text-coffee-800 mb-1">{t.fullName}</label>
+                  <input type="text" name="fullName" required value={formData.fullName} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm" />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-coffee-800 mb-1">{t.phone}</label>
+                  <input type="tel" name="phone" required value={formData.phone} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm" />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-coffee-800 mb-1">{t.address}</label>
+                  <input type="text" name="address" required value={formData.address} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm" />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-coffee-800 mb-1">{t.notes}</label>
+                  <textarea name="notes" rows={2} value={formData.notes} onChange={handleInputChange} className="w-full bg-white border border-coffee-200 rounded-lg p-2.5 text-sm" />
+                </div>
+
+                <div className="bg-coffee-100 p-3 sm:p-4 rounded-xl space-y-1 text-sm font-bold text-coffee-900">
+                  <div className="flex justify-between items-center"><span>{t.payable}</span><span className="text-base sm:text-lg text-coffee-800">{grandTotal.toLocaleString()} VND</span></div>
+                </div>
+
+                <button type="submit" disabled={isSubmitting} className="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-bold py-3 sm:py-3.5 rounded-xl shadow-md flex items-center justify-center gap-2 text-xs sm:text-sm disabled:opacity-50">
+                  <Icons.Send className="h-4 w-4" /> {isSubmitting ? t.submitting : t.submitOrder}
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    function OrderHistoryModal({ isOpen, onClose, t, onViewReceipt }) {
+      const [history, setHistory] = useState([]);
+
+      useEffect(() => {
+        const saved = localStorage.getItem(ORDER_HISTORY_STORAGE_KEY);
+        setHistory(saved ? JSON.parse(saved) : []);
+      }, [isOpen]);
+
+      const clearHistory = () => {
+        if (confirm(t.confirmClear)) {
+          localStorage.removeItem(ORDER_HISTORY_STORAGE_KEY);
+          setHistory([]);
+        }
+      };
+
+      return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+          <div className="relative w-full max-w-xl bg-coffee-50 rounded-2xl shadow-2xl border border-coffee-200 p-4 sm:p-6 max-h-[90vh] flex flex-col z-10">
+            <div className="flex justify-between items-center mb-3 border-b border-coffee-200 pb-3">
+              <h2 className="text-base sm:text-xl font-bold font-serif text-coffee-900 flex items-center gap-2"><Icons.Package className="h-5 w-5" /> {t.orderHistoryTitle}</h2>
+              <div className="flex items-center gap-2">
+                {history.length > 0 && (
+                  <button onClick={clearHistory} className="text-xs text-red-600 hover:underline flex items-center gap-1"><Icons.Trash className="h-3.5 w-3.5" /> {t.clearHistory}</button>
+                )}
+                <button onClick={onClose} className="p-1 rounded-full hover:bg-coffee-200"><Icons.X className="h-5 w-5" /></button>
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+              {history.length === 0 ? (
+                <p className="text-center py-8 text-xs sm:text-sm text-coffee-600">{t.noHistory}</p>
+              ) : (
+                history.map(item => (
+                  <div key={item.id} className="bg-white p-3 sm:p-4 rounded-xl border border-coffee-100 space-y-2 text-xs">
+                    <div className="flex justify-between font-bold text-coffee-900">
+                      <span>{t.orderId}: #{item.id}</span>
+                      <span className="text-coffee-600">{item.date}</span>
+                    </div>
+                    <div className="text-coffee-700">{item.customerName} ({item.phone})</div>
+                    <div className="bg-coffee-50 p-2 rounded space-y-1">
+                      {item.items.map((prod, idx) => (
+                        <div key={idx} className="flex justify-between text-coffee-800">
+                          <span className="truncate pr-2">{prod.name} ({prod.spec}) - {prod.grindLabel}</span>
+                          <span className="flex-shrink-0">x{prod.quantity}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+                      <span className="font-bold text-sm text-coffee-900">{item.grandTotal.toLocaleString()} VND</span>
+                      <button
+                        onClick={() => { onClose(); onViewReceipt(item); }}
+                        className="px-3 py-1.5 bg-coffee-800 hover:bg-coffee-900 text-white rounded-lg text-xs font-bold flex items-center gap-1 transition-colors"
+                      >
+                        <Icons.Printer className="h-3.5 w-3.5" /> {t.viewReceipt}
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const container = document.getElementById('root');
+    if (container) {
+      const root = ReactDOM.createRoot(container);
+      root.render(<App />);
+    }
+  </script>
 </body>
 </html>
