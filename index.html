@@ -114,9 +114,6 @@
       Trash: (props) => (
         <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
       ),
-      AlertTriangle: (props) => (
-        <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-      ),
       Lock: (props) => (
         <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
       ),
@@ -134,9 +131,9 @@
       )
     };
 
-    const CART_STORAGE_KEY = 'VIEBUCKS_cafe_cart_v1';
-    const PRODUCTS_STORAGE_KEY = 'VIEBUCKS_cafe_products_v4';
-    const ORDER_HISTORY_STORAGE_KEY = 'VIEBUCKS_cafe_order_history_v1';
+    const CART_STORAGE_KEY = 'VIEBUCKS_cafe_cart_v2';
+    const PRODUCTS_STORAGE_KEY = 'VIEBUCKS_cafe_products_v5';
+    const ORDER_HISTORY_STORAGE_KEY = 'VIEBUCKS_cafe_order_history_v2';
     const ADMIN_PASSWORD = '0348246669';
     const SHIPPING_CONFIG = { FREE_THRESHOLD: 500000, FLAT_RATE: 25000 };
 
@@ -150,8 +147,10 @@
         wholesalePrice: '批發價 (10包+)',
         selectAndBuy: '選擇與購買',
         soldOut: '已售完',
-        grindSize: '選擇研磨度 (Grind Size)',
+        grindSize: '選擇研磨度 / 規格',
         coldbrewNotice: '本商品為冷萃浸泡包：強調單一豆種，3種不同烘焙度混合。',
+        dripbagNotice: '本商品為精品濾掛包：手作耳掛設計，沖泡便利，完美還原單品莊園風味。',
+        giftboxNotice: '本商品為精緻禮盒組：內含精選咖啡豆與濾掛組合，送禮自用兩相宜。',
         safetyInfoTitle: '產品安全與食品標示資訊',
         safetyStorage: '保存方式：請置於陰涼乾燥處，避免陽光直射，開封後請盡速飲用完畢。',
         safetyCert: '品質保證：100% 天然烘焙，通過嚴格食品安全檢驗，不含人工添加物。',
@@ -209,14 +208,18 @@
           phin: { label: '越南滴漏', detail: 'Phin Filter' },
           espresso: { label: '義式濃縮', detail: 'Espresso' },
           pour_over: { label: '手沖', detail: 'Pour-over' },
-          coldbrew: { label: '冷萃包', detail: 'Cold Brew' }
+          coldbrew: { label: '冷萃包', detail: 'Cold Brew' },
+          dripbag: { label: '濾掛包', detail: 'Drip Bag' },
+          giftbox: { label: '精緻禮盒', detail: 'Gift Box' }
         },
         cats: {
           all: '全部分類',
           arabica: '阿拉比卡',
           robusta: '羅布斯塔',
           blend: '特調商業咖啡',
-          coldbrew: '冷萃包 (Cold Brew)'
+          coldbrew: '冷萃包',
+          dripbag: '濾掛包',
+          giftbox: '禮盒組'
         }
       },
       'vi': {
@@ -228,8 +231,10 @@
         wholesalePrice: 'Giá sỉ (10 gói+)',
         selectAndBuy: 'Chọn mua',
         soldOut: 'Hết hàng',
-        grindSize: 'Chọn mức độ xay (Grind Size)',
+        grindSize: 'Chọn mức độ xay / Quy cách',
         coldbrewNotice: 'Sản phẩm túi lọc Cold Brew: Nhấn mạnh đơn nguồn gốc, kết hợp 3 mức độ rang khác nhau.',
+        dripbagNotice: 'Sản phẩm túi lọc Drip Bag: Tiện lợi, giữ trọn hương vị nguyên bản của hạt cà phê.',
+        giftboxNotice: 'Hộp quà tặng cao cấp: Kết hợp tinh tế giữa cà phê hạt và túi lọc, thích hợp làm quà biếu.',
         safetyInfoTitle: 'Thông tin an toàn & Tiêu chuẩn sản phẩm',
         safetyStorage: 'Bảo quản: Nơi khô ráo, thoáng mát, tránh ánh nắng trực tiếp. Đóng kín sau khi mở.',
         safetyCert: 'Cam kết chất lượng: 100% rang mộc tự nhiên, đạt tiêu chuẩn an toàn thực phẩm, không hóa chất.',
@@ -287,19 +292,23 @@
           phin: { label: 'Pha Phin', detail: 'Phin Filter' },
           espresso: { label: 'Pha Máy', detail: 'Espresso' },
           pour_over: { label: 'Pha Giấy Lọc', detail: 'Pour-over' },
-          coldbrew: { label: 'Cold Brew', detail: 'Cold Brew' }
+          coldbrew: { label: 'Cold Brew', detail: 'Cold Brew' },
+          dripbag: { label: 'Túi Lọc Drip Bag', detail: 'Drip Bag' },
+          giftbox: { label: 'Hộp Quà Tặng', detail: 'Gift Box' }
         },
         cats: {
           all: 'Tất cả danh mục',
           arabica: 'Arabica',
           robusta: 'Robusta',
           blend: 'Cà phê Phối Trộn',
-          coldbrew: 'Túi Lọc Cold Brew'
+          coldbrew: 'Túi Lọc Cold Brew',
+          dripbag: 'Cà Phê Drip Bag',
+          giftbox: 'Hộp Quà Tặng'
         }
       }
     };
 
-        const INITIAL_PRODUCTS = [
+    const INITIAL_PRODUCTS = [
       { 
         id: 'arabica-100-250g', 
         nameZh: '100% 精品阿拉比卡咖啡豆', 
@@ -337,6 +346,46 @@
         process: '精準對應水洗、日曬或蜜處理法',
         grade: 'Grade 1 / Specialty Grade 精品級',
         flavor: '前段明亮果香或花香，中段堅果與焦糖甜感，尾韻乾淨綿長'
+      },
+      // 新增：濾掛包品項
+      { 
+        id: 'dripbag-signature-10', 
+        nameZh: 'VIEBUCKS 精品手作咖啡濾掛包', 
+        nameVi: 'Cà phê Phin Giấy Drip Bag Viebucks', 
+        category: 'dripbag', 
+        specZh: '10包/盒', 
+        specVi: '10 Gói /Hộp', 
+        price: 150000, 
+        wholesalePrice: 130000, 
+        type: 'dripbag', 
+        stock: 25, 
+        threshold: 5, 
+        image: 'https://cdn.jsdelivr.net/gh/rick0960590177/viebucks-coffee@main/images/P1.jpg',
+        origin: '精選阿拉比卡與頂級莊園豆完美調配',
+        altitude: '高海拔精選產區',
+        process: '中度烘焙、氮氣沖填保鮮',
+        grade: 'Drip Bag Specialty Series 精品濾掛系列',
+        flavor: '香氣濃郁、帶有核果、焦糖風味，隨身沖泡享受職人手沖口感'
+      },
+      // 新增：禮盒組品項
+      { 
+        id: 'giftbox-luxury-set', 
+        nameZh: 'VIEBUCKS 經典咖啡饗宴禮盒組', 
+        nameVi: 'Hộp Quà Tặng Cà Phê Cao Cấp Viebucks', 
+        category: 'giftbox', 
+        specZh: '禮盒裝 (咖啡豆250g x 2 + 濾掛包5入)', 
+        specVi: 'Hộp Quà (250g Hạt x 2 + 5 Drip Bag)', 
+        price: 480000, 
+        wholesalePrice: 420000, 
+        type: 'giftbox', 
+        stock: 10, 
+        threshold: 3, 
+        image: 'https://cdn.jsdelivr.net/gh/rick0960590177/viebucks-coffee@main/images/P5.jpg',
+        origin: '旗艦精選莊園綜合配方',
+        altitude: '多產區精選手工採收',
+        process: '水洗與日曬融合處理、精美厚磅禮盒包裝',
+        grade: 'Luxury Gift Set 頂級禮盒系列',
+        flavor: '一次體驗多款經典風味，層次豐富，送禮尊榮大方'
       },
       { 
         id: 'arabica-coldbrew-10', 
@@ -453,44 +502,6 @@
         flavor: '口感厚實濃郁、低酸回甘、具備強烈黑巧克力厚實尾韻'
       },
       { 
-        id: 'robusta-jasmine-10', 
-        nameZh: '茉莉花風味羅布斯塔冷萃包', 
-        nameVi: 'Cà phê ủ lạnh Robusta - Hương hoa nhài', 
-        category: 'coldbrew', 
-        specZh: '10包/袋', 
-        specVi: '10 Gói /Túi', 
-        price: 100000, 
-        wholesalePrice: 88000, 
-        type: 'coldbrew', 
-        stock: 20, 
-        threshold: 5, 
-        image: 'https://cdn.jsdelivr.net/gh/rick0960590177/viebucks-coffee@main/images/P3.jpg',
-        origin: '單一產區羅布斯塔搭配天然花香調配（Single Origin）',
-        altitude: '精選優質產區',
-        process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
-        grade: '風味冷萃浸泡包規格',
-        flavor: '獨特茉莉花香、伴隨羅布斯塔厚實基底與三焙豐富層次'
-      },
-      { 
-        id: 'robusta-jasmine-30', 
-        nameZh: '茉莉花風味羅布斯塔冷萃包', 
-        nameVi: 'Cà phê ủ lạnh Robusta - Hương hoa nhài', 
-        category: 'coldbrew', 
-        specZh: '30包/袋', 
-        specVi: '30 Gói /Túi', 
-        price: 250000, 
-        wholesalePrice: 220000, 
-        type: 'coldbrew', 
-        stock: 20, 
-        threshold: 5, 
-        image: 'https://cdn.jsdelivr.net/gh/rick0960590177/viebucks-coffee@main/images/P3.jpg',
-        origin: '單一產區羅布斯塔搭配天然花香調配（Single Origin）',
-        altitude: '精選優質產區',
-        process: '黃金三焙混調工藝（淺焙、中焙、深焙綜合浸泡）',
-        grade: '風味冷萃浸泡包規格',
-        flavor: '獨特茉莉花香、伴隨羅布斯塔厚實基底與三焙豐富層次'
-      },
-      { 
         id: 'blend-8020-250g', 
         nameZh: '80/20 義式特調咖啡豆', 
         nameVi: 'Cà phê phối trộn Blend 80/20 Espresso', 
@@ -527,82 +538,6 @@
         process: '水洗與日曬融合處理法',
         grade: 'Espresso Blend 義式精選級',
         flavor: '兼具阿拉比卡的優雅香氣與羅布斯塔的豐富油脂、濃厚Crema'
-      },
-      { 
-        id: 'blend-7030-250g', 
-        nameZh: '70/30 義式特調咖啡豆', 
-        nameVi: 'Cà phê phối trộn Blend 70/30 Espresso', 
-        category: 'blend', 
-        specZh: '250公克', 
-        specVi: '250g', 
-        price: 128000, 
-        wholesalePrice: 110000, 
-        type: 'beans', 
-        stock: 15, 
-        threshold: 5, 
-        image: 'https://cdn.jsdelivr.net/gh/rick0960590177/viebucks-coffee@main/images/P5.jpg',
-        origin: '精選阿拉比卡（70%）與羅布斯塔（30%）完美拼配',
-        altitude: '綜合高海拔與優質莊園產區',
-        process: '水洗與日曬融合處理法',
-        grade: 'Espresso Blend 義式精選級',
-        flavor: '平衡的酸甜感與厚實口感，非常適合製作拿鐵與卡布奇諾'
-      },
-      { 
-        id: 'blend-7030-500g', 
-        nameZh: '70/30 義式特調咖啡豆', 
-        nameVi: 'Cà phê phối trộn Blend 70/30 Espresso', 
-        category: 'blend', 
-        specZh: '500公克', 
-        specVi: '500g', 
-        price: 245000, 
-        wholesalePrice: 210000, 
-        type: 'beans', 
-        stock: 15, 
-        threshold: 5, 
-        image: 'https://cdn.jsdelivr.net/gh/rick0960590177/viebucks-coffee@main/images/P5.jpg',
-        origin: '精選阿拉比卡（70%）與羅布斯塔（30%）完美拼配',
-        altitude: '綜合高海拔與優質莊園產區',
-        process: '水洗與日曬融合處理法',
-        grade: 'Espresso Blend 義式精選級',
-        flavor: '平衡的酸甜感與厚實口感，非常適合製作拿鐵與卡布奇諾'
-      },
-      { 
-        id: 'blend-5050-250g', 
-        nameZh: '50/50 義式特調咖啡豆', 
-        nameVi: 'Cà phê phối trộn Blend 50/50 Espresso', 
-        category: 'blend', 
-        specZh: '250公克', 
-        specVi: '250g', 
-        price: 118000, 
-        wholesalePrice: 100000, 
-        type: 'beans', 
-        stock: 15, 
-        threshold: 5, 
-        image: 'https://cdn.jsdelivr.net/gh/rick0960590177/viebucks-coffee@main/images/P5.jpg',
-        origin: '阿拉比卡（50%）與羅布斯塔（50%）均衡拼配',
-        altitude: '綜合高海拔與優質莊園產區',
-        process: '水洗與日曬融合處理法',
-        grade: 'Espresso Blend 義式精選級',
-        flavor: '濃郁強勁、焦糖香氣與厚實Body，專為越式咖啡與濃厚義式打造'
-      },
-      { 
-        id: 'blend-5050-500g', 
-        nameZh: '50/50 義式特調咖啡豆', 
-        nameVi: 'Cà phê phối trộn Blend 50/50 Espresso', 
-        category: 'blend', 
-        specZh: '500公克', 
-        specVi: '500g', 
-        price: 225000, 
-        wholesalePrice: 190000, 
-        type: 'beans', 
-        stock: 15, 
-        threshold: 5, 
-        image: 'https://cdn.jsdelivr.net/gh/rick0960590177/viebucks-coffee@main/images/P5.jpg',
-        origin: '阿拉比卡（50%）與羅布斯塔（50%）均衡拼配',
-        altitude: '綜合高海拔與優質莊園產區',
-        process: '水洗與日曬融合處理法',
-        grade: 'Espresso Blend 義式精選級',
-        flavor: '濃郁強勁、焦糖香氣與厚實Body，專為越式咖啡與濃厚義式打造'
       }
     ];
 
@@ -1102,9 +1037,11 @@
 
     function ProductDetailModal({ product, lang, t, onClose, onAddToCart }) {
       const [quantity, setQuantity] = useState(1);
-      const [selectedGrind, setSelectedGrind] = useState('beans');
+      const [selectedGrind, setSelectedGrind] = useState(product.type === 'beans' ? 'beans' : product.type);
 
       const isBeanProduct = product.type === 'beans';
+      const isDripBag = product.type === 'dripbag';
+      const isGiftBox = product.type === 'giftbox';
       const maxStock = product.stock;
       const currentUnitPrice = quantity >= 10 ? product.wholesalePrice : product.price;
       const productName = lang === 'zh-TW' ? product.nameZh : product.nameVi;
@@ -1112,14 +1049,14 @@
       const specText = lang === 'zh-TW' ? product.specZh : product.specVi;
 
       const handleAdd = () => {
-        const grindObj = t.grindOptions[selectedGrind];
+        const grindObj = t.grindOptions[selectedGrind] || t.grindOptions.beans;
         onAddToCart({
           ...product,
           quantity,
           name: productName,
           spec: specText,
-          grind: isBeanProduct ? selectedGrind : 'coldbrew',
-          grindLabel: isBeanProduct ? grindObj.label : t.grindOptions.coldbrew.label
+          grind: selectedGrind,
+          grindLabel: grindObj.label
         });
         onClose();
       };
@@ -1147,7 +1084,7 @@
               </div>
             </div>
 
-            {/* 詳細規格與說明區塊 (咖啡豆 vs 冷萃包分別帶入) */}
+            {/* 詳細規格與說明區塊 */}
             {isBeanProduct ? (
               <div className="bg-coffee-100/75 border border-coffee-200 rounded-xl p-3 sm:p-4 space-y-2">
                 <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-coffee-900 font-serif">
@@ -1160,6 +1097,28 @@
                   <p>• <strong className="font-bold">{t.process}：</strong>{product.process}</p>
                   <p>• <strong className="font-bold">{t.grade}：</strong>{product.grade}</p>
                   <p>• <strong className="font-bold">{t.flavor}：</strong>{product.flavor}</p>
+                </div>
+              </div>
+            ) : isDripBag ? (
+              <div className="bg-amber-50/75 border border-amber-200 rounded-xl p-3 sm:p-4 space-y-2">
+                <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-amber-900 font-serif">
+                  <Icons.Package className="h-4 w-4 text-amber-700 flex-shrink-0" />
+                  <span>濾掛包商品特色</span>
+                </div>
+                <div className="space-y-1 text-[11px] sm:text-xs text-coffee-800 leading-relaxed">
+                  <p>• {t.dripbagNotice}</p>
+                  <p className="pt-1 text-amber-900 font-semibold">• <strong className="font-bold">{t.flavor}：</strong>{product.flavor}</p>
+                </div>
+              </div>
+            ) : isGiftBox ? (
+              <div className="bg-amber-50/75 border border-amber-200 rounded-xl p-3 sm:p-4 space-y-2">
+                <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-amber-900 font-serif">
+                  <Icons.Package className="h-4 w-4 text-amber-700 flex-shrink-0" />
+                  <span>精緻禮盒組特色</span>
+                </div>
+                <div className="space-y-1 text-[11px] sm:text-xs text-coffee-800 leading-relaxed">
+                  <p>• {t.giftboxNotice}</p>
+                  <p className="pt-1 text-amber-900 font-semibold">• <strong className="font-bold">{t.flavor}：</strong>{product.flavor}</p>
                 </div>
               </div>
             ) : (
@@ -1189,11 +1148,12 @@
               </div>
             </div>
 
+            {/* Grind Size Selection only for coffee beans */}
             {isBeanProduct ? (
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase text-coffee-800 flex items-center gap-1"><Icons.Settings className="h-3.5 w-3.5" /> {t.grindSize}</label>
                 <div className="grid grid-cols-2 gap-2">
-                  {Object.keys(t.grindOptions).filter(k => k !== 'coldbrew').map(key => (
+                  {['beans', 'phin', 'espresso', 'pour_over'].map(key => (
                     <button
                       key={key}
                       onClick={() => setSelectedGrind(key)}
@@ -1208,7 +1168,9 @@
                 </div>
               </div>
             ) : (
-              <div className="p-3 bg-coffee-100 rounded-lg text-xs text-coffee-700">{t.coldbrewNotice}</div>
+              <div className="p-3 bg-coffee-100 rounded-lg text-xs text-coffee-700">
+                {isDripBag ? t.dripbagNotice : isGiftBox ? t.giftboxNotice : t.coldbrewNotice}
+              </div>
             )}
 
             <div className="flex items-center justify-between pt-1">
