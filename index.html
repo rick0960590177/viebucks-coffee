@@ -137,9 +137,9 @@
       )
     };
 
-    const CART_STORAGE_KEY = 'VIEBUCKS_cafe_cart_v2';
-    const PRODUCTS_STORAGE_KEY = 'VIEBUCKS_cafe_products_v5';
-    const ORDER_HISTORY_STORAGE_KEY = 'VIEBUCKS_cafe_order_history_v2';
+    const CART_STORAGE_KEY = 'VIEBUCKS_cafe_cart_v3';
+    const PRODUCTS_STORAGE_KEY = 'VIEBUCKS_cafe_products_v6';
+    const ORDER_HISTORY_STORAGE_KEY = 'VIEBUCKS_cafe_order_history_v3';
     const ADMIN_PASSWORD = '0348246669';
     const SHIPPING_CONFIG = { FREE_THRESHOLD: 500000, FLAT_RATE: 25000 };
 
@@ -149,8 +149,7 @@
         history: '歷史訂單',
         cart: '購物車',
         categories: '產品分類',
-        retailPrice: '零售價',
-        wholesalePrice: '批發價 (10包+)',
+        price: '售價',
         selectAndBuy: '選擇與購買',
         soldOut: '已售完',
         grindSize: '選擇研磨度 / 規格',
@@ -172,8 +171,6 @@
         coldbrewFeature2: '黃金三焙混調工藝：大膽結合淺焙、中焙、深焙三種不同烘焙度，交織出前所未有的立體層次。',
         quantity: '數量',
         addToCart: '加入購物車',
-        wholesaleApplied: '已享批發優惠價',
-        wholesaleUpgrade: '(滿 10 包升級批發價)',
         freeShippingGoal: '滿 500,000 VND 免運',
         freeShippingReached: '已達免運門檻！',
         freeShippingShort: '還差 ',
@@ -240,8 +237,7 @@
         history: 'Lịch sử đơn hàng',
         cart: 'Giỏ hàng',
         categories: 'Danh mục sản phẩm',
-        retailPrice: 'Giá lẻ',
-        wholesalePrice: 'Giá sỉ (10 gói+)',
+        price: 'Giá',
         selectAndBuy: 'Chọn mua',
         soldOut: 'Hết hàng',
         grindSize: 'Chọn mức độ xay / Quy cách',
@@ -263,8 +259,6 @@
         coldbrewFeature2: 'Công nghệ phối trộn 3 cấp độ rang: Kết hợp hoàn hảo giữa rang nhạt, rang vừa và rang đậm, mang đến tầng hương phong phú.',
         quantity: 'Số lượng',
         addToCart: 'Thêm vào giỏ hàng',
-        wholesaleApplied: 'Đã áp dụng giá sỉ',
-        wholesaleUpgrade: '(Mua 10 gói+ nâng giá sỉ)',
         freeShippingGoal: 'Freeship từ 500,000 VND',
         freeShippingReached: 'Đã đạt mức Freeship!',
         freeShippingShort: 'Còn thiếu ',
@@ -337,7 +331,6 @@
         specZh: '250公克', 
         specVi: '250g', 
         price: 145000, 
-        wholesalePrice: 125000, 
         type: 'beans', 
         stock: 15, 
         threshold: 5, 
@@ -356,7 +349,6 @@
         specZh: '500公克', 
         specVi: '500g', 
         price: 280000, 
-        wholesalePrice: 240000, 
         type: 'beans', 
         stock: 15, 
         threshold: 5, 
@@ -375,7 +367,6 @@
         specZh: '10包/盒', 
         specVi: '10 Gói /Hộp', 
         price: 150000, 
-        wholesalePrice: 130000, 
         type: 'dripbag', 
         stock: 25, 
         threshold: 5, 
@@ -394,7 +385,6 @@
         specZh: '禮盒裝 (咖啡豆250g x 2 + 濾掛包5入)', 
         specVi: 'Hộp Quà (250g Hạt x 2 + 5 Drip Bag)', 
         price: 480000, 
-        wholesalePrice: 420000, 
         type: 'giftbox', 
         stock: 10, 
         threshold: 3, 
@@ -413,7 +403,6 @@
         specZh: '10包/袋', 
         specVi: '10 Gói /Túi', 
         price: 125000, 
-        wholesalePrice: 105000, 
         type: 'coldbrew', 
         stock: 20, 
         threshold: 5, 
@@ -432,7 +421,6 @@
         specZh: '30包/袋', 
         specVi: '30 Gói /Túi', 
         price: 350000, 
-        wholesalePrice: 295000, 
         type: 'coldbrew', 
         stock: 20, 
         threshold: 5, 
@@ -451,7 +439,6 @@
         specZh: '250公克', 
         specVi: '250g', 
         price: 91000, 
-        wholesalePrice: 78000, 
         type: 'beans', 
         stock: 25, 
         threshold: 5, 
@@ -470,7 +457,6 @@
         specZh: '500公克', 
         specVi: '500g', 
         price: 172000, 
-        wholesalePrice: 148000, 
         type: 'beans', 
         stock: 25, 
         threshold: 5, 
@@ -489,7 +475,6 @@
         specZh: '10包/袋', 
         specVi: '10 Gói /Túi', 
         price: 100000, 
-        wholesalePrice: 88000, 
         type: 'coldbrew', 
         stock: 20, 
         threshold: 5, 
@@ -508,7 +493,6 @@
         specZh: '30包/袋', 
         specVi: '30 Gói /Túi', 
         price: 250000, 
-        wholesalePrice: 220000, 
         type: 'coldbrew', 
         stock: 20, 
         threshold: 5, 
@@ -527,7 +511,6 @@
         specZh: '250公克', 
         specVi: '250g', 
         price: 135000, 
-        wholesalePrice: 115000, 
         type: 'beans', 
         stock: 15, 
         threshold: 5, 
@@ -546,7 +529,6 @@
         specZh: '500公克', 
         specVi: '500g', 
         price: 260000, 
-        wholesalePrice: 220000, 
         type: 'beans', 
         stock: 15, 
         threshold: 5, 
@@ -834,12 +816,8 @@
                       <div className="pt-4 border-t border-coffee-100 space-y-4">
                         <div className="flex items-baseline justify-between">
                           <div>
-                            <div className="text-[10px] sm:text-xs text-coffee-500 font-medium uppercase tracking-wider">{t.retailPrice}</div>
+                            <div className="text-[10px] sm:text-xs text-coffee-500 font-medium uppercase tracking-wider">{t.price}</div>
                             <div className="text-base sm:text-lg font-extrabold text-coffee-900">{product.price.toLocaleString()} VND</div>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-[10px] sm:text-xs text-amber-800 font-bold uppercase tracking-wider">{t.wholesalePrice}</div>
-                            <div className="text-sm sm:text-base font-bold text-amber-900">{product.wholesalePrice.toLocaleString()} VND</div>
                           </div>
                         </div>
 
@@ -1130,7 +1108,7 @@
       const isDripBag = product.type === 'dripbag';
       const isGiftBox = product.type === 'giftbox';
       const maxStock = product.stock;
-      const currentUnitPrice = quantity >= 10 ? product.wholesalePrice : product.price;
+      const currentUnitPrice = product.price;
       const productName = lang === 'zh-TW' ? product.nameZh : product.nameVi;
       const productSubName = lang === 'zh-TW' ? product.nameVi : product.nameZh;
       const specText = lang === 'zh-TW' ? product.specZh : product.specVi;
@@ -1163,11 +1141,6 @@
             <div className="flex items-baseline justify-between bg-coffee-50/80 p-4 rounded-2xl border border-coffee-100">
               <div className="flex items-baseline gap-2.5 flex-wrap">
                 <span className="text-xl sm:text-2xl font-extrabold text-coffee-900">{currentUnitPrice.toLocaleString()} VND</span>
-                {quantity >= 10 ? (
-                  <span className="text-[10px] sm:text-xs bg-amber-200 text-amber-900 font-bold px-2.5 py-1 rounded-lg shadow-sm">{t.wholesaleApplied}</span>
-                ) : (
-                  <span className="text-[10px] sm:text-xs text-coffee-600">{t.wholesaleUpgrade}</span>
-                )}
               </div>
             </div>
 
@@ -1280,7 +1253,7 @@
     }
 
     function CartDrawer({ isOpen, onClose, cart, updateQuantity, onOpenCheckout, t }) {
-      const getUnitPrice = (item) => item.quantity >= 10 ? item.wholesalePrice : item.price;
+      const getUnitPrice = (item) => item.price;
       const subtotal = cart.reduce((sum, item) => sum + getUnitPrice(item) * item.quantity, 0);
       const isFreeShipping = subtotal >= SHIPPING_CONFIG.FREE_THRESHOLD || subtotal === 0;
       const shippingFee = isFreeShipping ? 0 : SHIPPING_CONFIG.FLAT_RATE;
@@ -1375,7 +1348,7 @@
       const [isSuccess, setIsSuccess] = useState(false);
       const [lastCreatedOrder, setLastCreatedOrder] = useState(null);
 
-      const getUnitPrice = (item) => item.quantity >= 10 ? item.wholesalePrice : item.price;
+      const getUnitPrice = (item) => item.price;
       const subtotal = cart.reduce((sum, item) => sum + getUnitPrice(item) * item.quantity, 0);
       const isFreeShipping = subtotal >= SHIPPING_CONFIG.FREE_THRESHOLD || subtotal === 0;
       const shippingFee = isFreeShipping ? 0 : SHIPPING_CONFIG.FLAT_RATE;
